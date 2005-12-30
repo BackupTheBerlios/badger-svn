@@ -14,7 +14,7 @@
  
  $filename = LOG_FILE_NAME;
  $eventDate = date(LOG_DATE_FORMAT); 
- echo $eventDate;
+
  /* Write some entries to the log file. */
  $conf = array('lineFormat' => '%2$s [%3$s] %4$s', 'timeFormat' => '%H:%M:%S');
  $logger = &Log::singleton('file', $filename, $eventDate, $conf);
