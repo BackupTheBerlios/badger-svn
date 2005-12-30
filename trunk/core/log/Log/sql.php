@@ -8,8 +8,8 @@
  */
 
 /** PEAR's DB package */
-require_once 'DB.php';
-
+require_once '../../dbAdapter/DB.php';
+require_once '../Log.php';
 /**
  * The Log_sql class is a concrete implementation of the Log::
  * abstract class which sends messages to an SQL server.  Each entry
@@ -32,7 +32,7 @@ require_once 'DB.php';
  * @package Log
  *
  * @example sql.php     Using the SQL handler.
- */
+ */ 
 class Log_sql extends Log
 {
     /**
