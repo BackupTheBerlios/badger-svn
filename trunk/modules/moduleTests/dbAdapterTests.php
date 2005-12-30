@@ -39,7 +39,7 @@ INSERT INTO `test1` (`ID`, `Name`, `FirstName`, `Age`, `Height`) VALUES (1, 'Hei
 (2, 'Volzi', 'Clemi', 21, 186);
 
  */
-require_once '../dbAdapter/DB.php';
+require_once '../../core/dbAdapter/DB.php';
 $dsn = array(
 	'phptype'=>'mysql',
 	'username'=>'root',
