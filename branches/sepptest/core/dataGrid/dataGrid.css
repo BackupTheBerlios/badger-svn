@@ -1,0 +1,42 @@
+body, table {
+	font-family: verdana, arial;
+	font-size: 10pt;
+	}
+#dataGrid {
+	border: 1px solid #ececec;
+	}
+#dgTableHead {
+	background-color: #000000;
+	color: #ffffff;
+	font-weight: bold;
+	width: 100%;
+	}
+#dgScroll {
+	height: 200px;
+	width: 100%;
+	overflow: auto;
+	}
+#dgTableFoot {
+	width: 100%;
+	background-color: #ececec;
+	}
+#dgData {
+	width: 100%;
+	}
+#dgData td {
+	border-top: 1px solid #ececec;
+	border-bottom: 1px solid #ececec;
+}
+
+tr.dgRow {
+	background-color: #ffffff;
+	width: 100%;
+	}
+tr.dgRowSelected {
+	background-color: #339900;
+	width: 100%;
+	}
+tr.dgRowActive {
+	background-color: #ff0000;
+	width: 100%;
+	}
