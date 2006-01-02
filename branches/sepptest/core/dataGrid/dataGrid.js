@@ -9,7 +9,7 @@ var highlight = {
 			cells = this.getElementsByTagName("TD");
 			for (i = 0; i < cells.length;i++) {
 				if (i==0) {
-					cells[i].style.borderLeft = "1px dashed #000000";
+					//cells[i].style.borderLeft = "1px dashed #000000";
 				}
 				cells[i].style.borderTop = "1px dashed #000000";
 				cells[i].style.borderBottom = "1px dashed #000000";
@@ -24,7 +24,7 @@ var highlight = {
 			for (i = 0; i < cells.length;i++) {
 				cells[i].style.borderLeft = "";
 				cells[i].style.borderRight = "";
-				cells[i].style.borderTop = "";
+				cells[i].style.borderTop = "1px solid #ececec";
 				cells[i].style.borderBottom = "1px solid #ececec";
 			} 
 		}
