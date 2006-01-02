@@ -48,7 +48,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="2">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check2"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name2</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
@@ -56,7 +56,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="3">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check3"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name3</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
@@ -64,7 +64,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="4">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check4"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name4</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
@@ -72,7 +72,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="5">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check5"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name5</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
@@ -80,7 +80,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="6">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check6"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name6</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
@@ -88,7 +88,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="7">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check7"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name7</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
@@ -96,7 +96,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 	<tr class="dgRow" id="8">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check8"/></td>
-		<td width="100">Name1</td>
+		<td width="100">Name8</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
