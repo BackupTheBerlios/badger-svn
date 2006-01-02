@@ -91,6 +91,7 @@ Source Location: /DataGridXML.class.php<br /><br />
 		<p align="center" class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
 		<ul>
 		  		  <li><a href="../default/DataGridXML.html#method__construct">__construct</a></li>
+		  		  <li><a href="../default/DataGridXML.html#methodaddRow">addRow</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodaddRows">addRows</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodemptyRows">emptyRows</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodgetXML">getXML</a></li>
@@ -154,8 +155,13 @@ Source Location: /DataGridXML.class.php<br /><br />
 				</div>
 								<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#addRow" title="details" class="method-name">addRow</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Adds a single row.</td></tr>
+				</div>
+								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#addRows" title="details" class="method-name">addRows</a>()&nbsp;&nbsp;</td>
-					<td class="method-definition">Adds a row.</td></tr>
+					<td class="method-definition">Adds several rows.</td></tr>
 				</div>
 								<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
@@ -245,8 +251,53 @@ $columns
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
-<a name="methodaddRows" id="addRows"><!-- --></a>
+<a name="methodaddRow" id="addRow"><!-- --></a>
 <div class="oddrow">
+
+<div class="method-header">
+	<span class="method-title">addRow</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 162]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void addRow(
+$row
+$row&nbsp;
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Adds a single row.
+</strong></p>
+
+			<strong>Parameters:</strong><br />
+			<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td class="indent">
+				<span class="var-type">$row</span>&nbsp;&nbsp;</td>
+				<td>
+				<span class="var-name">$row:&nbsp;</span></td>
+				<td>
+				<span class="var-description"> array array of cell data</span>			</td></tr>
+				</table>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>public</td>
+  </tr>
+</table>
+<br />
+
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="methodaddRows" id="addRows"><!-- --></a>
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">addRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 144]</span>
@@ -263,7 +314,7 @@ $rows&nbsp;
     </td></tr></table>
     </td></tr></table><br /></div>
 
-	<p align="center" class="short-description"><strong>Adds a row.
+	<p align="center" class="short-description"><strong>Adds several rows.
 </strong></p>
 <span class="description"><p>Although works if no data has been given yet.</p></span>
 			<strong>Parameters:</strong><br />
@@ -291,10 +342,10 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodemptyRows" id="emptyRows"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">emptyRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 161]</span>
+	<span class="method-title">emptyRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 173]</span>
 </div>
 <br />
 
@@ -324,10 +375,10 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetXML" id="getXML"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">getXML</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 170]</span>
+	<span class="method-title">getXML</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 182]</span>
 </div>
 <br />
 
@@ -360,7 +411,7 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsetColumns" id="setColumns"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">setColumns</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 118]</span>
@@ -405,7 +456,7 @@ $columns&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsetData" id="setData"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
 	<span class="method-title">setData</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 107]</span>
@@ -457,7 +508,7 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodsetRows" id="setRows"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
 	<span class="method-title">setRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 130]</span>
@@ -516,7 +567,7 @@ $rows&nbsp;
 									</div>
 		<div class="info-box-body">
 			<a name="constUNDEFINED_COLUMNS" id="UNDEFINED_COLUMNS"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -534,7 +585,7 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="constXML_SERIALIZER_EXCEPTION" id="XML_SERIALIZER_EXCEPTION"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -556,7 +607,7 @@ $rows&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Mon, 02 Jan 2006 17:56:30 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.3.0RC4</a>
+		    Documentation generated on Mon, 02 Jan 2006 21:35:51 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.3.0RC4</a>
 	      </div>
       </td></tr></table>
     </td>
