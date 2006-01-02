@@ -79,6 +79,10 @@ echo "dgx5 addRows to filled rows: \n";
 $dgx5->addRows($rows1);
 printDGX($dgx5);
 
+echo "dgx5 addRow (single) to filled rows: \n";
+$dgx5->addRow(array ("Hackfresse", "Hans", "Dobi"));
+printDGX($dgx5);
+
 echo "dgx5 emptyRows: \n";
 $dgx5->emptyRows();
 printDGX($dgx5);

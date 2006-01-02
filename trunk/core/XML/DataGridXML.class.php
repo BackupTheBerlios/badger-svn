@@ -134,7 +134,7 @@ class DataGridXML {
 	}
 
 	/**
-	 * Adds a row.
+	 * Adds several rows.
 	 * 
 	 * Although works if no data has been given yet.
 	 * 
@@ -152,6 +152,18 @@ class DataGridXML {
 			$this->setRows($rows);
 		}
 	}
+	
+	/**
+	 * Adds a single row.
+	 * 
+	 * @param $row array array of cell data
+	 * @return void
+	 */
+	public function addRow($row) {
+		if (is_array($row)) {
+			$this->rows[] = $row;
+		}
+	} 
 	
 	/**
 	 * All rows will be erased.
