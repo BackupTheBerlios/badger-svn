@@ -10,20 +10,22 @@
 * Visit http://badger.berlios.org 
 *
 **/
+class Template {
+	private $templatecache;
 
-function getTemplate($template) {
-	global $templatecache;
-
-	if(!isset($templatecache[$template])) {
-		$filename = './tpl/'.$template.'.tpl';
-		if(file_exists($filename)) {
-			$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
-		} else 	{
-			$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
+	private function getTemplate($template) {		
+	
+		if(!isset($templatecache[$template])) {
+			$filename = './tpl/'.$template.'.tpl';
+			if(file_exists($filename)) {
+				$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
+			} else 	{
+				$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
+			}
+			$templatefile = preg_replace("'<if ([^>]*?)>(.*?)</if>'si", "\".( (\\1) ? \"\\2\" : \"\").\"", $templatefile);
+			$templatecache[$template] = $templatefile;
 		}
-		$templatefile = preg_replace("'<if ([^>]*?)>(.*?)</if>'si", "\".( (\\1) ? \"\\2\" : \"\").\"", $templatefile);
-		$templatecache[$template] = $templatefile;
+		return $templatecache[$template];
 	}
-	return $templatecache[$template];
 }
 ?>
