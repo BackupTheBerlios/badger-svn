@@ -11,13 +11,12 @@
 *
 **/
 define("BADGER_ROOT", "../../"); 
-include(BADGER_ROOT . "/includes/includes.php"); 
 
 
 class badgerException extends Exception
 {
    // Redefine the exception so message isn't optional
-   public function __construct($message, $code = 0) {
+   public function __construct($message, $code) {
        // some code
   
        // make sure everything is assigned properly

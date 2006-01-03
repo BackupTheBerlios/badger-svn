@@ -15,7 +15,7 @@
  define("DB_DATABASE_NAME", "moduleTest");
  
  // Errorhandling & Logging
- define("LOG_FILE_NAME", BADGER_ROOT."test3.log");
+ define("LOG_FILE_NAME", BADGER_ROOT."test_exceptions.log");
  define("LOG_DATE_FORMAT", "Ymd-His");
  
 ?>

@@ -11,21 +11,13 @@
 *
 **/
 define("BADGER_ROOT", "../../"); 
-include(BADGER_ROOT . "/includes/includes.php");
-  
-try{
-	function badgerExceptionTest(){
-	
-		 #throw new badgerException('Dies ist ein sinnvoller Text');
-		 throw new badgerException('Es wurde x probiert, aber y ist stattdessen passiert weil z schwul ist.', '2');
-		
-	}
-
-	$something = badgerExceptionTest();
-
-}catch (Exception $e) {
-
-   handleBadgerException($e);
+include BADGER_ROOT.'core/log/badgerLog.php';
+function handleBadgerException($e){
+	echo "Error Message: " . $e->getMessage();
+	echo "<br /><br />";
+	echo "Error Code:" . $e->getCode();
+	$logged_error = "ERROR:" . $e->getMessage() . " - ERROR CODE: " . $e->getCode() . " ON LINE " . $e->getLine() . " IN FILE " . $e->getFile();
+	$logger->log($logged_error);
 }
 
 ?>
