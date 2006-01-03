@@ -1,9 +1,18 @@
-body, table {
+body, table, input {
 	font-family: verdana, arial;
 	font-size: 10pt;
 }
+label {
+	cursor: pointer;	
+}
+.btnOK, .btnReset {
+	width: 70px;
+}
+
 #dataGrid {
 	border: 1px solid #ececec;
+	width: 100%;
+	//width: 99.9%; /*IE only*/
 }
 #dgTableHead {
 	background-color: #000000;

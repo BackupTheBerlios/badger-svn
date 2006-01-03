@@ -34,7 +34,6 @@ var highlight = {
 					deactivateRow(objRowActive);
 				}
 				objRowActive = this;
-				document.getElementById("check" + this.id).focus();
 				activateRow(this);
 			}
 		}
@@ -63,13 +62,17 @@ function enableMouseEvents() {
 function dgKeyProcess(event) {
 	if (!event) event=window.event;
 	
+	//alert(event.keyCode);
 	if (event.keyCode == Event.KEY_DOWN) {
+		//return false;
+		Event.stop(event);
+		
 		mouseEventsDisabled = true;
 		window.setTimeout("enableMouseEvents()", 10);
-		Event.stop(event);
 		if (objRowActive) {
-			objNextRow = objRowActive.nextSibling.nextSibling;
+			objNextRow = objRowActive.nextSibling;
 			if (objNextRow) {
+				if(objNextRow.tagName!="TR") objNextRow = objNextRow.nextSibling;
 				deactivateRow(objRowActive);
 				activateRow(objNextRow);
 				objRowActive = objNextRow;
@@ -78,21 +81,23 @@ function dgKeyProcess(event) {
 			objRowActive = document.getElementById("dgData").getElementsByTagName("tr")[0];
 			activateRow(objRowActive);
 		}
-		Behaviour.register(disabled);
 		
 	}
 	if (event.keyCode == Event.KEY_UP) {
+		//return false;
+		Event.stop(event);
+		
 		mouseEventsDisabled = true;
 		window.setTimeout("enableMouseEvents()", 10);
-		Event.stop(event);
-			if (objRowActive) {
-				objNextRow = objRowActive.previousSibling.previousSibling;
-				if (objNextRow) {
-					deactivateRow(objRowActive);
-					activateRow(objNextRow);
-					objRowActive = objNextRow;
-				}
+		if (objRowActive) {
+			objNextRow = objRowActive.previousSibling;
+			if (objNextRow) {
+				if(objNextRow.tagName!="TR") objNextRow = objNextRow.previousSibling;
+				deactivateRow(objRowActive);
+				activateRow(objNextRow);
+				objRowActive = objNextRow;
 			}
+		}
 	}
 	if (event.keyCode == Event.KEY_RETURN) {
 		
@@ -102,4 +107,4 @@ function dgKeyProcess(event) {
 	}
 
 }
-Event.observe(window, 'keypress', dgKeyProcess, false)
+Event.observe(document, 'keypress', dgKeyProcess, false)

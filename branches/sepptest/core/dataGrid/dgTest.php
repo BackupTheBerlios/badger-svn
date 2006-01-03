@@ -25,6 +25,35 @@ define("BADGER_ROOT", "../../");
 </head>
 
 <body>
+<div id="filter">
+	<fieldset>
+		<legend>&nbsp;Filter</legend>
+		<table>
+			<tr>
+				<td><label for="Name">Name:</label></td>
+				<td><input type="text" id="Name" name="Name" value="" size="30" maxlength="40"/></td>
+				<td>&nbsp;&nbsp;&nbsp;</td>
+				<td><label for="Alter">Alter:</label></td>
+				<td><input type="text" id="Alter" name="Alter" value="" size="30" maxlength="40"/></td>
+			</tr>
+			<tr>
+				<td><label for="Vorname">Vorname:</label></td>
+				<td><input type="text" id="Vorname" name="Vorname" value="" size="30" maxlength="40"/></td>
+				<td>&nbsp;&nbsp;&nbsp;</td>
+				<td><label for="Kontostand">Kontostand:</label></td>
+				<td><input type="text" id="Kontostand" name="Kontostand" value="" size="30" maxlength="40"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td>&nbsp;&nbsp;&nbsp;</td>
+				<td></td>
+				<td align="right"><input class="btnOK" type="button" name="OK" value="OK"/>&nbsp;<input class="btnReset" type="button" name="Reset" value="Reset"/></td>				
+			</tr>
+		</table>
+	</fieldset>
+</div>
+<br />
 <div id="dataGrid">
 <table id="dgTableHead" cellpadding="2" cellspacing="0">
 	<tr>
