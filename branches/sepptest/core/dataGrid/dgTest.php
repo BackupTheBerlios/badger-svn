@@ -37,7 +37,7 @@ define("BADGER_ROOT", "../../");
 	</tr>
 </table>
 <div id="dgScroll">
-<table id="dgData" cellpadding="2" cellspacing="0">
+<table id="dgData" cellpadding="2" cellspacing="0" rules="row">
 	<tr class="dgRow" id="1">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check1"/></td>
 		<td width="100">Name1</td>
@@ -97,6 +97,22 @@ define("BADGER_ROOT", "../../");
 	<tr class="dgRow" id="8">
 		<td width="20"><input type="checkbox" name="1" value="ON" id="check8"/></td>
 		<td width="100">Name8</td>
+		<td width="150">Vorname</td>
+		<td width="100">Alter</td>
+		<td width="180">Kontostand</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr class="dgRow" id="9">
+		<td width="20"><input type="checkbox" name="1" value="ON" id="check9"/></td>
+		<td width="100">Name9</td>
+		<td width="150">Vorname</td>
+		<td width="100">Alter</td>
+		<td width="180">Kontostand</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr class="dgRow" id="10">
+		<td width="20"><input type="checkbox" name="1" value="ON" id="check10"/></td>
+		<td width="100">Name10</td>
 		<td width="150">Vorname</td>
 		<td width="100">Alter</td>
 		<td width="180">Kontostand</td>
