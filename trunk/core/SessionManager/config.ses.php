@@ -26,10 +26,13 @@
 	database settings
 */
 
-$_db_user = "root";
-$_db_pass = "";
-$_db_url  = "localhost";
-$_db_name = "badger";
+define("BADGER_ROOT", "../../");
+require_once(BADGER_ROOT . "/includes/includes.php");
+
+$_db_user = DB_USERNAME;
+$_db_pass = DB_PASSWORD;
+$_db_url  = DB_HOST;
+$_db_name = DB_DATABASE_NAME;
 
 /*
 	if you dont have any table with the following names
