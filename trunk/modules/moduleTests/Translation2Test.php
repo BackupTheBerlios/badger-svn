@@ -1,4 +1,19 @@
 <?php
+/*
+* ____          _____   _____ ______ _____  
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+*| |_) | /  \  | |  | | |  __| |__  | |__) |
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
+*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|____/_/    \_\_____/ \_____|______|_|  \_\
+* Open Source Financial Management
+* Visit http://badger.berlios.org 
+*
+**/
+
+define("BADGER_ROOT", "../../");
+require_once(BADGER_ROOT . "/includes/includes.php");
+
 // set the parameters to connect to your db
 $dbinfo = array(
     'hostspec' => DB_HOST,
@@ -10,7 +25,6 @@ $dbinfo = array(
 
 $driver = 'DB';
 
-require_once 'Translation2.php';
 $tr =& Translation2::factory($driver, $dbinfo);
 
 print("<b>error auf en:</b><br>");
