@@ -20,5 +20,6 @@
  require_once BADGER_ROOT.'core/log/badgerLog.php';
  require_once BADGER_ROOT.'core/exceptionHandler/badgerException.php';
  require_once BADGER_ROOT.'core/exceptionHandler/handleBadgerException.php';
+ require_once BADGER_ROOT.'core/Translation2/Translation2.php';
  
 ?>
