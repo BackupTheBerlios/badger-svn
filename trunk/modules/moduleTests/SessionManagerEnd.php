@@ -22,6 +22,7 @@
 	define("BADGER_ROOT", "../../");
 
 	include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
+	
 	if($_GET['f']==1){
 		session_flush();
 	}else{
