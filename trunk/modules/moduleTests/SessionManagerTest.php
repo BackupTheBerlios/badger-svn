@@ -20,8 +20,8 @@
 */
 
 define("BADGER_ROOT", "../../");
-
 include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
+
 if($_GET['s']==1){
 	set_session_var($_GET['variable'],$_GET['valor']);
 }
@@ -33,6 +33,12 @@ You have been logged for <?=get_session_length()?> seconds.<br>
 Variables:<br><?print_r($_session)?>
 <br>
 <br>
+<?php
+
+set_session_var("testvar","testwert"); 
+echo $_session['testvar']; 
+
+?>
 <br>
 <br>
 <form method=get action=test>
