@@ -11,16 +11,57 @@
 *
 **/
  define("BADGER_ROOT", "../"); 
- // Database Values
 
+ // Database Values
+ 	/**
+	 * Type of database
+	 * 
+	 * @var global constant
+	 */	
  define("DB_TYPE", "mysql");
+ 
+ 	/**
+	 * Database username
+	 * 
+	 * @var global constant
+	 */	
  define("DB_USERNAME", "root");
+ 
+  	/**
+	 * Database password
+	 * 
+	 * @var global constant
+	 */	
  define("DB_PASSWORD", "");
+ 
+  	/**
+	 * Database host address
+	 * 
+	 * @var global constant
+	 */	
  define("DB_HOST", "localhost");
+ 
+  	/**
+	 * Name of the database to be used
+	 * 
+	 * @var global constant
+	 */	
  define("DB_DATABASE_NAME", "moduleTest");
  
  // Errorhandling & Logging
+ 
+  	/**
+	 * Path and name of logging file
+	 * 
+	 * @var global constant
+	 */	
  define("LOG_FILE_NAME", BADGER_ROOT."test_exceptions.log");
+ 
+  	/**
+	 * Formatting for date used in log entries according to http://www.php.net/date
+	 * 
+	 * @var global constant
+	 */	
  define("LOG_DATE_FORMAT", "Ymd-His");
  
 ?>

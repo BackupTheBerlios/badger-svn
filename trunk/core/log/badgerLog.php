@@ -10,16 +10,39 @@
 * Visit http://badger.berlios.org 
 *
 **/
- //Test for log in a file
- //document root path relative to current location 
+/**
+ * @author baxxter, sperber 
+ * @version $LastChangedRevision$
+ */
+ /**
+ * defines root path relative to current location
+ */
  define("BADGER_ROOT", "../../"); 
+ /**
+ * uses Log.php to log data
+ */
  require_once BADGER_ROOT.'/core/log/Log.php';
  
- 
+ 	/**
+	 * Name and path of the log file
+	 * 
+	 * @var string
+	 */	
  $filename = LOG_FILE_NAME;
+  	/**
+	 * Now() in predefined format
+	 * 
+	 * @var String
+	 */	
  $eventDate = date(LOG_DATE_FORMAT); 
 
  /* Write some entries to the log file. */
+  	/**
+	 * configuration of the text file
+	 * 
+	 * @var array of strings
+	 */	
  $conf = array('lineFormat' => '%2$s [%3$s] %4$s', 'timeFormat' => '%H:%M:%S');
+ //creates logging object 
  $logger = &Log::singleton('file', $filename, $eventDate, $conf);
 ?>

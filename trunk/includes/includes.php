@@ -15,11 +15,35 @@
  define("BADGER_ROOT", "../"); 
  
  //Includes
+ 
+/**
+ * makes use of the dbAdapter database abstraction layer
+ */
  require_once BADGER_ROOT.'core/dbAdapter/DB.php';
+
+/**
+ * global config values
+ */
  require_once BADGER_ROOT.'includes/config.inc.php';
+ 
+ /**
+ * makes global logging functionality available on all pages
+ */
  require_once BADGER_ROOT.'core/log/badgerLog.php';
+ 
+ /**
+ * makes global badgerException class available
+ */
  require_once BADGER_ROOT.'core/exceptionHandler/badgerException.php';
+ 
+ /**
+ * Exception handling function available on all pages including this file
+ */
  require_once BADGER_ROOT.'core/exceptionHandler/handleBadgerException.php';
- require_once BADGER_ROOT.'core/Translation2/Translation2.php';
+ 
+/**
+ * makes translation libs available
+ */
+require_once BADGER_ROOT.'core/Translation2/Translation2.php';
  
 ?>

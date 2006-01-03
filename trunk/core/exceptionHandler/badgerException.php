@@ -10,17 +10,27 @@
 * Visit http://badger.berlios.org 
 *
 **/
+
+
+ 
+/**
+ * defines root path relative to current location
+ */
 define("BADGER_ROOT", "../../"); 
 
-
+/**
+ * class used to extend the default exception class 
+ * 
+ * @author baxxter, sperber 
+ * @version $LastChangedRevision$
+ */
 class badgerException extends Exception
 {
-   // Redefine the exception so message isn't optional
-   public function __construct($message, $code) {
-       // some code
-  
-       // make sure everything is assigned properly
-       parent::__construct($message, $code);
+   // Redefine the exception so code isn't optional
+   public function __construct($code) {
+
+       // call default exception constructor
+       parent::__construct($message = NULL, $code);
    }
 
 }
