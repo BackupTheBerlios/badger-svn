@@ -903,7 +903,11 @@ function jsDOMenu() { // Public method
   if (len > 4 && arguments[4].length > 0) {
     menuElm.className = arguments[4];
   }
-  menuElm.style.width = arguments[0] + px;
+  if (typeof(arguments[0] == "string")) {
+  	menuElm.style.width = arguments[0];
+  } else {
+    menuElm.style.width = arguments[0] + px;
+  }	
   menuElm.style.left = "0px";
   menuElm.style.top = "0px";
   if (menuElm.mode != "static") {
