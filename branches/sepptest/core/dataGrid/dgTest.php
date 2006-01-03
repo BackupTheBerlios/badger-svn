@@ -16,42 +16,44 @@ define("BADGER_ROOT", "../../");
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Title</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="dataGrid.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="../../js/behaviour.js"></script>
-<script type="text/javascript" src="../../js/prototype.js"></script>
-<script type="text/javascript" src="dataGrid.js"></script>
+	<title>DataGrid Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link href="dataGrid.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../../js/behaviour.js"></script>
+	<script type="text/javascript" src="../../js/prototype.js"></script>
+	<script type="text/javascript" src="dataGrid.js"></script>
 </head>
 
 <body>
 <div id="filter">
-	<fieldset>
-		<legend>&nbsp;Filter</legend>
-		<table>
-			<tr>
-				<td><label for="Name">Name:</label></td>
-				<td><input type="text" id="Name" name="Name" value="" size="30" maxlength="40"/></td>
-				<td>&nbsp;&nbsp;&nbsp;</td>
-				<td><label for="Alter">Alter:</label></td>
-				<td><input type="text" id="Alter" name="Alter" value="" size="30" maxlength="40"/></td>
-			</tr>
-			<tr>
-				<td><label for="Vorname">Vorname:</label></td>
-				<td><input type="text" id="Vorname" name="Vorname" value="" size="30" maxlength="40"/></td>
-				<td>&nbsp;&nbsp;&nbsp;</td>
-				<td><label for="Kontostand">Kontostand:</label></td>
-				<td><input type="text" id="Kontostand" name="Kontostand" value="" size="30" maxlength="40"/></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td></td>
-				<td>&nbsp;&nbsp;&nbsp;</td>
-				<td></td>
-				<td align="right"><input class="btnOK" type="button" name="OK" value="OK"/>&nbsp;<input class="btnReset" type="button" name="Reset" value="Reset"/></td>				
-			</tr>
-		</table>
-	</fieldset>
+	<form>
+		<fieldset>
+			<legend><img src="../../img/filter.png" align="left"/>&nbsp;Filter</legend>
+			<table>
+				<tr>
+					<td><label for="Name">Name:</label></td>
+					<td><input type="text" id="Name" name="Name" value="" size="30" maxlength="40"/></td>
+					<td>&nbsp;&nbsp;&nbsp;</td>
+					<td><label for="Alter">Alter:</label></td>
+					<td><input type="text" id="Alter" name="Alter" value="" size="30" maxlength="40"/></td>
+				</tr>
+				<tr>
+					<td><label for="Vorname">Vorname:</label></td>
+					<td><input type="text" id="Vorname" name="Vorname" value="" size="30" maxlength="40"/></td>
+					<td>&nbsp;&nbsp;&nbsp;</td>
+					<td><label for="Kontostand">Kontostand:</label></td>
+					<td><input type="text" id="Kontostand" name="Kontostand" value="" size="30" maxlength="40"/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>&nbsp;&nbsp;&nbsp;</td>
+					<td></td>
+					<td align="right"><input class="btnOK" type="button" name="OK" value="OK"/>&nbsp;<input class="btnReset" type="reset" name="Reset" value="Reset"/></td>				
+				</tr>
+			</table>
+		</fieldset>
+	</form>
 </div>
 <br />
 <div id="dataGrid">

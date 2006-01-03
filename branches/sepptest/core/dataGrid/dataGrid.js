@@ -3,6 +3,7 @@ var objRowActive;
 var mouseEventsDisabled;
 mouseEventsDisabled = false;
 
+// Row Handling
 function activateRow(objRow) {
 	if (objRow.className == "dgRow") objRow.className = "dgRowActive";
 	if (objRow.className == "dgRowSelected") objRow.className = "dgRowSelectedActive";
@@ -26,21 +27,22 @@ function deselectRow(objRow) {
 	document.getElementById("check"+objRow.id).focus();
 }
 
-var highlight = {
+function enableMouseEvents() {
+	mouseEventsDisabled = false;
+}
+
+//Mouse-Events of the Rows
+Behaviour.register( {
 	'tr.dgRow' : function(element){
 		element.onmouseover = function(){
 			if (!mouseEventsDisabled) {
-				if(objRowActive) {
-					deactivateRow(objRowActive);
-				}
+				if(objRowActive) deactivateRow(objRowActive);
 				objRowActive = this;
 				activateRow(this);
 			}
 		}
 		element.onmouseout = function(){
-			if (!mouseEventsDisabled) {
-				deactivateRow(this);
-			}
+			if (!mouseEventsDisabled) deactivateRow(this);
 		}
 		element.onclick = function(){
 			if(this.className=="dgRowSelected" || this.className=="dgRowSelectedActive") {
@@ -49,30 +51,28 @@ var highlight = {
 				selectRow(this);
 			}
 		}
+		element.ondblclick = function(){
+			alert("Editieren von ID: " + this.id);
+		}
 	}	
-	
-};
-Behaviour.register(highlight);
+});
 
-function enableMouseEvents() {
-	mouseEventsDisabled = false;
-	//alert("test");
-}
-
+//Key-Events of the Rows
 function dgKeyProcess(event) {
 	if (!event) event=window.event;
 	
 	//alert(event.keyCode);
 	if (event.keyCode == Event.KEY_DOWN) {
-		//return false;
 		Event.stop(event);
 		
+		//when dataGrid scrolls down, disable mouse events
 		mouseEventsDisabled = true;
 		window.setTimeout("enableMouseEvents()", 10);
+		
 		if (objRowActive) {
 			objNextRow = objRowActive.nextSibling;
 			if (objNextRow) {
-				if(objNextRow.tagName!="TR") objNextRow = objNextRow.nextSibling;
+				if(objNextRow.tagName!="TR") objNextRow = objNextRow.nextSibling; //only FF, difference in the DOM
 				deactivateRow(objRowActive);
 				activateRow(objNextRow);
 				objRowActive = objNextRow;
@@ -84,15 +84,16 @@ function dgKeyProcess(event) {
 		
 	}
 	if (event.keyCode == Event.KEY_UP) {
-		//return false;
 		Event.stop(event);
 		
+		//when dataGrid scrolls down, disable mouse events
 		mouseEventsDisabled = true;
 		window.setTimeout("enableMouseEvents()", 10);
+		
 		if (objRowActive) {
 			objNextRow = objRowActive.previousSibling;
 			if (objNextRow) {
-				if(objNextRow.tagName!="TR") objNextRow = objNextRow.previousSibling;
+				if(objNextRow.tagName!="TR") objNextRow = objNextRow.previousSibling; //only FF, difference in the DOM
 				deactivateRow(objRowActive);
 				activateRow(objNextRow);
 				objRowActive = objNextRow;
@@ -100,10 +101,10 @@ function dgKeyProcess(event) {
 		}
 	}
 	if (event.keyCode == Event.KEY_RETURN) {
-		
+		alert("Editieren");
 	}
 	if (event.keyCode == Event.KEY_DELETE) {
-		confirm("Wollen Sie die Datens?tze wirklich l?schen?")
+		confirm("ToDo: Wollen Sie die Datens?tze wirklich l?schen?")
 	}
 
 }
