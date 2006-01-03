@@ -13,6 +13,6 @@
  include BADGER_ROOT.'core/dbAdapter/DB.php';
  include BADGER_ROOT.'includes/config.inc.php';
  include BADGER_ROOT.'core/log/badgerLog.php';
- include BADGER_ROOT.'core/exceptionHandler.php';
+ include BADGER_ROOT.'core/exceptionHandler/badgerException.php';
  
 ?>
