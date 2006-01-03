@@ -16,15 +16,12 @@ include(BADGER_ROOT . "/includes/includes.php");
 try{
 	function badgerExceptionTest(){
 	
-		 #throw new badgerException('Dies ist ein sinnvoller Text');
 		 throw new badgerException('Es wurde x probiert, aber y ist stattdessen passiert weil z schwul ist.', '2');
 		
 	}
-
 	$something = badgerExceptionTest();
-
+ 
 }catch (Exception $e) {
-
    handleBadgerException($e);
 }
 

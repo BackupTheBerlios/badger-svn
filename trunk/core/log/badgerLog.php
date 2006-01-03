@@ -1,14 +1,18 @@
 <?php
 /*
- * Created on 30.12.2005
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
- */
+* ____          _____   _____ ______ _____  
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+*| |_) | /  \  | |  | | |  __| |__  | |__) |
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
+*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|____/_/    \_\_____/ \_____|______|_|  \_\
+* Open Source Financial Management
+* Visit http://badger.berlios.org 
+*
+**/
  //Test for log in a file
  //document root path relative to current location 
  define("BADGER_ROOT", "../../"); 
- 
  include BADGER_ROOT.'/core/log/Log.php';
  
  

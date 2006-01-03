@@ -11,13 +11,20 @@
 *
 **/
 define("BADGER_ROOT", "../../"); 
-include BADGER_ROOT.'core/log/badgerLog.php';
 function handleBadgerException($e){
+	global $logger; 
+	
+	echo "<b>ERROR!</b><br />";
 	echo "Error Message: " . $e->getMessage();
 	echo "<br /><br />";
 	echo "Error Code:" . $e->getCode();
-	$logged_error = "ERROR:" . $e->getMessage() . " - ERROR CODE: " . $e->getCode() . " ON LINE " . $e->getLine() . " IN FILE " . $e->getFile();
-	$logger->log($logged_error);
+	
+	#$errorMessage = getFromDatabase("error", $e->getCode());
+	#echo $errorMessage; 
+	
+	$loggedError = "ERROR:" . $e->getMessage() . " - ERROR CODE: " . $e->getCode() . " ON LINE " . $e->getLine() . " IN FILE " . $e->getFile();
+	$logger->log($loggedError);
+		
 }
 
 ?>
