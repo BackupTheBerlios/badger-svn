@@ -14,7 +14,7 @@
 //document root path relative to current location 
 define("BADGER_ROOT", "../../"); 
 
-include BADGER_ROOT.'includes/includes.php';
+require_once BADGER_ROOT.'includes/includes.php';
 
 $logger->log("Log entry tesdoo777770");
 

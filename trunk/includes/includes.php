@@ -15,10 +15,10 @@
  define("BADGER_ROOT", "../"); 
  
  //Includes
- include BADGER_ROOT.'core/dbAdapter/DB.php';
- include BADGER_ROOT.'includes/config.inc.php';
- include BADGER_ROOT.'core/log/badgerLog.php';
- include BADGER_ROOT.'core/exceptionHandler/badgerException.php';
- include BADGER_ROOT.'core/exceptionHandler/handleBadgerException.php';
+ require_once BADGER_ROOT.'core/dbAdapter/DB.php';
+ require_once BADGER_ROOT.'includes/config.inc.php';
+ require_once BADGER_ROOT.'core/log/badgerLog.php';
+ require_once BADGER_ROOT.'core/exceptionHandler/badgerException.php';
+ require_once BADGER_ROOT.'core/exceptionHandler/handleBadgerException.php';
  
 ?>

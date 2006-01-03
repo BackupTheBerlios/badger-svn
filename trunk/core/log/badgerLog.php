@@ -13,7 +13,7 @@
  //Test for log in a file
  //document root path relative to current location 
  define("BADGER_ROOT", "../../"); 
- include BADGER_ROOT.'/core/log/Log.php';
+ require_once BADGER_ROOT.'/core/log/Log.php';
  
  
  $filename = LOG_FILE_NAME;
