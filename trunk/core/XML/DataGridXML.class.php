@@ -43,16 +43,16 @@ class DataGridXML {
 	private $serializer;
 	
 	/**
-	 * All column heads in the table
+	 * All column heads in the table.
 	 * 
-	 * @var simple string array of column names
+	 * @var array Simple string array of column names
 	 */
 	private $columns;
 	
 	/**
 	 * The single rows in the table.
 	 * 
-	 * @var array array of array of cell data
+	 * @var array Array of array of cell data
 	 */
 	private $rows;
 
