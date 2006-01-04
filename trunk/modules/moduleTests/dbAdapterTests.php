@@ -65,10 +65,10 @@ if (PEAR::isError($db)){
 	die($db->getMessage());	
 }
 $sql = "SELECT * FROM test1";
-//$data = array('test1');
+
 $res =& $db->query($sql,$data);
 while ($res->fetchInto ($row)){
-	echo $row[1] . "<br />";
+	echo $row[2] . "<br />";
 }
 $db->disconnect();
 ?>
