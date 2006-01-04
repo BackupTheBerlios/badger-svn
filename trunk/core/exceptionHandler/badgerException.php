@@ -26,12 +26,26 @@ define("BADGER_ROOT", "../../");
  */
 class badgerException extends Exception
 {
+	/**
+	 * AdditionalInfo regarding the exception
+	 * 
+	 * @var string 
+	 */
+	private $additionalInfo;
+  
    // Redefine the exception so code isn't optional
-   public function __construct($code) {
-
-       // call default exception constructor
-       parent::__construct($message = NULL, $code);
-   }
-
+   	public function __construct($code, $additionalInfo = 'test') {
+		$this->additionalInfo = $additionalInfo;
+       	// call default exception constructor
+		parent::__construct($message = NULL, $code);
+   	}
+   	/**
+ * function to receive the additionalInfo
+ * 
+ * @return String
+ */
+	public function getAdditionalInfo (){
+	return $this->additionalInfo;		
+	}
 }
 ?>
