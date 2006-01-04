@@ -36,7 +36,7 @@ function handleBadgerException($e){
 	
 	echo "<b>ERROR!</b><br />";
 	echo "Error Code:" . $e->getCode(); //retrieve error code from exception object
-	
+	echo $e->getAdditionalInfo();
 	#$errorMessage = getFromDatabase("error", $e->getCode());
 	#echo $errorMessage; 
 	/**
