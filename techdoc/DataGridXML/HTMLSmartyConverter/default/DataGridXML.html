@@ -56,7 +56,8 @@ Source Location: /DataGridXML.class.php<br /><br />
 	<div class="info-box-title">Class Overview</div>
 	<div class="nav-bar">
 					<span class="disabled">Class Overview</span> |
-																	<a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+															<a href="#sec-var-summary">Properties Summary</a> | <a href="#sec-vars">Properties Detail</a>
+						|											<a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
 						|											<a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
 						</div>
 	<div class="info-box-body">
@@ -67,7 +68,7 @@ Source Location: /DataGridXML.class.php<br /><br />
 </strong></p>
 
 		<p class="notes">
-			Located in <a class="field" href="_DataGridXML_class_php.html">/DataGridXML.class.php</a> [<span class="field">line 21</span>]
+			Located in <a class="field" href="_DataGridXML_class_php.html">/DataGridXML.class.php</a> [<span class="field">line 26</span>]
 		</p>
 
 		
@@ -86,6 +87,14 @@ Source Location: /DataGridXML.class.php<br /><br />
 		</table>
 		</td>
 
+				<td valign="top" width="20%" class="class-overview">
+		<p align="center" class="short-description"><strong><a href="#sec_vars">Properties</a></strong></p>
+		<ul>
+		  		  <li><a href="../default/DataGridXML.html#var$columns">$columns</a></li>
+		  		  <li><a href="../default/DataGridXML.html#var$rows">$rows</a></li>
+		  		  <li><a href="../default/DataGridXML.html#var$serializer">$serializer</a></li>
+		  		</ul>
+		</td>
 		
 				<td valign="top" width="20%" class="class-overview">
 		<p align="center" class="short-description"><strong><a href="#sec_methods">Methods</a></strong></p>
@@ -95,6 +104,7 @@ Source Location: /DataGridXML.class.php<br /><br />
 		  		  <li><a href="../default/DataGridXML.html#methodaddRows">addRows</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodemptyRows">emptyRows</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodgetXML">getXML</a></li>
+		  		  <li><a href="../default/DataGridXML.html#methodinitSerializer">initSerializer</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodsetColumns">setColumns</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodsetData">setData</a></li>
 		  		  <li><a href="../default/DataGridXML.html#methodsetRows">setRows</a></li>
@@ -114,7 +124,8 @@ Source Location: /DataGridXML.class.php<br /><br />
 		<div class="nav-bar">
 			<a href="#sec-description">Class Overview</a> |
 									<span class="disabled">Constants Summary</span> | <a href="#sec-consts">Constants Detail</a>
-										|
+												<a href="#sec-var-summary">Properties Summary</a> | <a href="#sec-vars">Properties Detail</a>
+								|										|
 									<a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
 									</div>
 		<div class="info-box-body">
@@ -136,13 +147,46 @@ Source Location: /DataGridXML.class.php<br /><br />
 		</div>
 	</div>
 
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Property Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a> |
+									<span class="disabled">Property Summary</span> | <a href="#sec-vars">Properties Detail</a>
+												<a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+								|			    		    			    				<a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
+    			    				</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+			<table border="0" cellspacing="0" cellpadding="0" class="var-summary">
+							<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">array</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$columns" title="details" class="var-name-summary">$columns</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">All column heads in the table.</td></tr>
+				</div>
+								<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">array</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$rows" title="details" class="var-name-summary">$rows</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The single rows in the table.</td></tr>
+				</div>
+								<div class="var-title">
+					<tr><td class="var-title"><span class="var-type-summary">object</span>&nbsp;&nbsp;</td>
+					<td class="var-title"><a href="#$serializer" title="details" class="var-name-summary">$serializer</a>&nbsp;&nbsp;</td>
+					<td class="var-summary-description">The XML Serializer Object.</td></tr>
+				</div>
+								</table>
+			</div>
+			<br /><div class="top">[ <a href="#top">Top</a> ]</div>
+		</div>
+	</div>
 
 	<a name="sec-method-summary"></a>
 	<div class="info-box">
 		<div class="info-box-title">Method Summary</span></div>
 		<div class="nav-bar">
 			<a href="#sec-description">Class Overview</a> |
-									    		    			    				<a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
+																		<a href="#sec-var-summary">Properties Summary</a> | <a href="#sec-vars">Properties Detail</a>
+								|			    		    			    				<a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
     			    					<span class="disabled">Method Summary</span> | <a href="#sec-methods">Methods Detail</a>
 		</div>
 		<div class="info-box-body">
@@ -175,6 +219,11 @@ Source Location: /DataGridXML.class.php<br /><br />
 				</div>
 								<div class="method-definition">
 											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
+										<td class="method-definition"><a href="#initSerializer" title="details" class="method-name">initSerializer</a>()&nbsp;&nbsp;</td>
+					<td class="method-definition">Initialize the Serializer.</td></tr>
+				</div>
+								<div class="method-definition">
+											<tr><td class="method-definition"><span class="method-result">void</span>&nbsp;&nbsp;</td>
 										<td class="method-definition"><a href="#setColumns" title="details" class="method-name">setColumns</a>()&nbsp;&nbsp;</td>
 					<td class="method-definition">Sets the column head.</td></tr>
 				</div>
@@ -194,23 +243,118 @@ Source Location: /DataGridXML.class.php<br /><br />
 		</div>
 	</div>
 
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Properties</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Class Overview</a> |
+													<a href="#sec-var-summary">Property Summary</a> | <a href="#sec-vars">Properties Detail</a>
+			
+							|
+									<a href="#sec-method-summary">Method Summary</a> | <a href="#sec-methods">Methods Detail</a>
+														|
+									<a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
+									</div>
+		<div class="info-box-body">
+			<a name="var$columns" id="$columns"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>&nbsp;&nbsp;
+			<span class="var-name">$columns</span>
+						<span class="smalllinenumber">[line 50]</span>
+		</span>
+	</div>
+
+	<p align="center" class="short-description"><strong>All column heads in the table.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>private</td>
+  </tr>
+</table>
+<br />
+
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$rows" id="$rows"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>&nbsp;&nbsp;
+			<span class="var-name">$rows</span>
+						<span class="smalllinenumber">[line 57]</span>
+		</span>
+	</div>
+
+	<p align="center" class="short-description"><strong>The single rows in the table.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>private</td>
+  </tr>
+</table>
+<br />
+
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+<a name="var$serializer" id="$serializer"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">object</span>&nbsp;&nbsp;
+			<span class="var-name">$serializer</span>
+						<span class="smalllinenumber">[line 43]</span>
+		</span>
+	</div>
+
+	<p align="center" class="short-description"><strong>The XML Serializer Object.
+</strong></p>
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>private</td>
+  </tr>
+</table>
+<br />
+
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
+		</div>
+	</div>
 
 	<a name="sec-methods"></a>
 	<div class="info-box">
 		<div class="info-box-title">Methods</div>
 		<div class="nav-bar">
 			<a href="#sec-description">Class Overview</a> |
-																|
+									                |
+									<a href="#sec-var-summary">Property Summary</a> | <a href="#sec-vars">Properties Detail</a>
+														|
 									<a href="#sec-const-summary">Constants Summary</a> | <a href="#sec-consts">Constants Detail</a>
 														| <a href="#sec-method-summary">Method Summary</a> | <span class="disabled">Methods Detail</span>
 					</div>
 		<div class="info-box-body">
 			<a name='method_detail'></a>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 60]</span>
+	<span class="method-title">Constructor __construct</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 65]</span>
 </div>
 <br />
 
@@ -218,9 +362,9 @@ Source Location: /DataGridXML.class.php<br /><br />
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>DataGridXML __construct(
-$columns
-0, $rows
-1&nbsp;
+array
+$columns, array
+$rows&nbsp;
 )</code>
     </td></tr></table>
     </td></tr></table><br /></div>
@@ -231,17 +375,17 @@ $columns
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">$columns</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
-				<span class="var-name">0:&nbsp;</span></td>
+				<span class="var-name">$columns:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array the columns to initialize the Object withh</span>			</td></tr>
+				<span class="var-description"> The columns to initialize the Object withh</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type">$rows</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
-				<span class="var-name">1:&nbsp;</span></td>
+				<span class="var-name">$rows:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array the rows of the Object</span>			</td></tr>
+				<span class="var-description"> The rows of the Object</span>			</td></tr>
 				</table>
 
 	<br />
@@ -252,10 +396,10 @@ $columns
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodaddRow" id="addRow"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">addRow</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 162]</span>
+	<span class="method-title">addRow</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 167]</span>
 </div>
 <br />
 
@@ -263,7 +407,7 @@ $columns
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>void addRow(
-$row
+array
 $row&nbsp;
 )</code>
     </td></tr></table>
@@ -275,11 +419,11 @@ $row&nbsp;
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">$row</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$row:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array array of cell data</span>			</td></tr>
+				<span class="var-description"> Array of cell data</span>			</td></tr>
 				</table>
 
 	<br />
@@ -297,10 +441,10 @@ $row&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodaddRows" id="addRows"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">addRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 144]</span>
+	<span class="method-title">addRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 149]</span>
 </div>
 <br />
 
@@ -308,7 +452,7 @@ $row&nbsp;
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>void addRows(
-$rows
+array
 $rows&nbsp;
 )</code>
     </td></tr></table>
@@ -320,11 +464,11 @@ $rows&nbsp;
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">$rows</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$rows:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array array of array of cell data</span>			</td></tr>
+				<span class="var-description"> Array of array of cell data</span>			</td></tr>
 				</table>
 
 	<br />
@@ -342,10 +486,10 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodemptyRows" id="emptyRows"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">emptyRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 173]</span>
+	<span class="method-title">emptyRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 178]</span>
 </div>
 <br />
 
@@ -375,10 +519,10 @@ $rows&nbsp;
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
 <a name="methodgetXML" id="getXML"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">getXML</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 182]</span>
+	<span class="method-title">getXML</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 187]</span>
 </div>
 <br />
 
@@ -410,11 +554,44 @@ $rows&nbsp;
 		<br />
 	<div class="top">[ <a href="#top">Top</a> ]</div>
 </div>
+<a name="methodinitSerializer" id="initSerializer"><!-- --></a>
+<div class="evenrow">
+
+<div class="method-header">
+	<span class="method-title">initSerializer</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 84]</span>
+</div>
+<br />
+
+	<div class="function">
+    <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
+    <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
+		<code>void initSerializer(
+)</code>
+    </td></tr></table>
+    </td></tr></table><br /></div>
+
+	<p align="center" class="short-description"><strong>Initialize the Serializer.
+</strong></p>
+
+	<br />
+	<strong>API Tags:</strong><br />
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="indent"><strong>Access:</strong>&nbsp;&nbsp;</td><td>private</td>
+  </tr>
+</table>
+<br />
+
+
+	
+		<br />
+	<div class="top">[ <a href="#top">Top</a> ]</div>
+</div>
 <a name="methodsetColumns" id="setColumns"><!-- --></a>
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">setColumns</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 118]</span>
+	<span class="method-title">setColumns</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 123]</span>
 </div>
 <br />
 
@@ -422,7 +599,7 @@ $rows&nbsp;
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>void setColumns(
-$columns
+array
 $columns&nbsp;
 )</code>
     </td></tr></table>
@@ -434,11 +611,11 @@ $columns&nbsp;
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">$columns</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$columns:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array array of strings of cloumn names</span>			</td></tr>
+				<span class="var-description"> Array of strings of cloumn names</span>			</td></tr>
 				</table>
 
 	<br />
@@ -459,7 +636,7 @@ $columns&nbsp;
 <div class="evenrow">
 
 <div class="method-header">
-	<span class="method-title">setData</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 107]</span>
+	<span class="method-title">setData</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 112]</span>
 </div>
 <br />
 
@@ -467,8 +644,8 @@ $columns&nbsp;
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>void setData(
-$columns
-$columns, $rows
+array
+$columns, array
 $rows&nbsp;
 )</code>
     </td></tr></table>
@@ -480,17 +657,17 @@ $rows&nbsp;
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">$columns</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$columns:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array array of strings of cloumn names</span>			</td></tr>
+				<span class="var-description"> Array of strings of cloumn names</span>			</td></tr>
 					<tr><td class="indent">
-				<span class="var-type">$rows</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$rows:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array array of array of cell data</span>			</td></tr>
+				<span class="var-description"> Array of array of cell data</span>			</td></tr>
 				</table>
 
 	<br />
@@ -511,7 +688,7 @@ $rows&nbsp;
 <div class="oddrow">
 
 <div class="method-header">
-	<span class="method-title">setRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 130]</span>
+	<span class="method-title">setRows</span>&nbsp;&nbsp;<span class="smalllinenumber">[line 135]</span>
 </div>
 <br />
 
@@ -519,7 +696,7 @@ $rows&nbsp;
     <table width="90%" border="0" cellspacing="0" cellpadding="1"><tr><td class="code-border">
     <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr><td class="code">&nbsp;
 		<code>void setRows(
-$rows
+array
 $rows&nbsp;
 )</code>
     </td></tr></table>
@@ -531,11 +708,11 @@ $rows&nbsp;
 			<strong>Parameters:</strong><br />
 			<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td class="indent">
-				<span class="var-type">$rows</span>&nbsp;&nbsp;</td>
+				<span class="var-type">array</span>&nbsp;&nbsp;</td>
 				<td>
 				<span class="var-name">$rows:&nbsp;</span></td>
 				<td>
-				<span class="var-description"> array array of array of cell data</span>			</td></tr>
+				<span class="var-description"> Array of array of cell data</span>			</td></tr>
 				</table>
 
 	<br />
@@ -573,7 +750,7 @@ $rows&nbsp;
 		<span class="var-title">
 			<span class="var-name">UNDEFINED_COLUMNS</span>
 			 = <span class="var-default"> 4712</span>
-			<span class="smalllinenumber">[line 31]</span>
+			<span class="smalllinenumber">[line 36]</span>
 		</span>
 	</div>
 
@@ -591,7 +768,7 @@ $rows&nbsp;
 		<span class="var-title">
 			<span class="var-name">XML_SERIALIZER_EXCEPTION</span>
 			 = <span class="var-default"> 4711</span>
-			<span class="smalllinenumber">[line 26]</span>
+			<span class="smalllinenumber">[line 31]</span>
 		</span>
 	</div>
 
@@ -607,7 +784,7 @@ $rows&nbsp;
 
         <div class="credit">
 		    <hr class="separator" />
-		    Documentation generated on Mon, 02 Jan 2006 21:35:51 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.3.0RC4</a>
+		    Documentation generated on Wed, 04 Jan 2006 08:57:59 +0100 by <a href="http://www.phpdoc.org">phpDocumentor 1.3.0RC4</a>
 	      </div>
       </td></tr></table>
     </td>
