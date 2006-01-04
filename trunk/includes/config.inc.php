@@ -10,6 +10,7 @@
 * Visit http://badger.berlios.org 
 *
 **/
+
  define("BADGER_ROOT", "../"); 
 
  // Database Values
