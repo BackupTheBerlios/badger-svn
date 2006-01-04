@@ -65,7 +65,7 @@ interface Navigation {
 	 * 	)
 	 * </pre>
 	 * 
-	 * @param $structure array the Navigationstructure in the format described above
+	 * @param array $structure The navigation structure in the format described above
 	 * @return void
 	 */
 	public function setStructure($structure);

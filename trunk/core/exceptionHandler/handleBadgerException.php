@@ -22,7 +22,7 @@ define("BADGER_ROOT", "../../");
 /**
  * function called upon by global exception handler
  * 
- * @param exception object
+ * @param object $exception
  * @return void
  */
 function handleBadgerException($e){

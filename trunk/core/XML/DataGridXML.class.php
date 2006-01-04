@@ -59,8 +59,8 @@ class DataGridXML {
 	/**
 	 * Initializes serializer and sets inital column and row data if given.
 	 * 
-	 * @param $columns array the columns to initialize the Object withh
-	 * @param $rows array the rows of the Object
+	 * @param array $columns The columns to initialize the Object withh
+	 * @param array $rows The rows of the Object
 	 */
 	function __construct() {
 		$this->initSerializer();
@@ -105,8 +105,8 @@ class DataGridXML {
 	/**
 	 * Sets the column head and row data.
 	 * 
-	 * @param $columns array array of strings of cloumn names
-	 * @param $rows array array of array of cell data
+	 * @param array $columns Array of strings of cloumn names
+	 * @param array $rows Array of array of cell data
 	 * @return void 
 	 */
 	public function setData($columns, $rows) {
@@ -117,7 +117,7 @@ class DataGridXML {
 	/**
 	 * Sets the column head.
 	 * 
-	 * @param $columns array array of strings of cloumn names
+	 * @param array $columns Array of strings of cloumn names
 	 * @return void
 	 */
 	public function setColumns($columns) {
@@ -129,7 +129,7 @@ class DataGridXML {
 	/**
 	 * Sets the rows.
 	 *
-	 * @param $rows array array of array of cell data
+	 * @param array $rows Array of array of cell data
 	 * @return void 
 	 */
 	public function setRows($rows) {
@@ -143,7 +143,7 @@ class DataGridXML {
 	 * 
 	 * Although works if no data has been given yet.
 	 * 
-	 * @param $rows array array of array of cell data
+	 * @param array $rows Array of array of cell data
 	 * @return void 
 	 */
 	public function addRows($rows) {
@@ -161,7 +161,7 @@ class DataGridXML {
 	/**
 	 * Adds a single row.
 	 * 
-	 * @param $row array array of cell data
+	 * @param array $row Array of cell data
 	 * @return void
 	 */
 	public function addRow($row) {
