@@ -60,6 +60,7 @@ class StandardNavigation implements Navigation {
 	public function getHTML() {
 		$result = '<script type="text/javascript">
 			menuBar = new jsDOMenuBar("fixed");
+			menuBar.setActivateMode("over");
 		';
 		
 		$menuNum = 0;
@@ -152,7 +153,8 @@ class StandardNavigation implements Navigation {
 	 * @return string A correct value for CSS property width
 	 */
 	private function calcMenuWidth($longestName) {
-		return ((int) ((strlen($longestName) * 1.3) + 3)) . 'ex';
+		//return ((int) ((strlen($longestName) * 1.3) + 3)) . 'ex';
+		return 'auto';
 	}
 	
 	/**

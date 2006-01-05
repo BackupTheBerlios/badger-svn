@@ -22,7 +22,7 @@ Menu related selectors
 	font-size: 12px;
 	padding-bottom: 3px;
 	padding-left: 30px;
-	padding-right: 15px;
+	padding-right: 17px;
 	padding-top: 3px;
 	position: relative; /* Do not alter this line! */
 }
@@ -61,10 +61,18 @@ Menu related selectors
 }
 
 .jsdomenusep {
-	padding-left: 28px;
+	margin-left: 28px;
+	margin-right: 4px;
+	margin-top: 0.49em;
+	margin-bottom: 0.49em;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	border-right: 1px solid gray;
+	border-bottom: 1px solid gray;
 }
 
 .jsdomenusep hr {
+	display: none;
 }
 
 /*
