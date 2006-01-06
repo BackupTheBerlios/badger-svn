@@ -34,7 +34,7 @@ class badgerException extends Exception
 	private $additionalInfo;
   
    // Redefine the exception so code isn't optional
-   	public function __construct($code, $additionalInfo = 'test') {
+   	public function __construct($code, $additionalInfo = NULL) {
 		$this->additionalInfo = $additionalInfo;
        	// call default exception constructor
 		parent::__construct($message = NULL, $code);

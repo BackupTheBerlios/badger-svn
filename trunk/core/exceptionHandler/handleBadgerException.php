@@ -44,7 +44,7 @@ function handleBadgerException($e){
 	 * 
 	 * @var string 
 	 */
-	$loggedError = "ERROR: - ERROR CODE: " . $e->getCode() . " ON LINE " . $e->getLine() . " IN FILE " . $e->getFile(). " ADDITIONAL INFO" . $e->getAdditionalInfo();;// compile error message to be logged
+	$loggedError = "ERROR: - ERROR CODE: " . $e->getCode() . " ON LINE " . $e->getLine() . " IN FILE " . $e->getFile(). " ADDITIONAL INFO " . $e->getAdditionalInfo();;// compile error message to be logged
 	$logger->log($loggedError); //write to log file
 }
 
