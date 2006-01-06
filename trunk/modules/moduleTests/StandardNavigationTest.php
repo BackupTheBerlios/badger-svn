@@ -292,3 +292,6 @@ $naviObj->setStructure($navi1);
 	<p>Letzte Zeile</p>
 </body>
 </html>
+<?php
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
+?>

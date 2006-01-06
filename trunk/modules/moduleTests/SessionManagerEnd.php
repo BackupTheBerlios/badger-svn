@@ -29,4 +29,5 @@
 		session_kill();
 	}	
 	header("Location: SessionManagerTest.php");
+	require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

@@ -67,5 +67,5 @@ set_session_var("testvar","testwert");
 echo $_session['testvar'];
 	Liest die Variable "testvar" aus. Ausgabe ist "testwert".
 */
-
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

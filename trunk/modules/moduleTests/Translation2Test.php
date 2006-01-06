@@ -43,4 +43,5 @@ print("<b>out_of_money auf de:</b><br>");
 echo $tr->get('out_of_money', 'badger_basics', 'de');
 echo "<br><br>";
 
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

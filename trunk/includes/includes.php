@@ -42,5 +42,9 @@
  * makes translation libs available
  */
 require_once BADGER_ROOT.'/core/Translation2/Translation2.php';
- 
+
+/**
+ * makes translation libs available
+ */
+require_once BADGER_ROOT.'/includes/openDbConnection.php'  
 ?>

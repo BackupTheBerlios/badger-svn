@@ -8,5 +8,5 @@ include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 
 echo "Variables:<br>";
 print_r($_session);
-
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

@@ -6,16 +6,11 @@
 *|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
 *| |_) / ____ \| |__| | |__| | |____| | \ \ 
 *|____/_/    \_\_____/ \_____|______|_|  \_\
-* Open Source Financial Management
+* Open Source Finance Management
 * Visit http://badger.berlios.org 
 *
 **/
- 
-//document root path relative to current location 
-define("BADGER_ROOT", "../.."); 
-require_once BADGER_ROOT.'/includes/includes.php';
 
-$logger->log("Datenbankverbindung erfolgreich");
-
-
+//close database connection
+$badgerDb->disconnect();
 ?>

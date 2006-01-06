@@ -94,5 +94,6 @@ try {
 	echo "no exception";
 } catch (Exception $ex) {
 	echo $ex;
-}	
+}
+require_once(BADGER_ROOT . "/includes/fileFooter.php");	
 ?>

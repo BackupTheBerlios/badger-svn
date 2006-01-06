@@ -25,4 +25,5 @@ try{
    handleBadgerException($e);
 }
 
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

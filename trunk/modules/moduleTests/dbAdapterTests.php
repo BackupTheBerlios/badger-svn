@@ -47,29 +47,12 @@ INSERT INTO `test1` (`ID`, `Name`, `FirstName`, `Age`, `Height`) VALUES (1, 'Hei
  */
 define("BADGER_ROOT", "../.."); 
 require_once BADGER_ROOT.'/includes/includes.php';
-$dsn = array(
-	'phptype'=>'mysql',
-	'username'=>'root',
-	'password'=>'',
-	'hostspec'=>'localhost',
-	'database'=>'moduleTest'
-);
 
-/*
-$options = array(
-	'portability'=> 'DB_PORTABILITY_ALL'
-);
-*/
-
-$db =& DB::Connect($dsn);
-if (PEAR::isError($db)){
-	die($db->getMessage());	
-}
 $sql = "SELECT * FROM test1";
 
-$res =& $db->query($sql);
+$res =& $badgerDb->query($sql);
 while ($res->fetchInto ($row)){
 	echo $row[2] . "<br />";
 }
-$db->disconnect();
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
