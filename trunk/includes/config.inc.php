@@ -65,4 +65,7 @@
 	 */	
  define("LOG_DATE_FORMAT", "Ymd-His");
  
+// Report ALL Errors
+error_reporting(E_ALL);
+ 
 ?>
