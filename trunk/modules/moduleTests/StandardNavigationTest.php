@@ -20,13 +20,13 @@ $navi1 = array (
 		'menu' => array (
 			array (
 				'type' => 'item',
-				'name' => 'Neu',
+				'name' => 'Neumachen macht viel Laune',
 				'icon' => 'navi/account.png',
 				'command' => 'http://www.heise.de/'
 			),
 			array (
 				'type' => 'item',
-				'name' => 'Oeffnen',
+				'name' => 'Der Niko ist der Obermeister!!!!!',
 				'icon' => 'navi/account.png',
 				'command' => 'http://www.slashdot.org/'
 			),

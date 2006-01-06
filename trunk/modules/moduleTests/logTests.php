@@ -13,9 +13,9 @@
  
 //document root path relative to current location 
 define("BADGER_ROOT", "../../"); 
-
 require_once BADGER_ROOT.'includes/includes.php';
 
-$logger->log("Log entry tesdoo777770");
+$logger->log("Datenbankverbindung erfolgreich");
+
 
 ?>
