@@ -69,14 +69,9 @@ global $submit;
 
 if ($submit){
 	echo "<h1>Generierter Link</h1>";
-	try{
-		throw new BadgerException('html2pdf.missing_url', "hjhjhgj"); 
-		//$doof = generatePdf($URL, $Linktext, $Dateiname, $Image);
+	echo generatePdf($URL, $Linktext, $Dateiname, $Image);
 	 
-	                                          
-	}catch (Exception $e) {
-	   handleBadgerException($e);
-	}
+	                                         
 }
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");

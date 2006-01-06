@@ -121,7 +121,7 @@
  */
 function generatePdf ($url, $linkText, $fileName, $image = NULL){
 	if ($url == ""){
-		throw new badgerException('html2pdf.missing_url', "hjhjhgj"); 
+		#throw new badgerException('html2pdf.missing_url', "hjhjhgj"); 
 	}
 	global $pdfPixels, $pdfScalePoints, $pdfRenderImages, $pdfRenderLinks, 
 		$pdfRenderFields, $pdfMedia, $pdfCssMedia, $pdfLeftMargin, $pdfRightMargin,
