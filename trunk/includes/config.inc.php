@@ -11,7 +11,7 @@
 *
 **/
 
- define("BADGER_ROOT", "../"); 
+ define("BADGER_ROOT_CONFIG_INC", "../"); 
 
  // Database Values
  	/**
@@ -56,7 +56,7 @@
 	 * 
 	 * @var global constant
 	 */	
- define("LOG_FILE_NAME", BADGER_ROOT."test_exceptions.log");
+ define("LOG_FILE_NAME", BADGER_ROOT_CONFIG_INC."test_exceptions.log");
  
   	/**
 	 * Formatting for date used in log entries according to http://www.php.net/date

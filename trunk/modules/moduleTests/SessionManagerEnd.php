@@ -19,9 +19,9 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-	define("BADGER_ROOT", "../../");
+	define("BADGER_ROOT_SESSIONMANAGEREND", "../../");
 
-	include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
+	include(BADGER_ROOT_SESSIONMANAGEREND . "/core/SessionManager/session.ses.php");
 	
 	if($_GET['f']==1){
 		session_flush();

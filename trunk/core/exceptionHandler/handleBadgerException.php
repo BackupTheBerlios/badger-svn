@@ -17,7 +17,7 @@
 /**
  * defines root path relative to current location
  */
-define("BADGER_ROOT", "../../"); 
+define("BADGER_ROOT_BADGEREXCEPTION", "../../"); 
 
 /**
  * function called upon by global exception handler
