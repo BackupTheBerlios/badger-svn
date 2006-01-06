@@ -18,7 +18,7 @@
 /**
  * function called upon by global exception handler
  * 
- * @param object $exception
+ * @param object $e  exception  thrown
  * @return void
  */
 function handleBadgerException($e){
