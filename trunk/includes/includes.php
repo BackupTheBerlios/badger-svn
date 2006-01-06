@@ -34,7 +34,7 @@
  /**
  * makes global badgerException class available
  */
- require_once BADGER_ROOT.'core/exceptionHandler/badgerException.php';
+ require_once BADGER_ROOT.'core/exceptionHandler/BadgerException.class.php';
  
  /**
  * Exception handling function available on all pages including this file

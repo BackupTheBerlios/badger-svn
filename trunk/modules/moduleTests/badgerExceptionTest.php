@@ -16,7 +16,7 @@ require_once(BADGER_ROOT . "/includes/includes.php");
 try{
 	function badgerExceptionTest(){
 	
-		 throw new badgerException('2');
+		 throw new badgerException('2', 'supi');
 		
 	}
 	$something = badgerExceptionTest();
