@@ -11,13 +11,6 @@
 *
 **/
 
-
- 
-/**
- * defines root path relative to current location
- */
-define("BADGER_ROOT_BADGEREXCEPTION_CLASS", "../../"); 
-
 /**
  * class used to extend the default exception class 
  * 

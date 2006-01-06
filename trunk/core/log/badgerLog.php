@@ -14,14 +14,11 @@
  * @author baxxter, sperber 
  * @version $LastChangedRevision$
  */
- /**
- * defines root path relative to current location
- */
- define("BADGER_ROOT_BADGERLOG", "../../"); 
+ 
  /**
  * uses Log.php to log data
  */
- require_once BADGER_ROOT_BADGERLOG.'core/log/Log.php';
+ require_once BADGER_ROOT.'/core/log/Log.php';
  
  	/**
 	 * Name and path of the log file

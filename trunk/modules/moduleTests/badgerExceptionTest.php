@@ -10,8 +10,8 @@
 * Visit http://badger.berlios.org 
 *
 **/
-define("BADGER_ROOT_BADGEREXCEPTIONTEST", "../../"); 
-require_once(BADGER_ROOT_BADGEREXCEPTIONTEST . "/includes/includes.php");
+define("BADGER_ROOT", "../.."); 
+require_once(BADGER_ROOT . "/includes/includes.php");
   
 try{
 	function badgerExceptionTest(){

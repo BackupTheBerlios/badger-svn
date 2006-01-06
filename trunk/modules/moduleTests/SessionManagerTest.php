@@ -20,10 +20,10 @@
 */
 
 // Initiate Badger Root constant
-define("BADGER_ROOT_SESSIONMANAGERTEST", "../../");
+define("BADGER_ROOT", "../..");
 
 //Include Session Management
-include(BADGER_ROOT_SESSIONMANAGERTEST . "/core/SessionManager/session.ses.php");
+include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 
 // If form was sent (marked with value s == 1)
 // then set a new session variable with the 

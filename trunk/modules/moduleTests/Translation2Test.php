@@ -11,8 +11,8 @@
 *
 **/
 
-define("BADGER_ROOT_TRANSLATION2TEST", "../../");
-require_once(BADGER_ROOT_TRANSLATION2TEST . "/includes/includes.php");
+define("BADGER_ROOT", "../..");
+require_once(BADGER_ROOT . "/includes/includes.php");
 
 // set the parameters to connect to your db
 $dbinfo = array(

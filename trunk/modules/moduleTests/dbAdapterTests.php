@@ -45,7 +45,8 @@ INSERT INTO `test1` (`ID`, `Name`, `FirstName`, `Age`, `Height`) VALUES (1, 'Hei
 (2, 'Volzi', 'Clemi', 21, 186);
 
  */
-require_once '../../core/dbAdapter/DB.php';
+define("BADGER_ROOT", "../.."); 
+require_once BADGER_ROOT.'/includes/includes.php';
 $dsn = array(
 	'phptype'=>'mysql',
 	'username'=>'root',
@@ -66,7 +67,7 @@ if (PEAR::isError($db)){
 }
 $sql = "SELECT * FROM test1";
 
-$res =& $db->query($sql,$data);
+$res =& $db->query($sql);
 while ($res->fetchInto ($row)){
 	echo $row[2] . "<br />";
 }

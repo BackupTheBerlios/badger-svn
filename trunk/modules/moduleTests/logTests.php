@@ -12,8 +12,8 @@
 **/
  
 //document root path relative to current location 
-define("BADGER_ROOT_LOGTESTS", "../../"); 
-require_once BADGER_ROOT_LOGTESTS.'includes/includes.php';
+define("BADGER_ROOT", "../.."); 
+require_once BADGER_ROOT.'/includes/includes.php';
 
 $logger->log("Datenbankverbindung erfolgreich");
 

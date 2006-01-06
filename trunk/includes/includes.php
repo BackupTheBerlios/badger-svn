@@ -11,39 +11,36 @@
 *
 **/
  
- //document root path relative to current location
- define("BADGER_ROOT_INCLUDES", "../"); 
- 
  //Includes
  
 /**
  * makes use of the dbAdapter database abstraction layer
  */
- require_once BADGER_ROOT_INCLUDES.'core/dbAdapter/DB.php';
+ require_once BADGER_ROOT.'/core/dbAdapter/DB.php';
 
 /**
  * global config values
  */
- require_once BADGER_ROOT_INCLUDES.'includes/config.inc.php';
+ require_once BADGER_ROOT.'/includes/config.inc.php';
  
  /**
  * makes global logging functionality available on all pages
  */
- require_once BADGER_ROOT_INCLUDES.'core/log/badgerLog.php';
+ require_once BADGER_ROOT.'/core/log/badgerLog.php';
  
  /**
  * makes global badgerException class available
  */
- require_once BADGER_ROOT_INCLUDES.'core/exceptionHandler/BadgerException.class.php';
+ require_once BADGER_ROOT.'/core/exceptionHandler/BadgerException.class.php';
  
  /**
  * Exception handling function available on all pages including this file
  */
- require_once BADGER_ROOT_INCLUDES.'core/exceptionHandler/handleBadgerException.php';
+ require_once BADGER_ROOT.'/core/exceptionHandler/handleBadgerException.php';
  
 /**
  * makes translation libs available
  */
-require_once BADGER_ROOT_INCLUDES.'core/Translation2/Translation2.php';
+require_once BADGER_ROOT.'/core/Translation2/Translation2.php';
  
 ?>

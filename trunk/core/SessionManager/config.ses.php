@@ -26,8 +26,7 @@
 	database settings
 */
 
-define("BADGER_ROOT_CONFIG_SES", "../../");
-require_once(BADGER_ROOT_CONFIG_SES . "/includes/includes.php");
+require_once(BADGER_ROOT . "/includes/includes.php");
 
 $_db_user = DB_USERNAME;
 $_db_pass = DB_PASSWORD;
