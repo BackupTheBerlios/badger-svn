@@ -113,12 +113,16 @@
 /**
  * function creates link for creating pdf
  * 
- * @param string $url URL
+ * @param string $url 
  * @param string $linkText 
- * @param string $imgage Image displayed as link
+ * @param string $image Image displayed as link
+ * @param string $fileName
  * @return String Link to create PDF
  */
-function generatePdf ($url, $linkText, $image = NULL){
+function generatePdf ($url, $linkText, $fileName, $image = NULL){
+	if ($url == ""){
+		throw new badgerException('html2pdf.missing_url', "hjhjhgj"); 
+	}
 	global $pdfPixels, $pdfScalePoints, $pdfRenderImages, $pdfRenderLinks, 
 		$pdfRenderFields, $pdfMedia, $pdfCssMedia, $pdfLeftMargin, $pdfRightMargin,
 		$pdfTopMargin, $pdfBottomMargin, $pdfEncoding, $pdfMethod, $pdfMethod, 
@@ -145,7 +149,8 @@ function generatePdf ($url, $linkText, $image = NULL){
 	encoding=" . $pdfEncoding . "&
 	method=" . $pdfMethod . "&
 	pdfversion=" . $pdfPdfVersion . "&
-	output=" . $pdfOutput;
+	output=" . $pdfOutput . "&
+	badgerFileName=".$fileName;
 	if ($image){
 		$pdfLink = "<a href = \"" . BADGER_ROOT . "/includes/html2pdf/html2ps.php?" . $pdfString . "\"><img src=\"" . $image . "\" alt = \"" . $linkText ."\" /></a>";		
 	} else {

@@ -271,6 +271,7 @@ require_once('content_type.class.php');
 check_requirements();
 
 $g_baseurl = trim($_REQUEST['URL']);
+$badgerFileName = trim($_REQUEST['badgerFileName']);
 
 if ($g_baseurl === "") {
   die("Please specify URL to process!");
@@ -414,13 +415,13 @@ if ($g_config['compress']) {
 
 switch ($g_config['output']) {
  case 0:
-   $pipeline->destination = new DestinationBrowser($g_baseurl);
+   $pipeline->destination = new DestinationBrowser($badgerFileName);
    break;
  case 1:
-   $pipeline->destination = new DestinationDownload($g_baseurl);
+   $pipeline->destination = new DestinationDownload($badgerFileName);
    break;
  case 2:
-   $pipeline->destination = new DestinationFile($g_baseurl);
+   $pipeline->destination = new DestinationFile($badgerFileName);
    break;
 };
 
