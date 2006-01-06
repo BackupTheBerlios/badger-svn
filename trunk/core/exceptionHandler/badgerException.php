@@ -24,7 +24,7 @@ define("BADGER_ROOT", "../../");
  * @author baxxter, sperber 
  * @version $LastChangedRevision$
  */
-class badgerException extends Exception
+class BadgerException extends Exception
 {
 	/**
 	 * AdditionalInfo regarding the exception
