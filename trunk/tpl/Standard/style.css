@@ -1,0 +1,9 @@
+body, table, input {
+	font-family: arial, verdana;
+	font-size: 10pt;
+}
+
+div.footer {
+	text-align: center;
+	font-size: 8pt;
+}

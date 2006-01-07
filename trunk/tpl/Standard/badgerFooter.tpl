@@ -1,1 +1,1 @@
-<div class="footer">BADGER Finance Management</div>
+<div class="footer">'BADGER Finance Management' is Free Software released under the GNU/GPL License.</div>
