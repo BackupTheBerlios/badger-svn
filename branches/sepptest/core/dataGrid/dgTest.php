@@ -10,7 +10,6 @@
 * Visit http://badger.berlios.org 
 *
 **/
-define("BADGER_ROOT", "../../"); 
 ?>
 <?php echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?".">"; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -154,7 +153,7 @@ define("BADGER_ROOT", "../../");
 </div>
 <table id="dgTableFoot" cellpadding="2" cellspacing="0">
 	<tr>
-		<td>xx Datensätze</td>
+		<td>xx Datensï¿½tze</td>
 	</tr>
 </table>
 </div>

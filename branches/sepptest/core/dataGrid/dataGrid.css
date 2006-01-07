@@ -1,5 +1,5 @@
 body, table, input {
-	font-family: verdana, arial;
+	font-family: arial, verdana;
 	font-size: 10pt;
 }
 fieldset {
@@ -9,7 +9,14 @@ label {
 	cursor: pointer;	
 }
 .btnOK, .btnReset {
-	width: 70px;
+  background: #efefef;
+  font-size: 11px;
+  font-weight: bold;
+  font-family: trebuchet ms,sans-serif,verdana;
+  color: #444444;
+  background-color: #efefef;
+  border: 1px solid #cccccc;
+  width: 70px;
 }
 
 #dataGrid {
