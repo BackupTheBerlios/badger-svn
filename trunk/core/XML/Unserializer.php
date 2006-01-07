@@ -27,7 +27,7 @@
 /**
  * uses PEAR error managemt
  */
-require_once 'PEAR.php';
+require_once BADGER_ROOT . '/core/PEAR.php';
 
 /**
  * uses XML_Parser to unserialize document

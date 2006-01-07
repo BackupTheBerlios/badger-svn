@@ -12,7 +12,9 @@
 *
 **/
 
-require_once ('../../core/navi/StandardNavigation.class.php');
+define ('BADGER_ROOT', '../..');
+
+require_once BADGER_ROOT . '/core/navi/StandardNavigation.class.php';
 
 $navi1 = array (
 	array (

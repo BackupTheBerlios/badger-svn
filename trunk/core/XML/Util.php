@@ -736,7 +736,7 @@ class XML_Util {
     */
     function raiseError($msg, $code)
     {
-        require_once 'PEAR.php';
+        require_once BADGER_ROOT . '/core/PEAR.php';
         return PEAR::raiseError($msg, $code);
     }
 }

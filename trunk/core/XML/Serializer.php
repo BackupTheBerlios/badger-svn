@@ -27,7 +27,7 @@
 /**
  * uses PEAR error management
  */
-require_once 'PEAR.php';
+require_once BADGER_ROOT . '/core/PEAR.php';
 
 /**
  * uses XML_Util to create XML tags

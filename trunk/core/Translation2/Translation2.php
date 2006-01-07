@@ -39,7 +39,7 @@
 /**
  * require PEAR base class
  */
-require_once 'PEAR.php';
+require_once BADGER_ROOT . '/core/PEAR.php';
 
 /**
  * Allows redefinition of the default pageID.

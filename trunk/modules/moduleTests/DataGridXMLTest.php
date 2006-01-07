@@ -6,7 +6,9 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
  
-require_once '../../core/XML/DataGridXML.class.php';
+define ('BADGER_ROOT', '../..');
+
+require_once BADGER_ROOT . '/core/XML/DataGridXML.class.php';
 
 header('Content-Type: text/plain');
 

@@ -27,7 +27,7 @@
 /**
  * Obtain the PEAR class so it can be extended from
  */
-require_once 'PEAR.php';
+require_once BADGER_ROOT . '/core/PEAR.php';
 
 
 // {{{ constants
