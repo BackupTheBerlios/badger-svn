@@ -10,11 +10,21 @@
 * Visit http://badger.berlios.org 
 *
 **/
-define("BADGER_ROOT", "../../"); 
+define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/includes.php");
   
-$tpl = new TemplateEngine("Standard", BADGER_ROOT);
 
-echo $tpl->getThemeName();
-echo $tpl->getTemplate("badgerFooter");
+$tpl = new TemplateEngine("Standard", BADGER_ROOT);
+$tpl->addCSS("/style.css"); // -> /tpl/themeName/style.css
+$tpl->addJavaScript("/js/prototype.js");
+$tpl->addJavaScript("/js/behaviour.js");
+$tpl->addJavaScript("/js/datagrid.js");
+echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
 ?>
+<body>
+<?
+echo "Themename: ".$tpl->getThemeName();
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+?>
+</body>
+</html>
