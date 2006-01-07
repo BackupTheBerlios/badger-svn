@@ -47,7 +47,7 @@
 	 * 
 	 * @var global constant
 	 */	
- define("DB_DATABASE_NAME", "moduleTest");
+ define("DB_DATABASE_NAME", "badger");
  
  // Errorhandling & Logging
  
