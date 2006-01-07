@@ -38,7 +38,7 @@ class BadgerException extends Exception
  * @return String
  */
 	public function getAdditionalInfo (){
-	return $this->additionalInfo;		
+		return $this->additionalInfo;		
 	}
 }
 ?>
