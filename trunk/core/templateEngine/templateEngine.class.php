@@ -43,8 +43,7 @@ class TemplateEngine {
 		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>";
 		$css = $this->css;
 		$javascripts = $this->javascripts;
-		return eval("echo \"".$this->getTemplate($template)."\";");
-		
+		return eval("echo \"".$this->getTemplate($template)."\";");		
 	}
 	
 	public function addCSS($cssFile) {
@@ -52,8 +51,7 @@ class TemplateEngine {
 	}
 	public function addJavaScript($JSFile) {
 		$this->javascripts = $this->javascripts."<script type=\"text/javascript\" src=\"".$this->badgerRoot.$JSFile."\"></script>";
-	}
-	
+	}	
 	
 	public function getThemeName() {
 		return $this->theme;
