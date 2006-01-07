@@ -14,17 +14,18 @@ class TemplateEngine {
 	private $templatecache;
 	private $theme;
 	private $badgerRoot;
+	private $css;
+	private $javascripts;
 
 	function __construct($themename, $badgerRoot) {
 		$this->theme = $themename; 
-		$this->badgerRoot = $badgerRoot;
-		
+		$this->badgerRoot = $badgerRoot;		
 	}
 	
 	public function getTemplate($template) {		
 	
 		if(!isset($templatecache[$template])) {
-			$filename = $this->badgerRoot.'tpl/'.$this->theme.'/'.$template.'.tpl';
+			$filename = $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl';
 			if(file_exists($filename)) {
 				$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
 			} else 	{
@@ -35,6 +36,24 @@ class TemplateEngine {
 		}
 		return $templatecache[$template];
 	}
+	
+	public function getHeader($pageTitle) {		
+		$template = "badgerHeader";
+		//leider kann ich das nicht in das template kopieren, da es probleme mit den ? gibt
+		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>";
+		$css = $this->css;
+		$javascripts = $this->javascripts;
+		return eval("echo \"".$this->getTemplate($template)."\";");
+		
+	}
+	
+	public function addCSS($cssFile) {
+		$this->css = $this->css."<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme . $cssFile."\" rel=\"stylesheet\" type=\"text/css\" />";
+	}
+	public function addJavaScript($JSFile) {
+		$this->javascripts = $this->javascripts."<script type=\"text/javascript\" src=\"".$this->badgerRoot.$JSFile."\"></script>";
+	}
+	
 	
 	public function getThemeName() {
 		return $this->theme;
