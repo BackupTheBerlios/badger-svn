@@ -26,7 +26,7 @@ echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
 $aktuellesDatum = date("d.m.Y");
 eval("echo \"".$tpl->getTemplate("templateTest")."\";");
 
-echo "Themename: ".$tpl->getThemeName();
+echo "Themename: ".$tpl->getThemeName(); //falls man irgendwo anzeigen muss, welches theme gerade verwendet wird ...
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 ?>
 </body>
