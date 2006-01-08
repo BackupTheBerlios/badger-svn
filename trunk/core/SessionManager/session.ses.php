@@ -21,7 +21,7 @@
 */
 
 include 'config.ses.php';
-if($_COOKIE["sess"]!=""){
+if(isset($_COOKIE["sess"]) && $_COOKIE["sess"]!=""){
 	$sess=update_session();
 }else{
 	$sess=new_session();
