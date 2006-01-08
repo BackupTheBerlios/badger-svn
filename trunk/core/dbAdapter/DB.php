@@ -26,7 +26,7 @@
 
 // {{{ constants
 // {{{ error codes
-
+ require_once 'PEAR.php';
 /**#@+
  * One of PEAR DB's portable error codes.
  * @see DB_common::errorCode(), DB::errorMessage()
