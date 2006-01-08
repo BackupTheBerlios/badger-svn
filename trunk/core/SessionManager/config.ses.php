@@ -52,7 +52,7 @@ $_session_timeout = 0;
 	this variable is used to generate a more secure sid, because this
 	string is only known by you
 */
-$secure_key = "badGERmushroomandasnake";
+$secure_key = 'badGERBadGerbAdGeRmushroomMUSHROOM';
 
 /**********end configuration*************/
 
@@ -68,7 +68,7 @@ mysql_select_db($_db_name) or die(mysql_error());
 */
 
 function new_session(){
-	global $_db_table,$_db_table_config,$_session_timeout;
+	global $_db_table,$_db_table_config,$_session_timeout,$secure_key;
 	list($m,$s) = explode(" ",microtime());
 	$sess = md5(rand(0,1000).substr($m,2).$secure_key);
 	if($_session_timeout != 0){

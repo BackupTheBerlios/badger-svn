@@ -20,7 +20,7 @@
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-include 'config.ses.php';
+include(BADGER_ROOT . "/core/SessionManager/config.ses.php");
 if(isset($_COOKIE["sess"]) && $_COOKIE["sess"]!=""){
 	$sess=update_session();
 }else{
