@@ -154,6 +154,7 @@ class StandardNavigation implements Navigation {
 	 */
 	private function calcMenuWidth($longestName) {
 		//return ((int) ((strlen($longestName) * 1.3) + 3)) . 'ex';
+		//patched the jsDOMenuBar code to accept auto
 		return 'auto';
 	}
 	
@@ -167,7 +168,7 @@ class StandardNavigation implements Navigation {
 		if (substr($command, 0, 11) != 'javascript:') {
 			return $command;
 		} else {
-			return 'code:' . substr($command, 11);
+			return 'code:' . addslashes(substr($command, 11));
 		}
 	}
 	

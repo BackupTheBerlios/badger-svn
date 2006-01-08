@@ -34,7 +34,7 @@ $options = array(
 	 * 
 	 * @var object
 	 */
-$badgerDb =& DB::Connect($badgerDbConnectionInfo);
+$badgerDb =& DB::Connect($badgerDbConnectionInfo, array('debug' => 9999));
 if (PEAR::isError($badgerDb)){
 	die($badgerDb->getMessage());	
 }
