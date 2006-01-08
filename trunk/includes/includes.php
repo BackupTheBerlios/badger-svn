@@ -16,10 +16,8 @@
 /**
  * makes use of the dbAdapter database abstraction layer
  */
- require_once BADGER_ROOT.'/core/PEAR.php';
 
  require_once BADGER_ROOT.'/core/dbAdapter/DB.php';
-
 /**
  * global config values
  */
@@ -48,7 +46,7 @@ require_once BADGER_ROOT.'/core/Translation2/Translation2.php';
 /**
  * makes translation libs available
  */
-//require_once BADGER_ROOT.'/includes/openDbConnection.php'; 
+require_once BADGER_ROOT.'/includes/openDbConnection.php'; 
 
 /**
  * makes pdf generator libs available
