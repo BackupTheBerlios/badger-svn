@@ -37,11 +37,6 @@
  */
 
 /**
- * require PEAR base class
- */
-require_once BADGER_ROOT . '/core/PEAR.php';
-
-/**
  * Allows redefinition of the default pageID.
  * This constant is needed to allow both NULL and EMPTY pageID values
  * and to have them match
