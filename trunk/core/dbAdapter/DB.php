@@ -24,12 +24,6 @@
  * @link       http://pear.php.net/package/DB
  */
 
-/**
- * Obtain the PEAR class so it can be extended from
- */
-require_once BADGER_ROOT . '/core/PEAR.php';
-
-
 // {{{ constants
 // {{{ error codes
 
