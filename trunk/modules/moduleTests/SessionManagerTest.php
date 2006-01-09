@@ -28,7 +28,7 @@ include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 // If form was sent (marked with value s == 1)
 // then set a new session variable with the 
 // transmitted name and value
-if($_GET['s']==1){
+if(isset($_GET['s']) && $_GET['s']==1){
 	set_session_var($_GET['variable'],$_GET['value']);
 }
 set_session_var("agent",$_SERVER['HTTP_USER_AGENT']);
@@ -36,7 +36,7 @@ set_session_var("agent",$_SERVER['HTTP_USER_AGENT']);
 
 <b>Session Handler Tester</b><br>
 Sid: <?=$sess?><br>
-You have been logged for <?=get_session_length()?> seconds.<br>
+You have been logged for <? print( get_session_length() );?> seconds.<br>
 Variables:<br><?print_r($_session)?>
 <br>
 <br>
