@@ -58,10 +58,11 @@ $secure_key = 'badGERBadGerbAdGeRmushroomMUSHROOM';
 
 /*
 	conect to db
+	disabled by badger
 */
-$_db = mysql_connect($_db_url, $_db_user, $_db_pass)
-	or die("error de coneccion a la base de datos");
-mysql_select_db($_db_name) or die(mysql_error());
+//$_db = mysql_connect($_db_url, $_db_user, $_db_pass)
+//	or die("error de coneccion a la base de datos");
+//mysql_select_db($_db_name) or die(mysql_error());
 
 /*
 	session functions
@@ -82,15 +83,20 @@ function new_session(){
 }
 
 function update_session(){
-	global $_db_table_config;
+	global $_db_table_config, $badgerDb;
 	$sess = $_COOKIE['sess'];
 	$sql = "select logout from $_db_table_config where sid = '$sess'";
 	$res = query($sql);
-	$row = mysql_fetch_array($res);
-	if($row[0]!=1){
+	
+	//modified by badger
+	//$row = mysql_fetch_array($res);
+	
+	$res->fetchInto ($row,DB_FETCHMODE_ASSOC);
+		
+	if($row['logout']!=1){
 		$sql = "update $_db_table_config set last = NOW() where sid = '$sess'";
 		query($sql);
-		if(mysql_affected_rows() < 0){
+		if($badgerDb->affectedRows() < 0){
 			return new_session();
 		}else{
 			return $sess;
@@ -114,12 +120,14 @@ function set_session_var($name,$value){
 	return mysql_affected_rows();
 }
 
+
+
 function get_session_vars(){
 	global $_db,$_db_table,$sess;
 	$_session = Array();
 	$sql = "select variable, value from $_db_table where sid = '$sess'";
 	$res = query($sql);
-	while($row = mysql_fetch_array($res)){
+	while($res->fetchInto ($row,DB_FETCHMODE_ASSOC)){
 		$_session[$row['variable']]=$row['value'];
 	}
 	return $_session;
@@ -145,8 +153,11 @@ function session_kill(){
 function get_session_length(){
 	global $sess,$_db_table_config;
 	$sql = "select NOW()-start from $_db_table_config where sid = '$sess'";
+		
 	$res = query($sql);
-	$row = mysql_fetch_array($res);
+	
+	while($res->fetchInto ($row));
+	echo count($row);
 	return $row[0];
 }
 
@@ -156,10 +167,11 @@ function get_session_length(){
 */
 
 function query($sql){
-	global $_db;
-	$res = mysql_query($sql,$_db);
-	if(mysql_error()!=""){
-		echo "<hr><br>".mysql_error()."<br>".$sql."<hr>";
+	global $_db,$badgerDb;
+	//$res = mysql_query($sql,$_db);
+	$res =& $badgerDb->query($sql);
+	if(PEAR::isError($res)){
+		die ("<hr><br>". $res->getMessage() ."<br>".$sql."<hr>");
 	}
 	return $res;
 }
