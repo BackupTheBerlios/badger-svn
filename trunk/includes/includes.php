@@ -60,4 +60,9 @@ require_once BADGER_ROOT.'/includes/generatePdf.php';
  * makes template engine available
  */
 require_once BADGER_ROOT.'/core/templateEngine/templateEngine.class.php';
+
+/**
+ * makes widget engine available
+ */
+require_once BADGER_ROOT.'/core/widgets/WidgetsEngine.class.php';
 ?>
