@@ -109,7 +109,7 @@ class Translation2_Container_db extends Translation2_Container
             $this->db =& $db;
         } else if (is_string($db) || is_array($db)) {
             // Passed a DSN
-            require_once 'DB.php';
+            require_once BADGER_ROOT . '/core/dbAdapter/DB.php';
             $this->db =& DB::connect($db);
         } else {
             // Passed something invalid

@@ -1,4 +1,15 @@
 <?php
+/*
+* ____          _____   _____ ______ _____  
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+*| |_) | /  \  | |  | | |  __| |__  | |__) |
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
+*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|____/_/    \_\_____/ \_____|______|_|  \_\
+* Open Source Financial Management
+* Visit http://badger.berlios.org 
+*
+**/
 
 /**
  * Creates the internal navigation structure described by @link Navigation::setStructure 
@@ -9,17 +20,6 @@
  */
 class NavigationFromDB {
 	/**
-	 * Maps the database item_type column to the internal strings
-	 * 
-	 * @var array
-	 */
-	static private $itemTypes = array (
-		'i' => 'item',
-		'm' => 'menu',
-		's' => 'separator'
-	);
-	
-	/**
 	 * Creates the internal navigation structure described by @link Navigation::setStructure 
 	 * out of the badger database.
 	 * 
@@ -28,6 +28,12 @@ class NavigationFromDB {
 	public static function getNavigation() {
 		global $badgerDb;
 		
+		$itemTypes = array (
+			'i' => 'item',
+			'm' => 'menu',
+			's' => 'separator'
+		);
+
 		$sql = 'SELECT navi_id, parent_id, menu_order, item_type, item_name, tooltip, icon_url, command
 			FROM navi
 			ORDER BY parent_id, menu_order';
@@ -48,7 +54,7 @@ class NavigationFromDB {
 			
 			//fill most of the fields
 			$menus[$menuId][] = array (
-				'type' => NavigationFromDB::$itemTypes[$row['item_type']],
+				'type' => $itemTypes[$row['item_type']],
 				'name' => $row['item_name'],
 				'tooltip' => $row['tooltip'],
 				'icon' => NavigationFromDB::replaceBadgerRoot($row['icon_url']),

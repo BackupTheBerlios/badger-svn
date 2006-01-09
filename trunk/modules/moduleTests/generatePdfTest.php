@@ -23,7 +23,7 @@ global $submit;
 
 ?>
  	<h1>Formular </h1> <br /> 
-	<form method = "post" action = "<?=$PHP_SELF?>">	
+	<form method = "post" action = "<?=$_SERVER['PHP_SELF']?>">	
 		<table border = 0 cellpadding = 5, cellspacing = 5>
 			<tr>
 				<td>

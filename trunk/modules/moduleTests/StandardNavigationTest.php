@@ -11,10 +11,16 @@
 *
 **/
 
-define ('BADGER_ROOT', '../..');
+/*
+ * This example requires the table navi in the database.
+ * See http://svn.berlios.de/viewcvs/badger/techdoc/navi/
+ */
+ 
+ define ('BADGER_ROOT', '../..');
 
 require_once BADGER_ROOT . '/core/navi/StandardNavigation.class.php';
 
+/*
 $navi1 = array (
 	array (
 		'type' => 'menu',
@@ -80,7 +86,6 @@ $navi1 = array (
 				'type' => 'item',
 				'name' => 'Abbuchen',
 				'tooltip' => 'Beträge auf ein anderes Konto überweisen',
-				/* icon haben wir hier keins */
 				'command' => 'modules/account/transfer.php'
 			)
 		)
@@ -96,17 +101,15 @@ $navi1 = array (
 		'command' => 'core/session.php?logout'
 	)
 );
+*/
 
 $naviObj = new StandardNavigation();
 
-$naviObj->setStructure($navi1);
 ?>
 <html>
 <head>
 	<?php echo $naviObj->getHeader();?>
-	<link rel="stylesheet" type="text/css" href="../../js/jsDOMenuBar/themes/office_xp/office_xp.css" />
-	<script type="text/javascript" src="../../js/jsDOMenuBar/jsdomenu.js"></script>
-	<script type="text/javascript" src="../../js/jsDOMenuBar/jsdomenubar.js"></script></head>
+</head>
 
 <body>
 	<?php echo $naviObj->getHTML();?>

@@ -30,36 +30,107 @@ class StandardNavigation implements Navigation {
 	private $structure;
 	
 	/**
+	 * The name used for the icon CSS classes.
+	 * 
+	 * @var string
+	 */
+	const iconName = 'stdNavIcons';
+	
+	/**
 	 * Registers initjsDOMenu for body.onload.
 	 */
 	public function __construct() {
 		//need to register initjsDOMenu() for body.onload
 	}
 	
+	/**
+	 * Sets Navigation Structure.
+	 * 
+	 * Every navigation structure is an array. It consists of three different types of sub-elements,
+	 * which are also arrays. The type of the sub-element is stored in the array element <tt>type</tt>.
+	 * There are:
+	 * <ul>
+	 * 	<li><b>item</b> These are usual menu items. It needs to have the <tt>name</tt> and <tt>command</tt>
+	 * 		properties. If <tt>command</tt> starts with "javascript:", it is considered JavaScript code, else
+	 * 		it is a URL. Additionally, items can have a <tt>tooltip</tt> and an <tt>icon</tt>.</li>
+	 * 	<li><b>separator</b> A menu separator, usually drawn as a line. It has no additional properties.</li>
+	 * 	<li><b>menu</b> A sub-menu. It requires the properties <tt>name</tt> and <tt>menu</tt>, whereas
+	 * 		the latter holds an array with the same structure as the main array. It can be nested infinitely.
+	 * 		There can be support for a <tt>tooltip</tt> and an <tt>icon</tt>.</li>
+	 * </ul>
+	 * 
+	 * Example:
+	 * <pre>
+	 * 	array (
+	 * 		array (
+	 * 			'type' => 'item',
+	 * 			'name' => 'Log out',
+	 * 			'tooltip' => 'Logs the user out',
+	 * 			'icon' => 'navi/logout.png',
+	 * 			'command' => 'core/session.php?logout'
+	 * 		),
+	 * 		array (
+	 * 			'type' => 'separator',
+	 * 		),
+	 * 		array (
+	 * 			'type' => 'menu',
+	 * 			'name' => 'Accounts',
+	 * 			'tooltip' => 'All account-related tasks',
+	 * 			'icon' => 'navi/account.png',
+	 * 			'menu' => array (
+	 * 				array (
+	 * 					'type' => 'item',
+	 * 					'name' => 'Transfer',
+	 * 					'tooltip' => 'Transfer amounts to other account',
+	 * 					'command' => 'modules/account/transfer.php'
+	 * 				)
+	 * 			)
+	 * 		)
+	 * 	)
+	 * </pre>
+	 * 
+	 * @param array $structure The navigation structure in the format described above
+	 * @return void
+	 */
 	public function setStructure($structure) {
 		$this->structure = $structure;
 	}
 	
+	/**
+	 * Returns the required HTML header values to include
+	 * 
+	 * @return string All necessary HTML header tags
+	 */
 	public function getHeader() {
-		$staticLinks = '<link rel="stylesheet" type="text/css" href="js/jsDOMenuBar/themes/office_xp/office_xp.css" />
-			<script type="text/javascript" src="js/jsDOMenuBar/jsdomenu.js"></script>
-			<script type="text/javascript" src="js/jsDOMenuBar/jsdomenubar.js"></script>
+		$staticLinks = '<link rel="stylesheet" type="text/css" href="' . BADGER_ROOT . '/js/jsDOMenuBar/themes/office_xp/office_xp.css" />
+			<link rel="stylesheet" type="text/css" href="' . BADGER_ROOT . '/core/navi/getStandardNavigation.php?part=css" />
+			<script type="text/javascript" src="' . BADGER_ROOT . '/js/jsDOMenuBar/jsdomenu.js"></script>
+			<script type="text/javascript" src="' . BADGER_ROOT . '/js/jsDOMenuBar/jsdomenubar.js"></script>
 		';
 		//<script type="text/javascript" src="core/navi/StandardNavigation.js.php"></script>
 		
-		//Create CSS classes for icons
-		$result = $staticLinks . '<style type="text/css">';
-		
-		$result .= $this->parseIcons('icons', $this->structure);
-		
-		$result .= '</style>';
-		
-		return $result;
+		return $staticLinks;
 	}
 	
-	public function getHTML() {
-		$result = '<script type="text/javascript">
-			menuBar = new jsDOMenuBar("fixed");
+	/**
+	 * Returns the CSS definitions required for the navigation.
+	 * 
+	 * @return string The CSS definitions required for the navigtion.
+	 */
+	public function getCSS() {
+		return $this->parseIcons(StandardNavigation::iconName, $this->structure);
+	}
+
+	/**
+	 * Returns the JS calls required for the navigation.
+	 * 
+	 * @return string The JS calls required for the navigation.
+	 */
+	public function getJS() {
+		//We need the names of the CSS icon classes
+		$this->parseIcons(StandardNavigation::iconName, $this->structure);
+		
+		$result = 'menuBar = new jsDOMenuBar("fixed");
 			menuBar.setActivateMode("over");
 		';
 		
@@ -99,9 +170,16 @@ class StandardNavigation implements Navigation {
 			}
 		}
 		
-		$result .= '</script>';
-		
 		return $result;
+	}
+	
+	/**
+	 * Returns the Navigation as HTML Fragment
+	 * 
+	 * @return string the Navigation HTML
+	 */
+	public function getHTML() {
+		return '<script type="text/javascript" src="' . BADGER_ROOT . '/core/navi/getStandardNavigation?part=js"></script>';
 	}
 	
 	/**
@@ -120,7 +198,7 @@ class StandardNavigation implements Navigation {
 		foreach ($structure as $key => $currentElement) {
 			$iconId = "{$name}_{$numElement}";
 			
-			if (isset($currentElement['icon'])) {
+			if (isset($currentElement['icon']) && $currentElement['icon'] != '') {
 				$result .=  ".$iconId {
 					background-image: url('$currentElement[icon]');
 					background-repeat: no-repeat; /* Do not alter this line! */

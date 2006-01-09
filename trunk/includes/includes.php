@@ -13,11 +13,14 @@
  
  //Includes
 
+ 
+ ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
+
 /**
  * makes use of the dbAdapter database abstraction layer
  */
-
  require_once BADGER_ROOT.'/core/dbAdapter/DB.php';
+
 /**
  * global config values
  */
