@@ -52,7 +52,7 @@ $sql = "SELECT * FROM test1";
 
 $res =& $badgerDb->query($sql);
 while ($res->fetchInto ($row)){
-	echo $row[2] . "<br />";
+	echo $row[1] . "<br />";
 }
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

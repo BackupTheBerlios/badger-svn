@@ -121,7 +121,13 @@
  */
 function generatePdf ($url, $linkText, $fileName, $image = NULL){
 	if ($url == ""){
-		#throw new badgerException('html2pdf.missing_url', "hjhjhgj"); 
+		throw new badgerException('html2pdf.missing_url'); 
+	}
+	if ($linkText == ""){
+		$linkText = "Generated PDF"; 
+	}
+	if ($fileName == ""){
+		$fileName = "Badger Export"; 
 	}
 	global $pdfPixels, $pdfScalePoints, $pdfRenderImages, $pdfRenderLinks, 
 		$pdfRenderFields, $pdfMedia, $pdfCssMedia, $pdfLeftMargin, $pdfRightMargin,

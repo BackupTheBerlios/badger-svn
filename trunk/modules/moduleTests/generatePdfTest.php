@@ -66,13 +66,13 @@ global $submit;
 	</form>
 
 <?php
-
-if ($submit){
-	echo "<h1>Generierter Link</h1>";
-	echo generatePdf($URL, $Linktext, $Dateiname, $Image);
-	 
-	                                         
-}
-
-require_once(BADGER_ROOT . "/includes/fileFooter.php");
+try{
+	if ($submit){
+		echo "<h1>Generierter Link</h1>";
+		echo generatePdf($URL, $Linktext, $Dateiname, $Image);
+	}
+}catch (Exception $e) {
+   handleBadgerException($e);
+}	
+	require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
