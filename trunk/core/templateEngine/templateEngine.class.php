@@ -58,14 +58,18 @@ class TemplateEngine {
 	}
 	
 	public function addCSS($cssFile) {
-		$this->css = $this->css."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme . $cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+		$this->css = $this->css."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	}
 	public function addJavaScript($JSFile) {
-		$this->javascripts = $this->javascripts."\t<script type=\"text/javascript\" src=\"".$this->badgerRoot.$JSFile."\"></script>\n";
+		$this->javascripts = $this->javascripts."\t<script type=\"text/javascript\" src=\"".$this->badgerRoot."/".$JSFile."\"></script>\n";
 	}	
 	
 	public function getThemeName() {
 		return $this->theme;
 	}
+	public function getBadgerRoot() {
+		return $this->badgerRoot;
+	}
+
 }
 ?>
