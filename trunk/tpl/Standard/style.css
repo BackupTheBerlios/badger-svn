@@ -1,5 +1,5 @@
 body, table, input {
-	font-family: arial, verdana;
+	font-family: Arial, Verdana;
 	font-size: 10pt;
 }
 
@@ -7,3 +7,24 @@ div.footer {
 	text-align: center;
 	font-size: 8pt;
 }
+
+/* CALENDAR */
+td.calendarDateInput {
+	letter-spacing: normal;
+	line-height: normal;
+	font-family: Arial,Verdana,Sans-Serif;
+	font-size: 8pt;
+	}
+   
+select.calendarDateInput {
+	letter-spacing: .06em;
+	font-family: Arial, Verdana,Sans-Serif;
+	font-size: 9pt;
+	}
+   
+input.calendarDateInput {
+	letter-spacing: .06em;
+	font-family: Arial, Verdana,Sans-Serif;
+	font-size: 9pt;
+	}
+/* CALENDAR */
