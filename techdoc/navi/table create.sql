@@ -7,4 +7,4 @@ CREATE TABLE `navi` (
 `tooltip` VARCHAR( 255 ) NULL ,
 `icon_url` VARCHAR( 255 ) NULL ,
 `command` VARCHAR( 255 ) NULL 
-)
+);
