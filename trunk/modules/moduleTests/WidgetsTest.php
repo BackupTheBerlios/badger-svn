@@ -38,8 +38,7 @@ $widgets->addDateField("testdate", "2006-01-01");
 */
 ?>
 
-  <input type="text" name="name" size="40" maxlength="40"/>
-  
+
 </form>
 </body>
 </html>
