@@ -1,3 +1,12 @@
+<?php
+	header('Content-Type: text/javascript');
+	$badgerRoot = $_GET['badgerRoot'];
+	$badgerTemplate = $_GET['badgerTemplate'];
+	
+	//We do our best to get this cached
+	header('Cache-Control: public');
+	header('Expires: ' . date('r', time() + 24 * 60 * 60));
+?>
 /***********************************************
  Fool-Proof Date Input Script with DHTML Calendar
  by Jason Moon - calendar@moonscript.com
@@ -5,16 +14,16 @@
 
 // Customizable variables
 var DefaultDateFormat = 'YYYY-MM-DD'; // If no date format is supplied, this will be used instead
-var HideWait = 3; // Number of seconds before the calendar will disappear
+var HideWait = 2; // Number of seconds before the calendar will disappear
 var Y2kPivotPoint = 76; // 2-digit years before this point will be created in the 21st century
 var UnselectedMonthText = ''; // Text to display in the 1st month list item when the date isn't required
-var FontSize = 11; // In pixels
-var FontFamily = 'Arial';
+//var FontSize = 11; // In pixels
+//var FontFamily = 'Arial';
 var CellWidth = 18;
 var CellHeight = 16;
-var ImageURL = '../../tpl/Standard/Widgets/calendar.jpg';
-var NextURL = '../../tpl/Standard/Widgets/cal_next.gif';
-var PrevURL = '../../tpl/Standard/Widgets/cal_prev.gif';
+var ImageURL = '<?php echo $badgerRoot?>/tpl/<?php echo $badgerTemplate?>/Widgets/calendar.jpg';
+var NextURL = '<?php echo $badgerRoot?>/tpl/<?php echo $badgerTemplate?>/Widgets/cal_next.gif';
+var PrevURL = '<?php echo $badgerRoot?>/tpl/<?php echo $badgerTemplate?>/Widgets/cal_prev.gif';
 var CalBGColor = 'white';
 var TopRowBGColor = 'buttonface';
 var DayBGColor = 'lightgrey';
@@ -22,18 +31,9 @@ var DayBGColor = 'lightgrey';
 // Global variables
 var ZCounter = 100;
 var Today = new Date();
-var WeekDays = new Array('S','M','T','W','T','F','S');
+var WeekDays = new Array('S','M','T','W','T','F','S'); //DB
 var MonthDays = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-var MonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December');
-
-// Write out the stylesheet definition for the calendar
-with (document) {
-   writeln('<style>');
-   writeln('td.calendarDateInput {letter-spacing:normal;line-height:normal;font-family:' + FontFamily + ',Sans-Serif;font-size:' + FontSize + 'px;}');
-   writeln('select.calendarDateInput {letter-spacing:.06em;font-family:Verdana,Sans-Serif;font-size:11px;}');
-   writeln('input.calendarDateInput {letter-spacing:.06em;font-family:Verdana,Sans-Serif;font-size:11px;}');
-   writeln('</style>');
-}
+var MonthNames = new Array('January','February','March','April','May','June','July','August','September','October','November','December'); //DB
 
 // Only allows certain keys to be used in the date field
 function YearDigitsOnly(e) {
