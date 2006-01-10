@@ -29,19 +29,11 @@ $tr =& Translation2::factory($driver, $dbinfo);
 
 print("<b>error auf en:</b><br>");
 echo $tr->get('error', 'badger_basics', 'en');
-echo "<br>";
-
-print("<b>error auf de:</b><br>");
-echo $tr->get('error', 'badger_basics', 'de');
 echo "<br><br>";
 
 print("<b>out_of_money auf en:</b><br>");
 echo $tr->get('out_of_money', 'badger_basics', 'en');
 echo "<br>";
-
-print("<b>out_of_money auf de:</b><br>");
-echo $tr->get('out_of_money', 'badger_basics', 'de');
-echo "<br><br>";
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
