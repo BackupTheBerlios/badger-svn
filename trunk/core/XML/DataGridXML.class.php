@@ -26,16 +26,6 @@ require_once 'Serializer.php';
 class DataGridXML {
 
 	/**
-	 * Exception Code if the serializer returns an errror.  
-	 */
-	const XML_SERIALIZER_EXCEPTION = 4711;
-	
-	/**
-	 * Exception Code if getXML called with undefined columns.  
-	 */
-	const UNDEFINED_COLUMNS = 4712;
-	
-	/**
 	 * The XML Serializer Object.
 	 * 
 	 * @var object
@@ -59,7 +49,7 @@ class DataGridXML {
 	/**
 	 * Initializes serializer and sets inital column and row data if given.
 	 * 
-	 * @param array $columns The columns to initialize the Object withh
+	 * @param array $columns The columns to initialize the Object with
 	 * @param array $rows The rows of the Object
 	 */
 	function __construct() {
@@ -122,7 +112,7 @@ class DataGridXML {
 	 */
 	public function setColumns($columns) {
 		if (is_array($columns)) {
-			$this->columns = $columns;
+			$this->columns = $this->removeNonNumericIndices($columns);
 		}
 	}
 
@@ -134,7 +124,7 @@ class DataGridXML {
 	 */
 	public function setRows($rows) {
 		if (is_array($rows)) {
-			$this->rows = $rows;
+			$this->rows = $this->removeNonNumericIndices($rows);
 		}
 	}
 
@@ -151,7 +141,7 @@ class DataGridXML {
 		// checks if we have already data 
 		if (is_array($this->rows)) {
 			if (is_array($rows)) {
-				$this->rows = array_merge($this->rows, $rows);
+				$this->rows = array_merge($this->rows, $this->removeNonNumericIndices($rows));
 			}
 		} else {
 			$this->setRows($rows);
@@ -182,11 +172,37 @@ class DataGridXML {
 	/**
 	 * Returns the XML structure.
 	 * 
+	 * Structure:
+	 * <datatable>
+	 *   <columns>
+	 *     <column>column_name_0</column>
+	 *     <column>column_name_1</column>
+	 *     <column>column_name_2</column>
+	 *   </columns>
+	 *   <rows>
+	 *     <row>
+	 *       <cell>Value of row 0, column 0</cell>
+	 *       <cell>Value of row 0, column 1</cell>
+	 *       <cell>Value of row 0, column 2</cell>
+	 *     </row> 
+	 *     <row>
+	 *       <cell>Value of row 1, column 0</cell>
+	 *       <cell>Value of row 1, column 1</cell>
+	 *       <cell>Value of row 1, column 2</cell>
+	 *     </row> 
+	 *     <row>
+	 *       <cell>Value of row 2, column 0</cell>
+	 *       <cell>Value of row 2, column 1</cell>
+	 *       <cell>Value of row 2, column 2</cell>
+	 *     </row>
+	 *   </rows>
+	 * </datatable> 
+	 * 
 	 * @return string XML Structure
 	 */
 	public function getXML() {
 		if (!is_array($this->columns)) {
-			throw new Exception('getXML called with undefined columns', DataGridXML::UNDEFINED_COLUMNS);
+			throw new BadgerException('DataGridXML.undefinedColumns');
 		}
 		
 		$data = array (
@@ -199,8 +215,30 @@ class DataGridXML {
 		if ($result === true) {
 			return $this->serializer->getSerializedData();
 		} else {
-			throw new Exception('Error while calling XML Serializer', DataGridXML::XML_SERIALIZER_EXCEPTION);
+			throw new BadgerException('DataGridXML.XmlSerializerException');
 		}
 	}
+	
+	/**
+	 * Replaces non-numeric indices by numeric ones. Handles nested arrays correctly.
+	 * 
+	 * Non-linear ordered arrays are reordered.
+	 * 
+	 * @param array $array The array with (possible) non-numeric idices
+	 * @return array The input array with numeric indices.
+	 */
+	private function removeNonNumericIndices($array) {
+		$result = array();
+		
+		foreach ($array as $val) {
+			if (!is_array($val)) {
+				$result[] = $val;
+			} else {
+				$result[] = $this->removeNonNumericIndices($val);
+			}
+		}
+		
+		return $result;
+	} 
 }
 ?>

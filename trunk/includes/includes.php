@@ -14,7 +14,15 @@
  //Includes
 
  
- ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
+/**
+ * hopefully kill all problems with [un|pre]installed PEAR
+ */
+ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
+
+/**
+ * Common functions
+ */
+require_once BADGER_ROOT . '/core/common.php';
 
 /**
  * makes use of the dbAdapter database abstraction layer

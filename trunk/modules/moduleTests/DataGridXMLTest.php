@@ -29,7 +29,7 @@ printDGX($dgx1);
 
 $columns1 = array ("Name", "Vorname", "Hund");
 $rows1 = array (
-	array ("Stets", "Niko", "Paul"),
+	array ("test1" => "Stets", "test2" => "Niko", "Paul"),
 	array ("Hetscler", "Phil", "Ferdinand")
 );
 $columns2 = array ("Straße", "Hausnummer");
