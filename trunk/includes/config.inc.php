@@ -65,6 +65,9 @@
 	 */	
  define("LOG_DATE_FORMAT", "Ymd-His");
  
+ // Internationalisation: Language ID
+ define("LANGUAGE_ID", "en");
+ 
 // Report ALL Errors
 error_reporting(E_ALL);
  
