@@ -128,7 +128,7 @@ class StandardNavigation implements Navigation {
 	 */
 	public function getJS() {
 		//We need the names of the CSS icon classes
-		$this->parseIcons(StandardNavigation::iconName, $this->structure);
+		$structure =& $this->parseIconIds(StandardNavigation::iconName, $this->structure);
 		
 		$result = 'menuBar = new jsDOMenuBar("fixed");
 			menuBar.setActivateMode("over");
@@ -136,7 +136,7 @@ class StandardNavigation implements Navigation {
 		
 		$menuNum = 0;
 		
-		foreach ($this->structure as $mainElement) {
+		foreach ($structure as $mainElement) {
 			switch ($mainElement['type']) {
 				case 'item':
 					$action = $this->calcCommand($mainElement['command']);
@@ -179,7 +179,7 @@ class StandardNavigation implements Navigation {
 	 * @return string the Navigation HTML
 	 */
 	public function getHTML() {
-		return '<script type="text/javascript" src="' . BADGER_ROOT . '/core/navi/getStandardNavigation?part=js"></script>';
+		return '<script type="text/javascript" src="' . BADGER_ROOT . '/core/navi/getStandardNavigation.php?part=js"></script>';
 	}
 	
 	/**
@@ -208,8 +208,6 @@ class StandardNavigation implements Navigation {
 					width: 16px;
 				 }\n";
 				
-				$structure[$key]['iconId'] = $iconId; 
-				
 				$numElement++;
 			}
 
@@ -220,6 +218,34 @@ class StandardNavigation implements Navigation {
 		}
 		
 		return $result;
+	} 
+
+	/**
+	 * Walks recursively through $structure, creates iconId properties in $structure
+	 * 
+	 * @param array $name The name of this level
+	 * @param array $structure The unprocessed sub-treee of $this->structure
+	 * 
+	 * @return array The modified $structure
+	 */
+	private function parseIconIds($name, &$structure) {
+		$numElement = 0;
+		foreach ($structure as $key => $currentElement) {
+			$iconId = "{$name}_{$numElement}";
+			
+			if (isset($currentElement['icon']) && $currentElement['icon'] != '') {
+				$structure[$key]['iconId'] = $iconId; 
+				
+				$numElement++;
+			}
+
+			//walk through recursively
+			if ($currentElement['type'] == 'menu') {
+				$structure[$key]['menu'] =& $this->parseIconIds($iconId, $currentElement['menu']);
+			}
+		}
+		
+		return $structure;
 	} 
 
 	/**
