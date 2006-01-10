@@ -7,7 +7,7 @@ mouseEventsDisabled = false;
 function activateRow(objRow) {
 	if (objRow.className == "dgRow") objRow.className = "dgRowActive";
 	if (objRow.className == "dgRowSelected") objRow.className = "dgRowSelectedActive";
-	document.getElementById("check" + objRow.id).focus();
+	$("check" + objRow.id).focus();
 }
 function deactivateRow(objRow) {
 	if (objRow.className == "dgRowActive") objRow.className = "dgRow";
@@ -17,14 +17,14 @@ function deactivateRow(objRow) {
 function selectRow(objRow) {
 	if (objRow.className == "dgRow") objRow.className = "dgRowSelected";
 	if (objRow.className == "dgRowActive") objRow.className = "dgRowSelectedActive";
-	document.getElementById("check"+objRow.id).checked = "checked";
-	document.getElementById("check"+objRow.id).focus();
+	$("check"+objRow.id).checked = "checked";
+	$("check"+objRow.id).focus();
 }
 function deselectRow(objRow) {
 	if (objRow.className == "dgRowSelected") objRow.className = "dgRow";
 	if (objRow.className == "dgRowSelectedActive") objRow.className = "dgRowActive";
-	document.getElementById("check"+objRow.id).checked = "";
-	document.getElementById("check"+objRow.id).focus();
+	$("check"+objRow.id).checked = "";
+	$("check"+objRow.id).focus();
 }
 
 function enableMouseEvents() {
@@ -78,7 +78,7 @@ function dgKeyProcess(event) {
 				objRowActive = objNextRow;
 			}
 		} else {
-			objRowActive = document.getElementById("dgData").getElementsByTagName("tr")[0];
+			objRowActive = $("dgData").getElementsByTagName("tr")[0];
 			activateRow(objRowActive);
 		}
 		
