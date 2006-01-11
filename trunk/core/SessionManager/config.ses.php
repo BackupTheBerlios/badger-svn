@@ -46,7 +46,7 @@ $_db_table_config = "session_master";	// name of the table that will contain ses
 	otherwise session will expire un _session_timeout minutes
 */
 
-$_session_timeout = 0;
+$_session_timeout = 3600;
 
 /*
 	this variable is used to generate a more secure sid, because this
@@ -92,7 +92,7 @@ function update_session(){
 	//$row = mysql_fetch_array($res);
 	
 	$res->fetchInto ($row,DB_FETCHMODE_ASSOC);
-		
+	
 	if($row['logout']!=1){
 		$sql = "update $_db_table_config set last = NOW() where sid = '$sess'";
 		query($sql);
@@ -123,7 +123,7 @@ function set_session_var($name,$value){
 
 
 function get_session_vars(){
-	global $_db,$_db_table,$sess;
+	global $_db_table,$sess;
 	$_session = Array();
 	$sql = "select variable, value from $_db_table where sid = '$sess'";
 	$res = query($sql);
@@ -153,12 +153,10 @@ function session_kill(){
 function get_session_length(){
 	global $sess,$_db_table_config;
 	$sql = "select NOW()-start from $_db_table_config where sid = '$sess'";
-		
 	$res = query($sql);
+	$res->fetchInto($row,DB_FETCHMODE_ASSOC);
 	
-	while($res->fetchInto ($row));
-	echo count($row);
-	return $row[0];
+	return $row['NOW()-start'];
 }
 
 
@@ -167,7 +165,7 @@ function get_session_length(){
 */
 
 function query($sql){
-	global $_db,$badgerDb;
+	global $badgerDb;
 	//$res = mysql_query($sql,$_db);
 	$res =& $badgerDb->query($sql);
 	if(PEAR::isError($res)){
