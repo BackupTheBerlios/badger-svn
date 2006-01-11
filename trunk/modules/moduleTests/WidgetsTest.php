@@ -19,14 +19,16 @@ $tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
+$widgets->addAutoCompleteJS();
 echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
 ?>
 <body>
 <form>
 <?php
-$widgets->addToolTipLayer();
-$widgets->addToolTipLink("javascript:void(0);", "Description - sdijgfsodjf ", "click here");
-$widgets->addDateField("testdate", "2006-01-01");
+echo $widgets->addDateField("testdate", "2006-01-01");
+echo $widgets->addAutoCompleteField("FeldName");
+echo $widgets->addToolTipLayer();
+echo $widgets->addToolTipLink("javascript:void(0);", "Description - sdijgfsodjf ", "click here");
 
 /*
 * Offene Punkte:
@@ -35,9 +37,9 @@ $widgets->addDateField("testdate", "2006-01-01");
 * - evtl. wird bei manchen Eingaben der Tag nicht benötigt -> eigenes Element (wenn benötigt)
 * - Fehlerbehandlung mit Exceptions
 * - Style von ToolTip auslagern(?)
+* - BackendLogik von Autocomplete
 */
 ?>
-
 
 </form>
 </body>
