@@ -13,7 +13,7 @@
 
 //Include Session Management
 include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
-
+print("<a href=\"".$PHP_SELF."\">link</a><br>");
 //placeholder for pw from db
 $readoutpassword = md5("hoerner");
 $passwordcorrect = false;
