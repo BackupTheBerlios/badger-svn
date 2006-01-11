@@ -20,8 +20,7 @@ class TemplateEngine {
 	private $templatecache;
 	private $theme;
 	private $badgerRoot;
-	private $css;
-	private $javascripts;
+	private $additionalHeaderTags;
 
 	function __construct($themename, $badgerRoot) {
 		$this->theme = $themename; 
@@ -52,17 +51,19 @@ class TemplateEngine {
 		$template = "badgerHeader";
 		//leider kann ich das nicht in das template kopieren, da es probleme mit den ? gibt
 		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>";
-		$css = $this->css;
-		$javascripts = $this->javascripts;
+		$additionalHeaderTags = $this->additionalHeaderTags;
 		return eval("echo \"".$this->getTemplate($template)."\";");		
 	}
 	
 	public function addCSS($cssFile) {
-		$this->css = $this->css."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+		$this->additionalHeaderTags = $this->additionalHeaderTags."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
 	}
 	public function addJavaScript($JSFile) {
-		$this->javascripts = $this->javascripts."\t<script type=\"text/javascript\" src=\"".$this->badgerRoot."/".$JSFile."\"></script>\n";
-	}	
+		$this->additionalHeaderTags = $this->additionalHeaderTags."\t<script type=\"text/javascript\" src=\"".$this->badgerRoot."/".$JSFile."\"></script>\n";
+	}
+	public function addHeaderTag($HeaderTag) {
+		$this->additionalHeaderTags = $this->additionalHeaderTags."\t".$HeaderTag."\n";
+	}
 	
 	public function getThemeName() {
 		return $this->theme;
