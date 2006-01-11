@@ -34,7 +34,8 @@ class TemplateEngine {
 				$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
 				$templatefile=str_replace("{BADGER_ROOT}",$this->badgerRoot,$templatefile);
 			} else 	{
-				$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
+				throw new badgerException('templateEngine.noTemplate', $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl'); 
+				//$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
 			}
 			$templatefile = preg_replace("'<if ([^>]*?)>(.*?)</if>'si", "\".( (\\1) ? \"\\2\" : \"\").\"", $templatefile);
 			$templatecache[$template] = $templatefile;
