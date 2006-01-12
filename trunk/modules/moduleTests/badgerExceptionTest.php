@@ -13,7 +13,7 @@
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/includes.php");
   
-try{
+
 	function badgerExceptionTest(){
 	
 		 throw new BadgerException('dasdasd', "gfh");
@@ -21,9 +21,7 @@ try{
 	}
 	$something = badgerExceptionTest();
  
-}catch (Exception $e) {
-   handleBadgerException($e);
-}
+
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
