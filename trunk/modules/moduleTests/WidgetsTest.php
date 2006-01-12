@@ -22,7 +22,6 @@ $widgets->addCalendarJS();
 $widgets->addAutoCompleteJS();
 echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
 ?>
-<body>
 <form>
 <?php
 echo $widgets->addDateField("testdate", "2006-01-01");
@@ -34,10 +33,11 @@ echo $widgets->addToolTipLink("javascript:void(0);", "Description - sdijgfsodjf 
 * Offene Punkte:
 * - Kalendar sollte mit Montag beginnen
 * - Internationalisierung der KalendarValues -> JS durch PHP generieren
+* 
 * - evtl. wird bei manchen Eingaben der Tag nicht benötigt -> eigenes Element (wenn benötigt)
-* - Fehlerbehandlung mit Exceptions
 * - Style von ToolTip auslagern(?)
 * - BackendLogik von Autocomplete
+* - Buchstaben soll bei Enter stehen bleiben
 */
 ?>
 
