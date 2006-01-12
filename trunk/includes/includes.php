@@ -49,6 +49,11 @@ require_once BADGER_ROOT . '/core/common.php';
  */
  require_once BADGER_ROOT.'/core/exceptionHandler/handleBadgerException.php';
  
+  /**
+ * Catches uncaught exceptions
+ */
+ require_once BADGER_ROOT.'/core/exceptionHandler/catchException.php';
+ 
 /**
  * makes translation libs available
  */

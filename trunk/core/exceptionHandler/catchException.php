@@ -6,21 +6,10 @@
 *|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
 *| |_) / ____ \| |__| | |__| | |____| | \ \ 
 *|____/_/    \_\_____/ \_____|______|_|  \_\
-* Open Source Financial Management
+* Open Source Finance Management
 * Visit http://badger.berlios.org 
 *
 **/
-define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/includes.php");
- 
-	function badgerExceptionTest(){
-	
-		 throw new BadgerException('dasdasd', "gfh");
-		
-	}
-	$something = badgerExceptionTest();
- 
-
-
-require_once(BADGER_ROOT . "/includes/fileFooter.php");
+// will catch all uncatched exceptions
+set_exception_handler('handleBadgerException');  
 ?>
