@@ -50,10 +50,14 @@ class WidgetEngine {
 	}
 	
 	public function addToolTipLink($link, $text, $linkname) {
-		if($this->ToolTipJSAdded && $this->ToolTipLayerAdded) {
-			return "<a href=\"".$link."\" class=\"ToolTip\" onmouseover=\"return overlib('".$text."', DELAY, 700);\" onmouseout=\"return nd();\">".$linkname."</a>\n";
+		if($this->ToolTipJSAdded) {
+			if ($this->ToolTipLayerAdded) {
+				return "<a href=\"".$link."\" class=\"ToolTip\" onmouseover=\"return overlib('".$text."', DELAY, 700);\" onmouseout=\"return nd();\">".$linkname."</a>\n";
+			} else 	{
+				throw new badgerException('widgetsEngine.ToolTipLayerNotAdded', '');
+			}
 		} else {
-			//FEHLER
+			throw new badgerException('widgetsEngine.ToolTipJSNotAdded', ''); 
 		}
 		
 	}
@@ -61,14 +65,14 @@ class WidgetEngine {
 		if($this->CalendarJSAdded) {
 			return "<script>DateInput('".$fieldname."', true, 'YYYY-MON-DD', '".$startdate."')</script>";
 		} else {
-			//FEHLER
+			throw new badgerException('widgetsEngine.CalendarJSNotAdded', ''); 
 		}
 	}
 	public function addAutoCompleteField($fieldname) {
 		if($this->AutoCompleteJSAdded) {
 			return "<input id=\"".$fieldname."\" name=\"".$fieldname."\" type=\"text\" action=\"autocomplete.html\">";
 		} else {
-			//FEHLER
+			throw new badgerException('widgetsEngine.AutoCompleteJSNotAdded', ''); 
 		}
 	}	
 }
