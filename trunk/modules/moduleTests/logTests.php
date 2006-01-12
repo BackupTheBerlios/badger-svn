@@ -15,7 +15,7 @@
 define("BADGER_ROOT", "../.."); 
 require_once BADGER_ROOT.'/includes/includes.php';
 
-$logger->log("Datenbankverbindung erfolgreich");
-
+$logger->log("LogTest erfolgreich");
+echo "logtest erfolgreich";
 
 ?>
