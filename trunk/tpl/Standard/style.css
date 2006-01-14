@@ -8,27 +8,6 @@ div.footer {
 	font-size: 8pt;
 }
 
-/* CALENDAR */
-td.calendarDateInput {
-	letter-spacing: normal;
-	line-height: normal;
-	font-family: Arial,Verdana,Sans-Serif;
-	font-size: 8pt;
-	}
-   
-select.calendarDateInput {
-	letter-spacing: .06em;
-	font-family: Arial, Verdana,Sans-Serif;
-	font-size: 9pt;
-	}
-   
-input.calendarDateInput {
-	letter-spacing: .06em;
-	font-family: Arial, Verdana,Sans-Serif;
-	font-size: 9pt;
-	}
-/* END CALENDAR */
-
 /* SUGGEST */
 .SuggestFramework_List {
 	border: 1px solid #CCCCCC;
