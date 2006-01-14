@@ -34,13 +34,14 @@ class WidgetEngine {
 		$this->TplEngine->addJavaScript("js/overlib.js");
 		$this->ToolTipJSAdded = true;
 	}
-	public function addCalendarJS() {
-		$this->TplEngine->addJavaScript("js/calendarDateInput.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot()."&badgerTemplate=".$this->TplEngine->getThemeName());
+	public function addCalendarJS($language) {
+		$this->TplEngine->addJavaScript("js/calendar.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot()."&badgerTemplate=".$this->TplEngine->getThemeName());
+		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initCalendar;</script>");
 		$this->CalendarJSAdded = true;
 	}
 	public function addAutoCompleteJS() {
 		$this->TplEngine->addJavaScript("js/SuggestFramework.js");
-		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initializeSuggestFramework;</script>");
+		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initializeSuggestFramework ();</script>");
 		$this->AutoCompleteJSAdded = true;
 	}
 	
@@ -61,9 +62,12 @@ class WidgetEngine {
 		}
 		
 	}
-	public function addDateField($fieldname, $startdate) {
+	public function addDateField($fieldname, $startdate, $format) {
+		$strDateField = ""; 
 		if($this->CalendarJSAdded) {
-			return "<script>DateInput('".$fieldname."', true, 'YYYY-MON-DD', '".$startdate."')</script>";
+			$strDateField = "<input type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
+			$strDateField .= "<input type='button' onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' value='select' style='font-size:11px' />\n";
+			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine.CalendarJSNotAdded', ''); 
 		}
