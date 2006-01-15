@@ -24,7 +24,7 @@
 ////////
 var olLoaded = 0;var pmStart = 10000000; var pmUpper = 10001000; var pmCount = pmStart+1; var pmt=''; var pms = new Array(); var olInfo = new Info('4.21', 1);
 var FREPLACE = 0; var FBEFORE = 1; var FAFTER = 2; var FALTERNATE = 3; var FCHAIN=4;
-var olHideForm=0;  // parameter for hiding SELECT and ActiveX elements in IE5.5+ 
+var olHideForm=1;  // parameter for hiding SELECT and ActiveX elements in IE5.5+ 
 var olHautoFlag = 0;  // flags for over-riding VAUTO and HAUTO if corresponding
 var olVautoFlag = 0;  // positioning commands are used on the command line
 var hookPts = new Array(), postParse = new Array(), cmdLine = new Array(), runTime = new Array();
