@@ -31,7 +31,8 @@ class WidgetEngine {
 	}
 	
 	public function addToolTipJS() {
-		$this->TplEngine->addJavaScript("js/overlib.js");
+		$this->TplEngine->addJavaScript("js/overlib_mini.js");
+		$this->TplEngine->addJavaScript("js/overlib_cssstyle_mini.js");
 		$this->ToolTipJSAdded = true;
 	}
 	public function addCalendarJS($language) {
