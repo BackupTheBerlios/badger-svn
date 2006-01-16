@@ -10,41 +10,30 @@
 * Visit http://badger.berlios.org 
 *
 **/
-define("BADGER_ROOT", "../.."); 
-define("BADGER_TEMPLATE", "Standard"); 
+define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/includes.php");
+require_once(BADGER_ROOT . "/core/UserSettings.class.php"); // sollte das nicht auch in die Includes??
 
-try {
-	$tpl = new TemplateEngine(BADGER_TEMPLATE, BADGER_ROOT);
-	$tpl->addCSS("style.css");
-	$widgets = new WidgetEngine($tpl);
-	$widgets->addToolTipJS();
-	$widgets->addCalendarJS();
-	$widgets->addAutoCompleteJS();
-	echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
-	?>
-	<form>
-	<?php
-	echo $widgets->addDateField("testdate", "2006-01-01");
-	echo $widgets->addAutoCompleteField("FeldName");
-	echo $widgets->addToolTipLayer();
-	echo $widgets->addToolTipLink("javascript:void(0);", "Description - sdijgfsodjf ", "click here");
-	
-	/*
-	* Offene Punkte:
-	* - Kalendar sollte mit Montag beginnen
-	* - Internationalisierung der KalendarValues -> JS durch PHP generieren
-	* 
-	* - evtl. wird bei manchen Eingaben der Tag nicht benötigt -> eigenes Element (wenn benötigt)
-	* - Style von ToolTip auslagern(?)
-	* - BackendLogik von Autocomplete
-	* - Buchstaben soll bei Enter stehen bleiben
-	*/
-}catch (Exception $e) {
-   handleBadgerException($e);
-}
+$settings = new UserSettings($badgerDb);
+//$settings->setProperty("badgerTemplate", "Standard");
+//$settings->setProperty("badgerSiteName", "BADGER Finance");
+$tpl = new TemplateEngine($settings->getProperty("badgerTemplate"), BADGER_ROOT);
+$tpl->addCSS("style.css");
+$widgets = new WidgetEngine($tpl);
+$widgets->addToolTipJS();
+$widgets->addCalendarJS();
+$widgets->addAutoCompleteJS();
+echo $tpl->getHeader("Seitenname - ".$settings->getProperty("badgerSiteName")); //write header */
 ?>
-
-</form>
+	<form name="mainform">
+		<?php
+		echo $widgets->addDateField("testdate", "01-01-2006", "dd-mm-yyyy");
+		echo "<br /><br />";
+		echo $widgets->addAutoCompleteField("Suggest");
+		echo "<br />";
+		echo $widgets->addToolTipLayer();
+		echo $widgets->addToolTipLink("javascript:void(0);", "Description - this is ...", "ToolTip Test");
+		?>
+	</form>
 </body>
 </html>
