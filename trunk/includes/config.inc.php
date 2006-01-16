@@ -47,7 +47,7 @@
 	 * 
 	 * @var global constant
 	 */	
- define("DB_DATABASE_NAME", "badger");
+ define("DB_DATABASE_NAME", "projectssql2");
  
  // Errorhandling & Logging
  
