@@ -35,14 +35,14 @@ class WidgetEngine {
 		$this->TplEngine->addJavaScript("js/overlib_cssstyle_mini.js");
 		$this->ToolTipJSAdded = true;
 	}
-	public function addCalendarJS($language) {
+	public function addCalendarJS() {
 		$this->TplEngine->addJavaScript("js/calendar.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot()."&badgerTemplate=".$this->TplEngine->getThemeName());
-		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initCalendar;</script>");
+		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">initCalendar();</script>");
 		$this->CalendarJSAdded = true;
 	}
 	public function addAutoCompleteJS() {
 		$this->TplEngine->addJavaScript("js/SuggestFramework.js");
-		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initializeSuggestFramework ();</script>");
+		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initializeSuggestFramework;</script>");
 		$this->AutoCompleteJSAdded = true;
 	}
 	
@@ -67,7 +67,7 @@ class WidgetEngine {
 		$strDateField = ""; 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
-			$strDateField .= "<input type='button' onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' value='select' style='font-size:11px' />\n";
+			$strDateField .= "<input type='button' onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' value='select' />\n";
 			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine.CalendarJSNotAdded', ''); 
@@ -75,7 +75,7 @@ class WidgetEngine {
 	}
 	public function addAutoCompleteField($fieldname) {
 		if($this->AutoCompleteJSAdded) {
-			return "<input id=\"".$fieldname."\" name=\"".$fieldname."\" type=\"text\" action=\"autocomplete.html\">";
+			return "<input id=\"".$fieldname."\" name=\"".$fieldname."\" type=\"text\" action=\"autocomplete.html\" />";
 		} else {
 			throw new badgerException('widgetsEngine.AutoCompleteJSNotAdded', ''); 
 		}
