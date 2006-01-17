@@ -28,7 +28,9 @@ echo $tpl->getHeader("Seitenname"); //write header */
 ?>
 	<form name="mainform">
 		<?php
-		echo $widgets->addDateField("testdate", "");
+		echo $widgets->addDateField("testdate", "01.01.2006");
+		echo "<br />";
+		echo $widgets->addDateField("testDT34"); //heutiges Datum als StandardValue
 		echo "<br /><br />";
 		echo $widgets->addAutoCompleteField("Suggest");
 		echo "<br />";
