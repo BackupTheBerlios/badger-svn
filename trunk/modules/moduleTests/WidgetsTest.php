@@ -17,17 +17,18 @@ require_once(BADGER_ROOT . "/core/UserSettings.class.php"); // sollte das nicht 
 $settings = new UserSettings($badgerDb);
 //$settings->setProperty("badgerTemplate", "Standard");
 //$settings->setProperty("badgerSiteName", "BADGER Finance");
-$tpl = new TemplateEngine($settings->getProperty("badgerTemplate"), BADGER_ROOT);
+//$settings->setProperty("DateFormat", "dd.mm.yyyy");
+$tpl = new TemplateEngine($settings, BADGER_ROOT);
 $tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addAutoCompleteJS();
-echo $tpl->getHeader("Seitenname - ".$settings->getProperty("badgerSiteName")); //write header */
+echo $tpl->getHeader("Seitenname"); //write header */
 ?>
 	<form name="mainform">
 		<?php
-		echo $widgets->addDateField("testdate", "01-01-2006", "dd-mm-yyyy");
+		echo $widgets->addDateField("testdate", "");
 		echo "<br /><br />";
 		echo $widgets->addAutoCompleteField("Suggest");
 		echo "<br />";
