@@ -31,12 +31,13 @@ if($passwordcorrect == false)
 	{
 		print("<form method=\"post\" action=\"".$PHP_SELF."\">");
 		print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\"><br>");
+		foreach( $_POST as $key=>$value ){
+			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\">");
+		};
 		print("<input value=\"Go!\" name=\"submit\" type=\"submit\">");
 		print("</form>");
 		exit();
 	};
-
-
 
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");

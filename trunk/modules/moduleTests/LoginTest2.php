@@ -10,18 +10,14 @@
 * Visit http://badger.berlios.org 
 *
 **/
+
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/includes.php");
 
-require(BADGER_ROOT . "/includes/login.php");
-
-print("If you can see this text, you are logged in.<br>");
-
-if (isset($_POST)){
-	print("<pre>");
-	print_r($_POST);
-	print("</pre>");
-};
-
+print("<form action=\"LoginTest.php\" method=\"post\">");
+print("<input type=\"text\" name=\"test\"><br/>");
+print("<input type=\"submit\" value=\"submit\">");
+print("</form>");
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
+
 ?>
