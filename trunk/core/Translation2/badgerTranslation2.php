@@ -20,7 +20,7 @@ $tr =& Translation2::factory($driver, $badgerDbConnectionInfo);
 
 function getBadgerTranslation2 ($page, $id){
 	global $tr,$us;
-	return $tr->get($id, $page, $us->getProperty('language'));
+	return $tr->get($id, $page, $us->getProperty('badgerLanguage'));
 }
 
 ?>
