@@ -21,11 +21,17 @@ class TemplateEngine {
 	private $theme;
 	private $badgerRoot;
 	private $additionalHeaderTags;
+	private $settings;
 
-	function __construct($themename, $badgerRoot) {
-		$this->theme = $themename; 
+	function __construct($settings, $badgerRoot) {
+		$this->settings = $settings;
+		$this->theme = $this->settings->getProperty("badgerTemplate");
 		$this->badgerRoot = $badgerRoot;		
 	}	
+	
+	function getSettingsObj() {
+		return $this->settings;
+	}
 	
 	public function getTemplate($template) {	
 		if(!isset($templatecache[$template])) {
@@ -50,6 +56,8 @@ class TemplateEngine {
 	 */
 	public function getHeader($pageTitle) {		
 		$template = "badgerHeader";
+		
+		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
 		//leider kann ich das nicht in das template kopieren, da es probleme mit den ? gibt
 		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>";
 		$additionalHeaderTags = $this->additionalHeaderTags;
