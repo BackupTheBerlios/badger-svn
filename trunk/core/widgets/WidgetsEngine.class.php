@@ -25,11 +25,20 @@ class WidgetEngine {
 	private $AutoCompleteJSAdded = false;
 	private $CalendarJSAdded = false;	
 	private $TplEngine;
+	private $settings;
 	
 	public function __construct($TplEngine) {
 		$this->TplEngine = $TplEngine;
+		$this->settings = $this->TplEngine->getSettingsObj();
 	}
 	
+	private function getFormatedDateToday($format) {
+		// convert dateformat to php date format
+		$format = str_replace("dd","d", $format);
+		$format = str_replace("mm","m", $format);
+		$format = str_replace("yyyy","Y", $format);
+		return date($format, time());
+	}
 	public function addToolTipJS() {
 		$this->TplEngine->addJavaScript("js/overlib_mini.js");
 		$this->TplEngine->addJavaScript("js/overlib_cssstyle_mini.js");
@@ -63,16 +72,20 @@ class WidgetEngine {
 		}
 		
 	}
-	public function addDateField($fieldname, $startdate, $format) {
+	public function addDateField($fieldname, $startdate) {
+		$format = $this->settings->getProperty("DateFormat");
+		if($startdate=="") {$startdate=$this->getFormatedDateToday($format);}
+		
 		$strDateField = ""; 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
-			$strDateField .= "<input type='button' onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' value='select' />\n";
+			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->TplEngine->getThemeName()."/widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
 			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine.CalendarJSNotAdded', ''); 
 		}
 	}
+	
 	public function addAutoCompleteField($fieldname) {
 		if($this->AutoCompleteJSAdded) {
 			return "<input id=\"".$fieldname."\" name=\"".$fieldname."\" type=\"text\" action=\"autocomplete.html\" />";
@@ -80,4 +93,5 @@ class WidgetEngine {
 			throw new badgerException('widgetsEngine.AutoCompleteJSNotAdded', ''); 
 		}
 	}	
+	
 }
