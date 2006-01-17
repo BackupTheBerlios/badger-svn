@@ -57,12 +57,17 @@ require_once BADGER_ROOT . '/core/common.php';
 /**
  * makes translation libs available
  */
-require_once BADGER_ROOT.'/core/Translation2/Translation2.php';
-
+require_once BADGER_ROOT.'/includes/openDbConnection.php'; 
+ 
 /**
  * makes translation libs available
  */
-require_once BADGER_ROOT.'/includes/openDbConnection.php'; 
+require_once BADGER_ROOT.'/core/Translation2/Translation2.php';
+
+/**
+ * implements custom translation method
+ */
+require_once BADGER_ROOT.'/core/Translation2/badgerTranslation2.php';
 
 /**
  * makes pdf generator libs available
