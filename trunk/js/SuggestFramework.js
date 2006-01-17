@@ -169,17 +169,16 @@ function SuggestFramework_SelectThis(instance, index)
 	if(!isNaN(index))
 		SuggestFramework_SuggestionsIndex[instance] = index;
 	
-	//Sepp: if you haven't selected an value and press Enter -> undefined
-	//I changed it, so that you got the first entry
-	if(SuggestFramework_SuggestionsIndex[instance]==-1) SuggestFramework_SuggestionsIndex[instance] = 0;
+	//Sepp: if you haven't selected an value and press Enter 
+	if(SuggestFramework_SuggestionsIndex[instance]>=0) { 
+		if(SuggestFramework_Columns[instance] > 1)
+			SuggestFramework_InputContainer[instance].value = SuggestFramework_Suggestions[instance][SuggestFramework_SuggestionsIndex[instance]][SuggestFramework_Capture[instance] - 1];
+		else
+			SuggestFramework_InputContainer[instance].value = SuggestFramework_Suggestions[instance][SuggestFramework_SuggestionsIndex[instance]];
 	
-	if(SuggestFramework_Columns[instance] > 1)
-		SuggestFramework_InputContainer[instance].value = SuggestFramework_Suggestions[instance][SuggestFramework_SuggestionsIndex[instance]][SuggestFramework_Capture[instance] - 1];
-	else
-		SuggestFramework_InputContainer[instance].value = SuggestFramework_Suggestions[instance][SuggestFramework_SuggestionsIndex[instance]];
-
-	SuggestFramework_Previous[instance] = SuggestFramework_InputContainer[instance].value;
-	SuggestFramework_HideOutput(instance);
+		SuggestFramework_Previous[instance] = SuggestFramework_InputContainer[instance].value;
+		SuggestFramework_HideOutput(instance);
+	}
 };
 
 function SuggestFramework_SelectNext(instance)
