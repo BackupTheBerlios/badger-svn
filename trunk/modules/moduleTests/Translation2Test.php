@@ -17,11 +17,11 @@ require_once(BADGER_ROOT . "/includes/includes.php");
 
 
 print("<b>error auf en:</b><br>");
-echo getBadgerTranslation2('badger_basics', 'error', 'en');
+echo getBadgerTranslation2('badger_basics', 'error');
 echo "<br><br>";
 
 print("<b>out_of_money auf en:</b><br>");
-echo getBadgerTranslation2('badger_basics', 'out_of_money', 'en');
+echo getBadgerTranslation2('badger_basics', 'out_of_money');
 echo "<br>";
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
