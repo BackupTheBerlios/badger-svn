@@ -1,44 +1,29 @@
 <?php
-    header('Content-Type: text/javascript');
-    $badgerRoot = $_GET['badgerRoot'];
-    $badgerTemplate = $_GET['badgerTemplate'];
-    
-    //We do our best to get this cached
-    //header('Cache-Control: public');
-    //header('Expires: ' . date('r', time() + 24 * 60 * 60));
-?> 
-//	written	by Tan Ling Wee
-//	last updated 28 July 2003
-//	email :	info@sparrowscripts.com
-//      url : www.sparrowscripts.com
-//	TabSize: 4
-//
-//	modified by ALQUANTO 30 July 2003 - german language included.
-//									  - modified languageLogic with the ISO-2letter-strings
-//									  - changes in in showCalendar: defaultLanguage is already set...
-//									  - js and html corrected... more xhtml-compliant... simplier css
-//	email: popcalendar@alquanto.de
-//
-//	modified by PinoToy 25 July 2003  - new logic for multiple languages (English, Spanish and ready for more).
-//									  - changes in popUpMonth & popDownMonth methods for hidding	popup.
-//									  - changes in popDownYear & popDownYear methods for hidding	popup.
-//									  - new logic for disabling dates in	the past.
-//									  - new method showCalendar, dynamic	configuration of language, enabling	past & position.
-//									  - changes in the styles.
-//	email  : pinotoy@yahoo.com
-//
-//	modified by Eni Kao 24 August 2005
-//		- Optimized multiple language support with more than one calendar in different languages (as toy.html)
-//		- Added support for Opera, Konqueror and Firefox in non-Quicks mode
-//		- Fully compatible to XHTML 1.0 Transitional
-//		- Changed depricated font, bgcolor etc. to CSS attributes
-//		- Added messages as tooltips (and a new one for the close button)
-//		- Made ESC work in every browser
-//		- Changed german umlauts to HTML entities for better support of international character sets
-//		- TODO: Do this with spanish special characters
-//		- Perhaps I missed something?
-//	email: popcalendar@enikao.net
+/*
+* ____          _____   _____ ______ _____  
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+*| |_) | /  \  | |  | | |  __| |__  | |__) |
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
+*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|____/_/    \_\_____/ \_____|______|_|  \_\
+* Open Source Financial Management
+* Visit http://badger.berlios.org 
+*
+**/
+define("BADGER_ROOT", "..");
+require_once(BADGER_ROOT . "/includes/includes.php");
+require_once(BADGER_ROOT . "/core/UserSettings.class.php"); // sollte das nicht auch in die Includes??
 
+header('Content-Type: text/javascript');
+$badgerRoot = $_GET['badgerRoot']; //we need this bagerRoot for images path
+
+$settings = new UserSettings($badgerDb);
+$badgerTemplate = $settings->getProperty("badgerTemplate");
+  
+//We do our best to get this cached
+//header('Cache-Control: public');
+//header('Expires: ' . date('r', time() + 24 * 60 * 60));
+?> 
 	var enablePast = 0;		// 0 - disabled ; 1 - enabled
 	var fixedX = -1;		// x position (-1 if to appear below control)
 	var fixedY = -1;		// y position (-1 if to appear below control)
@@ -48,27 +33,21 @@
 	var imgDir = '<?php echo $badgerRoot?>/tpl/<?php echo $badgerTemplate?>/Widgets/calendar/';
 	var dayName = '';
 
-	var gotoString = 'Gehe zu aktuellem Monat'; //'Go To Current Month'
-	var todayString = 'Heute ist'; //	en : 'Today is'
-	var weekString = 'KW' //'Wk'
-	var scrollLeftMessage = 'Klicken, um zum vorigen Monat zu gelangen. Gedr&uuml;ckt halten, um automatisch weiter zu scrollen.'
-	// 'Click to scroll to previous month. Hold mouse button to scroll automatically.'
-	var scrollRightMessage = 'Klicken, um zum n&auml;chsten Monat zu gelangen. Gedr&uuml;ckt halten, um automatisch weiter zu scrollen.';
-	// 'Click to scroll to next month. Hold mouse button to scroll automatically.'
-	var selectMonthMessage = 'Klicken, um Monat auszuw&auml;hlen'; //'Click to select a month.'
-	var selectYearMessage = 'Klicken, um Jahr auszuw&auml;hlen'; //'Click to select a year.'
-	var selectDateMessage = 'W&auml;hle [date] als Datum.'; //'Select [date] as date.'
-	var closeCalendarMessage = 'Klicken, um den Kalender zu schlie&szlig;en.';//'Click to close the calendar.'
-	var	monthName = new Array('Januar','Februar','M&auml;rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember')
-	//new Array('January','February','March','April','May','June','July','August','September','October','November','December'),
-	var	monthName2 = new Array('JAN','FEB','MRZ','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ');
-	// new Array('JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'),
+	var gotoString = '<?php echo getBadgerTranslation2("Calendar","gotoString")?>';
+	var todayString = '<?php echo getBadgerTranslation2("Calendar","todayString")?>';
+	var weekString = '<?php echo getBadgerTranslation2("Calendar","weekString")?>';
+	var scrollLeftMessage = '<?php echo getBadgerTranslation2("Calendar","scrollLeftMessage")?>';
+	var scrollRightMessage = '<?php echo getBadgerTranslation2("Calendar","scrollRightMessage")?>';
+	var selectMonthMessage = '<?php echo getBadgerTranslation2("Calendar","selectMonthMessage")?>';
+	var selectYearMessage = '<?php echo getBadgerTranslation2("Calendar","selectYearMessage")?>';
+	var selectDateMessage = '<?php echo getBadgerTranslation2("Calendar","selectDateMessage")?>';
+	var closeCalendarMessage = '<?php echo getBadgerTranslation2("Calendar","closeCalendarMessage")?>';
+	var	monthName = <?php echo str_replace("\\", "", getBadgerTranslation2("Calendar","monthName"))?>;
+	var	monthName2 = <?php echo str_replace("\\", "", getBadgerTranslation2("Calendar","monthName2"))?>;
 	if (startAt==0) {
-		dayName = new Array('So','Mo','Di','Mi','Do','Fr','Sa')
-		//new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat')
+		dayName = <?php echo str_replace("\\", "", getBadgerTranslation2("Calendar","dayNameStartsWithSunday"))?>;
 	} else {
-		dayName = new Array('Mo','Di','Mi','Do','Fr','Sa','So')
-		// new Array('Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
+		dayName = <?php echo str_replace("\\", "", getBadgerTranslation2("Calendar","dayNameStartsWithMonday"))?>;
 	}
 
 	var crossobj, crossMonthObj, crossYearObj, monthSelected, yearSelected, dateSelected, omonthSelected, oyearSelected, odateSelected, monthConstructed, yearConstructed, intervalID1, intervalID2, timeoutID1, timeoutID2, ctlToPlaceValue, ctlNow, dateFormat, nStartingYear, selDayAction, isPast;
@@ -156,7 +135,7 @@
 		document.write (
 			'<div onclick="bShow=true" id="calendar" style="z-index:+999;position:absolute;visibility:hidden;">' +
 				'<table width="'+((showWeekNumber==1)?250:220)+'" style="font-family:Arial;font-size:11px;border: 1px solid #A0A0A0;background-color:#ffffff">' +
-					'<tr style="background-color:#000066;"><td><table width="100%"><tr>' +
+					'<tr style="background-color:#99cc00;"><td><table width="100%"><tr>' +
 						'<td style="padding:2px;font-family:Arial;font-size:11px;"><span id="caption" style="font-weight:bold;color:#ffffff;"></span></td>' + 
 						'<td align="right"><a href="javascript:hideCalendar()" id="imgCloseCalendar"><img src="'+imgDir+'close.gif" width="15" height="13" border="0" title="'+closeCalendarMessage+'" alt="'+closeCalendarMessage+'" /></a></td>' +
 					'</tr></table></td></tr>' +
@@ -193,7 +172,7 @@
 			yearConstructed = false;
 
 			if (showToday == 1) {
-				document.getElementById('lblToday').innerHTML =	'<span style="color:#000066">' + todayString + ' <a onmousemove="window.status=\''+gotoString+'\'" onmouseout="window.status=\'\'" title="'+gotoString+'" style="'+styleAnchor+'" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">'+dayName[(today.getDay()-startAt==-1)?6:(today.getDay()-startAt)]+', ' + dateNow + ' ' + monthName[monthNow].substring(0,3) + ' ' + yearNow + '</a></span>';
+				document.getElementById('lblToday').innerHTML =	'<span style="color:#99cc00">' + todayString + ' <a onmousemove="window.status=\''+gotoString+'\'" onmouseout="window.status=\'\'" title="'+gotoString+'" style="'+styleAnchor+'" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">'+dayName[(today.getDay()-startAt==-1)?6:(today.getDay()-startAt)]+', ' + dateNow + ' ' + monthName[monthNow].substring(0,3) + ' ' + yearNow + '</a></span>';
 			}
 
 			bPageLoaded=true;
@@ -202,10 +181,10 @@
 
 	function constructCaption() {
 		if (!ns4) {
-			sHTML1 = '<span id="spanLeft" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.gif\');this.style.borderColor=\'#8af\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.gif\');this.style.borderColor=\'#36f\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.gif" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanRight" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.gif\');this.style.borderColor=\'#8af\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.gif\');this.style.borderColor=\'#36f\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.gif" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanMonth" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.gif\');this.style.borderColor=\'#8af\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.gif\');this.style.borderColor=\'#36f\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
-			sHTML1 += '<span id="spanYear" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.gif\');this.style.borderColor=\'#8af\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.gif\');this.style.borderColor=\'#36f\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
+			sHTML1 = '<span id="spanLeft" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.gif\');this.style.borderColor=\'#739900\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.gif" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanRight" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.gif\');this.style.borderColor=\'#739900\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.gif" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanMonth" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.gif\');this.style.borderColor=\'#739900\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
+			sHTML1 += '<span id="spanYear" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.gif\');this.style.borderColor=\'#739900\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
 	
 			document.getElementById('caption').innerHTML = sHTML1;
 
@@ -289,9 +268,9 @@
 				if (i == monthSelected){
 					sName = '<b>' + sName + '</b>';
 				}
-				sHTML += '<tr><td id="m' + i + '" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="monthConstructed=false;monthSelected=' + i + ';constructCalendar();popDownMonth();event.cancelBubble=true"><span style="color:#000066">&nbsp;' + sName + '&nbsp;</span></td></tr>';
+				sHTML += '<tr><td id="m' + i + '" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="monthConstructed=false;monthSelected=' + i + ';constructCalendar();popDownMonth();event.cancelBubble=true"><span style="color:#99cc00">&nbsp;' + sName + '&nbsp;</span></td></tr>';
 			}
-
+			
 			document.getElementById('selectMonth').innerHTML = '<table width="70" style="font-family:Arial;font-size:11px;border:1px solid #a0a0a0;background-color:#f0f0f0" cellspacing="0" onmouseover="clearTimeout(timeoutID1)" onmouseout="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'popDownMonth()\',100);event.cancelBubble=true">' + sHTML + '</table>';
 
 			monthConstructed = true;
@@ -356,18 +335,18 @@
 		popDownMonth();
 		sHTML = '';
 		if (!yearConstructed) {
-			sHTML = '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="clearInterval(intervalID1);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID1);intervalID1=setInterval(\'decYear()\',30)" onmouseup="clearInterval(intervalID1)"><span style="color:#000066">-</span></td></tr>';
+			sHTML = '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="clearInterval(intervalID1);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID1);intervalID1=setInterval(\'decYear()\',30)" onmouseup="clearInterval(intervalID1)"><span style="color:#99cc00">-</span></td></tr>';
 
 			j = 0;
 			nStartingYear =	yearSelected - 3;
 			for ( i = (yearSelected-3); i <= (yearSelected+3); i++ ) {
 				sName = i;
 				if (i == yearSelected) sName = '<b>' + sName + '</b>';
-				sHTML += '<tr><td id="y' + j + '" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="selectYear('+j+');event.cancelBubble=true"><span style="color:#000066">&nbsp;' + sName + '&nbsp;</span></td></tr>';
+				sHTML += '<tr><td id="y' + j + '" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="selectYear('+j+');event.cancelBubble=true"><span style="color:#99cc00">&nbsp;' + sName + '&nbsp;</span></td></tr>';
 				j++;
 			}
 
-			sHTML += '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="clearInterval(intervalID2);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID2);intervalID2=setInterval(\'incYear()\',30)" onmouseup="clearInterval(intervalID2)"><span style="color:#000066">+</span></td></tr>';
+			sHTML += '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="clearInterval(intervalID2);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID2);intervalID2=setInterval(\'incYear()\',30)" onmouseup="clearInterval(intervalID2)"><span style="color:#99cc00">+</span></td></tr>';
 
 			document.getElementById('selectYear').innerHTML = '<table width="44" cellspacing="0" style="font-family:Arial;font-size:11px;border:1px solid #a0a0a0;background-color:#f0f0f0" onmouseover="clearTimeout(timeoutID2)" onmouseout="clearTimeout(timeoutID2);timeoutID2=setTimeout(\'popDownYear()\',100)">' + sHTML + '</table>';
 
@@ -464,7 +443,7 @@
 		}
 
 		for (i = 0; i<7; i++) {
-			sHTML += '<td width="27" align="right"><b><span style="color:#000066">' + dayName[i] + '</span></b></td>';
+			sHTML += '<td width="27" align="right"><b><span style="color:#99cc00">' + dayName[i] + '</span></b></td>';
 		}
 
 		sHTML += '</tr><tr>';
@@ -517,17 +496,17 @@
 				if (isPast==1)
 					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
 				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#54A6E2\">" + datePointer + "</span>&nbsp;</a>";
+					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#BFFF09\">" + datePointer + "</span>&nbsp;</a>";
 			} else if ((dayPointer % 7 == (startAt * -1)+7 && startAt==1) || (dayPointer % 7 == startAt && startAt==0)) {	///// SI ES SABADO
 				if (isPast==1)
 					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
 				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#54A6E2\">" + datePointer + "</span>&nbsp;</a>";
-			} else {																			///// CUALQUIER OTRO DIA
+					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#BFFF09\">" + datePointer + "</span>&nbsp;</a>";
+			} else {							 												///// CUALQUIER OTRO DIA
 				if (isPast==1)
 					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
-				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#000066\">" + datePointer + "</span>&nbsp;</a>";
+				else //normale Tage
+					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#C7C7C7\">" + datePointer + "</span>&nbsp;</a>";
 			}
 
 			sHTML += '';
