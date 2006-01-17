@@ -45,7 +45,7 @@ class WidgetEngine {
 		$this->ToolTipJSAdded = true;
 	}
 	public function addCalendarJS() {
-		$this->TplEngine->addJavaScript("js/calendar.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot()."&badgerTemplate=".$this->TplEngine->getThemeName());
+		$this->TplEngine->addJavaScript("js/calendar.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot());
 		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">initCalendar();</script>");
 		$this->CalendarJSAdded = true;
 	}
