@@ -10,14 +10,17 @@
 * Visit http://badger.berlios.org 
 *
 **/
+require_once BADGER_ROOT.'/core/UserSettings.class.php';
+
+$us = new UserSettings($badgerDb);
 
 $driver = 'DB';
 
 $tr =& Translation2::factory($driver, $badgerDbConnectionInfo);
 
-function getBadgerTranslation2 ($page, $id, $lang){
-	global $tr;
-	$tr->get($id, $page, $lang);
+function getBadgerTranslation2 ($page, $id){
+	global $tr,$us;
+	return $tr->get($id, $page, $us->getProperty('language'));
 }
 
 ?>
