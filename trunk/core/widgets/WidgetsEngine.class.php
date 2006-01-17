@@ -73,7 +73,7 @@ class WidgetEngine {
 		
 	}
 	public function addDateField($fieldname, $startdate) {
-		$format = $this->settings->getProperty("DateFormat");
+		$format = $this->settings->getProperty("badgerDateFormat");
 		if($startdate=="") {$startdate=$this->getFormatedDateToday($format);}
 		
 		$strDateField = ""; 
