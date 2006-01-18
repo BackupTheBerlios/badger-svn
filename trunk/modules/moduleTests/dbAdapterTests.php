@@ -48,7 +48,7 @@ INSERT INTO `test1` (`ID`, `Name`, `FirstName`, `Age`, `Height`) VALUES (1, 'Hei
 define("BADGER_ROOT", "../.."); 
 require_once BADGER_ROOT.'/includes/includes.php';
 
-$sql = "SELECT * FROM test1";
+$sql = "SELECT * FROM user_settings";
 
 $res =& $badgerDb->query($sql);
 while ($res->fetchInto ($row)){
