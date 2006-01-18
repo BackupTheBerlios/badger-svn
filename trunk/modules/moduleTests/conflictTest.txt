@@ -1,4 +1,4 @@
-andy ist einfach  der beste!!! hörner!!! düdeldü!!!
+andy ist einfach  das beste!!! hörner!!! düdeldü!!!
 this is a test file
 to test conflict management
 in subclipse
@@ -13,6 +13,11 @@ moin moin
 buh!
 
 hier mal ein paar zeilen
-die zusammengehören
+die zusammengehören,
+testeinfügung
 andi, schreib hier mal
 testweise eine neue zeile dazwischen
+
+hier noch ein paar zeilen
+9:19
+all your base are belong to us
