@@ -1,0 +1,17 @@
+this is a test file
+to test conflict management
+in subclipse
+blabla
+hallo
+conflictTest
+line 7
+line 8
+line 9
+lalalalalalala
+moin moin
+buh!
+
+hier mal ein paar zeilen
+die zusammengehören
+andi, schreib hier mal
+testweise eine neue zeile dazwischen
