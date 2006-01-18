@@ -14,8 +14,10 @@
 //Include Session Management
 include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 
-//placeholder for pw from db
-$readoutpassword = md5("hoerner");
+$us = new UserSettings($badgerDb);
+
+//Retrieve md5´ed password from user settings
+$readoutpassword = $us->getProperty('badgerPassword');
 $passwordcorrect = false;
 if (isset($_session['password']) && $readoutpassword == $_session['password'])
 	{$passwordcorrect = true;
