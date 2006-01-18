@@ -14,8 +14,6 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/includes.php");
 
-
-
 print("<b>error auf en:</b><br>");
 echo getBadgerTranslation2('badger_basics', 'error');
 echo "<br><br>";
