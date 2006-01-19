@@ -41,7 +41,7 @@ class WidgetEngine {
 	}
 	public function addToolTipJS() {
 		$this->TplEngine->addJavaScript("js/overlib_mini.js");
-		$this->TplEngine->addJavaScript("js/overlib_cssstyle_mini.js");
+		$this->TplEngine->addJavaScript("js/overlib_cssw3c.js");
 		$this->ToolTipJSAdded = true;
 	}
 	public function addCalendarJS() {
@@ -63,7 +63,7 @@ class WidgetEngine {
 	public function addToolTipLink($link, $text, $linkname) {
 		if($this->ToolTipJSAdded) {
 			if ($this->ToolTipLayerAdded) {
-				return "<a href=\"".$link."\" class=\"ToolTip\" onmouseover=\"return overlib('".$text."', DELAY, 700);\" onmouseout=\"return nd();\">".$linkname."</a>\n";
+				return "<a href=\"".$link."\" class=\"ToolTip\" onmouseover=\"return overlib('".$text."', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\">".$linkname."</a>\n";
 			} else 	{
 				throw new badgerException('widgetsEngine.ToolTipLayerNotAdded', '');
 			}
