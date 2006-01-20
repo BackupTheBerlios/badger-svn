@@ -13,21 +13,21 @@
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/includes.php");
 
-try{  
-	$tpl = new TemplateEngine("Standard", BADGER_ROOT);
-	$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
-	$tpl->addJavaScript("js/prototype.js");
-	$tpl->addJavaScript("js/behaviour.js");
-	echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
+require_once(BADGER_ROOT . "/core/UserSettings.class.php"); // sollte das nicht auch in die Includes??
 
-	// Beispiel: Einfügen des aktuellen Datum in das Template
-	$aktuellesDatum = date("d.m.Y");
-	eval("echo \"".$tpl->getTemplate("templateTest")."\";");
-	eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+$settings = new UserSettings($badgerDb);
+$tpl = new TemplateEngine($settings, BADGER_ROOT);
 
-}catch (Exception $e) {
-   handleBadgerException($e);
-}
+$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
+$tpl->addJavaScript("js/prototype.js");
+$tpl->addJavaScript("js/behaviour.js");
+echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
+
+// Beispiel: Einfügen des aktuellen Datum in das Template
+$aktuellesDatum = date("d.m.Y");
+eval("echo \"".$tpl->getTemplate("templateTest")."\";");
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+
 ?>
 </body>
 </html>
