@@ -627,7 +627,18 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 	}
 
 	document.onkeypress = function hidecal1 (event) {
-		if (event.keyCode == 27) hideCalendar();
+		var keyPressed;
+		try {
+			if (e.keyCode) {
+				keyPressed = e.keyCode;
+			} else {
+				keyPressed = e.which;
+			}
+		} catch (ex) {
+			keyPressed = window.event.keyCode;
+		}
+
+		if (keyPressed == 27) hideCalendar();
 	}
 	document.onclick = function hidecal2 () {
 		if (!bShow) hideCalendar();

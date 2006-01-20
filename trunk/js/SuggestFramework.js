@@ -12,7 +12,9 @@ function SuggestFramework_Create(instance)
 		SuggestFramework_InputContainer[instance].onblur       = function() { SuggestFramework_HideOutput(instance); };
 		SuggestFramework_InputContainer[instance].onclick      = function() { SuggestFramework_ShowOutput(instance); };
 		SuggestFramework_InputContainer[instance].onfocus      = function() { SuggestFramework_ShowOutput(instance); };
+		//only needed for IE, gets unregistered on first use in other browsers
 		SuggestFramework_InputContainer[instance].onkeydown    = function(event) { SuggestFramework_ProcessKeys(instance, event); };
+		SuggestFramework_InputContainer[instance].onkeypress    = function(event) { SuggestFramework_ProcessKeys(instance, event); };
 
 		SuggestFramework_OutputContainer[instance]                = document.createElement("div");
 		SuggestFramework_OutputContainer[instance].id             = SuggestFramework_Name[instance] + "SuggestList";
@@ -96,13 +98,32 @@ function SuggestFramework_IsHidden(instance)
 
 function SuggestFramework_ProcessKeys(instance, e)
 {
+	try {
+		if (e.keyCode && e.type == 'keydown') {
+			SuggestFramework_InputContainer[instance].onkeydown = null;
+			return;
+		}
+	} catch (ex) {
+		//do nothing, IE detected
+	}
+
 	var keyDown   = 40;
 	var keyUp     = 38;
 	var keyTab    = 9;
 	var keyEnter  = 13;
 	var keyEscape = 27;
 
-	var keyPressed = ((window.event) ? window.event.keyCode : e.which);
+	var keyPressed;
+	
+	try {
+		if (e.keyCode) {
+			keyPressed = e.keyCode;
+		} else {
+			keyPressed = e.which;
+		}
+	} catch (ex) {
+		keyPressed = window.event.keyCode;
+	}
 
 	if(!SuggestFramework_IsHidden(instance))
 	{

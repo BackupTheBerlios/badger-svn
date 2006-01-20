@@ -79,7 +79,7 @@ class WidgetEngine {
 		$strDateField = ""; 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
-			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->TplEngine->getThemeName()."/widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
+			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->TplEngine->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
 			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine.CalendarJSNotAdded', ''); 
