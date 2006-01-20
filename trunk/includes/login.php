@@ -31,15 +31,15 @@ if (isset($_session['password']) && $readoutpassword == $_session['password'])
 
 if($passwordcorrect == false)
 	{
-		print("<b>Please enter your Password:</b><br>");
+		print("<b>Please enter your Password:</b><br />");
 		print("<form method=\"post\" action=\"".$PHP_SELF."\">");
-		print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\"><br>");
+		print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
 		foreach( $_POST as $key=>$value ){
-			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\">");
+			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
 		};
-		print("<input value=\"Go!\" name=\"submit\" type=\"submit\">");
-		print("</form><br/><br/>");
-		if(isset($_POST['password'])){ print("Wrong password.<br/><br/>"); };
+		print("<input value=\"Go!\" name=\"submit\" type=\"submit\" />");
+		print("</form><br /><br />");
+		if(isset($_POST['password'])){ print("Wrong password.<br /><br />"); };
 		exit();
 	};
 
