@@ -16,7 +16,6 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 //$settings->setProperty("badgerTemplate", "Standard");
 //$settings->setProperty("badgerSiteName", "BADGER Finance");
 //$settings->setProperty("DateFormat", "dd.mm.yyyy");
-$tpl = new TemplateEngine($settings, BADGER_ROOT);
 $tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
