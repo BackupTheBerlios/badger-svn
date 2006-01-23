@@ -23,6 +23,8 @@ define ('BADGER_ROOT', '../..');
 require_once(BADGER_ROOT . '/includes/includes.php');
 require_once(BADGER_ROOT . '/core/navi/StandardNavigation.class.php');
 require_once(BADGER_ROOT . '/core/navi/NavigationFromDB.class.php');
+require_once(BADGER_ROOT . '/core/UserSettings.class.php'); // sollte das nicht auch in die Includes??
+
 
 if (isset($_GET['part'])) {
 	

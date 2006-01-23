@@ -18,6 +18,7 @@
  * @author Eni Kao
  * @version $LastChangedRevision$ 
  */
+
 class NavigationFromDB {
 	/**
 	 * Creates the internal navigation structure described by @link Navigation::setStructure 
@@ -27,6 +28,8 @@ class NavigationFromDB {
 	 */
 	public static function getNavigation() {
 		global $badgerDb;
+		
+		$settings = new UserSettings($badgerDb);
 		
 		$itemTypes = array (
 			'i' => 'item',
@@ -55,9 +58,9 @@ class NavigationFromDB {
 			//fill most of the fields
 			$menus[$menuId][] = array (
 				'type' => $itemTypes[$row['item_type']],
-				'name' => $row['item_name'],
+				'name' => getBadgerTranslation2("Navigation", $row['item_name']),
 				'tooltip' => $row['tooltip'],
-				'icon' => NavigationFromDB::replaceBadgerRoot($row['icon_url']),
+				'icon' => BADGER_ROOT ."/tpl/".$settings->getProperty("badgerTemplate")."/Navigation/".$row['icon_url'],
 				'command' => NavigationFromDB::replaceBadgerRoot($row['command'])
 			);
 			
