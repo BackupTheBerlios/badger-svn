@@ -62,7 +62,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 	var dateNow  = today.getDate();
 	var monthNow = today.getMonth();
 	var yearNow  = today.getYear();
-	var imgsrc   = new Array('drop1.gif','drop2.gif','left1.gif','left2.gif','right1.gif','right2.gif');
+	var imgsrc   = new Array('drop1.png','drop2.png','left1.png','left2.png','right1.png','right2.png');
 	var img      = new Array();
 	var bShow    = false;
 
@@ -186,10 +186,10 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 
 	function constructCaption() {
 		if (!ns4) {
-			sHTML1 = '<span id="spanLeft" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.gif\');this.style.borderColor=\'#000000\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.gif" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanRight" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.gif\');this.style.borderColor=\'#000000\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.gif" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanMonth" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.gif\');this.style.borderColor=\'#000000\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
-			sHTML1 += '<span id="spanYear" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.gif\');this.style.borderColor=\'#000000\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
+			sHTML1 = '<span id="spanLeft" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.png\');this.style.borderColor=\'#000000\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.png" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanRight" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.png\');this.style.borderColor=\'#000000\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.png" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanMonth" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.png\');this.style.borderColor=\'#000000\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
+			sHTML1 += '<span id="spanYear" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.png\');this.style.borderColor=\'#000000\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
 	
 			document.getElementById('caption').innerHTML = sHTML1;
 
@@ -524,8 +524,8 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		}
 
 		document.getElementById('content').innerHTML   = sHTML
-		document.getElementById('spanMonth').innerHTML = '&nbsp;' +	monthName[monthSelected] + '&nbsp;<img id="changeMonth" src="'+imgDir+'drop1.gif" width="12" height="10" border="0" alt="" />'
-		document.getElementById('spanYear').innerHTML  = '&nbsp;' + yearSelected	+ '&nbsp;<img id="changeYear" src="'+imgDir+'drop1.gif" width="12" height="10" border="0" alt="" />';
+		document.getElementById('spanMonth').innerHTML = '&nbsp;' +	monthName[monthSelected] + '&nbsp;<img id="changeMonth" src="'+imgDir+'drop1.png" width="12" height="10" border="0" alt="" />'
+		document.getElementById('spanYear').innerHTML  = '&nbsp;' + yearSelected	+ '&nbsp;<img id="changeYear" src="'+imgDir+'drop1.png" width="12" height="10" border="0" alt="" />';
 	}
 
 	function showCalendar(ctl, ctl2, format, past, fx, fy) {
