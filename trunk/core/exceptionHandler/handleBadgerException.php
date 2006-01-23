@@ -36,16 +36,13 @@ function handleBadgerException($e){
 	echo getBadgerTranslation2( 'badgerException' , 'Errorcode');
 	echo ": ";
 	echo getBadgerTranslation2( $e->getBadgerErrorPage(), $e->getBadgerErrorId());	
-#	echo "Error Code:" . $e->getBadgerErrorCode(); //retrieve error code from exception object
-#	echo $e->getAdditionalInfo();
-	#$errorMessage = getFromDatabase("error", $e->getCode());
-	#echo $errorMessage; 
+
 	/**
 	 * Compiled error message
 	 * 
 	 * @var string 
 	 */
-	$loggedError = "ERROR: - ERROR Module: " . $e->getBadgerErrorPage() . ", ERROR Code: ". $e->getBadgerErrorId()." ON LINE " . $e->getLine() . " IN FILE " . $e->getFile(). " ADDITIONAL INFO " . $e->getAdditionalInfo();// compile error message to be logged
+	$loggedError = "ERROR: - ERROR Module: " . $e->getBadgerErrorPage() . ", ERROR Code: ". $e->getBadgerErrorId(). ", Error Description: ".getBadgerTranslation2( $e->getBadgerErrorPage(), $e->getBadgerErrorId(), 'en') ." ON LINE " . $e->getLine() . " IN FILE " . $e->getFile(). " ADDITIONAL INFO " . $e->getAdditionalInfo();// compile error message to be logged
 	$logger->log($loggedError); //write to log file
 }
 
