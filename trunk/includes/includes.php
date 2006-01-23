@@ -83,4 +83,9 @@ require_once BADGER_ROOT.'/core/templateEngine/templateEngine.class.php';
  * makes widget engine available
  */
 require_once BADGER_ROOT.'/core/widgets/WidgetsEngine.class.php';
+
+/**
+ * makes user settings available
+ */
+require_once(BADGER_ROOT . "/core/UserSettings.class.php");
 ?>

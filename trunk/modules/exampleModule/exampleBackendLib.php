@@ -11,7 +11,7 @@
 *
 **/
 define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.php");
+require_once(BADGER_ROOT . "/includes/fileHeaderBackEnd.php");
   
 
 // Hier der Programmcode rein. Der sollte Exceptions werfen
