@@ -17,7 +17,7 @@
 /**
  * hopefully kill all problems with [un|pre]installed PEAR
  */
-ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
+#ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
 
 /**
  * Common functions
