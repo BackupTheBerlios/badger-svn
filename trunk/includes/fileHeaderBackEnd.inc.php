@@ -10,6 +10,12 @@
 * Visit http://badger.berlios.org 
 *
 **/
+
+/**
+ * hopefully kill all problems with [un|pre]installed PEAR
+ */
+ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
+
 require_once(BADGER_ROOT . "/includes/includes.php");
 
 ?>
