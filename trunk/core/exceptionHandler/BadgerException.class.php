@@ -25,11 +25,13 @@ class BadgerException extends Exception
 	 * @var string 
 	 */
 	private $additionalInfo;
-  	private $badgerErrorCode;
+  	private $badgerErrorId;
+  	private $badgerErrorPage;
    // Redefine the exception so code isn't optional
-   	public function __construct($badgerErrorCode, $additionalInfo = NULL) {
+   	public function __construct($badgerErrorPage, $badgerErrorId, $additionalInfo = NULL) {
 		$this->additionalInfo = $additionalInfo;
-		$this->badgerErrorCode = $badgerErrorCode;
+		$this->badgerErrorPage = $badgerErrorPage;
+		$this->badgerErrorId = $badgerErrorId;
        	// call default exception constructor
 		parent::__construct($message = NULL, $code = 42);
    	}
@@ -42,13 +44,21 @@ class BadgerException extends Exception
 		return $this->additionalInfo;		
 	}
 /**
- * function to receive the badgerErrorCode
+ * function to receive the badgerErrorPage
  * 
  * @return String
  */
-	public function getBadgerErrorCode (){
-		return $this->badgerErrorCode;		
+	public function getBadgerErrorPage (){
+		return $this->badgerErrorPage;		
 	}
-	
+
+/**
+ * function to receive the badgerErrorId
+ * 
+ * @return String
+ */
+	public function getBadgerErrorId (){
+		return $this->badgerErrorId;		
+	}	
 }
 ?>

@@ -18,9 +18,14 @@ $driver = 'DB';
 
 $tr =& Translation2::factory($driver, $badgerDbConnectionInfo);
 
-function getBadgerTranslation2 ($page, $id){
+function getBadgerTranslation2 ($page, $id, $lang = NULL){
 	global $tr,$us;
-	return $tr->get($id, $page, $us->getProperty('badgerLanguage'));
+	if (!($lang)){
+		$usedLanguage = $us->getProperty('badgerLanguage');
+	} else {
+		$usedLanguage = $lang;
+	};
+	return $tr->get($id, $page, $usedLanguage);
 }
 
 ?>

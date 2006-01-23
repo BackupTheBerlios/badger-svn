@@ -30,9 +30,14 @@ function handleBadgerException($e){
 	 */	
 	global $logger; 
 	
-	echo "<b>ERROR!</b><br />";
-	echo "Error Code:" . $e->getBadgerErrorCode(); //retrieve error code from exception object
-	echo $e->getAdditionalInfo();
+	echo "<b>" ;
+	echo getBadgerTranslation2( 'badgerException' , 'Error' );
+	echo "</b><br />";
+	echo getBadgerTranslation2( 'badgerException' , 'Errorcode');
+	echo ": ";
+	echo getBadgerTranslation2( $e->getBadgerErrorPage(), $e->getBadgerErrorId());	
+#	echo "Error Code:" . $e->getBadgerErrorCode(); //retrieve error code from exception object
+#	echo $e->getAdditionalInfo();
 	#$errorMessage = getFromDatabase("error", $e->getCode());
 	#echo $errorMessage; 
 	/**
@@ -40,7 +45,7 @@ function handleBadgerException($e){
 	 * 
 	 * @var string 
 	 */
-	$loggedError = "ERROR: - ERROR CODE: " . $e->getBadgerErrorCode() . " ON LINE " . $e->getLine() . " IN FILE " . $e->getFile(). " ADDITIONAL INFO " . $e->getAdditionalInfo();;// compile error message to be logged
+	$loggedError = "ERROR: - ERROR Module: " . $e->getBadgerErrorPage() . ", ERROR Code: ". $e->getBadgerErrorId()." ON LINE " . $e->getLine() . " IN FILE " . $e->getFile(). " ADDITIONAL INFO " . $e->getAdditionalInfo();// compile error message to be logged
 	$logger->log($loggedError); //write to log file
 }
 
