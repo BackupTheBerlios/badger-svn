@@ -92,6 +92,18 @@ class WidgetEngine {
 		} else {
 			throw new badgerException('widgetsEngine.AutoCompleteJSNotAdded', ''); 
 		}
-	}	
+	}
+	
+	public function createLabel($field, $name, $mandatory=false) {
+		if($mandatory) {
+			return "<label for='$field' class='mandatory'>$name</label>";
+		} else {
+			return "<label for='$field'>$name</label>";
+		}
+	}
+	
+	public function createField($fieldname, $size, $value="", $mandatory=false){
+		return "<input type='text' id='$fieldname' name='$fieldname' size='$size' value='$value' />";	
+	}
 	
 }
