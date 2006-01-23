@@ -11,13 +11,14 @@
 *
 **/
 define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/fileHeaderBackEnd.php");
+require_once(BADGER_ROOT . "/includes/fileHeaderBackEnd.inc.php");
   
 
 // Hier der Programmcode rein. Der sollte Exceptions werfen
 // nach dem Muster: 
-
-echo "Hello World!";
+function badgerEchoHelloWorld(){
+	echo "Hello World!";
+}
 
 #throw new badgerException('exampleModule.exampleException', 'Additional Information');                                            
 
