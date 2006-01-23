@@ -21,7 +21,7 @@ $tpl = new TemplateEngine($settings, BADGER_ROOT);
 $tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
 $tpl->addJavaScript("js/prototype.js");
 $tpl->addJavaScript("js/behaviour.js");
-echo $tpl->getHeader("BADGER Finance Management - Seitenname"); //write header
+echo $tpl->getHeader("Seitenname"); //write header
 
 // Beispiel: Einfügen des aktuellen Datum in das Template
 $aktuellesDatum = date("d.m.Y");
