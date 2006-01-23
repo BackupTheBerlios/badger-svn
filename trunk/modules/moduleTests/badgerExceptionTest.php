@@ -11,7 +11,7 @@
 *
 **/
 define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/includes.php");
+require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
  
 	function badgerExceptionTest(){
 	

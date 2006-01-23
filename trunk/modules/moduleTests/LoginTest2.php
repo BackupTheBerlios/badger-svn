@@ -12,7 +12,7 @@
 **/
 
 define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/includes.php");
+require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 print("<form action=\"LoginTest.php\" method=\"post\">");
 print("<input type=\"text\" name=\"test\"><br/>");
