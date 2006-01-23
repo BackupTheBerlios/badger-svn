@@ -13,9 +13,6 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
-//$settings->setProperty("badgerTemplate", "Standard");
-//$settings->setProperty("badgerSiteName", "BADGER Finance");
-//$settings->setProperty("DateFormat", "dd.mm.yyyy");
 $tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
@@ -33,7 +30,11 @@ echo $tpl->getHeader("Seitenname"); //write header */
 		echo "<br />";
 		echo $widgets->addToolTipLayer();
 		echo $widgets->addToolTipLink("javascript:void(0);", "Description - this is ...", "ToolTip Test");
+		echo "<br />";
+		echo $widgets->createLabel("fieldname", "name:", true);
+		echo $widgets->createField("fieldname", 25, "value", true);
 		?>
 	</form>
-</body>
-</html>
+<?php
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+?>
