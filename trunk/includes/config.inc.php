@@ -26,14 +26,14 @@
 	 * 
 	 * @var global constant
 	 */	
- define("DB_USERNAME", "root");
+ define("DB_USERNAME", "projectssql2");
  
   	/**
 	 * Database password
 	 * 
 	 * @var global constant
 	 */	
- define("DB_PASSWORD", "");
+ define("DB_PASSWORD", "pass");
  
   	/**
 	 * Database host address
