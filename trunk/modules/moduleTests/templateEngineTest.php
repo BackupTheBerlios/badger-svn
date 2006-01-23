@@ -13,15 +13,11 @@
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
-require_once(BADGER_ROOT . "/core/UserSettings.class.php"); // sollte das nicht auch in die Includes??
-
-$settings = new UserSettings($badgerDb);
-$tpl = new TemplateEngine($settings, BADGER_ROOT);
-
+//$tpl = new TemplateEngine($settings, BADGER_ROOT);
 $tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
 $tpl->addJavaScript("js/prototype.js");
 $tpl->addJavaScript("js/behaviour.js");
-echo $tpl->getHeader("Phil exfreundinnen"); //write header
+echo $tpl->getHeader("PageTitle"); //write header
 
 // Beispiel: Einfügen des aktuellen Datum in das Template
 $aktuellesDatum = date("d.m.Y");
@@ -29,5 +25,3 @@ eval("echo \"".$tpl->getTemplate("templateTest")."\";");
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 
 ?>
-</body>
-</html>
