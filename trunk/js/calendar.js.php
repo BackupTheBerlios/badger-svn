@@ -132,19 +132,24 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 			img[i] = new Image;
 			img[i].src = imgDir + imgsrc[i];
 		}
+		
 		document.write (
 			'<div onclick="bShow=true" id="calendar" style="z-index:+999;position:absolute;visibility:hidden;">' +
 				'<table width="'+((showWeekNumber==1)?250:220)+'" style="font-family:Arial;font-size:11px;border: 1px solid #A0A0A0;background-color:#ffffff">' +
-					'<tr style="background-color:#99cc00;"><td><table width="100%"><tr>' +
-						'<td style="padding:2px;font-family:Arial;font-size:11px;"><span id="caption" style="font-weight:bold;color:#ffffff;"></span></td>' + 
-						'<td align="right"><a href="javascript:hideCalendar()" id="imgCloseCalendar"><img src="'+imgDir+'close.gif" width="15" height="13" border="0" title="'+closeCalendarMessage+'" alt="'+closeCalendarMessage+'" /></a></td>' +
-					'</tr></table></td></tr>' +
+					'<tr style="background-color:#99cc00;"><td>' + 
+						'<table width="100%"><tr>' +
+							'<td style="padding:2px;font-family:Arial;font-size:11px;"><span id="caption" style="font-weight:bold;color:#ffffff;"></span></td>' + 
+							'<td align="right"><a href="javascript:hideCalendar()" id="imgCloseCalendar"><img src="'+imgDir+'close.gif" width="15" height="13" border="0" title="'+closeCalendarMessage+'" alt="'+closeCalendarMessage+'" /></a></td>' +
+						'</tr></table>' +
+					'</td></tr>' +
 					'<tr><td style="padding:5px;background-color:#ffffff"><div id="content" style="display:inline;"></div></td></tr>');
-
+		
+		
 		if (showToday == 1) {
 			document.write ('<tr style="background-color:#f0f0f0"><td style="padding:5px;text-align:center;"><span id="lblToday"></span></td></tr>');
 		}
 			
+		
 		document.write ('</table></div><div id="selectMonth" style="z-index:+999;position:absolute;visibility:hidden;"></div><div id="selectYear" style="z-index:+999;position:absolute;visibility:hidden;"></div>');
 	}
 
@@ -181,10 +186,10 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 
 	function constructCaption() {
 		if (!ns4) {
-			sHTML1 = '<span id="spanLeft" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.gif\');this.style.borderColor=\'#739900\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.gif" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanRight" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.gif\');this.style.borderColor=\'#739900\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.gif" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanMonth" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.gif\');this.style.borderColor=\'#739900\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
-			sHTML1 += '<span id="spanYear" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.gif\');this.style.borderColor=\'#739900\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
+			sHTML1 = '<span id="spanLeft" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.gif\');this.style.borderColor=\'#000000\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.gif" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanRight" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.gif\');this.style.borderColor=\'#000000\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.gif" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanMonth" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.gif\');this.style.borderColor=\'#000000\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
+			sHTML1 += '<span id="spanYear" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.gif\');this.style.borderColor=\'#000000\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.gif\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
 	
 			document.getElementById('caption').innerHTML = sHTML1;
 
@@ -268,7 +273,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 				if (i == monthSelected){
 					sName = '<b>' + sName + '</b>';
 				}
-				sHTML += '<tr><td id="m' + i + '" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="monthConstructed=false;monthSelected=' + i + ';constructCalendar();popDownMonth();event.cancelBubble=true"><span style="color:#99cc00">&nbsp;' + sName + '&nbsp;</span></td></tr>';
+				sHTML += '<tr><td id="m' + i + '" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="monthConstructed=false;monthSelected=' + i + ';constructCalendar();popDownMonth();event.cancelBubble=true"><span style="color:#000000">&nbsp;' + sName + '&nbsp;</span></td></tr>';
 			}
 			
 			document.getElementById('selectMonth').innerHTML = '<table width="70" style="font-family:Arial;font-size:11px;border:1px solid #a0a0a0;background-color:#f0f0f0" cellspacing="0" onmouseover="clearTimeout(timeoutID1)" onmouseout="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'popDownMonth()\',100);event.cancelBubble=true">' + sHTML + '</table>';
@@ -302,9 +307,9 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		for	(i=0; i<7; i++) {
 			newYear	= (i + nStartingYear) + 1;
 			if (newYear == yearSelected)
-				txtYear = '<span style="color:#006;font-weight:bold;">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span style="color:#000000;font-weight:bold;">&nbsp;' + newYear + '&nbsp;</span>';
 			else
-				txtYear = '<span style="color:#006;">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span style="color:#000000;">&nbsp;' + newYear + '&nbsp;</span>';
 			document.getElementById('y'+i).innerHTML = txtYear;
 		}
 		nStartingYear++;
@@ -315,9 +320,9 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		for	(i=0; i<7; i++) {
 			newYear = (i + nStartingYear) - 1;
 			if (newYear == yearSelected)
-				txtYear = '<span style="color:#006;font-weight:bold">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span style="color:#000000;font-weight:bold">&nbsp;' + newYear + '&nbsp;</span>';
 			else
-				txtYear = '<span style="color:#006;">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span style="color:#000000;">&nbsp;' + newYear + '&nbsp;</span>';
 			document.getElementById('y'+i).innerHTML = txtYear;
 		}
 		nStartingYear--;
@@ -335,18 +340,18 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		popDownMonth();
 		sHTML = '';
 		if (!yearConstructed) {
-			sHTML = '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="clearInterval(intervalID1);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID1);intervalID1=setInterval(\'decYear()\',30)" onmouseup="clearInterval(intervalID1)"><span style="color:#99cc00">-</span></td></tr>';
+			sHTML = '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="clearInterval(intervalID1);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID1);intervalID1=setInterval(\'decYear()\',30)" onmouseup="clearInterval(intervalID1)"><span style="color:#000000">-</span></td></tr>';
 
 			j = 0;
 			nStartingYear =	yearSelected - 3;
 			for ( i = (yearSelected-3); i <= (yearSelected+3); i++ ) {
 				sName = i;
 				if (i == yearSelected) sName = '<b>' + sName + '</b>';
-				sHTML += '<tr><td id="y' + j + '" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="selectYear('+j+');event.cancelBubble=true"><span style="color:#99cc00">&nbsp;' + sName + '&nbsp;</span></td></tr>';
+				sHTML += '<tr><td id="y' + j + '" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="selectYear('+j+');event.cancelBubble=true"><span style="color:#00000">&nbsp;' + sName + '&nbsp;</span></td></tr>';
 				j++;
 			}
 
-			sHTML += '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#909090\'" onmouseout="clearInterval(intervalID2);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID2);intervalID2=setInterval(\'incYear()\',30)" onmouseup="clearInterval(intervalID2)"><span style="color:#99cc00">+</span></td></tr>';
+			sHTML += '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="clearInterval(intervalID2);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID2);intervalID2=setInterval(\'incYear()\',30)" onmouseup="clearInterval(intervalID2)"><span style="color:#000000">+</span></td></tr>';
 
 			document.getElementById('selectYear').innerHTML = '<table width="44" cellspacing="0" style="font-family:Arial;font-size:11px;border:1px solid #a0a0a0;background-color:#f0f0f0" onmouseover="clearTimeout(timeoutID2)" onmouseout="clearTimeout(timeoutID2);timeoutID2=setTimeout(\'popDownYear()\',100)">' + sHTML + '</table>';
 
@@ -496,12 +501,12 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 				if (isPast==1)
 					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
 				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#BFFF09\">" + datePointer + "</span>&nbsp;</a>";
+					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#99cc00\">" + datePointer + "</span>&nbsp;</a>";
 			} else if ((dayPointer % 7 == (startAt * -1)+7 && startAt==1) || (dayPointer % 7 == startAt && startAt==0)) {	///// SI ES SABADO
 				if (isPast==1)
 					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
 				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#BFFF09\">" + datePointer + "</span>&nbsp;</a>";
+					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#99cc00\">" + datePointer + "</span>&nbsp;</a>";
 			} else {							 												///// CUALQUIER OTRO DIA
 				if (isPast==1)
 					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
