@@ -12,3 +12,4 @@ $additionalHeaderTags
 <img src="http://projects.edop.de/wiki/images/8/8f/Logo_447x173.PNG">
 </td><td>BADGER finance ist <b>die</b> Open Source Finanzmanagement-Software für Privatanwender!</td>
 </tr><tr><td colspan="2">
+
