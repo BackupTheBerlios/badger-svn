@@ -31,7 +31,7 @@ class AccountManager extends DataGridHandler {
 	private $dbResult;
 	
 	function AccountManager($badgerDb) {
-		super($badgerDb);
+		parent::__construct($badgerDb);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ class AccountManager extends DataGridHandler {
 			'accountId' => 'integer',
 			'currency' => 'string',
 			'title' => 'string',
-			'balance' => 'currency'    	
+			'balance' => 'Amount'    	
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -103,7 +103,7 @@ class AccountManager extends DataGridHandler {
 				'accountId' => $currentAccount->getId(),
 				'currency' => $currentAccount->getCurrency()->getSymbol(),
 				'title' => $currentAccount->getTitle(),
-				'balance' => $currentAccount->getBalance()
+				'balance' => $currentAccount->getBalance()->get()
 			);
 		}
 		
@@ -116,7 +116,7 @@ class AccountManager extends DataGridHandler {
 		}
 		$this->fetchFromDB();
 		$row = false;
-		if($this->dbResult->fetchInto($row)){
+		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
 			$this->accounts[$row['account_id']] = new Account(&$this, $row);
 			return $row['account_id'];
 		} else {
@@ -131,25 +131,35 @@ class AccountManager extends DataGridHandler {
 		}
 		
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, c.symbol, SUM(ft.amount) balance
+				a.upper_limit, a.currency_id, c.symbol currency_symbol, c.long_name currency_long_name, SUM(ft.amount) balance
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
 		";
-		$where = $this->getFilterSQL();
-		if($where) {
-			$sql .= "WHERE $where\n ";
-		} 
+		
 		$sql .= "GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, c.symbol \n";
+				a.upper_limit, a.currency_id, currency_symbol, currency_long_name \n";
+		
+		$where = $this->getFilterSQL();
+		$where = str_replace('balance', 'SUM(ft.amount)', $where);
+		if($where) {
+			$sql .= "HAVING $where\n ";
+		} 
+		
 		$order = $this->getOrderSQL();				
 		if($order) {
 			$sql .= "ORDER BY $order\n ";
-		} 
+		}
+		
+		//echo "<pre>$sql</pre>";
+
 		$this->dbResult =& $this->badgerDb->query($sql);
+		
 		if (PEAR::isError($this->dbResult)) {
+			echo "SQL Error: " . $this->dbResult->getMessage();
 			throw new badgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
 		}
+		
 		$this->dataFetched = true; 	
 	}
 }

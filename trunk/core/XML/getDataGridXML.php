@@ -35,8 +35,10 @@
  */
 
 define("BADGER_ROOT", "../.."); 
-require_once BADGER_ROOT . '/includes/includes.php';
+require_once BADGER_ROOT . '/includes/fileHeaderBackEnd.inc.php';
 require_once BADGER_ROOT . '/core/XML/DataGridRepository.class.php';
+require_once BADGER_ROOT . '/core/XML/DataGridXML.class.php';
+require_once BADGER_ROOT . '/core/Amount.class.php';
 
 //q parameter is mandatory
 if (!isset($_GET['q'])){
@@ -107,7 +109,7 @@ while (isset($_GET["fk$i"]) && isset($_GET["fo$i"]) && isset($_GET["fv$i"])) {
 			$filter[$i]['op'] = unescaped($_GET, "fo$i");
 			
 			try {
-				$filter[$i]['val'] = transferType($handler-getFieldType(unescaped($_GET, "fk$i")), unescaped($_GET, "fv$i"));
+				$filter[$i]['val'] = transferType($handler->getFieldType(unescaped($_GET, "fk$i")), unescaped($_GET, "fv$i"));
 			} catch (TransferException $ex) {
 				//Untransferable Data Type
 				return 'Illegal filter value: ' . $_GET["fv$i"];
@@ -133,6 +135,8 @@ $rows = $handler->getAll();
 $columns = $handler->getFieldNames();
 
 $dgx = new DataGridXML($columns, $rows);
+
+header('Content-Type: text/xml');
 
 //construct XML
 echo $dgx->getXML();
@@ -209,6 +213,10 @@ function transferType($type, $str) {
 			} else {
 				throw new TransferException();
 			}
+			break;
+			
+		case 'Amount':
+			return new Amount($str);
 			break;
 			
 		default:
