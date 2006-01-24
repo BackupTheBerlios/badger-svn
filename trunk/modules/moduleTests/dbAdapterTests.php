@@ -46,7 +46,7 @@ INSERT INTO `test1` (`ID`, `Name`, `FirstName`, `Age`, `Height`) VALUES (1, 'Hei
 
  */
 define("BADGER_ROOT", "../.."); 
-require_once BADGER_ROOT.'/includes/includes.php';
+require_once BADGER_ROOT.'/includes/fileHeaderFrontEnd.inc.php';
 
 $sql = "SELECT * FROM user_settings";
 
