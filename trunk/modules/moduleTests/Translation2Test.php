@@ -15,11 +15,11 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 print("<b>error auf en:</b><br>");
-echo getBadgerTranslation2('badger_basics', 'error');
+echo getBadgerTranslation2('Navigation', 'Dummy');
 echo "<br><br>";
 
 print("<b>out_of_money auf en:</b><br>");
-echo getBadgerTranslation2('badger_basics', 'out_of_money');
+echo getBadgerTranslation2('Navigation', 'Dummy', 'en');
 echo "<br>";
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
