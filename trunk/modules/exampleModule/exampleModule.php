@@ -19,7 +19,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 echo "Hello World!";
 
-#throw new badgerException('exampleModule.exampleException', 'Additional Information');                                            
+#throw new badgerException('exampleModule', 'exampleException', 'Additional Information');                                            
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

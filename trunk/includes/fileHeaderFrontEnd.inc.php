@@ -20,4 +20,5 @@ require_once(BADGER_ROOT . "/includes/includes.php");
 require_once(BADGER_ROOT . "/core/UserSettings.class.php");
 $settings = new UserSettings($badgerDb);
 $tpl = new TemplateEngine($settings, BADGER_ROOT);
+require(BADGER_ROOT . "/includes/login.php");
 ?>
