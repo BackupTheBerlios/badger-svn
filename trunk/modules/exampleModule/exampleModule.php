@@ -12,16 +12,15 @@
 **/
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
-  
-
-// Hier der Programmcode rein. Der sollte Exceptions werfen
-// nach dem Muster: 
-
-echo "Hello World!" . "<br />";
-
+// hier wird die ID Dummy aus dem Modul Navigation internationalisiert ausgegeben. 
 echo getBadgerTranslation2('Navigation', 'Dummy') . "<br />";
+// hier wird ein Element der User Settings ausgelesen (hier die Sprache)
 echo $us->getProperty('badgerLanguage') . "<br />\n";
-
+// wenn nicht auskommentiert, wird hier eine Exception geworfen. Dazu muss in der i18n Datenbank ein Eintrag mit:
+// page_id = exampleModule
+// id = exampleException
+// en = Englische Fehlerbeschreibung
+// de = deutsche Fehlerbeschreibung
 #throw new badgerException('exampleModule', 'exampleException', 'Additional Information');                                            
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
