@@ -2,7 +2,12 @@ body, table {
 	font-family: Arial, Verdana;
 	font-size: 10pt;
 }
+div.footer {
+	text-align: center;
+	font-size: 8pt;
+}
 
+/* FORMS */
 label {
 	text-align: right;
 	cursor: pointer;	
@@ -15,17 +20,12 @@ input {
 	font-family: Arial, Verdana;
 	font-size: 10pt;
 	border: 1px solid #d4d4d4;
-}	
-
+}
 input:focus, textarea:focus {
 	background-color: #efefef;
 	border: 1px solid #d4d4d4;
 }
-
-div.footer {
-	text-align: center;
-	font-size: 8pt;
-}
+/* END FORMS */
 
 /* SUGGEST */
 .SuggestFramework_List {
