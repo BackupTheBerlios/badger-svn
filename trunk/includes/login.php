@@ -14,11 +14,16 @@
 //Include Session Management
 //include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 
-$us = new UserSettings($badgerDb);
-$tpl = new TemplateEngine($us, BADGER_ROOT);
+//UserSettings object named "$us" is already existing
+//TemplateEngine object named "$tpl" is already existing
 
-$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
-echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
+
+//Check if user wants to logout. If so, log him out
+if(isset($_GET['logout']) && $_GET['logout']==true){
+	session_flush();
+};
+
+
 
 //Check how many times the user tried to log in, stop working after 10 times
 
@@ -66,6 +71,9 @@ if (isset($_session['password']) && $readoutpassword == $_session['password'])
 
 if($passwordcorrect == false)
 	{
+		$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
+		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
+		
 		set_session_var('number_of_login_attempts',$attempts + 1);
 		print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
 		print("<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");

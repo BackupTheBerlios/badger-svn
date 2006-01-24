@@ -13,9 +13,9 @@
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
-require(BADGER_ROOT . "/includes/login.php");
 
 print("If you can see this text, you are logged in.<br>");
+print("<a href=\"".$_SERVER['PHP_SELF']."?logout=true\">Logout Link</a>");
 
 if (isset($_POST)){
 	print("<pre>");

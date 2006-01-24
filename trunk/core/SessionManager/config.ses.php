@@ -181,10 +181,13 @@ function getmicrotime(){
 
 function index_of($value,$array){
 	$i = 0;
-	while($array[$i] != $value && $i < count($array)){
-		$i++;
+	if(count($array)>0) { 
+		while($array[$i] != $value && $i < count($array)){
+			$i++;
+		}
+		return $array[$i]==$value?$i:-1;
 	}
-	return $array[$i]==$value?$i:-1;
+	return -1;
 }
 
 
