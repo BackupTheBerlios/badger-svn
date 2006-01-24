@@ -68,7 +68,7 @@ if($passwordcorrect == false)
 	{
 		set_session_var('number_of_login_attempts',$attempts + 1);
 		print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
-		print("<form method=\"post\" action=\"".$PHP_SELF."\">");
+		print("<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
 		print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
 		foreach( $_POST as $key=>$value ){
 			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
@@ -92,7 +92,7 @@ if($passwordcorrect == false)
 			$signature = $signature."&";
 		};
 		
-		print("<br/><a href=\"".$PHP_SELF.$signature."send_password=true\">".getBadgerTranslation2('badger_login', 'forgot_password')."</a>");
+		print("<br/><a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=true\">".getBadgerTranslation2('badger_login', 'forgot_password')."</a>");
 		print("</form><br />");
 		if(isset($_POST['password']) && $_POST['password'] == ""){
 			print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");
@@ -102,7 +102,7 @@ if($passwordcorrect == false)
 		
 		if(isset($_GET['send_password']) && $_GET['send_password'] == "true"){
 			print(getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>");
-			print("<a href=\"".$PHP_SELF.$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>");
+			print("<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>");
 		};
 		
 		if(isset($_GET['send_password']) && $_GET['send_password'] == "truetrue"){
