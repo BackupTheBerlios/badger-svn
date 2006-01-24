@@ -18,7 +18,7 @@ ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
 
 require_once(BADGER_ROOT . "/includes/includes.php");
 require_once(BADGER_ROOT . "/core/UserSettings.class.php");
-$settings = new UserSettings($badgerDb);
-$tpl = new TemplateEngine($settings, BADGER_ROOT);
+$us = new UserSettings($badgerDb);
+$tpl = new TemplateEngine($us, BADGER_ROOT);
 require(BADGER_ROOT . "/includes/login.php");
 ?>
