@@ -26,6 +26,13 @@ abstract class DataGridHandler {
 	 * @var object
 	 */
 	protected $badgerDb;
+	
+	/**
+	 * All order criteria, structure described in setOrder().
+	 * 
+	 * @var array
+	 */
+	protected $order;
 
     /**
      * Initializes the DB object.
@@ -70,7 +77,45 @@ abstract class DataGridHandler {
      * @throws BadgerException If $order has the wrong format or an invalid field name was given.
      * @return void
      */
-    public abstract function setOrder($order);
+    public function setOrder($order){
+    	$this->order = array ();
+    	$numOrders = 0;
+    
+    	if (!is_array($order)){
+    		throw new badgerException('DataGridHandler', 'paramNoArray'); 
+    	}
+    
+    	foreach ($order as $key => $val){
+       		if (!is_array($val)){
+    			throw new badgerException('DataGridHandler', 'arrayElementNoArray', $key); 
+    		}
+    		if(!isset($val['key'])){
+    			throw new badgerException('DataGridHandler', 'keyIndexNotDefined', $key);
+    		}
+    		if(!isset($val['dir'])){
+    			throw new badgerException('DataGridHandler', 'dirIndexNotDefined', $key);
+    		}
+    		
+    		if(!$this-> hasField($val['key'])){
+    			throw new badgerException('DataGridHandler', 'illegalField', $val['key']);
+    		}
+    		if(strtolower($val['dir'])  != 'asc' and strtolower($val['dir'])  != 'desc'){
+    			throw new badgerException('DataGridHandler', 'illegalDirection', $val['dir']);
+    		}
+    		
+    		$this->order[] = array (
+    			'key' => $val['key'],
+    			'dir' => $val['dir']
+    		);
+    		
+    		$numOrders++;
+    		
+    		if ($numOrders >= 3) {
+    			break;
+    		}
+    	}
+    }
+    
     
     /**
      * Sets the filter(s) to limit the results to.
@@ -90,7 +135,41 @@ abstract class DataGridHandler {
      * @throws BadgerException If $filter has the wrong format or an invalid field name was given.
      * @return void
      */
-    public abstract function setFilter($filter);
+    public function setFilter($filter) {
+    	$this->filter = array ();
+    
+    	if (!is_array($filter)){
+    		throw new badgerException('DataGridHandler', 'paramNoArray'); 
+    	}
+    
+    	foreach ($filter as $key => $val){
+       		if (!is_array($val)){
+    			throw new badgerException('DataGridHandler', 'arrayElementNoArray', $key); 
+    		}
+    		if(!isset($val['key'])){
+    			throw new badgerException('DataGridHandler', 'keyIndexNotDefined', $key);
+    		}
+    		if(!isset($val['op'])){
+    			throw new badgerException('DataGridHandler', 'opIndexNotDefined', $key);
+    		}
+    		if(!isset($val['val'])){
+    			throw new badgerException('DataGridHandler', 'valIndexNotDefined', $key);
+    		}
+    		
+    		if(!$this->hasField($val['key'])){
+    			throw new badgerException('DataGridHandler', 'illegalField', $val['key']);
+    		}
+
+			//We trust the caller to check op and val
+    		
+    		$this->order[] = array (
+    			'key' => $val['key'],
+    			'op' => $val['op'],
+    			'val' => $val['val']
+    		);
+    	}
+    	
+    }
     
     /**
      * Returns all valid field names.
@@ -105,8 +184,8 @@ abstract class DataGridHandler {
      * The result has the following form:
      * array (
      *   array (
-     *     'field name 0' => 'value of field 0 as string',
-     *     'field name 1' => 'value of field 1 as string'
+     *     'field name 0' => 'value of field 0',
+     *     'field name 1' => 'value of field 1'
      *   )
      * );
      * 
