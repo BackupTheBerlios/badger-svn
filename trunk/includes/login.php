@@ -12,7 +12,7 @@
 **/
 
 //Include Session Management
-include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
+//include(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 
 $us = new UserSettings($badgerDb);
 $tpl = new TemplateEngine($us, BADGER_ROOT);
@@ -22,27 +22,40 @@ echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write h
 
 //Check how many times the user tried to log in, stop working after 10 times
 
-$locked_out_since = $us->getProperty('locked_out_since');
+if(isset($_session['locked_out_since']))
+{
+	$locked_out_since = $_session['locked_out_since'];
+}else{
+	$locked_out_since = 0;
+};
+
 if( $locked_out_since != 0){
-	if($locked_out_since - time() + 5 <= 0){
-		$us->setProperty('locked_out_since','0');
-		$us->setProperty('number_of_login_attempts','0');
+	if($locked_out_since - time() + 60 <= 0){
+		set_session_var('locked_out_since','0');
+		set_session_var('number_of_login_attempts','0');
 	}
 	else{
 		die(getBadgerTranslation2('badger_login','locked_out_part_1') . ($locked_out_since - time() + 60) . getBadgerTranslation2('badger_login','locked_out_part_2'));
 	};
 };
 
-$attempts = $us->getProperty('number_of_login_attempts');
+if(isset($_session['number_of_login_attempts']))
+{
+	$attempts = $_session['number_of_login_attempts'];
+}else{
+	$attempts = 0;
+};
+
 if($attempts >= 9){
-	$us->setProperty('locked_out_since',time());
+	set_session_var('locked_out_since',time());
 };
 
 //Retrieve md5´ed password from user settings
 $readoutpassword = $us->getProperty('badgerPassword');
 $passwordcorrect = false;
 if (isset($_session['password']) && $readoutpassword == $_session['password'])
-	{$passwordcorrect = true;
+	{
+		$passwordcorrect = true;
 	}
 	elseif(isset($_POST['password']) && md5($_POST['password']) == $readoutpassword )
 		{
@@ -53,7 +66,7 @@ if (isset($_session['password']) && $readoutpassword == $_session['password'])
 
 if($passwordcorrect == false)
 	{
-		$us->setProperty('number_of_login_attempts', $attempts  + 1);
+		set_session_var('number_of_login_attempts',$attempts + 1);
 		print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
 		print("<form method=\"post\" action=\"".$PHP_SELF."\">");
 		print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
@@ -107,7 +120,7 @@ if($passwordcorrect == false)
 		exit();
 	}
 	else{
-		$us->setProperty('number_of_login_attempts', 0);
+		set_session_var('number_of_login_attempts', 0);
 	};
 
 

@@ -88,4 +88,9 @@ require_once BADGER_ROOT.'/core/widgets/WidgetsEngine.class.php';
  * makes user settings available
  */
 require_once(BADGER_ROOT . "/core/UserSettings.class.php");
+
+/**
+ * Include Session Management
+ */
+require_once(BADGER_ROOT . "/core/SessionManager/session.ses.php");
 ?>
