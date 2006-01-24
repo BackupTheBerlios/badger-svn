@@ -131,6 +131,4 @@ if($passwordcorrect == false)
 		set_session_var('number_of_login_attempts', 0);
 	};
 
-
-require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
