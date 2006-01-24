@@ -17,7 +17,10 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 // Hier der Programmcode rein. Der sollte Exceptions werfen
 // nach dem Muster: 
 
-echo "Hello World!";
+echo "Hello World!" . "<br />";
+
+echo getBadgerTranslation2('Navigation', 'Dummy') . "<br />";
+echo $us->getProperty('badgerLanguage') . "<br />\n";
 
 #throw new badgerException('exampleModule', 'exampleException', 'Additional Information');                                            
 
