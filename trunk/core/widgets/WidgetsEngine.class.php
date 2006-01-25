@@ -109,6 +109,9 @@ class WidgetEngine {
 			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
 		return $output;
+	}
+	public function createButton($name, $action, $img){
+		//ToDo
 			
 	}
 	
