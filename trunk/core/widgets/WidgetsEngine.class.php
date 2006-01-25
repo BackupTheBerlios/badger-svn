@@ -102,8 +102,14 @@ class WidgetEngine {
 		}
 	}
 	
-	public function createField($fieldname, $size, $value="", $mandatory=false){
-		return "<input type='text' id='$fieldname' name='$fieldname' size='$size' value='$value' />";	
+	public function createField($fieldname, $size, $value="", $description="", $mandatory=false){
+		$output = "<input type='text' id='$fieldname' name='$fieldname' size='$size' value='$value' />";
+		if($description) {
+			$helpImg = "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/Widgets/help.png' border='0' />";
+			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
+		}
+		return $output;
+			
 	}
 	
 }
