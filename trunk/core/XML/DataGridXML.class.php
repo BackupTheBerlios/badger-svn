@@ -202,7 +202,7 @@ class DataGridXML {
 	 */
 	public function getXML() {
 		if (!is_array($this->columns)) {
-			throw new BadgerException('DataGridXML.undefinedColumns');
+			throw new BadgerException('DataGridXML', 'undefinedColumns');
 		}
 		
 		$data = array (
@@ -215,7 +215,7 @@ class DataGridXML {
 		if ($result === true) {
 			return $this->serializer->getSerializedData();
 		} else {
-			throw new BadgerException('DataGridXML.XmlSerializerException');
+			throw new BadgerException('DataGridXML','XmlSerializerException');
 		}
 	}
 	

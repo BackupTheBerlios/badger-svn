@@ -65,7 +65,7 @@ class UserSettings {
     	if (isset($this->properties[$key])) {
     		return $this->properties[$key];
     	} else {
-    		throw new BadgerException('UserSettings.illegalKey', $key);
+    		throw new BadgerException('UserSettings', 'illegalKey', $key);
     	}
     }
     
@@ -112,7 +112,7 @@ class UserSettings {
 			  		
     		unset ($this->properties[$key]);
     	} else {
-    		throw new BadgerException('UserSettings.illegalKey', $key);
+    		throw new BadgerException('UserSettings', 'illegalKey', $key);
     	}
     }
 }

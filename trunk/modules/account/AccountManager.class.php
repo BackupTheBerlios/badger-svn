@@ -100,7 +100,7 @@ class AccountManager extends DataGridHandler {
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
-			throw new badgerException('AccountManager', 'invalidFieldName', $fieldName); 
+			throw new BadgerException('AccountManager', 'invalidFieldName', $fieldName); 
 		}
 		
 		return $fieldTypes[$fieldName];    	
@@ -174,7 +174,7 @@ class AccountManager extends DataGridHandler {
 	/**
 	 * Prepares and executes the SQL query.
 	 * 
-	 * @throws badgerException If an SQL error occured.
+	 * @throws BadgerException If an SQL error occured.
 	 */
 	private function fetchFromDB() {
 		if($this->dataFetched){
@@ -208,7 +208,7 @@ class AccountManager extends DataGridHandler {
 		
 		if (PEAR::isError($this->dbResult)) {
 			echo "SQL Error: " . $this->dbResult->getMessage();
-			throw new badgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
+			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
 		}
 		
 		$this->dataFetched = true; 	

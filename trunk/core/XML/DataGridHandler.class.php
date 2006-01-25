@@ -84,25 +84,25 @@ abstract class DataGridHandler {
 		$numOrders = 0;
 	
 		if (!is_array($order)){
-			throw new badgerException('DataGridHandler', 'paramNoArray'); 
+			throw new BadgerException('DataGridHandler', 'orderParamNoArray'); 
 		}
 	
 		foreach ($order as $key => $val){
 	   		if (!is_array($val)){
-				throw new badgerException('DataGridHandler', 'arrayElementNoArray', $key); 
+				throw new BadgerException('DataGridHandler', 'orderArrayElementNoArray', $key); 
 			}
 			if(!isset($val['key'])){
-				throw new badgerException('DataGridHandler', 'keyIndexNotDefined', $key);
+				throw new BadgerException('DataGridHandler', 'orderKeyIndexNotDefined', $key);
 			}
 			if(!isset($val['dir'])){
-				throw new badgerException('DataGridHandler', 'dirIndexNotDefined', $key);
+				throw new BadgerException('DataGridHandler', 'orderDirIndexNotDefined', $key);
 			}
 			
-			if(!$this-> hasField($val['key'])){
-				throw new badgerException('DataGridHandler', 'illegalField', $val['key']);
+			if(!$this->hasField($val['key'])){
+				throw new BadgerException('DataGridHandler', 'orderIllegalField', $val['key']);
 			}
 			if(strtolower($val['dir'])  != 'asc' and strtolower($val['dir'])  != 'desc'){
-				throw new badgerException('DataGridHandler', 'illegalDirection', $val['dir']);
+				throw new BadgerException('DataGridHandler', 'orderIllegalDirection', $val['dir']);
 			}
 			
 			$this->order[] = array (
@@ -141,25 +141,25 @@ abstract class DataGridHandler {
 		$this->filter = array ();
 	
 		if (!is_array($filter)){
-			throw new badgerException('DataGridHandler', 'paramNoArray'); 
+			throw new BadgerException('DataGridHandler', 'filterParamNoArray'); 
 		}
 	
 		foreach ($filter as $key => $val){
 	   		if (!is_array($val)){
-				throw new badgerException('DataGridHandler', 'arrayElementNoArray', $key); 
+				throw new BadgerException('DataGridHandler', 'filterArrayElementNoArray', $key); 
 			}
 			if(!isset($val['key'])){
-				throw new badgerException('DataGridHandler', 'keyIndexNotDefined', $key);
+				throw new BadgerException('DataGridHandler', 'filterKeyIndexNotDefined', $key);
 			}
 			if(!isset($val['op'])){
-				throw new badgerException('DataGridHandler', 'opIndexNotDefined', $key);
+				throw new BadgerException('DataGridHandler', 'filterOpIndexNotDefined', $key);
 			}
 			if(!isset($val['val'])){
-				throw new badgerException('DataGridHandler', 'valIndexNotDefined', $key);
+				throw new BadgerException('DataGridHandler', 'filterValIndexNotDefined', $key);
 			}
 
 			if(!$this->hasField($val['key'])){
-				throw new badgerException('DataGridHandler', 'illegalField', $val['key']);
+				throw new BadgerException('DataGridHandler', 'filterIllegalField', $val['key']);
 			}
 	
 			//We trust the caller to check op and val

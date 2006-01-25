@@ -73,7 +73,7 @@ class DataGridRepository {
     	if (isset($this->handlers[$key])) {
     		return $this->handlers[$key];
     	} else {
-    		throw new BadgerException('DataGridRepository.illegalHandlerName', $key);
+    		throw new BadgerException('DataGridRepository', 'illegalHandlerName', $key);
     	}
     }
     
@@ -126,7 +126,7 @@ class DataGridRepository {
 			  		
     		unset ($this->handlers[$key]);
     	} else {
-    		throw new BadgerException('DataGridRepository.illegalHandlerName', $key);
+    		throw new BadgerException('DataGridRepository', 'illegalHandlerName', $key);
     	}
     }
 }
