@@ -14,7 +14,7 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 $tpl->addCSS("style.css");
-$widgets = new WidgetEngine($tpl);
+$widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addAutoCompleteJS();
@@ -32,7 +32,7 @@ echo $tpl->getHeader("Seitenname"); //write header */
 		echo $widgets->addToolTipLink("javascript:void(0);", "Description - this is ...", "ToolTip Test");
 		echo "<br />";
 		echo $widgets->createLabel("fieldname", "name:", true);
-		echo $widgets->createField("fieldname", 25, "value", true);
+		echo $widgets->createField("fieldname", 25, "value", "description", true);
 		?>
 	</form>
 <?php
