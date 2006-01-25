@@ -19,11 +19,15 @@
 
 
 //Check if user wants to logout. If so, log him out
+/*if(isset($logout) && $logout==true){
+	session_flush();
+	unset($_session['password']);
+};*/
+
 if(isset($_GET['logout']) && $_GET['logout']==true){
 	session_flush();
+	unset($_session['password']);
 };
-
-
 
 //Check how many times the user tried to log in, stop working after 10 times
 
@@ -123,6 +127,9 @@ if($passwordcorrect == false)
 			} else {
 				print(getBadgerTranslation2('badger_login', 'sent_password_failed')."<br/>");
 			};
+		};
+		if(isset($_GET['logout']) && $_GET['logout']==true){
+			echo getBadgerTranslation2('badger_login', 'you_are_logout');
 		};
 		
 		exit();

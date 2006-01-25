@@ -15,7 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 
 print("If you can see this text, you are logged in.<br>");
-print("<a href=\"".$_SERVER['PHP_SELF']."?logout=true\">Logout Link</a>");
+print("<a href=\"".BADGER_ROOT."/modules/moduleTests/LoginTest2.php\">Link</a>");
 
 if (isset($_POST)){
 	print("<pre>");

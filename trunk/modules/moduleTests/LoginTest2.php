@@ -18,6 +18,9 @@ print("<form action=\"LoginTest.php\" method=\"post\">");
 print("<input type=\"text\" name=\"test\"><br/>");
 print("<input type=\"submit\" value=\"submit\">");
 print("</form>");
+
+print("<br/><br/>");
+print("<a href=\"".BADGER_ROOT."/modules/moduleTests/LoginTest.php?logout=true\">Hello, I am a Link</a>");
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 
 ?>

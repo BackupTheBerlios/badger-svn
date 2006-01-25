@@ -11,7 +11,7 @@
 *
 **/
 define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/includes.php");
+require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 // set the parameters to connect to your db
 $dbinfo = array(
