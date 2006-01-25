@@ -17,7 +17,7 @@ require_once (BADGER_ROOT . '/core/Amount.class.php');
  * Defines the interface required for an DataGridHandler.
  * 
  * @see getDataGridXML.php
- * @author Eni Kao
+ * @author Eni Kao, Mampfred
  * @version $LastChangedRevision$
  */
 abstract class DataGridHandler {
@@ -41,7 +41,7 @@ abstract class DataGridHandler {
 	 * 
 	 * @param object $badgerDb The DB object.
 	 */
-	public function DataGridHandler($badgerDb) {
+	public function DataGridHandler($badgerDb, $params = null) {
 		$this->badgerDb = $badgerDb;
 	}
 	
@@ -198,6 +198,11 @@ abstract class DataGridHandler {
 	 */
 	public abstract function getAll();
 	
+	/**
+	 * Returns the order critera as SQL string. The 'ORDER BY' clause is not included.
+	 * 
+	 * @return string The order criteria as SQL string.
+	 */
 	protected function getOrderSQL() {
 		$result = '';
 		$firstrun = true;
@@ -214,6 +219,11 @@ abstract class DataGridHandler {
 		return $result;    	
 	}
 	
+	/**
+	 * Returns the filter criteria as SQL string. The 'WHERE' clause is not included.
+	 * 
+	 * @return string The filter criteria as SQL string.
+	 */
 	protected function getFilterSQL() {
 		$result = '';
 		$firstrun = true;
@@ -229,6 +239,7 @@ abstract class DataGridHandler {
 				|| $val['op'] == 'ew'
 				|| $val['op'] == 'ct'
 			) {
+				//we need to treat everything as string
 				$result .= "LOWER(CONVERT($val[key], CHAR)) LIKE ";
 				
 				if ($val['val'] instanceof Amount) {
@@ -237,7 +248,7 @@ abstract class DataGridHandler {
 					$stringVal = (string) strtolower($val['val']);
 				}
 				
-				switch ($val['op']) {	
+				switch ($val['op']) {
 					case 'bw':
 	    				$result .= "'" . addslashes($stringVal) . "%'";
 	    				break;
@@ -251,6 +262,7 @@ abstract class DataGridHandler {
 	    				break;
 				}
 			} else {
+				//standard comparison
 				$result .= $val['key'];
 
 				switch ($val['op']) {
@@ -285,6 +297,13 @@ abstract class DataGridHandler {
 		return $result;
 	}
 	
+	/**
+	 * Formats $val, which is of $type, ready for a SQL statement.
+	 * 
+	 * @param $val mixed The value that should be formatted.
+	 * @param $type string The type of $val.
+	 * @return string $val in a SQL-ready form.
+	 */
 	protected function formatForDB($val, $type) {
 		switch ($type) {
 			case 'int':
@@ -300,7 +319,6 @@ abstract class DataGridHandler {
 				
 			case 'Amount':
 				return "'" . $val->get() . "'";
-				break;
 		}
 	}
 }

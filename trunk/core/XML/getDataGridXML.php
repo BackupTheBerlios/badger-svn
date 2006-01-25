@@ -217,7 +217,6 @@ function transferType($type, $str) {
 			
 		case 'Amount':
 			return new Amount($str);
-			break;
 			
 		default:
 			throw new TransferException();

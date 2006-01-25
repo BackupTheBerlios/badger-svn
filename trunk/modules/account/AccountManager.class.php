@@ -16,8 +16,19 @@ require_once (BADGER_ROOT . '/modules/account/Account.class.php');
 require_once (BADGER_ROOT . '/modules/account/Currency.class.php');
 require_once (BADGER_ROOT . '/core/Amount.class.php');
 
+/**
+ * Manages all Accounts.
+ * 
+ * @author Eni Kao, Mampfred
+ * @version $LastChangedRevision$
+ */
 class AccountManager extends DataGridHandler {
 	
+	/**
+	 * List of valid field names.
+	 * 
+	 * @var array
+	 */
 	private $fieldNames = array (
 			'accountId',
 			'currency',
@@ -25,11 +36,39 @@ class AccountManager extends DataGridHandler {
 			'balance'
 		);
 		
+	/**
+	 * Have the query been executed?
+	 * 
+	 * @var bool
+	 */
 	private $dataFetched = false;
+	
+	/**
+	 * Has all data been fetched from the DB?
+	 * 
+	 * @var bool
+	 */
 	private $allDataFetched = false;
+	
+	/**
+	 * List of Accounts.
+	 * 
+	 * @var object
+	 */
 	private $accounts = array();
+	
+	/**
+	 * The result object of the DB query.
+	 * 
+	 * @var object
+	 */
 	private $dbResult;
 	
+	/**
+	 * Creates an AccountManager.
+	 * 
+	 * @param $badgerDb object The DB object.
+	 */
 	function AccountManager($badgerDb) {
 		parent::__construct($badgerDb);
 	}
@@ -110,12 +149,19 @@ class AccountManager extends DataGridHandler {
 		return $result;
 	}
 	
+	/**
+	 * Gets next Account from the Database.
+	 * 
+	 * @return mixed ID of the fetched Account if successful, false otherwise.
+	 */
 	public function getNextAccount() {
 		if($this->allDataFetched){
 			return;
 		}
+		
 		$this->fetchFromDB();
 		$row = false;
+		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
 			$this->accounts[$row['account_id']] = new Account(&$this, $row);
 			return $row['account_id'];
@@ -125,6 +171,11 @@ class AccountManager extends DataGridHandler {
 		}
 	}
 	
+	/**
+	 * Prepares and executes the SQL query.
+	 * 
+	 * @throws badgerException If an SQL error occured.
+	 */
 	private function fetchFromDB() {
 		if($this->dataFetched){
 			return;
