@@ -5,11 +5,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 $additionalHeaderTags
 </head>
-<body bgcolor="#9CCF00">
-<br />
-<table align="center" bgcolor="white" width="90%">
-<tr><td>
-<img src="http://projects.edop.de/wiki/images/8/8f/Logo_447x173.PNG">
-</td><td>BADGER finance ist <b>die</b> Open Source Finanzmanagement-Software für Privatanwender!</td>
-</tr><tr><td colspan="2">
+<body>
+<div id="header" style="background-image: url({BADGER_ROOT}/tpl/Standard/badger_leiste_n.png)">
+<img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" />
+</div>
+
+
 
