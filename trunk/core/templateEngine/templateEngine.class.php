@@ -22,6 +22,7 @@ class TemplateEngine {
 	private $badgerRoot;
 	private $additionalHeaderTags;
 	private $settings;
+	private $jsOnLoadEvents = array();
 
 	function __construct($settings, $badgerRoot) {
 		$this->settings = $settings;
@@ -57,10 +58,28 @@ class TemplateEngine {
 	public function getHeader($pageTitle) {		
 		$template = "badgerHeader";
 		
+		// create Page Title
 		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
-		//leider kann ich das nicht in das template kopieren, da es probleme mit den ? gibt
+		
+		// write XHTML-Header
+		// leider kann ich das nicht in das template kopieren, da es probleme mit den ? gibt
 		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>";
+		
+		// transfer additionalHeaderTags (JS, CSS) to $var ($var must be in template)
 		$additionalHeaderTags = $this->additionalHeaderTags;
+		
+		// create onload-Event
+		if($this->jsOnLoadEvents) {
+			$JSOnLoadEvents = "\t<script type=\"text/javascript\">\n";
+			$JSOnLoadEvents .=  "\twindow.onload = function () {\n";		
+			foreach ($this->jsOnLoadEvents as $key => $value) {
+	        	$JSOnLoadEvents .= "\t\t".$value."\n";
+	        }
+	        $JSOnLoadEvents .= "\t}\n";
+	        $JSOnLoadEvents .= "\t</script>";
+		}
+		
+		// write complete header
 		return eval("echo \"".$this->getTemplate($template)."\";");		
 	}
 	
@@ -72,8 +91,11 @@ class TemplateEngine {
 	}
 	public function addHeaderTag($HeaderTag) {
 		$this->additionalHeaderTags = $this->additionalHeaderTags."\t".$HeaderTag."\n";
+	}	
+	public function addOnLoadEvent($eventFunction) {
+		$this->jsOnLoadEvents[] = "$eventFunction";
 	}
-	
+		
 	public function getThemeName() {
 		return $this->theme;
 	}

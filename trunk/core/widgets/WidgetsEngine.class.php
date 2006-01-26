@@ -46,12 +46,12 @@ class WidgetEngine {
 	}
 	public function addCalendarJS() {
 		$this->TplEngine->addJavaScript("js/calendar.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot());
-		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">initCalendar();</script>");
+		$this->TplEngine->addOnLoadEvent("initCalendar();");
 		$this->CalendarJSAdded = true;
 	}
 	public function addAutoCompleteJS() {
 		$this->TplEngine->addJavaScript("js/SuggestFramework.js");
-		$this->TplEngine->addHeaderTag("<script type=\"text/javascript\">window.onload = initializeSuggestFramework;</script>");
+		$this->TplEngine->addOnLoadEvent("initializeSuggestFramework();");
 		$this->AutoCompleteJSAdded = true;
 	}
 	
