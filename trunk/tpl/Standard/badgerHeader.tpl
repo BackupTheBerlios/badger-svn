@@ -4,11 +4,12 @@
 	<title>$pageTitle</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 $additionalHeaderTags
+$JSOnLoadEvents
 </head>
 <body>
 <div id="header" style="background-image: url({BADGER_ROOT}/tpl/Standard/badger_leiste_n.png)">
 <img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" />
 </div>
-
+<div id="content">
 
 
