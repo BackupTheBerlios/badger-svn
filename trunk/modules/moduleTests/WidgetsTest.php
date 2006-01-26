@@ -32,6 +32,7 @@ echo $tpl->getHeader("Seitenname"); //write header */
 		echo $widgets->addToolTipLink("javascript:void(0);", "Description - this is ...", "ToolTip Test");
 		echo "<br />";
 		echo $widgets->createLabel("fieldname", "name:", true);
+		echo "&nbsp;";
 		echo $widgets->createField("fieldname", 25, "value", "description", true);
 		?>
 	</form>
