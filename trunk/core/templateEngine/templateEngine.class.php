@@ -57,6 +57,7 @@ class TemplateEngine {
 	 */
 	public function getHeader($pageTitle) {		
 		$template = "badgerHeader";
+		$JSOnLoadEvents = "";
 		
 		// create Page Title
 		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
