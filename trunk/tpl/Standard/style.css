@@ -88,3 +88,10 @@ input:focus, textarea:focus {
 .LSPrompt {
 	font-weight: bold;
 }
+/* LOGIN SCREEN END*/
+
+/* USER SETTINGS ADMIN */
+.USAHeading {
+	font-weight: bold;
+}
+/* USER SETTINGS ADMIN END*/
