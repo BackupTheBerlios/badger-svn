@@ -13,7 +13,6 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
-$tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
@@ -34,6 +33,10 @@ echo $tpl->getHeader("Seitenname"); //write header */
 		echo $widgets->createLabel("fieldname", "name:", true);
 		echo "&nbsp;";
 		echo $widgets->createField("fieldname", 25, "value", "description", true);
+		echo "<br /><br />";		
+		echo $widgets->createButton("btnName", "klick mich", "", "navigation/cancel.gif");
+		echo "<br /><br />";
+		echo $widgets->addImage("navigation/cancel.gif");
 		?>
 	</form>
 <?php
