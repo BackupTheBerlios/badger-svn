@@ -13,7 +13,9 @@
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 global $importCsvFileName, $upload;
-echo $tpl->getHeader("CSV Import");
+
+ //$tpl->addCSS("style.css");
+ echo $tpl->getHeader("CSV-Import"); 
 if (!isset($_POST['Upload'])){
 	
 
@@ -44,29 +46,30 @@ foreach($_FILES as $file_name => $file_array) {
       		$csvContent = $csvContent . $line;
       		
  		}
- 		echo $csvContent;
- 		$csvContent = nl2br($csvContent);	
+ 		//echo $csvContent;
+ 		//$csvContent = nl2br($csvContent);	
 		//move_uploaded_file($file_array['tmp_name'],
 		//	"$file_dir/$file_array[name]") or die ("Couldn't copy");
 		
 		?>
 		<!--<textarea name="csv_content" cols="100" rows="10" readonly><?=$csvContent?></textarea>-->
 		<!--<div id="hf" style="width:700px; height:300px; border: thin solid black; overflow:scroll;" align="center"><?=$csvContent?></div>-->
-		<div id ="scroll"
+		<div id="scroll">
 		<?php
+		/*
 		print "<table class='data' cellspacing='0' cellpadding='2'>";
 		print "<tr><th>Buchungstag</th>";
 		print "<th>Soll</th>";
 		print "<th>Haben</th>";
 		print "<th>Verwendungszweck</th>";
 		print "<th>&nbsp;</th></tr>";
-
+		*/
 		//$fp = fopen($file_dir ."/". $file_array['name'], "r") or die("Couldn't open $filename");
 		$fp = fopen($file_array['tmp_name'], "r") or die("Couldn't open $filename");
- 		/*while (!feof($fp)) {
+ 		while (!feof($fp)) {
       		$line = fgets($fp, 1024);
-      		//print "$line<br>";
-			if (strstr($line, ";")) { //if line is not empty
+      		print "$line<br>";
+			/*if (strstr($line, ";")) { //if line is not empty
 				$counter += 1;
 				$csv_array = explode(";", $line);
 				$buchungsdatum = explode(".", $csv_array[0]); //Buchungsdatum
@@ -102,9 +105,10 @@ foreach($_FILES as $file_name => $file_array) {
 				print "<td align='right'>" . $csv_array[4] . "</td>";
 				print "<td>" . $csv_array[2] . "</td>";
 				//print "<td>" . $result . "</td></tr>";
-			}
-		}*/
-		print "</table>";
+			}*/
+		}
+		//print "</table>";
+		print "</div>";
 	}
 }
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
