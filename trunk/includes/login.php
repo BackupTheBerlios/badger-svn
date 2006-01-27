@@ -24,12 +24,13 @@
 	unset($_session['password']);
 };*/
 
+
 if(isset($_GET['logout']) && $_GET['logout']==true){
 	session_flush();
 	unset($_session['password']);
 };
 
-//Check how many times the user tried to log in, stop working after 10 times
+//Check how many times the user tried to log in, stop working after x times
 
 if(isset($_session['locked_out_since']))
 {
@@ -38,15 +39,42 @@ if(isset($_session['locked_out_since']))
 	$locked_out_since = 0;
 };
 
+//---
+
+
 if( $locked_out_since != 0){
-	if($locked_out_since - time() + 60 <= 0){
+	if($locked_out_since - time() + $us->getProperty('badgerLockOutTime') <= 0){
 		set_session_var('locked_out_since','0');
 		set_session_var('number_of_login_attempts','0');
 	}
 	else{
-		die(getBadgerTranslation2('badger_login','locked_out_part_1') . ($locked_out_since - time() + 60) . getBadgerTranslation2('badger_login','locked_out_part_2'));
+		// if user locked himself out
+		// because of too many login attempts
+		$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
+		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
+		echo "<br/>";
+		print (getBadgerTranslation2('badger_login','locked_out_part_1') . ($locked_out_since - time() + $us->getProperty('badgerLockOutTime')) . getBadgerTranslation2('badger_login','locked_out_part_2'));
+		echo "<br/><br/>";
+		
+		if(isset($_GET)){
+			$signature = "?";
+			foreach( $_GET as $key=>$value ){
+				if($key != "send_password"){
+					if($signature != "?"){
+						$signature = $signature . "&";
+					};
+				$signature = $signature . $key . "=" . $value;
+				};
+			};
+		}else{
+			$signature = "";
+		};
+		
+		die("<a href=\"".$_SERVER['PHP_SELF'].$signature."\">".getBadgerTranslation2('badger_login', 'locked_out_refresh')."</a>");
 	};
 };
+
+//---
 
 if(isset($_session['number_of_login_attempts']))
 {
@@ -55,7 +83,7 @@ if(isset($_session['number_of_login_attempts']))
 	$attempts = 0;
 };
 
-if($attempts >= 9){
+if($attempts >= $us->getProperty('badgerMaxLoginAttempts') ){
 	set_session_var('locked_out_since',time());
 };
 
