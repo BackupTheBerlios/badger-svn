@@ -14,7 +14,7 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 global $importCsvFileName, $upload;
 
- //$tpl->addCSS("style.css");
+
  echo $tpl->getHeader("CSV-Import"); 
 if (!isset($_POST['Upload'])){
 	
@@ -68,7 +68,7 @@ foreach($_FILES as $file_name => $file_array) {
 		$fp = fopen($file_array['tmp_name'], "r") or die("Couldn't open $filename");
  		while (!feof($fp)) {
       		$line = fgets($fp, 1024);
-      		print "$line<br>";
+      		print "<span nowrap='nowrap'>$line</span><br>";
 			/*if (strstr($line, ";")) { //if line is not empty
 				$counter += 1;
 				$csv_array = explode(";", $line);
