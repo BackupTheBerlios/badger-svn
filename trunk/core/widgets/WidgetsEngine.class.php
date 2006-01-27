@@ -111,8 +111,12 @@ class WidgetEngine {
 		return $output;
 	}
 	public function createButton($name, $text, $action, $img){
-		return "<button name='$name' id='$name'><table cellspacing='0' cellpadding='0'><tr><td><img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/$img' /></td><td nowrap='nowrap'>&nbsp;$text</td></tr></table></button>";
+		if ($action=="") {$action = "void(0);return false;";}; 
+		return "<button name='$name' id='$name' onclick=\"javascript:".$action."\"><table cellspacing='0' cellpadding='0'><tr><td>".$this->addImage($img)."</td><td nowrap='nowrap'>&nbsp;$text</td></tr></table></button>";
 			
+	}
+	public function addImage($file) {
+			return "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/$file' />";
 	}
 	
 }
