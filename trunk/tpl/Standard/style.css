@@ -1,4 +1,4 @@
-body {
+body, form, img {
 	margin: 0px 0px 0px 0px;	
 }
 
@@ -19,7 +19,11 @@ body, table {
 	font-size: 8pt;
 }
 
-
+#scroll {
+	height: 180px;
+	width: 100%;
+	overflow: auto;
+}
 
 /* FORMS */
 label {
