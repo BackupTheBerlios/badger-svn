@@ -56,8 +56,9 @@ foreach($_FILES as $file_name => $file_array) {
 		<!--<div id="hf" style="width:700px; height:300px; border: thin solid black; overflow:scroll;" align="center"><?=$csvContent?></div>-->
 		<div id="scroll">
 		<?php
+		
+		print "<table cellspacing='0' cellpadding='2'>";
 		/*
-		print "<table class='data' cellspacing='0' cellpadding='2'>";
 		print "<tr><th>Buchungstag</th>";
 		print "<th>Soll</th>";
 		print "<th>Haben</th>";
@@ -68,7 +69,7 @@ foreach($_FILES as $file_name => $file_array) {
 		$fp = fopen($file_array['tmp_name'], "r") or die("Couldn't open $filename");
  		while (!feof($fp)) {
       		$line = fgets($fp, 1024);
-      		print "<span nowrap='nowrap'>$line</span><br>";
+      		print "<tr><td nowrap='nowrap'>$line</td><tr>";
 			/*if (strstr($line, ";")) { //if line is not empty
 				$counter += 1;
 				$csv_array = explode(";", $line);
@@ -107,7 +108,7 @@ foreach($_FILES as $file_name => $file_array) {
 				//print "<td>" . $result . "</td></tr>";
 			}*/
 		}
-		//print "</table>";
+		print "</table>";
 		print "</div>";
 	}
 }
