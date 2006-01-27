@@ -6,12 +6,17 @@ body, table {
 	font-family: Arial, Verdana;
 	font-size: 10pt;
 }
+body {
+	background-image: url('/trunk/tpl/Standard/back_verlauf_grau2.jpg');
+	background-repeat: repeat-y;
+}
 
 #header {
 	
 }
 #content {
 	margin: 5px 5px 5px 5px;
+
 }
 
 #footer {
@@ -22,7 +27,7 @@ body, table {
 #scroll {
 	height: 180px;
 	width: 100%;
-	overflow: auto;
+	overflow: scroll;
 }
 
 /* FORMS */
