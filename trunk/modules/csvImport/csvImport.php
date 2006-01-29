@@ -91,9 +91,11 @@ foreach($_FILES as $file_name => $file_array) {
  		//call to parse function
  		$importedTransactions = parseToArray($fp, $accountId);
  		$transactionNumber = count($importedTransactions);
+		echo "count: $transactionNumber<br />";
+		echo "<pre>"; print_r($importedTransactions); echo "</pre>";
  		//show content of the array
  		if ($transactionNumber > 0){ 
-	 		for ($outputTransactionNumber = 0; $outputTransactionNumber <= $transactionNumber; $outputTransactionNumber++) {
+	 		for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
 	   			echo $importedTransactions[$outputTransactionNumber]["categoryId"] . ";";
 	   			echo $importedTransactions[$outputTransactionNumber]["accountId"] . ";";
 	   			echo $importedTransactions[$outputTransactionNumber]["title"] . ";";
@@ -160,7 +162,7 @@ foreach($_FILES as $file_name => $file_array) {
 				if ($totalRows_Transaktionen>0) {
 					$result = "Datensatz existiert";
 				} else {
-					//schöner wäre es eine checkbox für jeden DS zu erstellen und nicht sofort zu importieren
+					//schï¿½ner wï¿½re es eine checkbox fï¿½r jeden DS zu erstellen und nicht sofort zu importieren
 					$query = "INSERT INTO ttransaktionen (Buchungstag, Verwendungszweck, Soll, Haben) " .
 								" VALUES ('".$buchungsdatum[4]."' , '".$csv_array[2]."', ".$csv_array[3].", ".$csv_array[4].");";
 					 mysql_query($query, $Geld) or die(mysql_error());

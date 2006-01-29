@@ -55,13 +55,14 @@ function parseToArray($fp, $accountId){
 					);
 
 			}
-			$csvRow++;
 			/**
 			 * array of all transaction arrays
 			 * 
 			 * @var array
 			 */
 			$importedTransactions[$csvRow] = $rowArray;
+
+			$csvRow++;
 			echo $csvRow;
 
 		}
