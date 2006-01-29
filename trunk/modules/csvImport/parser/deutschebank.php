@@ -101,12 +101,12 @@ function parseToArray($fp, $accountId){
 
 		}
 		if ($noValidFile) {
-			echo "du bist echt super doof";
+			throw new badgerException('importCsv', 'wrongSeperatorNumber');
 			//close file
 			fclose ($fp);
 		} else {
 			if ($csvRow == 0){
-				echo "du bist doof";
+				throw new badgerException('importCsv', 'noSeperator');
 				//close file
 				fclose ($fp);
 			} else{
