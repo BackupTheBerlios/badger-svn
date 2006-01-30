@@ -9,7 +9,7 @@
 * Open Source Finance Management
 * Visit http://badger.berlios.org 
 *
-* Parse .csv files from Deutsche Bank (Germany). Tested with files from 30.01.2006
+* Parse .csv files from Postbank (Germany). Tested with files from 30.01.2006
 **/
 /**
  * transform csv to array
@@ -25,7 +25,7 @@ function parseToArray($fp, $accountId){
 		 */
 		$csvRow = 0;
 		/**
-		 * is set true, a line contains ";" , but not the correct number for this parser (5)
+		 * is set true, a line contains "\t" (tabs), but not the correct number for this parser (5)
 		 * 
 		 * @var boolean 
 		 */
@@ -40,9 +40,9 @@ function parseToArray($fp, $accountId){
 		while (!feof($fp)) {
 			//read one line
 			$rowArray = NULL;
-			//ignore header (first 5 lines)
+			//ignore header (first 11 lines)
 			if (!$headerIgnored){
-				for ($headerLine = 0; $headerLine < 5; $headerLine++) {
+				for ($headerLine = 0; $headerLine < 11; $headerLine++) {
 					$garbage = fgets($fp, 1024);
 					//to ignore this code on the next loop run
 					$headerIgnored = true;
@@ -51,25 +51,26 @@ function parseToArray($fp, $accountId){
 			//read one line
 			$line = fgets($fp, 1024);
 			//if line is not empty or is no header
-			if (strstr($line, ";")) { 
-				//if line contains excactly 5 ';', to ensure it is a valid Deutsche Bank csv file
-				if (substr_count ($line, ";")==5){ 
+			if (strstr($line, "\t")) { // \t = tab
+				//if line contains excactly 7 '\t', to ensure it is a valid Postbank csv file
+				if (substr_count ($line, "\t")==7){ 
 					// divide String to an array
-					$transactionArray = explode(";", $line);
+					$transactionArray = explode("\t", $line);
 					//format date YY-MM-DD or YYYY-MM-DD
-					$valutaDate = explode(".", $transactionArray[0]); //Valuta Date
+					$valutaDate = explode(".", $transactionArray[1]); //Valuta Date
 					$valutaDate[4] = $valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
 					//avoid " & \ in the title & description, those characters could cause problems
 					$transactionArray[2] = str_replace("\"","",$transactionArray[2]);
-					$transactionArray[2] = str_replace("\\","",$transactionArray[2]);					
+					$transactionArray[2] = str_replace("\\","",$transactionArray[2]);
+					$transactionArray[3] = str_replace("\"","",$transactionArray[3]);
+					$transactionArray[3] = str_replace("\\","",$transactionArray[3]);					
 					//format amount data to sql format, decimal sign is a .
-					$transactionArray[3] = str_replace(",",".",$transactionArray[3]); 
-					$transactionArray[4] = str_replace(",",".",$transactionArray[4]);
-					//if transactionArray[3] == "", it is an expenditure, else income
-					if ($transactionArray[3]=="") { 
-						$amount = $transactionArray[4];
+					$transactionArray[6] = str_replace(",",".",$transactionArray[6]); 
+					//if transactionArray[6]is a negative amount (expenditure), the transaction partner is the receiver, ele the sender is the transaction partner 
+					if (strstr($transactionArray[6], "-")){ 
+						$transactionPartner = $transactionArray[5];
 					} else {
-						$amount = $transactionArray[3];
+						$transactionPartner = $transactionArray[4];
 					}				
 					/**
 					 * transaction array
@@ -79,11 +80,11 @@ function parseToArray($fp, $accountId){
 					$rowArray = array (
 					   "categoryId" => "",
 					   "accountId" => $accountId,
-					   "title" => substr($transactionArray[2],0,99),// cut title with more than 100 chars
-					   "description" => "",
+					   "title" => substr($transactionArray[3],0,99),// cut title with more than 100 chars
+					   "description" => $transactionArray[2],
 					   "valutaDate" => $valutaDate[4],
-					   "amount" => $amount,
-					   "transactionPartner" => ""
+					   "amount" => $transactionArray[6],
+					   "transactionPartner" => $transactionPartner
 					);
 				} else{
 					$noValidFile = 'true';
@@ -111,8 +112,6 @@ function parseToArray($fp, $accountId){
 				//close file
 				fclose ($fp);
 			} else{
-				//delete footer (1 line)
-				unset($importedTransactions[$csvRow-1]);
 				//close file
 				fclose ($fp);
 				return $importedTransactions;
