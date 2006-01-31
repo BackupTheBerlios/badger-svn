@@ -116,8 +116,7 @@ if( isset( $_POST['SubmitChangePassword'] ) ){
 		echo $widgets->createField("LockOutTime", 10, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true);
 		
 		echo "<br/><br/>";
-		
-		echo "<input name=\"SubmitUserSettings\" value=\"".getBadgerTranslation2('UserSettingsAdmin','submit_button')."\" type=\"submit\">";
+		echo $widgets->createButton("SubmitUserSettings", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		
 		?>
 		
@@ -162,7 +161,8 @@ if(isset($validation_user_settings) && $validation_user_settings == true){
 		
 		echo "<br/><br/>";
 		
-		echo "<input name=\"SubmitChangePassword\" value=\"".getBadgerTranslation2('UserSettingsAdmin','submit_button')."\" type=\"submit\">";
+		echo $widgets->createButton("SubmitChangePassword", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+		//echo "<input name=\"SubmitChangePassword\" value=\"".getBadgerTranslation2('UserSettingsAdmin','submit_button')."\" type=\"submit\">";
 
 echo "</form>";
 
