@@ -52,8 +52,10 @@ class Amount {
 	 * @return string The amount with thousands separator and decimal separator according to language settings. 
 	 */
 	function getFormatted() {
-		$decPoint = getBadgerTranslation2('formats', 'decimalPoint');
-		$thousandsSep = getBadgerTranslation2('formats', 'thousandsSeparator');
+		global $us;
+		
+		$decPoint = $us->getProperty('badgerDecimalSeparator');
+		$thousandsSep = $us->getProperty('badgerThousandSeparator');
 		
 		$str = $this->amount;
 		
@@ -176,6 +178,14 @@ class Amount {
 		}
 		
 		return $this;
+	}
+	
+	public function compare($b) {
+		if ($b instanceof Amount) {
+			return bccomp($this->amount, $b->amount);
+		} else {
+			return bccomp($this->amount, $b);
+		}
 	}
 }
 ?>

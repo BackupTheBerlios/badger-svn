@@ -41,7 +41,7 @@ abstract class DataGridHandler {
 	 * 
 	 * @param object $badgerDb The DB object.
 	 */
-	public function DataGridHandler($badgerDb, $params = null) {
+	public function __construct($badgerDb, $params = null) {
 		$this->badgerDb = $badgerDb;
 	}
 	

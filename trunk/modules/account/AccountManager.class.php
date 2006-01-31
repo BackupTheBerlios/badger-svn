@@ -30,11 +30,11 @@ class AccountManager extends DataGridHandler {
 	 * @var array
 	 */
 	private $fieldNames = array (
-			'accountId',
-			'currency',
-			'title',
-			'balance'
-		);
+		'accountId',
+		'currency',
+		'title',
+		'balance'
+	);
 		
 	/**
 	 * Have the query been executed?
@@ -182,7 +182,7 @@ class AccountManager extends DataGridHandler {
 	public function getAccountById($accountId){
 		if ($this->dataFetched){
 			if(isset($this->accounts[$accountId])) {
-				return $this->accounts[accountId];
+				return $this->accounts[$accountId];
 			}
 			while($currentAccount=$this->getNextAccount()){
 				if($currentAccount->getId() == $accountId){
