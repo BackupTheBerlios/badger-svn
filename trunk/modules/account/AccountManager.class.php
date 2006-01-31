@@ -69,7 +69,7 @@ class AccountManager extends DataGridHandler {
 	 * 
 	 * @param $badgerDb object The DB object.
 	 */
-	function AccountManager($badgerDb) {
+	function __construct($badgerDb) {
 		parent::__construct($badgerDb);
 	}
 	
@@ -163,12 +163,147 @@ class AccountManager extends DataGridHandler {
 		$row = false;
 		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->accounts[$row['account_id']] = new Account(&$this, $row);
+			$this->accounts[$row['account_id']] = new Account(&$this->badgerDb, &$this, $row);
 			return $row['account_id'];
 		} else {
 			$this->allDataFetched = true;
 			return false;    	
 		}
+	}
+
+	/**
+	 * Returns the Account identified by $accountId.
+	 * 
+	 * @param integer $accountId The ID of the requested Account.
+	 * @throws BadgerException SQLError If an SQL Error occurs.
+	 * @throws BadgerException UnknownAccountId If $accountId is not in the Database
+	 * @return object The Account object identified by $accountId. 
+	 */
+	public function getAccountById($accountId){
+		if ($this->dataFetched){
+			if(isset($this->accounts[$accountId])) {
+				return $this->accounts[accountId];
+			}
+			while($currentAccount=$this->getNextAccount()){
+				if($currentAccount->getId() == $accountId){
+					return $currentAccount;
+				}
+			}
+		}	
+		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
+				a.upper_limit, a.currency_id, c.symbol currency_symbol, c.long_name currency_long_name, SUM(ft.amount) balance
+			FROM account a
+				INNER JOIN currency c ON a.currency_id = c.currency_id
+				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
+			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
+				a.upper_limit, a.currency_id, currency_symbol, currency_long_name
+			HAVING a.account_id = $accountId";
+		
+		$this->dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($this->dbResult)) {
+			echo "SQL Error: " . $this->dbResult->getMessage();
+			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
+		}
+		
+		$currentAccount = $this->getNextAccount();
+		if($currentAccount){
+			return $currentAccount;
+		} else {
+			$this->allDataFetched = false;	
+			throw new BadgerException('AccountManager', 'UnknownAccountId', $accountId);
+		}
+	}
+	
+	
+	/**
+	 * Deletes the Account identified by $accountId.
+	 * 
+	 * @param integer $accountId The ID of the Account to delete.
+	 * @throws BadgerException SQLError If an SQL Error occurs.
+	 * @throws BadgerException UnknownAccountId If $accountId is not in the Database
+	 * @return void
+	 */
+	public function deleteAccount($accountId){
+		if(isset($this->accounts[$accountId])){
+			unset($this->accounts[$accountId]);
+		}
+		$sql= "DELETE FROM account
+				WHERE account_id = $accountId";
+				
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
+		}
+		
+		if($dbResult->affectedRows() != 1){
+			throw new BadgerException('AccountManager', 'UnknownAccountId', $accountId);
+		}
+	}
+	
+	/**
+	 * Creates a new Account.
+	 * 
+	 * @param string $title The title of the new Account.
+	 * @param object $currency The Currency object of the new Account.
+	 * @param string $description The description of the new Account.
+	 * @param object $lowerLimit The Amount object marking the lower limit of the new Account.
+	 * @param object $upperLimit The Amount object marking the upper limit of the new Account. 
+	 * @throws BadgerException SQLError If an SQL Error occurs.
+	 * @throws BadgerException insertError If the account cannot be inserted.
+	 * @return object The new Account object.
+	 */
+	public function addAccount($title, $currency, $description = null, $lowerLimit = null, $upperLimit = null) {
+		$accountId = $this->badgerDb->nextId('accountIds');
+		
+		$sql = "INSERT INTO account
+			(account_id, title, currency_id ";
+			
+		if($description){
+			$sql .= ", description";
+		}
+		
+		if($lowerLimit){
+			$sql .= ", lower_limit";
+		}
+		
+		if($upperLimit){
+			$sql .= ", upper_limit";
+		}
+		
+		$sql .= ")
+			VALUES ($accountId, '" . $this->badgerDb->escapeSimple($title) . "'," . $curreny->getId();
+	
+		if($description){
+			$sql .= ", '".  $this->badgerDb->escapeSimple($description) . "'";
+		}
+	
+		if($lowerLimit){
+			$sql .= ", '".  $lowerLimit->get() . "'";
+		}
+			
+		if($upperLimit){
+			$sql .= ", '".  $upperLimit->get() . "'";
+		}
+		$sql .= ")";
+		
+		
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
+		}
+		
+		if($dbResult->affectedRows() != 1){
+			throw new BadgerException('AccountManager', 'insertError', $dbResult->getMessage());
+		}
+		
+		$this->accounts[$accountId] = new Account(&$this->badgerDb, &$this, $accountId, $title, $description, $lowerLimit, $upperLimit, $currency);
+		
+		return $this->accounts[$accountId];	
 	}
 	
 	/**
@@ -186,9 +321,7 @@ class AccountManager extends DataGridHandler {
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
-		";
-		
-		$sql .= "GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
+			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
 				a.upper_limit, a.currency_id, currency_symbol, currency_long_name \n";
 		
 		$where = $this->getFilterSQL();
