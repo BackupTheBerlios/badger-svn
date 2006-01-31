@@ -77,10 +77,9 @@ if (!isset($_POST['btnSubmit'])){
 	<?php
 	}
 }
-// for every file
 if (isset($_POST['Upload'])){
+	// for every file
 	foreach($_FILES as $file_name => $file_array) {
-		$counter = 0;
 		//if a file is chosen
 		if (is_uploaded_file($file_array['tmp_name'])) {
 			//open file
@@ -90,8 +89,13 @@ if (isset($_POST['Upload'])){
 	 		$accountId = $_POST["accountSelect"];
 	 		//call to parse function
 	 		$importedTransactions = parseToArray($fp, $accountId);
-	 		//look for existing transaction
+	 		//delete existing transactions, criteria are accountid, date & amount
 	 		#$bereinigete Transaktionen = 
+	 		for ($importedTransactionNumber = 0; $importedTransactionNumber < count($importedTransactions); $importedTransactionNumber++) {
+	 			$amount = $importedTransactions[$outputTransactionNumber]["amount"];
+	 			$date = $importedTransactions[$outputTransactionNumber]["valutaDate"];
+	 			$accountId = $importedTransactions[$outputTransactionNumber]["accountId"];
+	 		} 
 	 		
 	 		#importedTransactions umstellen auf bereinigte Transaktionen
 	 		$transactionNumber = count($importedTransactions);
@@ -110,17 +114,18 @@ if (isset($_POST['Upload'])){
 				   				<th><?php echo getBadgerTranslation2("importCsv", "valutaDate"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "amount"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "transactionPartner"); ?> </th>
-				   				<?php for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
+				   				<?php 
+				   				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
 				   					echo "<tr>";
 				   						//select transaction
 				   						echo "<td>";
 				   							echo "<center";
-				   							echo "<input type=\"checkbox\" name=\"select\" value=\"select\" checked=\"checked\"> </input>";
+				   							echo "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\"> </input>";
 				   							echo "</center>";
 				   						echo "</td>";
 				   						//select category
 				   						echo "<td>";
-				   							echo "<select name=\"categorySelect\" size=\"1\">";
+				   							echo "<select name=\"categorySelect" . $outputTransactionNumber . "\" size=\"1\">";
 										    	echo "<option>". "" . "</option>";
 										    	$sql = "SELECT * FROM category";
 												$res =& $badgerDb->query($sql);
@@ -131,7 +136,7 @@ if (isset($_POST['Upload'])){
 				   						echo "</td>";
 				   						//account
 				   						echo "<td>";
-				   							echo "<select name=\"account2Select\" size=\"1\">";
+				   							echo "<select name=\"account2Select" . $outputTransactionNumber . "\" size=\"1\">";
 				   								$sql = "SELECT * FROM account WHERE account_id =". $importedTransactions[$outputTransactionNumber]["accountId"];
 				   								$res =& $badgerDb->query($sql);
 				   								while ($res->fetchInto ($row)){
@@ -146,43 +151,89 @@ if (isset($_POST['Upload'])){
 		   								echo "</td>";
 		   								//title
 		   								echo "<td>";
-				   							echo "<input name=\"title\" type=\"text\" size=\"30\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["title"] ."\">";
+				   							echo "<input name=\"title" . $outputTransactionNumber . "\" type=\"text\" size=\"30\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["title"] ."\">";
 			   							echo "</td>";
 			   							//description
 		   								echo "<td>";
-				   							echo "<input name=\"description\" type=\"text\" size=\"12\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["description"] ."\">";
+				   							echo "<input name=\"description" . $outputTransactionNumber . "\" type=\"text\" size=\"12\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["description"] ."\">";
 			   							echo "</td>";
 			   							//valuta date
 			   							echo "<td>";
-				   							echo "<input name=\"description\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["valutaDate"] ."\">";
+				   							echo "<input name=\"valutaDate" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["valutaDate"] ."\">";
 			   							echo "</td>";
 			   							//amount
 			   							echo "<td>";
-				   							echo "<input name=\"description\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["amount"] ."\">";
+				   							echo "<input name=\"amount" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["amount"] ."\">";
 			   							echo "</td>";
+			   							//transaction partner
 			   							echo "<td>";
-				   							echo "<input name=\"description\" type=\"text\" size=\"15\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["transactionPartner"] ."\">";
+				   							echo "<input name=\"transactionPartner" . $outputTransactionNumber . "\" type=\"text\" size=\"15\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["transactionPartner"] ."\">";
 			   							echo "</td>";
 				   					echo "</tr>";
 				   				}?>
 				   			</table>
 			   			</div>	
 	   				<?php
+	   				echo "<input type=\"hidden\" name=\"tableRows\" value=\"" . $transactionNumber . " \">";
 					echo $widgets->createButton("btnSubmit", getBadgerTranslation2("importCsv", "save"), "submit", "Widgets/table_save.gif");
 				echo "</form>";
 	 		
 	 		} else{
 	 			echo "doof";
-	 			//Exception, dass keine neuen Datensätze gefunden wurden
+	 			#Echo, dass keine neuen Datensätze gefunden wurden
 	 		}	
 	  	
 		}
 	}	
 }
-if (isset($_POST['btnSubmit'])){
-		echo "doof";
-	 				# array anlegen, dass alle angekreuzten variablen enthält
-	 				# array in db schreiben
+if (isset($_POST['btnSubmit'])){		
+	// create array with the selected transaction from the form above
+	// to count number of selected transactions
+	$selectedTransaction = 0;
+	//initalise array
+	$writeToDbArray = NULL;
+	//for all rows
+	for ($selectedTransactionNumber = 0; $selectedTransactionNumber < $_POST['tableRows']; $selectedTransactionNumber++) {
+		//reset tableRowArray
+		$tableRowArray = NULL;
+		// if the transaction was selected
+		if (isset($_POST["select". $selectedTransactionNumber])){
+			//create array with one transaction
+			$tableRowArray = array(
+				"categoryId" => $_POST['categorySelect' . $selectedTransactionNumber],
+				"account" => $_POST['account2Select' . $selectedTransactionNumber],
+				"title" => $_POST['title' . $selectedTransactionNumber], 
+				"description" => $_POST['description' . $selectedTransactionNumber],
+				"valutaDate" => $_POST['valutaDate' . $selectedTransactionNumber],
+				"amount" => $_POST['amount' . $selectedTransactionNumber],
+				"transactionPartner" => $_POST['transactionPartner' . $selectedTransactionNumber],
+			);	
+		}
+		//if a array with one transaction exist
+		if ($tableRowArray){
+			//add the transaction to the multidimensional array
+			$writeToDbArray[$selectedTransaction] = $tableRowArray;
+			//increment number of selected transactions
+			$selectedTransaction++;
+		}
+	}
+	if ($writeToDbArray){
+		# array in db schreiben
+		for ($arrayRow = 0; $arrayRow < count($writeToDbArray); $arrayRow++) {
+			echo $writeToDbArray[$arrayRow]['categoryId'];
+			echo $writeToDbArray[$arrayRow]['account'];
+			echo $writeToDbArray[$arrayRow]['title']; 
+			echo $writeToDbArray[$arrayRow]['description'];
+			echo $writeToDbArray[$arrayRow]['valutaDate'];
+			echo $writeToDbArray[$arrayRow]['amount'];
+			echo $writeToDbArray[$arrayRow]['transactionPartner'];
+		}
+		// echo success message & number of written transactions
+		echo "<br/>" . count($writeToDbArray) . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
+	}else {
+		//echo no transactions selected
+		echo getBadgerTranslation2("importCsv", "noTransactionSelected");
+	}
 } 		
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
