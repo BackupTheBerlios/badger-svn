@@ -125,13 +125,13 @@ class WidgetEngine {
 		$output .= "</table>\n";
 		$output .= "</button>";
 			
+		return $output;
 	}
 	public function addImage($file) {
 		return "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/$file' />";
 	}
-	public function createSelectField($name, $ids, $values, $default="", $description="", $mandatory=false) {
-		$selectField = "";		
-		$selectField .= "<select name='$name' id='$name'>\n";
+	public function createSelectField($name, $ids, $values, $default="", $description="", $mandatory=false) {	
+		$selectField = "<select name='$name' id='$name'>\n";
 		if(isset($values)) {
 			for ($i=0; $i < count($values); $i++) {
 				$selected = (($ids[$i]==$default) ? "selected" : "");
