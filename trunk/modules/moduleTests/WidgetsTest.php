@@ -35,13 +35,13 @@ echo $tpl->getHeader("Seitenname"); //write header */
 		echo "&nbsp;";
 		echo $widgets->createField("fieldname", 25, "value", "description", true);
 		echo "<br /><br />";		
-		echo $widgets->createButton("btnName", "klick mich", "", "navigation/cancel.gif");
+		echo $widgets->createButton("button", "klick mich", "submit", "navigation/cancel.gif");
 		echo "<br /><br />";
 		echo $widgets->addImage("navigation/cancel.gif");
 		echo "<br /><br />";
 		$arrNames = array("Jan", "Feb", "Mar", "April");
 		$arrAlias = array(1, 2, 3, 4);
-		echo $widgets->createSelectField("selName", $arrAlias, $arrNames, 3,"description", true);
+		echo $widgets->createSelectField("selField", $arrAlias, $arrNames, 3,"description", true);
 		?>
 	</form>
 <?php
