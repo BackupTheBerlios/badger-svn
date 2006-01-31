@@ -116,7 +116,22 @@ class WidgetEngine {
 			
 	}
 	public function addImage($file) {
-			return "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/$file' />";
+		return "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/$file' />";
 	}
-	
+	public function createSelectField($name, $ids, $values, $default=0, $description="", $mandatory=false) {
+		$selectField = "";		
+		$selectField .= "<select name='$name' id='$name'>\n";
+		if(isset($values)) {
+			for ($i=0; $i < count($values); $i++) {
+				$selected = (($ids[$i]==$default) ? "selected" : "");
+				$selectField .= "\t<option $selected value='$ids[$i]'>$values[$i]</option>\n";
+			}
+		}
+		if($description) {
+			$helpImg = "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/Widgets/help.gif' border='0' />";
+			$selectField .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
+		}
+		$selectField .= "</select>\n";
+		return $selectField;
+	}
 }
