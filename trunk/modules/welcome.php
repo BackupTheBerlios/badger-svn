@@ -16,6 +16,10 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 $widgets = new WidgetEngine($tpl); 
 echo $tpl->getHeader("Seitenname"); //write header */
 ?>
-Übersichtsseite
-
-Verlinkung auf die einzelnen Module
+<center>
+	<table height="90%">
+		<tr>
+			<td valign="middle"><img  src="<?php echo BADGER_ROOT?>/img/badger_comic.gif" /></td><td>Modul 1</td>
+		</tr>
+	</table>
+</center>
