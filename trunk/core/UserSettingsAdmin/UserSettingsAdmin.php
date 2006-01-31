@@ -20,9 +20,8 @@ $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addAutoCompleteJS();
-echo $widgets->addToolTipLayer();
 echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
-
+echo $widgets->addToolTipLayer();
 // Was the form for change of User Settings sent?
 if( isset( $_POST['SubmitUserSettings'] ) ){
 	// Validate submitted values
