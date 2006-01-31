@@ -7,12 +7,15 @@ body, table {
 	font-size: 10pt;
 }
 body {
-	background-image: url('/trunk/tpl/Standard/back_verlauf_grau2.jpg');
-	background-repeat: repeat-y;
+	background-image: url('/trunk/tpl/Standard/back_verlauf_kreis.jpg');
+	background-attachment: fixed;
+	/*background-repeat: repeat-y;*/
+	/*background-color: #ececec;*/
+	background-repeat: no-repeat;
 }
 
 #header {
-	
+	background-color: #ECE9D8;
 }
 #content {
 	margin: 5px 5px 5px 5px;
