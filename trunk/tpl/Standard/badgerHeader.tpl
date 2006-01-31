@@ -6,7 +6,7 @@
 $additionalHeaderTags
 $JSOnLoadEvents
 </head>
-<body>
+<body style="background-image: url('{BADGER_ROOT}/tpl/Standard/back_verlauf_kreis.jpg');background-attachment: fixed;background-repeat: no-repeat;">
 <div id="header">
 <img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" />
 </div>

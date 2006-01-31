@@ -7,11 +7,7 @@ body, table {
 	font-size: 10pt;
 }
 body {
-	background-image: url('/trunk/tpl/Standard/back_verlauf_kreis.jpg');
-	background-attachment: fixed;
-	/*background-repeat: repeat-y;*/
-	/*background-color: #ececec;*/
-	background-repeat: no-repeat;
+
 }
 
 #header {
