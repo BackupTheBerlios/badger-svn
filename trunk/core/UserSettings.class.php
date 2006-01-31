@@ -50,6 +50,7 @@ class UserSettings {
 		$row = array();
 		
 		while ($res->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+			//echo $row['prop_value'] . ' : ' . unserialize($row['prop_value']) . "<br>";
 			$this->properties[$row['prop_key']] = unserialize($row['prop_value']);
 		}
     }
@@ -62,6 +63,7 @@ class UserSettings {
      * @return mixed the value referenced by $key
      */
     public function getProperty($key) {
+    	//echo "<pre>"; print_r($this->properties); echo "</pre>";
     	if (isset($this->properties[$key])) {
     		return $this->properties[$key];
     	} else {
@@ -79,19 +81,21 @@ class UserSettings {
     public function setProperty($key, $value) {
        	if (isset($this->properties[$key])) {
     		$sql = 'UPDATE user_settings
-				SET prop_value = \'' . addslashes(serialize($value)) . '\'
-				WHERE prop_key = \'' . addslashes($key) . '\'';
+				SET prop_value = \'' . $this->badgerDb->escapeSimple(serialize($value)) . '\'
+				WHERE prop_key = \'' . $this->badgerDb->escapeSimple($key) . '\'';
     		
     		$this->badgerDb->query($sql);
        	} else {
        		$sql = 'INSERT INTO user_settings (prop_key, prop_value)
-				VALUES (\'' . addslashes($key) . '\',
-				\'' . addslashes(serialize($value)) . '\')';
+				VALUES (\'' . $this->badgerDb->escapeSimple($key) . '\',
+				\'' . $this->badgerDb->escapeSimple(serialize($value)) . '\')';
 				
 			$this->badgerDb->query($sql);	
     		
        	}
 
+		//echo "<pre>$sql</pre>";
+		//echo $this->badgerDb->getMessage();
        	$this->properties[$key] = $value;
     }
 
@@ -105,7 +109,7 @@ class UserSettings {
  	public function delProperty($key) {
 		if (isset($this->properties[$key])) {
     		$sql = 'DELETE FROM user_settings
-				WHERE prop_key = \'' . addslashes($key) . '\'';
+				WHERE prop_key = \'' . $this->badgerDb->escapeSimple($key) . '\'';
 				
     		
     		$this->badgerDb->query($sql);
