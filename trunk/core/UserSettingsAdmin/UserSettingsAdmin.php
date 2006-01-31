@@ -72,6 +72,11 @@ if( isset( $_POST['SubmitChangePassword'] ) ){
 		$validation_change_password = false;
 		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_empty_password')."<br>";
 	};
+	
+	if( $_POST['NewPassword'] == "badger"){
+		$validation_change_password = false;
+		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_standard_password')."<br>";
+	};
 
 	if($validation_change_password == true){
 		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
