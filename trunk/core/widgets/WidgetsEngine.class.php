@@ -111,7 +111,8 @@ class WidgetEngine {
 		return $output;
 	}
 	public function createButton($name, $text, $action, $img){
-		if ($action=="") {$action = "void(0);return false;";}; 
+		if ($action=="submit") $action = "this.form.submit()";
+		if ($action=="") $action = "void(0);return false;"; 
 		return "<button name='$name' id='$name' onclick=\"javascript:".$action."\"><table cellspacing='0' cellpadding='0'><tr><td>".$this->addImage($img)."</td><td nowrap='nowrap'>&nbsp;$text</td></tr></table></button>";
 			
 	}
@@ -127,11 +128,11 @@ class WidgetEngine {
 				$selectField .= "\t<option $selected value='$ids[$i]'>$values[$i]</option>\n";
 			}
 		}
+		$selectField .= "</select>\n";
 		if($description) {
 			$helpImg = "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/Widgets/help.gif' border='0' />";
 			$selectField .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
-		$selectField .= "</select>\n";
 		return $selectField;
 	}
 }
