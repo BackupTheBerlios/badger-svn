@@ -44,8 +44,16 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		// If validation returns a good result, commit the changes
 		$us->setProperty('badgerTemplate',$_POST['Template']);
 		$us->setProperty('badgerLanguage',$_POST['Language']);
+		$us->setProperty('badgerDateFormat',$_POST['DateFormat']);
 		$us->setProperty('badgerMaxLoginAttempts',$_POST['MaximumLoginAttempts']);
 		$us->setProperty('badgerLockOutTime',$_POST['LockOutTime']);
+		if($_POST['Seperators'] == ".,"){
+			$us->setProperty('badgerDecimalSeperator',",");
+			$us->setProperty('badgerThousandSeperator',".");
+		}else{
+			$us->setProperty('badgerDecimalSeperator',".");
+			$us->setProperty('badgerThousandSeperator',",");
+		};
 	};
 	
 };
@@ -99,12 +107,44 @@ if( isset( $_POST['SubmitChangePassword'] ) ){
 		
 		echo "<br/><br/>";
 		
+		$langs = $tr->getLangs();
 		echo $widgets->createLabel("Language", getBadgerTranslation2('UserSettingsAdmin','language_name'), true);
 		echo "&nbsp;";
-		echo $widgets->createField("Language", 50, $us->getProperty('badgerLanguage'), getBadgerTranslation2('UserSettingsAdmin','language_description'), true);
+		echo $widgets->createSelectField("Language", $langs, $default=$us->getProperty('badgerLanguage'), $description=getBadgerTranslation2('UserSettingsAdmin','language_description'), $mandatory=true);
 		
 		echo "<br/><br/><br/>";
 		
+		$date_formats = array(
+			"tt.mm.yyyy" => "tt.mm.yyyy",
+			"tt/mm/yyyy" => "tt/mm/yyyy",
+			"tt-mm-yyyy" => "tt-mm-yyyy",
+			"yyyy-mm-tt" => "yyyy-mm-tt",
+			"yyyy/mm/tt" => "yyyy/mm/tt"
+		);
+		
+		echo $widgets->createLabel("DateFormat", getBadgerTranslation2('UserSettingsAdmin','date_format_name'), true);
+		echo "&nbsp;";
+		echo $widgets->createSelectField("DateFormat", $date_formats, $default=$us->getProperty('badgerDateFormat'), $description=getBadgerTranslation2('UserSettingsAdmin','date_format_description'), $mandatory=true);
+		
+		echo "<br/><br/>";
+		
+		$seperators = array(
+			".," => "12.345,67",
+			",." => "12,345.67"
+		);
+		
+		if($us->getProperty('badgerDecimalSeperator') == ","){
+			$seperators_default = ".,";
+		}else{
+			$seperators_default = ",.";
+		};
+		
+		echo $widgets->createLabel("Seperators", getBadgerTranslation2('UserSettingsAdmin','seperators_name'), true);
+		echo "&nbsp;";
+		echo $widgets->createSelectField("Seperators", $seperators, $default=$seperators_default, $description=getBadgerTranslation2('UserSettingsAdmin','seperators_description'), $mandatory=true);
+		
+		echo "<br/><br/><br/>";
+				
 		echo $widgets->createLabel("MaximumLoginAttempts", getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_name'), true);
 		echo "&nbsp;";
 		echo $widgets->createField("MaximumLoginAttempts", 10, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true);
