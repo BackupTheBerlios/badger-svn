@@ -110,10 +110,20 @@ class WidgetEngine {
 		}
 		return $output;
 	}
-	public function createButton($name, $text, $action, $img){
+	public function createButton($name, $text, $action, $img=""){
+		$output ="";
 		if ($action=="submit") $action = "this.form.submit()";
 		if ($action=="") $action = "void(0);return false;"; 
-		return "<button name='$name' id='$name' onclick=\"javascript:".$action."\"><table cellspacing='0' cellpadding='0'><tr><td>".$this->addImage($img)."</td><td nowrap='nowrap'>&nbsp;$text</td></tr></table></button>";
+		$output .= "<button name='$name' id='$name' onclick=\"javascript:".$action."\">\n";
+		$output .= "<table cellspacing='0' cellpadding='0'>\n";
+		$output .= "\t<tr>\n";
+		if ($img) {
+			$output .= "\t\t<td>".$this->addImage($img)."</td>\n";
+		}
+		$output .= "\t\t<td nowrap='nowrap'>&nbsp;$text</td>\n";
+		$output .= "\t</tr>\n";
+		$output .= "</table>\n";
+		$output .= "</button>";
 			
 	}
 	public function addImage($file) {
