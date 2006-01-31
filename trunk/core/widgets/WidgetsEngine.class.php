@@ -111,10 +111,9 @@ class WidgetEngine {
 		return $output;
 	}
 	public function createButton($name, $text, $action, $img=""){
-		$output ="";
 		if ($action=="submit") $action = "this.form.submit()";
 		if ($action=="") $action = "void(0);return false;"; 
-		$output .= "<button name='$name' id='$name' onclick=\"javascript:".$action."\">\n";
+		$output = "<button name='$name' id='$name' onclick=\"javascript:".$action."\">\n";
 		$output .= "<table cellspacing='0' cellpadding='0'>\n";
 		$output .= "\t<tr>\n";
 		if ($img) {
