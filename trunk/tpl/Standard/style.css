@@ -24,7 +24,7 @@ body {
 }
 
 #scroll {
-	height: 500px;
+	height: 450px;
 	width: 100%;
 	overflow: scroll;
 }

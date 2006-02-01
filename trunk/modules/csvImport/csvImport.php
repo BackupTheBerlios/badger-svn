@@ -92,11 +92,10 @@ if (isset($_POST['Upload'])){
 	 		//delete existing transactions, criteria are accountid, date & amount
 	 		#$bereinigete Transaktionen = 
 	 		for ($importedTransactionNumber = 0; $importedTransactionNumber < count($importedTransactions); $importedTransactionNumber++) {
-	 			$amount = $importedTransactions[$outputTransactionNumber]["amount"];
-	 			$date = $importedTransactions[$outputTransactionNumber]["valutaDate"];
-	 			$accountId = $importedTransactions[$outputTransactionNumber]["accountId"];
+	 			$amount = $importedTransactions[$importedTransactionNumber]["amount"];
+	 			$date = $importedTransactions[$importedTransactionNumber]["valutaDate"];
+	 			$accountId = $importedTransactions[$importedTransactionNumber]["accountId"];
 	 		} 
-	 		
 	 		#importedTransactions umstellen auf bereinigte Transaktionen
 	 		$transactionNumber = count($importedTransactions);
 	 		//show content of the array
@@ -108,12 +107,14 @@ if (isset($_POST['Upload'])){
 				   			<table border = 1 cellpadding = 0, cellspacing = 5>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "select"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "category"); ?> </th>
-				   				<th><?php echo getBadgerTranslation2("importCsv", "account"); ?> </th>
+								<th><?php echo getBadgerTranslation2("importCsv", "valutaDate"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "title"); ?> </th>
-				   				<th><?php echo getBadgerTranslation2("importCsv", "description"); ?> </th>
-				   				<th><?php echo getBadgerTranslation2("importCsv", "valutaDate"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "amount"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "transactionPartner"); ?> </th>
+				   				<th><?php echo getBadgerTranslation2("importCsv", "description"); ?> </th>
+				   				<th><?php echo getBadgerTranslation2("importCsv", "periodical"); ?> </th>
+				   				<th><?php echo getBadgerTranslation2("importCsv", "Exceptional"); ?> </th>
+				   				<th><?php echo getBadgerTranslation2("importCsv", "account"); ?> </th>				   				
 				   				<?php 
 				   				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
 				   					echo "<tr>";
@@ -123,7 +124,7 @@ if (isset($_POST['Upload'])){
 				   							echo "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\"> </input>";
 				   							echo "</center>";
 				   						echo "</td>";
-				   						//select category
+				   						//category
 				   						echo "<td>";
 				   							echo "<select name=\"categorySelect" . $outputTransactionNumber . "\" size=\"1\">";
 										    	echo "<option>". "" . "</option>";
@@ -133,6 +134,38 @@ if (isset($_POST['Upload'])){
 													echo "<option value=\"".$row[0]."\">". $row[2] . "</option>";
 												}
 					    					echo "</select>";
+				   						echo "</td>";
+				   						//valuta date
+			   							echo "<td>";
+				   							echo "<input name=\"valutaDate" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["valutaDate"] ."\">";
+			   							echo "</td>";
+			   							//title
+		   								echo "<td>";
+				   							echo "<input name=\"title" . $outputTransactionNumber . "\" type=\"text\" size=\"30\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["title"] ."\">";
+			   							echo "</td>";
+				   						//amount
+			   							echo "<td>";
+				   							echo "<input name=\"amount" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["amount"] ."\">";
+			   							echo "</td>";
+				   						//transaction partner
+			   							echo "<td>";
+				   							echo "<input name=\"transactionPartner" . $outputTransactionNumber . "\" type=\"text\" size=\"15\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["transactionPartner"] ."\">";
+			   							echo "</td>";
+				   						//description
+		   								echo "<td>";
+				   							echo "<input name=\"description" . $outputTransactionNumber . "\" type=\"text\" size=\"12\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["description"] ."\">";
+			   							echo "</td>";
+			   							//periodical
+				   						echo "<td>";
+				   							echo "<center";
+				   							echo "<input type=\"checkbox\" name=\"periodical" . $outputTransactionNumber . "\" value=\"select\"> </input>";
+				   							echo "</center>";
+				   						echo "</td>";
+				   						//exceptional
+				   						echo "<td>";
+				   							echo "<center";
+				   							echo "<input type=\"checkbox\" name=\"exceptional" . $outputTransactionNumber . "\" value=\"select\"> </input>";
+				   							echo "</center>";
 				   						echo "</td>";
 				   						//account
 				   						echo "<td>";
@@ -148,27 +181,7 @@ if (isset($_POST['Upload'])){
 													echo "<option value=\"".$row[0]."\">". $row[2] . "</option>";
 												}
 				   							echo "</select>";
-		   								echo "</td>";
-		   								//title
-		   								echo "<td>";
-				   							echo "<input name=\"title" . $outputTransactionNumber . "\" type=\"text\" size=\"30\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["title"] ."\">";
-			   							echo "</td>";
-			   							//description
-		   								echo "<td>";
-				   							echo "<input name=\"description" . $outputTransactionNumber . "\" type=\"text\" size=\"12\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["description"] ."\">";
-			   							echo "</td>";
-			   							//valuta date
-			   							echo "<td>";
-				   							echo "<input name=\"valutaDate" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["valutaDate"] ."\">";
-			   							echo "</td>";
-			   							//amount
-			   							echo "<td>";
-				   							echo "<input name=\"amount" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["amount"] ."\">";
-			   							echo "</td>";
-			   							//transaction partner
-			   							echo "<td>";
-				   							echo "<input name=\"transactionPartner" . $outputTransactionNumber . "\" type=\"text\" size=\"15\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["transactionPartner"] ."\">";
-			   							echo "</td>";
+		   								echo "</td>";	
 				   					echo "</tr>";
 				   				}?>
 				   			</table>
@@ -197,7 +210,19 @@ if (isset($_POST['btnSubmit'])){
 		//reset tableRowArray
 		$tableRowArray = NULL;
 		// if the transaction was selected
-		if (isset($_POST["select". $selectedTransactionNumber])){
+		if (isset($_POST["select" . $selectedTransactionNumber])){
+			// set periodical flag
+			if (isset ($_POST["periodical" . $selectedTransactionNumber])){
+				$periodical = "JA";
+			}else {
+				$periodical = "NEIN";
+			}
+			// set periodical flag
+			if (isset ($_POST["exceptional" . $selectedTransactionNumber])){
+				$exceptional = "JA";
+			}else {
+				$exceptional = "NEIN";
+			}
 			//create array with one transaction
 			$tableRowArray = array(
 				"categoryId" => $_POST['categorySelect' . $selectedTransactionNumber],
@@ -207,6 +232,8 @@ if (isset($_POST['btnSubmit'])){
 				"valutaDate" => $_POST['valutaDate' . $selectedTransactionNumber],
 				"amount" => $_POST['amount' . $selectedTransactionNumber],
 				"transactionPartner" => $_POST['transactionPartner' . $selectedTransactionNumber],
+				"periodical" => $periodical,
+				"exceptional" => $exceptional
 			);	
 		}
 		//if a array with one transaction exist
@@ -227,6 +254,8 @@ if (isset($_POST['btnSubmit'])){
 			echo $writeToDbArray[$arrayRow]['valutaDate'];
 			echo $writeToDbArray[$arrayRow]['amount'];
 			echo $writeToDbArray[$arrayRow]['transactionPartner'];
+			echo $writeToDbArray[$arrayRow]['periodical'];
+			echo $writeToDbArray[$arrayRow]['exceptional'];
 		}
 		// echo success message & number of written transactions
 		echo "<br/>" . count($writeToDbArray) . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
