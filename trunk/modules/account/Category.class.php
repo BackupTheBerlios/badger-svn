@@ -20,7 +20,7 @@ class Category {
 	private $description;
 	private $outsideCapital;
 	private $parent;
-	private $children = array();
+	private $children;
 	
 	public function __construct(&$badgerDb, $categoryManager, $data) {
 		$this->badgerDb = $badgerDb;
@@ -30,26 +30,7 @@ class Category {
 		$this->title = $data['title'];
 		$this->description = $data['description'];
 		$this->outsideCapital = $data['outside_capital'];
-		if ($data['parent_id']) {
-			$this->parent = $categoryManager->getCategoryById($data['parent_id']);
-		}
-		
-		$sql = "SELECT category_id
-			FROM category
-			WHERE parent_id = " . $this->id;
-
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
-		}
-		
-		$row = false;
-		
-		while($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
-			$children[$row['category_id']] = $categoryManager->getCategoryByid($row['category_id']);
-		}
+		$this->parent = $data['parent_id'];
 	}
 	
 	public function getId() {
@@ -79,7 +60,7 @@ class Category {
 		return $this->description;
 	}
 	
- 	public function setTitle($description) {
+ 	public function setDescription($description) {
 		$this->description = $description;
 		
 		$sql = "UPDATE category
@@ -109,11 +90,17 @@ class Category {
 		
 		if (PEAR::isError($dbResult)) {
 			echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
+			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 		}
 	}
 
 	public function getParent() {
+		if (!($this->parent instanceof Category)
+			&& $this->parent
+		) {
+			$this->parent = $this->categoryManager->getCategoryById($this->parent);
+		}
+		
 		return $this->parent;
 	}
 	
@@ -129,11 +116,30 @@ class Category {
 		
 		if (PEAR::isError($dbResult)) {
 			echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
+			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 		}
 	}
 
 	public function getChildren() {
+		if (!is_array($this->children)) {
+			$sql = "SELECT category_id
+				FROM category
+				WHERE parent_id = " . $this->id;
+	
+			$dbResult =& $this->badgerDb->query($sql);
+			
+			if (PEAR::isError($dbResult)) {
+				echo "SQL Error: " . $dbResult->getMessage();
+				throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
+			}
+			
+			$row = false;
+			
+			while($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+				$children[$row['category_id']] = $this->categoryManager->getCategoryByid($row['category_id']);
+			}
+		}
+
 		return $this->children;
 	}
 	

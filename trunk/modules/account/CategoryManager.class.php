@@ -103,6 +103,21 @@ class CategoryManager extends DataGridHandler {
 		return $this->fieldNames;
 	}
 	
+	public function getFieldSQLName($fieldName) {
+		$fieldTypes = array (
+			'categoryId' => 'category_id',
+			'title' => 'title',
+			'description' => 'description',
+			'outsideCapital' => 'outside_capital'
+		);
+	
+		if (!isset ($fieldTypes[$fieldName])){
+			throw new BadgerException('CategoryManager', 'invalidFieldName', $fieldName); 
+		}
+		
+		return $fieldTypes[$fieldName];    	
+	}
+
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -129,7 +144,7 @@ class CategoryManager extends DataGridHandler {
 				'categoryId' => $currentCategory->getId(),
 				'title' => $currentCategory->getTitle(),
 				'description' => $currentCategory->getDescription(),
-				'outsideCapital' => $currentCategory->getOutsideCapital()
+				'outsideCapital' => is_null($tmp = $currentCategory->getOutsideCapital()) ? '' : $tmp
 			);
 		}
 		
@@ -150,7 +165,9 @@ class CategoryManager extends DataGridHandler {
 		$sql = "SELECT c.category_id, c.parent_id, c.title, c.description, c.outside_capital
 			FROM category c
 			WHERE c.category_id = $categoryId";
-		
+
+		//echo "<pre>$sql</pre>";
+
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
@@ -163,7 +180,7 @@ class CategoryManager extends DataGridHandler {
 			return $currentCategory;
 		} else {
 			$this->allDataFetched = false;	
-			throw new BadgerException('CategoryManager', 'UnknownAccountId', $categoryId);
+			throw new BadgerException('CategoryManager', 'UnknownCategoryId', $categoryId);
 		}
 	}
 		
@@ -173,16 +190,15 @@ class CategoryManager extends DataGridHandler {
 	 * @return mixed ID of the fetched Account if successful, false otherwise.
 	 */
 	public function getNextCategory() {
-		if($this->allDataFetched){
-			return;
-		}
-		
 		$this->fetchFromDB();
 		$row = false;
 		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->accounts[$row['category_id']] = new Category(&$this->badgerDb, &$this, $row);
-			return $row['category_id'];
+
+			//echo "<pre>"; print_r($row); echo "</pre>";
+
+			$this->categories[$row['category_id']] = new Category(&$this->badgerDb, &$this, $row);
+			return $this->categories[$row['category_id']];
 		} else {
 			$this->allDataFetched = true;
 			return false;    	
@@ -203,7 +219,7 @@ class CategoryManager extends DataGridHandler {
 		}
 		
 		if($dbResult->affectedRows() != 1){
-			throw new BadgerException('CategoryManager', 'UnknownAccountId', $categoryId);
+			throw new BadgerException('CategoryManager', 'UnknownCategoryId', $categoryId);
 		}
 	}
 	
@@ -274,8 +290,6 @@ class CategoryManager extends DataGridHandler {
 			$sql .= "ORDER BY $order\n ";
 		}
 		
-		//echo "<pre>$sql</pre>";
-
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {

@@ -116,6 +116,21 @@ class AccountManager extends DataGridHandler {
 		return $this->fieldNames;
 	}
 	
+	public function getFieldSQLName($fieldName) {
+		$fieldSQLNames = array (
+			'accountId' => 'a.account_id',
+			'currency' => 'c.title',
+			'title' => 'a.title',
+			'balance' => 'SUM(ft.amount)'    	
+		);
+	
+		if (!isset ($fieldSQLNames[$fieldName])){
+			throw new BadgerException('AccountManager', 'invalidFieldName', $fieldName); 
+		}
+		
+		return $fieldSQLNames[$fieldName];    	
+	}
+
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -164,7 +179,7 @@ class AccountManager extends DataGridHandler {
 		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
 			$this->accounts[$row['account_id']] = new Account(&$this->badgerDb, &$this, $row);
-			return $row['account_id'];
+			return $this->accounts[$row['account_id']];
 		} else {
 			$this->allDataFetched = true;
 			return false;    	
@@ -181,11 +196,11 @@ class AccountManager extends DataGridHandler {
 	 */
 	public function getAccountById($accountId){
 		if ($this->dataFetched){
-			if(isset($this->accounts[$accountId])) {
+			if (isset($this->accounts[$accountId])) {
 				return $this->accounts[$accountId];
 			}
-			while($currentAccount=$this->getNextAccount()){
-				if($currentAccount->getId() == $accountId){
+			while ($currentAccount = $this->getNextAccount()) {
+				if ($currentAccount->getId() == $accountId) {
 					return $currentAccount;
 				}
 			}
@@ -238,7 +253,7 @@ class AccountManager extends DataGridHandler {
 			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($dbResult->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() != 1){
 			throw new BadgerException('AccountManager', 'UnknownAccountId', $accountId);
 		}
 	}
@@ -274,7 +289,7 @@ class AccountManager extends DataGridHandler {
 		}
 		
 		$sql .= ")
-			VALUES ($accountId, '" . $this->badgerDb->escapeSimple($title) . "'," . $curreny->getId();
+			VALUES ($accountId, '" . $this->badgerDb->escapeSimple($title) . "'," . $currency->getId();
 	
 		if($description){
 			$sql .= ", '".  $this->badgerDb->escapeSimple($description) . "'";
@@ -297,7 +312,7 @@ class AccountManager extends DataGridHandler {
 			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($dbResult->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() != 1){
 			throw new BadgerException('AccountManager', 'insertError', $dbResult->getMessage());
 		}
 		
@@ -325,7 +340,6 @@ class AccountManager extends DataGridHandler {
 				a.upper_limit, a.currency_id, currency_symbol, currency_long_name \n";
 		
 		$where = $this->getFilterSQL();
-		$where = str_replace('balance', 'SUM(ft.amount)', $where);
 		if($where) {
 			$sql .= "HAVING $where\n ";
 		} 

@@ -34,7 +34,9 @@ abstract class DataGridHandler {
 	 * 
 	 * @var array
 	 */
-	protected $order;
+	protected $order = array();
+	
+	protected $filter = array();
 	
 	/**
 	 * Initializes the DB object.
@@ -61,6 +63,8 @@ abstract class DataGridHandler {
 	 * @return string The type of field $fieldName.
 	 */
 	public abstract function getFieldType($fieldName);
+	
+	public abstract function getFieldSQLName($fieldName);
 	
 	/**
 	 * Sets the order to return the results.
@@ -213,7 +217,7 @@ abstract class DataGridHandler {
 			} else {
 				$result .= ', ';
 			}
-			$result .= $val['key'] . ' ' . $val['dir'];
+			$result .= $this->getFieldSQLName($val['key']) . ' ' . $val['dir'];
 		}	
 		
 		return $result;    	
@@ -240,7 +244,7 @@ abstract class DataGridHandler {
 				|| $val['op'] == 'ct'
 			) {
 				//we need to treat everything as string
-				$result .= "LOWER(CONVERT($val[key], CHAR)) LIKE ";
+				$result .= "LOWER(CONVERT(" . $this->getFieldSQLName($val['key']) . ", CHAR)) LIKE ";
 				
 				if ($val['val'] instanceof Amount) {
 					$stringVal = $val['val']->get();
@@ -263,7 +267,7 @@ abstract class DataGridHandler {
 				}
 			} else {
 				//standard comparison
-				$result .= $val['key'];
+				$result .= $this->getFieldSQLName($val['key']);
 
 				switch ($val['op']) {
 					case 'eq':
@@ -318,7 +322,12 @@ abstract class DataGridHandler {
 				return "'" . addslashes($val) . "'";
 				
 			case 'Amount':
+			case 'amount':
 				return "'" . $val->get() . "'";
+			
+			case 'Date':
+			case 'date':
+				return "'" . $val->getDate() . "'";
 		}
 	}
 }

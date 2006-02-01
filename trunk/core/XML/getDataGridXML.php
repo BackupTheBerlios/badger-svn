@@ -39,10 +39,14 @@ require_once BADGER_ROOT . '/includes/fileHeaderBackEnd.inc.php';
 require_once BADGER_ROOT . '/core/XML/DataGridRepository.class.php';
 require_once BADGER_ROOT . '/core/XML/DataGridXML.class.php';
 require_once BADGER_ROOT . '/core/Amount.class.php';
+require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
+
+$CategoryManager = new CategoryManager($badgerDb);
 
 //q parameter is mandatory
 if (!isset($_GET['q'])){
-	return 'Missing Parameter q';
+	echo 'Missing Parameter q';
+	exit;
 }
 
 $dgr = new DataGridRepository($badgerDb);
@@ -51,7 +55,8 @@ $dgr = new DataGridRepository($badgerDb);
 try{
 	$handlerData = $dgr->getHandler($_GET['q']);
 } catch (BadgerException $ex){
-	return 'Unknown DataGridHandler';		
+	echo 'Unknown DataGridHandler';
+	exit;		
 }
 
 //Include file containing DataGridHandler
@@ -59,7 +64,8 @@ require_once BADGER_ROOT . $handlerData['path'];
 
 //Pass query parameters, if available
 if (isset($_GET['qp'])) {
-	$handler = new $handlerData['class']($badgerDb, unescaped($_GET, 'qp'));
+	$param = unescaped($_GET, 'qp');
+	$handler = new $handlerData['class']($badgerDb, $param);
 } else {
 	$handler = new $handlerData['class']($badgerDb);
 }
@@ -89,7 +95,8 @@ for ($i = 0; $i <= 2; $i++) {
 			}
 		} else {
 			//unknown order key
-			return 'Unknown order key: ' . $_GET["ok$i"];
+			echo 'Unknown order key: ' . $_GET["ok$i"];
+			exit;
 		}
 	} else {
 		//unset order key, do not process further
@@ -112,15 +119,18 @@ while (isset($_GET["fk$i"]) && isset($_GET["fo$i"]) && isset($_GET["fv$i"])) {
 				$filter[$i]['val'] = transferType($handler->getFieldType(unescaped($_GET, "fk$i")), unescaped($_GET, "fv$i"));
 			} catch (TransferException $ex) {
 				//Untransferable Data Type
-				return 'Illegal filter value: ' . $_GET["fv$i"];
+				echo 'Illegal filter value: ' . $_GET["fv$i"];
+				exit;
 			}
 		} else {
 			//illegal filter operator
-			return 'Illegal filter operator: ' . $_GET["fo$i"];
+			echo 'Illegal filter operator: ' . $_GET["fo$i"];
+			exit;
 		}
 	} else {
 		//unknown filter key
-		return 'Unknown filter key: ' . $_GET["fk$i"];
+		echo 'Unknown filter key: ' . $_GET["fk$i"];
+		exit;
 	}
 
 	$i++;
@@ -216,7 +226,12 @@ function transferType($type, $str) {
 			break;
 			
 		case 'Amount':
+		case 'amount':
 			return new Amount($str);
+		
+		case 'Date':
+		case 'date':
+			return new Date($str);
 			
 		default:
 			throw new TransferException();

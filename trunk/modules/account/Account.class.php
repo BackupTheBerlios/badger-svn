@@ -15,6 +15,8 @@ require_once (BADGER_ROOT . '/core/XML/DataGridHandler.class.php');
 require_once (BADGER_ROOT . '/core/Amount.class.php');
 require_once (BADGER_ROOT . '/modules/account/Currency.class.php');
 require_once (BADGER_ROOT . '/core/Date.php');
+require_once (BADGER_ROOT . '/modules/account/AccountManager.class.php');
+require_once (BADGER_ROOT . '/modules/account/FinishedTransaction.class.php');
 
 /**
  * An (financial) Account.
@@ -30,7 +32,7 @@ class Account extends DataGridHandler {
 	 * @var array
 	 */
 	private $fieldNames = array (
-		'transferId',
+		'transactionId',
 		'title',
 		'description',
 		'valutaDate',
@@ -102,8 +104,6 @@ class Account extends DataGridHandler {
 	 */
 	private $accountManager;
 	
-	private $badgerDb;
-	
 	/**
 	 * Have the query been executed?
 	 * 
@@ -133,14 +133,14 @@ class Account extends DataGridHandler {
 	 * @param $accountManager object The AccountManager who created this Account.
 	 * @param $data array An associative array with the values out of the DB.
 	 */
-	function __construct(&$badgerDb, &$accountManager, $data, $title = null, $description = null, $lowerLimit = null, $upperLimit = null, $currency = null) {
+	function __construct(&$badgerDb, &$accountManager, $data = null, $title = null, $description = null, $lowerLimit = null, $upperLimit = null, $currency = null) {
 		$this->badgerDb = $badgerDb;
 		
+		$this->targetFutureCalcDate = new Date();
+		$this->targetFutureCalcDate->addSeconds(1 * 365 * 24 * 60 * 60);
+
 		if (!is_string($accountManager)) {
 			$this->accountManager = $accountManager;
-			
-			$this->targetFutureCalcDate = new Date();
-			$this->targetFutureCalcDate->addSeconds(10 * 365 * 24 * 60 * 60);
 			
 			if (is_array($data)) {
 				$this->id = $data['account_id'];
@@ -163,13 +163,15 @@ class Account extends DataGridHandler {
 			$this->accountManager = new AccountManager(&$badgerDb);
 			settype($accountManager, 'integer');
 			$tmpAccount = $this->accountManager->getAccountById($accountManager);
+			
+			//echo "<pre>"; print_r($tmpAccount); echo "</pre>";
 
 			$this->id = $tmpAccount->getId();
 			$this->title = $tmpAccount->getTitle();
 			$this->description = $tmpAccount->getDescription();
 			$this->lowerLimit = $tmpAccount->getLowerLimit();
 			$this->upperLimit = $tmpAccount->getUpperLimit();
-			$this->balance = $tmpAccount->getAccount();
+			$this->balance = $tmpAccount->getBalance();
 			$this->currency = $tmpAccount->getCurrency();
 		}
 	}
@@ -194,7 +196,7 @@ class Account extends DataGridHandler {
 	 */
 	public function getFieldType($fieldName) {
 		$fieldTypes = array (
-			'transferId' => 'integer',
+			'transactionId' => 'integer',
 			'title' => 'string',
 			'description' => 'string',
 			'valutaDate' => 'date',
@@ -221,6 +223,26 @@ class Account extends DataGridHandler {
 		return $this->fieldNames;
 	}
 
+	public function getFieldSQLName($fieldName) {
+		$fieldSQLNames = array (
+			'transactionId' => 'ft.finished_transaction_id',
+			'title' => 'ft.title',
+			'description' => 'ft.description',
+			'valutaDate' => 'ft.valuta_date',
+			'amount' => 'ft.amount',
+			'outsideCapital' => 'ft.outside_capital',
+			'transactionPartner' => 'ft.transaction_parter',
+			'categoryId' => 'ft.category_id',
+			'categoryTitle' => 'c.title'
+		);
+	
+		if (!isset ($fieldSQLNames[$fieldName])){
+			throw new BadgerException('Account', 'invalidFieldName', $fieldName); 
+		}
+		
+		return $fieldSQLNames[$fieldName];    	
+	}
+	
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -238,21 +260,21 @@ class Account extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		while($this->getNextTransfer());
+		$this->getTransactions();
 		
 		$result = array();
 		
-		foreach($this->finishedTransfers as $currentTransfer){
+		foreach($this->finishedTransactions as $currentTransaction){
 			$result[] = array (
-				'transferId',
-				'title',
-				'description',
-				'valutaDate',
-				'amount',
-				'outsideCapital',
-				'transactionPartner',
-				'categoryId',
-				'categoryTitle'
+				'transactionId' => $currentTransaction->getId(),
+				'title' => $currentTransaction->getTitle(),
+				'description' => $currentTransaction->getDescription(),
+				'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getDate() : '',
+				'amount' => $currentTransaction->getAmount()->get(),
+				'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
+				'transactionPartner' => $currentTransaction->getTransactionPartner(),
+				'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
+				'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : ''
 			);
 		}
 		
@@ -260,12 +282,13 @@ class Account extends DataGridHandler {
 	}
 
 	public function getFinishedTransactionById($finishedTransactionId){
-		if ($this->dataFetched){
-			if(isset($this->finishedTransactions[$finishedTransactionId])) {
+		if ($this->dataFetched) {
+			if (isset($this->finishedTransactions[$finishedTransactionId])) {
 				return $this->finishedTransactions[$finishedTransactionId];
 			}
-			while($currentTransaction=$this->getNextTransaction()){
-				if($currentTransaction->getId() == $finishedTransactionId){
+			while ($currentTransaction = $this->fetchNextFinishedTransaction()) {
+				if ($currentTransaction->getId() === $finishedTransactionId) {
+					
 					return $currentTransaction;
 				}
 			}
@@ -273,7 +296,9 @@ class Account extends DataGridHandler {
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 				ft.outside_capital, ft.transaction_partner, ft.category_id
 			FROM finished_transaction ft 
-			WHERE transaction_id = " .  $finishedTransactionId;
+			WHERE finished_transaction_id = " .  $finishedTransactionId;
+		
+		//echo $sql . "\n";
 		
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
@@ -282,7 +307,7 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'SQLError', $this->dbResult->getMessage());
 		}
 		
-		$currentTransaction = $this->getNextTransaction();
+		$currentTransaction = $this->fetchNextFinishedTransaction();
 		if($currentTransaction){
 			return $currentTransaction;
 		} else {
@@ -291,7 +316,7 @@ class Account extends DataGridHandler {
 		}
 	}
 	
-	public function deleteFinishedTransactions($finishedTransactionId){
+	public function deleteFinishedTransaction($finishedTransactionId){
 		if(isset($this->finishedTransactions[$finishedTransactionId])){
 			unset($this->finishedTransactions[$finishedTransactionId]);
 		}
@@ -305,8 +330,8 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($dbResult->affectedRows() != 1){
-			throw new BadgerException('Account', 'UnknownFinishedTransferId', $finishedTransactionId);
+		if($this->badgerDb->affectedRows() != 1){
+			throw new BadgerException('Account', 'UnknownFinishedTransactionId', $finishedTransactionId);
 		}
 	}
 	
@@ -361,11 +386,11 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($dbResult->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() != 1){
 			throw new BadgerException('Account', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction(&$this->badgerDb, &$this, $this->id, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital);
+		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction(&$this->badgerDb, &$this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital);
 		
 		return $this->finishedTransactions[$finishedTransactionId];	
 	}
@@ -516,7 +541,7 @@ class Account extends DataGridHandler {
 		$this->targetFutureCalcDate = $date;
 	}
 	
-	public function getNextTransaction() {
+	public function getTransactions() {
 		while ($this->fetchNextFinishedTransaction());
 		
 		$this->fetchPlannedTransactions();
@@ -526,16 +551,12 @@ class Account extends DataGridHandler {
 	}
 	
 	private function fetchNextFinishedTransaction() {
-		if($this->allDataFetched){
-			return;
-		}
-		
 		$this->fetchFromDB();
 		$row = false;
 		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->finishedTransactions[$row['finished_transactions_id']] = new FinishedTransaction(&$this->badgerDb, &$this, $row);
-			return $row['finished_transaction_id'];
+			$this->finishedTransactions[$row['finished_transaction_id']] = new FinishedTransaction(&$this->badgerDb, &$this, $row);
+			return $this->finishedTransactions[$row['finished_transaction_id']];
 		} else {
 			$this->allDataFetched = true;
 			return false;    	
@@ -556,11 +577,12 @@ class Account extends DataGridHandler {
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 				ft.outside_capital, ft.transaction_partner, ft.category_id
 			FROM finished_transaction ft 
-			WHERE account_id = " .  $this->id;
+				LEFT OUTER JOIN category c ON ft.category_id = c.category_id
+			WHERE account_id = " .  $this->id . "\n";
 		
 		$where = $this->getFilterSQL();
 		if($where) {
-			$sql .= "WHERE $where\n ";
+			$sql .= "AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
@@ -574,7 +596,7 @@ class Account extends DataGridHandler {
 		
 		if (PEAR::isError($this->dbResult)) {
 			echo "SQL Error: " . $this->dbResult->getMessage();
-			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
+			throw new BadgerException('Account', 'SQLError', $this->dbResult->getMessage());
 		}
 		
 		$this->dataFetched = true; 	
@@ -584,12 +606,15 @@ class Account extends DataGridHandler {
 		$this->fetchPlannedTransactions();
 
 		$now = new Date();
+		
+		//echo "<pre>"; print_r($this->plannedTransactions); echo "</pre>";
+		
 		foreach($this->plannedTransactions as $currentTransaction){ 
 			$date = new Date($currentTransaction['begin_date']);
 			$dayOfMonth = $date->getDay();
 			while($this->targetFutureCalcDate->after($date)){
 				if(!($date->before($now))) {
-					$this->finishedTransactions[] = new Transaction($this->badgerDb, $this, $currentTransaction, $currentTransaction['planned_transaction_id']);
+					$this->finishedTransactions[] = new FinishedTransaction($this->badgerDb, $this, $currentTransaction, $currentTransaction['planned_transaction_id'], $date);
 				}
 				switch ($currentTransaction['repeat_unit']){
 					case 'day': 
@@ -610,6 +635,10 @@ class Account extends DataGridHandler {
 					case 'year':
 						$date->setYear($date->getYear() + $currentTransaction['repeat_frequency']);
 						break;
+					
+					default:
+						echo "Illegal repeat unit";
+						exit;
 				}
 			}
 		} 
@@ -622,7 +651,7 @@ class Account extends DataGridHandler {
 
 		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.valuta_date, pt.amount, 
 				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
-				pt.repeat_frequency
+				pt.repeat_frequency, pt.category_id
 			FROM planned_transaction pt 
 			WHERE account_id = " .  $this->id . "
 				AND pt.begin_date <= '". $this->targetFutureCalcDate->getDate(DATE_FORMAT_ISO) . "'
@@ -637,39 +666,68 @@ class Account extends DataGridHandler {
 		
 		$row = false;
 		while($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->plannedTransactions[] = new FinishedTransaction(&$this->badgerDb, &$this, $row);
+			$this->plannedTransactions[] = $row;
 		}
+		
+		$this->plannedDataFetched = true;
 	}
 
-	function transferCompare($a, $b) {
-		if (isset($this->order[0])) {
-			switch ($this->order[0]) {
-				case 'transferId':
-					return $a->getId() - $b->getId();
+	function transferCompare($aa, $bb) {
+		$tmp = 0;
+
+		for ($run = 0; isset($this->order[$run]); $run++) {
+			if ($this->order[$run]['dir'] == 'asc') {
+				$a = $aa;
+				$b = $bb;
+			} else {
+				$a = $bb;
+				$b = $aa;
+			}
+			//echo "a: " . $a->getId() . "<br />";
+			
+			switch ($this->order[$run]['key']) {
+				case 'transactionId':
+					$tmp = $a->getId() - $b->getId();
+					break;
 				
 				case 'title':
-					return strncasecmp($a->getTitle(), $b->getTitle());
+					$tmp = strncasecmp($a->getTitle(), $b->getTitle(), 9999);
+					//echo $tmp;
+					break;
 				
 				case 'description':
-					return strncasecmp($a->getDescription(), $b->getDescription());
+					$tmp = strncasecmp($a->getDescription(), $b->getDescription(), 9999);
+					break;
 					
 				case 'valutaDate':
-					return $a->getValutaDate()->compare($a->getValutaDate(), $b->getValutaDate());
+					if ($a->getValutaDate() && $b->getValutaDate()) {
+						$tmp = $a->getValutaDate()->compare($a->getValutaDate(), $b->getValutaDate());
+					}
+					break;
 				
 				case 'amount':
-					return $a->getAmount()->compare($b->getAmount());
+					$tmp = $a->getAmount()->compare($b->getAmount());
+					break;
 		
 				case 'outsideCapital':
-					return $a->getOutsideCapital() - $b->getOutsideCapital();
+					$tmp = $a->getOutsideCapital() - $b->getOutsideCapital();
+					break;
 		
 				case 'transactionPartner':
-					return strncasecmp($a->getTransactionPartner(), $b->getTransactionPartner());
+					$tmp = strncasecmp($a->getTransactionPartner(), $b->getTransactionPartner(), 9999);
+					break;
 				
 				case 'categoryId':
-					return $a->getCategory()->getId() - $b->getCategory()->getId();
+					$tmp = $a->getCategory()->getId() - $b->getCategory()->getId();
+					break;
 				
 				case 'categoryTitle':
-					return strncasecmp($a->getCategory()->getTitle(), $b->getCategory()->getTitle());
+					$tmp = strncasecmp($a->getCategory()->getTitle(), $b->getCategory()->getTitle(), 9999);
+					break;
+			}
+			
+			if ($tmp != 0) {
+				return $tmp;
 			}
 		}
 	}

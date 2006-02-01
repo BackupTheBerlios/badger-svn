@@ -12,7 +12,7 @@
 **/
 
 require_once (BADGER_ROOT . '/core/Date.php');
-require_once (BADGER_ROOT . '/core/Amount.php');
+require_once (BADGER_ROOT . '/core/Amount.class.php');
 require_once (BADGER_ROOT . '/modules/account/Category.class.php');
 
 class FinishedTransaction {
@@ -28,21 +28,31 @@ class FinishedTransaction {
 	private $transactionPartner;
 	private $category;
 	
-    function __construct(&$badgerDb, $account, $data, $title, $amount, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = false) {
+    function __construct(&$badgerDb, $account, $data, $title = null, $amount = null, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = false) {
     	global $CategoryManager;
     	
     	$this->badgerDb = $badgerDb;
     	$this->account = $account;
     	
     	if (is_array($data)) {
-    		$this->id = $data['finished_transaction_id'];
     		$this->title = $data['title'];
     		$this->description = $data['description'];
-    		$this->valutaDate = new Date($data['valuta_date']);
     		$this->amount = new Amount($data['amount']);
     		$this->outsideCapital = $data['outside_capital'];
     		$this->transactionPartner =  $data['transaction_partner'];
-    		$this->category = $CategoryManager->getCategoryById($data['category_id']);
+    		if ($data['category_id']) {
+    			$this->category = $CategoryManager->getCategoryById($data['category_id']);
+    		}
+
+    		if (isset($data['finished_transaction_id'])) {
+	    		$this->id = isset($data['finished_transaction_id']);
+	    		if ($data['valuta_date']) {
+	    			$this->valutaDate = new Date($data['valuta_date']);
+	    		}
+    		} else {
+    			$this->id = 'x-$title';
+    			$this->valutaDate = new Date($amount);
+    		}
     	} else {
     		$this->id = $data;
     		$this->title = $title;
@@ -98,7 +108,7 @@ class FinishedTransaction {
 	}
 	
     public function getValutaDate() {
-    	return $this->valutaDate();
+    	return $this->valutaDate;
     }
     
  	public function setValutaDate($valutaDate) {

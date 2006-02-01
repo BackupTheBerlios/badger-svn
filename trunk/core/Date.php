@@ -45,6 +45,10 @@ require_once 'Date/Span.php';
  * Output formats.  Pass this to getDate().
  */
 /**
+ * "YYYY-MM-DD"
+ */
+define('DATE_FORMAT_ISO_NOTIME', 6);
+/**
  * "YYYY-MM-DD HH:MM:SS"
  */
 define('DATE_FORMAT_ISO', 1);
@@ -225,9 +229,12 @@ class Date
      * @param int $format format constant (DATE_FORMAT_*) of the output date
      * @return string the date in the requested format
      */
-    function getDate($format = DATE_FORMAT_ISO)
+    function getDate($format = DATE_FORMAT_ISO_NOTIME)
     {
         switch ($format) {
+        case DATE_FORMAT_ISO_NOTIME:
+            return $this->format("%Y-%m-%d");
+            break;
         case DATE_FORMAT_ISO:
             return $this->format("%Y-%m-%d %T");
             break;

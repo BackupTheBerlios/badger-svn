@@ -14,6 +14,7 @@ function testLink($text, $link) {
 </head>
 
 <body>
+	<h1>AccountManager</h1>
 	<dl>
 		<?php
 			testLink('Alle Accounts', 'q=AccountManager');
@@ -23,6 +24,22 @@ function testLink($text, $link) {
 			testLink('Alle Accounts, die mit X aufh&ouml;ren', 'q=AccountManager&amp;fk0=title&amp;fo0=ew&amp;fv0=x');
 			testLink('Alle Accounts, die ein X enthalten und positiven Kontostand aufweisen', 'q=AccountManager&amp;fk0=title&amp;fo0=ct&amp;fv0=x&amp;fk1=balance&amp;fo1=gt&amp;fv1=0');
 			testLink('Alle Accounts, die ein X enthalten und negativen Kontostand aufweisen, nach Kontostand absteigend sortiert', 'q=AccountManager&amp;fk0=title&amp;fo0=ct&amp;fv0=x&amp;fk1=balance&amp;fo1=lt&amp;fv1=0&amp;ok0=balance&amp;od0=d');
+		?>
+	</dl>
+	
+	<h1>Account</h1>
+	<dl>
+		<?php
+			testLink('Alle Transaktionen von Konto #2', 'q=Account&amp;qp=2');
+			testLink('Alle Transaktionen von Konto #1, geordnet nach Titel aufsteigend', 'q=Account&amp;qp=1&amp;ok0=title&amp;od0=a');
+			testLink('Alle Transaktionen von Konto #1, geordnet nach Datum aufsteigend', 'q=Account&amp;qp=1&amp;ok0=valutaDate&amp;od0=a');
+		?>
+	</dl>
+	
+	<h1>CategoryManager</h1>
+	<dl>
+		<?php
+			testLink('Alle Kategorien', 'q=CategoryManager');
 		?>
 	</dl>
 </body>
