@@ -20,6 +20,7 @@ $tpl->addJavaScript("js/ajax_tables.js");
 echo $tpl->getHeader("Seitenname"); //write header */
 
 ?>
+
         <div>
             Load data: [
             <a href="../../core/XML/getDataGridXML.php?q=AccountManager" mochi:dataformat="xml">AccountManager</a>

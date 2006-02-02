@@ -16,11 +16,17 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
-//$widgets->addAutoCompleteJS();
-echo $tpl->getHeader("Seitenname"); //write header */
+
+$widgets->addNavigationHead();
+//write XHTML Header
+echo $tpl->getHeader("Seitenname");
+
+//Navigation Head
+eval("echo \"".$tpl->getTemplate("Navigation/body")."\";");
 ?>
 	<form name="mainform">
 		<?php
+		
 		echo "<br />";
 		echo $widgets->addDateField("testdate", "01.01.2006");
 		echo "<br />";
