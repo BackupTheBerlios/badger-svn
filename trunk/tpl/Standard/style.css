@@ -6,12 +6,10 @@ body, table {
 	font-family: Arial, Verdana;
 	font-size: 10pt;
 }
-body {
-
-}
 
 #header {
 	background-color: #ECE9D8;
+	height: 46px;
 }
 #content {
 	margin: 5px 5px 5px 5px;
