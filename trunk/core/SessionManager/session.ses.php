@@ -21,7 +21,7 @@
 */
 
 include(BADGER_ROOT . "/core/SessionManager/config.ses.php");
-if(isset($_COOKIE["sess"]) && $_COOKIE["sess"]!=""){
+if(isset($_COOKIE['badger_sess']) && $_COOKIE['badger_sess']!=""){
 	$sess=update_session();
 }else{
 	$sess=new_session();

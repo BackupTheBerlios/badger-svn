@@ -114,11 +114,11 @@ if( isset( $_POST['SubmitChangePassword'] ) ){
 		echo "<br/><br/><br/>";
 		
 		$date_formats = array(
-			"tt.mm.yyyy" => "tt.mm.yyyy",
-			"tt/mm/yyyy" => "tt/mm/yyyy",
-			"tt-mm-yyyy" => "tt-mm-yyyy",
-			"yyyy-mm-tt" => "yyyy-mm-tt",
-			"yyyy/mm/tt" => "yyyy/mm/tt"
+			"dd.mm.yyyy" => getBadgerTranslation2('DateFormats','dd.mm.yyyy'),
+			"dd/mm/yyyy" => getBadgerTranslation2('DateFormats','dd/mm/yyyy'),
+			"dd-mm-yyyy" => getBadgerTranslation2('DateFormats','dd-mm-yyyy'),
+			"yyyy-mm-dd" => getBadgerTranslation2('DateFormats','yyyy-mm-dd'),
+			"yyyy/mm/dd" => getBadgerTranslation2('DateFormats','yyyy/mm/dd')
 		);
 		
 		echo $widgets->createLabel("DateFormat", getBadgerTranslation2('UserSettingsAdmin','date_format_name'), true);

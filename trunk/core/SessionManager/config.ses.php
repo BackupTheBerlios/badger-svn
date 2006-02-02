@@ -73,9 +73,9 @@ function new_session(){
 	list($m,$s) = explode(" ",microtime());
 	$sess = md5(rand(0,1000).substr($m,2).$secure_key);
 	if($_session_timeout != 0){
-		setcookie('sess',$sess,time()+($_session_timeout*60));
+		setcookie('badger_sess', $sess, time()+($_session_timeout*60), '/');
 	}else{
-		setcookie('sess',$sess);
+		setcookie('badger_sess',$sess, 0, '/');
 	}
 	$sql = "insert into $_db_table_config(sid,start,ip) values('$sess',NOW(),'".$_SERVER['REMOTE_ADDR']."')";
 	$res = query($sql);
@@ -84,7 +84,7 @@ function new_session(){
 
 function update_session(){
 	global $_db_table_config, $badgerDb;
-	$sess = $_COOKIE['sess'];
+	$sess = $_COOKIE['badger_sess'];
 	$sql = "select logout from $_db_table_config where sid = '$sess'";
 	$res = query($sql);
 	
@@ -147,7 +147,7 @@ function session_kill(){
 	global $sess,$_db_table_config;
 	$sql = "update $_db_table_config set logout=1";
 	query($sql);
-	setcookie('sess',0,time()-500);
+	setcookie('badger_sess',0,time()-500);
 }
 
 function get_session_length(){

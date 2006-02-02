@@ -15,7 +15,8 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 
 print("If you can see this text, you are logged in.<br>");
-print("<a href=\"".BADGER_ROOT."/modules/moduleTests/LoginTest2.php\">Link</a>");
+print("<p onclick=\"location.href='../../core/LoginTest.php'\">java</p>");
+//print("<a href=\"".BADGER_ROOT."/modules/moduleTests/LoginTest2.php\">Link</a>");
 
 if (isset($_POST)){
 	print("<pre>");

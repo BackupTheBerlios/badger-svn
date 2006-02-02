@@ -18,8 +18,6 @@
 //TemplateEngine object named "$tpl" is already existing
 
 
-
-
 // check if this is a mandatory password change
 // because of standard password
 
@@ -211,8 +209,8 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	
 	echo "<br/><br/>";
 	
-	echo "<input name=\"SubmitMandatoryChangePassword\" value=\"".getBadgerTranslation2('UserSettingsAdmin','submit_button')."\" type=\"submit\">";
-	
+	echo $widgets->createButton("SubmitMandatoryChangePassword", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+		
 	echo "</form>";
 	
 	exit();
@@ -220,9 +218,18 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 
 
 if($passwordcorrect == false)
-	{
+	{	
+		// Initialization
+		$tpl->addCSS("style.css");
+		$widgets = new WidgetEngine($tpl); 
+		$widgets->addToolTipJS();
+		$widgets->addCalendarJS();
+		$widgets->addAutoCompleteJS();
+		echo $widgets->addToolTipLayer();
+		
 		$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
 		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
+		// End of Initialization
 		
 		set_session_var('number_of_login_attempts',$attempts + 1);
 		print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
@@ -231,7 +238,7 @@ if($passwordcorrect == false)
 		foreach( $_POST as $key=>$value ){
 			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
 		};
-		print("<input value=\"".getBadgerTranslation2('badger_login', 'submit_button')."\" name=\"submit\" type=\"submit\" />");
+		echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		
 		$signature = "";
 		if(isset($_GET)){
