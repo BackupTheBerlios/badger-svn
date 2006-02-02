@@ -12,69 +12,48 @@
 **/
 define("BADGER_ROOT", "../.."); 
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
-echo $tpl->getHeader("CSV-Import"); 
+$widgets = new WidgetEngine($tpl); 
+$widgets->addToolTipJS();
+$tpl->getHeader("CSV-Import");
+echo $widgets->addToolTipLayer();
+require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
+$am = new AccountManager($badgerDb);
 //if no Upload yet, show form
-$widgets = new WidgetEngine($tpl);
-
 if (!isset($_POST['btnSubmit'])){
 	if (!isset($_POST['Upload'])){	
-	?>
-	<form action="" method="post" enctype="multipart/form-data" name="Import" id="Import">
-	  <p>
-	    <table border = 0 cellpadding = 5, cellspacing = 5>
-				<tr>
-					<td>
-						<?php echo getBadgerTranslation2("importCsv", "selectFile") . ":"; ?>
-					</td>
-					<td>
-						<input name="file" type="file" size="50" />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<?php echo getBadgerTranslation2("importCsv", "selectParser") . ":"; ?>
-					</td>
-					<td>
-						<select name="parserSelect" size="1">
-					      <?php
-					      	$sql = "SELECT * FROM csv_parser";
-							
-							$res =& $badgerDb->query($sql);
-							while ($res->fetchInto ($row)){
-								echo "<option value=\"".$row[2]."\">". $row[1] . "</option>";
-							}
-					      ?>
-	    				</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<?php echo getBadgerTranslation2("importCsv", "targetAccount") . ":"; ?>
-					</td>
-					<td>
-					 	<select name="accountSelect" size="1">
-					      <?php
-					      	$sql = "SELECT * FROM account";
-							
-							$res =& $badgerDb->query($sql);
-							while ($res->fetchInto ($row)){
-								echo "<option value=\"".$row[0]."\">". $row[2] . "</option>";
-							}
-					      ?>
-				    	</select>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="submit" name="Upload" value="<?php echo getBadgerTranslation2("importCsv", "upload"); ?>" />
-					</td>
-					<td>
-					</td>
-				</tr>
-		</table>
-	  </p>
-	</form>
-	<?php
+		$fileLabel =  $widgets->createLabel("file", getBadgerTranslation2("importCsv", "selectFile").":", true);
+		# description internatiolisierne--> ist tooltip
+		# sepp muss durchsuchen widget machen
+		//$fileField = $widgets->createField("file", 50, "", "description", true);
+		$fileField = "<input name=\"file\" type=\"file\" size=\"50\" />";
+		
+		$selectParserLabel =  $widgets->createLabel("parserSelect", getBadgerTranslation2("importCsv", "selectParser").":", true);
+    	
+    	$sql = "SELECT * FROM csv_parser";
+      	$parser = array();
+      	$res =& $badgerDb->query($sql);
+      	while ($res->fetchInto ($row)){ 
+      		$parser[$row[2]] = $row[1];
+      	}
+      	#description internationalisieren
+      	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, "", "description");
+		
+		$accountSelectLabel =  $widgets->createLabel("accountSelect", getBadgerTranslation2("importCsv", "targetAccount").":", true);					      	
+		$sql = "SELECT * FROM account";
+		
+		$account = array();
+    	while ($currentAccount = $am->getNextAccount()) {
+    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
+    	}
+      	
+      	#description internationalisieren
+	    $accountSelectFile = $widgets->createSelectField("accountSelect", $account, "", "description");  
+
+		$uploadButton = $widgets->createButton("Upload", getBadgerTranslation2("importCsv", "upload"), "submit", "Widgets/table_save.gif");
+
+
+		eval("echo \"".$tpl->getTemplate("CsvImport/csvImportSelectFileForm")."\";");
+		
 	}
 }
 if (isset($_POST['Upload'])){
@@ -116,60 +95,51 @@ if (isset($_POST['Upload'])){
 				   				<th><?php echo getBadgerTranslation2("importCsv", "Exceptional"); ?> </th>
 				   				<th><?php echo getBadgerTranslation2("importCsv", "account"); ?> </th>				   				
 				   				<?php 
-				   				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
-				   					echo "<tr>";
-				   						//select transaction
-				   						echo "<td>";
-				   							echo "<center";
-				   							echo "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\"> </input>";
-				   							echo "</center>";
-				   						echo "</td>";
-				   						//category
-				   						echo "<td>";
-				   							echo "<select name=\"categorySelect" . $outputTransactionNumber . "\" size=\"1\">";
-										    	echo "<option>". "" . "</option>";
-										    	$sql = "SELECT * FROM category";
+				   				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {?>
+				   					<tr>
+				   						<td>
+				   							<center
+				   							<input type="checkbox" name="select<?php echo $outputTransactionNumber?>" value="select" checked="checked"> </input>
+				   							</center>
+				   						</td>
+				   						<td>
+				   							<select name="categorySelect<?php echo $outputTransactionNumber?>" size="1">"
+										    	<option> </option>;
+										    	<?php $sql = "SELECT * FROM category";
 												$res =& $badgerDb->query($sql);
 												while ($res->fetchInto ($row)){
 													echo "<option value=\"".$row[0]."\">". $row[2] . "</option>";
-												}
-					    					echo "</select>";
-				   						echo "</td>";
-				   						//valuta date
-			   							echo "<td>";
-				   							echo "<input name=\"valutaDate" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["valutaDate"] ."\">";
-			   							echo "</td>";
-			   							//title
-		   								echo "<td>";
-				   							echo "<input name=\"title" . $outputTransactionNumber . "\" type=\"text\" size=\"30\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["title"] ."\">";
-			   							echo "</td>";
-				   						//amount
-			   							echo "<td>";
-				   							echo "<input name=\"amount" . $outputTransactionNumber . "\" type=\"text\" size=\"8\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["amount"] ."\">";
-			   							echo "</td>";
-				   						//transaction partner
-			   							echo "<td>";
-				   							echo "<input name=\"transactionPartner" . $outputTransactionNumber . "\" type=\"text\" size=\"15\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["transactionPartner"] ."\">";
-			   							echo "</td>";
-				   						//description
-		   								echo "<td>";
-				   							echo "<input name=\"description" . $outputTransactionNumber . "\" type=\"text\" size=\"12\" maxlength=\"99\" value=\"". $importedTransactions[$outputTransactionNumber]["description"] ."\">";
-			   							echo "</td>";
-			   							//periodical
-				   						echo "<td>";
-				   							echo "<center";
-				   							echo "<input type=\"checkbox\" name=\"periodical" . $outputTransactionNumber . "\" value=\"select\"> </input>";
-				   							echo "</center>";
-				   						echo "</td>";
-				   						//exceptional
-				   						echo "<td>";
-				   							echo "<center";
-				   							echo "<input type=\"checkbox\" name=\"exceptional" . $outputTransactionNumber . "\" value=\"select\"> </input>";
-				   							echo "</center>";
-				   						echo "</td>";
-				   						//account
-				   						echo "<td>";
-				   							echo "<select name=\"account2Select" . $outputTransactionNumber . "\" size=\"1\">";
+												}?>
+					    					</select>
+				   						</td>
+			   							<td>
+				   							<input name="valutaDate<?php echo $outputTransactionNumber?>" type="text" size="8" maxlength="99" value="<?php echo $importedTransactions[$outputTransactionNumber]["valutaDate"]?>">
+			   							</td>
+			   							<td>
+				   							<input name="title<?php echo $outputTransactionNumber?>" type="text" size="30" maxlength="99" value="<?php echo $importedTransactions[$outputTransactionNumber]["title"]?>">
+			   							</td>
+			   							<td>
+				   							<input name="amount<?php echo $outputTransactionNumber?>" type="text" size="8" maxlength="99" value="<?php echo $importedTransactions[$outputTransactionNumber]["amount"]?>">
+			   							</td>
+			   							<td>
+				   							<input name="transactionPartner<?php echo $outputTransactionNumber?>" type="text" size="15" maxlength="99" value="<?php echo $importedTransactions[$outputTransactionNumber]["transactionPartner"]?>">
+			   							</td>
+			   							<td>
+				   							<input name="description<?php echo $outputTransactionNumber?>" type="text" size="12" maxlength="99" value="<?php echo $importedTransactions[$outputTransactionNumber]["description"]?>">
+			   							</td>
+			   							<td>
+				   							<center
+				   							<input type="checkbox" name="periodical<?php echo $outputTransactionNumber?>" value="select"> </input>
+				   							</center>
+				   						</td>
+				   						<td>
+				   							<center>
+				   							<input type="checkbox" name="exceptional<?php echo $outputTransactionNumber?>" value="select"> </input>
+				   							</center>
+				   						</td>
+				   						<td>
+				   							<select name="account2Select<?php echo $outputTransactionNumber?>" size="1">
+				   								<?php
 				   								$sql = "SELECT * FROM account WHERE account_id =". $importedTransactions[$outputTransactionNumber]["accountId"];
 				   								$res =& $badgerDb->query($sql);
 				   								while ($res->fetchInto ($row)){
@@ -180,12 +150,22 @@ if (isset($_POST['Upload'])){
 				   								while ($res->fetchInto ($row)){
 													echo "<option value=\"".$row[0]."\">". $row[2] . "</option>";
 												}
-				   							echo "</select>";
-		   								echo "</td>";	
-				   					echo "</tr>";
-				   				}?>
+												?>
+				   							</select>
+		   								</td>	
+				   					</tr>
+				   				<?php
+				   				}
+				   				?>
 				   			</table>
 			   			</div>	
+		<!-- innere schleifen die variable $tplOutput... diese dann in das äußere template rein
+		//vor die for schleife: $tplOutput = "";
+		//in die for schleife: for
+		//eval("\$tplOutput .= \"".$tpl->getTemplate("csvImportInputForm")."\";");
+		//end for
+		//nach der for schleife: echo $tplOutput; -->
+	   				
 	   				<?php
 	   				echo "<input type=\"hidden\" name=\"tableRows\" value=\"" . $transactionNumber . " \">";
 					echo $widgets->createButton("btnSubmit", getBadgerTranslation2("importCsv", "save"), "submit", "Widgets/table_save.gif");
