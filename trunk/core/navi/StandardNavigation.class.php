@@ -130,7 +130,8 @@ class StandardNavigation implements Navigation {
 		//We need the names of the CSS icon classes
 		$structure =& $this->parseIconIds(StandardNavigation::iconName, $this->structure);
 		
-		$result = 'menuBar = new jsDOMenuBar("fixed");
+		//absolute / fixed
+		$result = 'menuBar = new jsDOMenuBar("static", "staticMenuBar");
 			menuBar.setActivateMode("over");
 		';
 		

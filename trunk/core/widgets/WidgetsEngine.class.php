@@ -150,4 +150,10 @@ class WidgetEngine {
 		}
 		return $selectField;
 	}
+	function addNavigationHead() {
+		//Navigation Head
+		$tplNavigationHead = "";
+		eval("\$tplNavigationHead = \"".$this->TplEngine->getTemplate("Navigation/header")."\";");
+		$this->TplEngine->addHeaderTag($tplNavigationHead);	
+	}
 }
