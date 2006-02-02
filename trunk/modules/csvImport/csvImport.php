@@ -36,7 +36,7 @@ if (!isset($_POST['btnSubmit'])){
       		$parser[$row[2]] = $row[1];
       	}
       	#description internationalisieren
-      	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, "", "description");
+      	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, "", getBadgerTranslation2("importCsv", "toolTipParserSelect"));
 		
 		$accountSelectLabel =  $widgets->createLabel("accountSelect", getBadgerTranslation2("importCsv", "targetAccount").":", true);					      	
 		$sql = "SELECT * FROM account";
@@ -47,7 +47,7 @@ if (!isset($_POST['btnSubmit'])){
     	}
       	
       	#description internationalisieren
-	    $accountSelectFile = $widgets->createSelectField("accountSelect", $account, "", "description");  
+	    $accountSelectFile = $widgets->createSelectField("accountSelect", $account, "", getBadgerTranslation2("importCsv", "toolTopAccountSelect"));  
 
 		$uploadButton = $widgets->createButton("Upload", getBadgerTranslation2("importCsv", "upload"), "submit", "Widgets/table_save.gif");
 
