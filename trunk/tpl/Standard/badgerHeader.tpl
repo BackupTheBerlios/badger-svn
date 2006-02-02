@@ -10,6 +10,7 @@ $JSOnLoadEvents
 <div id="header">
 <img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" />
 </div>
+<div id="staticMenuBar"></div>
 <div id="content">
 
 
