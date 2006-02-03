@@ -42,9 +42,12 @@ echo $widgets->getNavigationBody();
 		echo "<br /><br />";
 		echo $widgets->addImage("navigation/cancel.gif");
 		echo "<br /><br />";
-		$arrNames = array("Jan", "Feb", "Mar", "April");
-		$arrAlias = array(1, 2, 3, 4);
-		echo $widgets->createSelectField("selField", $arrAlias, $arrNames, 3,"description", true);
+		$arrNames = array(
+			1 => "Jan",
+			2 => "Feb",
+			3 => "Mar",
+			4 => "April");
+		echo $widgets->createSelectField("selField", $arrNames, 3, "description", true);
 		?>
 	</form>
 <?php
