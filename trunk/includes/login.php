@@ -59,8 +59,8 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$widgets->addToolTipJS();
 		$widgets->addCalendarJS();
 		$widgets->addAutoCompleteJS();
-		echo $widgets->addToolTipLayer();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
+		echo $widgets->addToolTipLayer();
 		//end of Initialization
 		
 		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
@@ -75,8 +75,8 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$widgets->addToolTipJS();
 		$widgets->addCalendarJS();
 		$widgets->addAutoCompleteJS();
-		echo $widgets->addToolTipLayer();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
+		echo $widgets->addToolTipLayer();
 		//end of Initialization
 		
 		echo($validation_change_password_errors."<br/>");
@@ -178,8 +178,8 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
 	$widgets->addAutoCompleteJS();
-	echo $widgets->addToolTipLayer();
 	echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
+	echo $widgets->addToolTipLayer();
 	
 	$passwordcorrect = false;
 	//end of Initialization
@@ -220,15 +220,12 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 if($passwordcorrect == false)
 	{	
 		// Initialization
-		$tpl->addCSS("style.css");
 		$widgets = new WidgetEngine($tpl); 
 		$widgets->addToolTipJS();
 		$widgets->addCalendarJS();
 		$widgets->addAutoCompleteJS();
-		echo $widgets->addToolTipLayer();
-		
-		$tpl->addCSS("style.css"); // -> /tpl/themeName/style.css
 		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
+		echo $widgets->addToolTipLayer();
 		// End of Initialization
 		
 		set_session_var('number_of_login_attempts',$attempts + 1);
