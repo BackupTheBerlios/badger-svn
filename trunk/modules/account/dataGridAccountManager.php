@@ -58,5 +58,5 @@ echo $widgets->getNavigationBody();
                 </tr>
             </tbody>
         </table>
-    </body>
-</html>
+        <br>
+<?php eval("echo \"".$tpl->getTemplate("badgerFooter")."\";"); ?>
