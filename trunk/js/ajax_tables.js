@@ -205,8 +205,8 @@ SortableManager.prototype = {
         this.thead = getElementsByTagAndClassName("thead", null)[0];
         this.thead_proto = this.thead.cloneNode(true);
 
-        this.sortkey = "accountId";
-        this.loadFromURL("xml", "../../core/XML/getDataGridXML.php?q=AccountManager");
+        //this.sortkey = "";
+        //this.loadFromURL("xml", "");
     },
 
     "loadFromURL": function (format, url) {
