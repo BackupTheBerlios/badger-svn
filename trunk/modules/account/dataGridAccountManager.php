@@ -15,23 +15,26 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
 $dataGrid = array();
+$dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
+$dataGrid['actionNew'] = "newAccount.php";
+$dataGrid['actionDelete'] = "deleteAccount.php?id=";
+
 
 $widgets = new WidgetEngine($tpl); 
 $tpl->addCSS("Widgets/ajax_tables.css");
 $tpl->addJavaScript("js/MochiKit/MochiKit.js");
 $tpl->addJavaScript("js/ajax_tables.js");
-echo $tpl->getHeader("Seitenname"); //write header */
+$widgets->addNavigationHead();
 
-$dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-$dataGrid['actionNew'] = "newAccount.php";
-$dataGrid['actionDelete'] = "deleteAccount.php?id=";
+$tpl->addOnLoadEvent('sortableManager.sortkey = "accountId";
+        	sortableManager.loadFromURL("xml", "'.$dataGrid['loadXML'].'");
+        sortableManager.initialize();');
+
+echo $tpl->getHeader("Seitenname");
+echo $widgets->getNavigationBody();
+
+
 ?>
-<script>
-        sortableManager.sortkey = "accountId";
-        sortableManager.loadFromURL("xml", "<?php echo $dataGrid['loadXML'] ?>");
-        sortableManager.initialize();
-</script>
-
         <div>
         	<?php 
         	echo $widgets->createButton("btnNew", "Neu", "this.location.href=", "Widgets/table_add.gif");
