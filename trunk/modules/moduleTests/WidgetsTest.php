@@ -18,11 +18,8 @@ $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 
 $widgets->addNavigationHead();
-//write XHTML Header
 echo $tpl->getHeader("Seitenname");
-
-//Navigation Head
-eval("echo \"".$tpl->getTemplate("Navigation/body")."\";");
+echo $widgets->getNavigationBody();
 ?>
 	<form name="mainform">
 		<?php
