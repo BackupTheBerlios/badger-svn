@@ -8,8 +8,11 @@ $JSOnLoadEvents
 </head>
 <body style="background-image: url('{BADGER_ROOT}/tpl/Standard/back_verlauf_kreis.jpg');background-attachment: fixed;background-repeat: no-repeat;">
 <div id="header" valign="center">
-	<img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif"  />
-	&nbsp;&nbsp;Open Source Finanzmanagement-Software für Privatanwender!
+	<table><tr>
+		<td><img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" /></td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td>Open Source Finanzmanagement-Software für Privatanwender!</td>
+	</tr></table>
 </div>
 <div id="staticMenuBar"></div>
 <div id="content">
