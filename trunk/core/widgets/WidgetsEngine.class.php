@@ -102,14 +102,25 @@ class WidgetEngine {
 		}
 	}
 	
-	public function createField($fieldname, $size, $value="", $description="", $mandatory=false){
-		$output = "<input type='text' id='$fieldname' name='$fieldname' size='$size' value='$value' />";
+	public function createField($fieldname, $size, $value="", $description="", $mandatory=false, $type="text"){
+		if (is_numeric($value)) {
+			if ($value<0) {
+				$class = "inputNumberMinus";
+			} else {
+				$class = "inputNumber";
+			}
+		} else {
+			$class = "inputString";
+		}
+			
+		$output = "<input type='$type' id='$fieldname' name='$fieldname' size='$size' class='$class' value='$value' />";
 		if($description) {
 			$helpImg = "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/Widgets/help.gif' border='0' />";
 			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
 		return $output;
 	}
+	
 	public function createButton($name, $text, $action, $img=""){
 		if ($action=="submit") $action = "this.form.submit()";
 		if ($action=="") $action = "void(0);return false;"; 
