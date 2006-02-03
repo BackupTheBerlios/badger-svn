@@ -46,6 +46,17 @@ input:focus, textarea:focus {
 	background-color: #efefef;
 	border: 1px solid #d4d4d4;
 }
+input.inputString {
+	
+}
+input.inputNumber {
+	text-align: right;
+}	
+input.inputNumberMinus {
+	text-align: right;
+	color: #F50000;
+}
+
 /* END FORMS */
 
 /* SUGGEST */
