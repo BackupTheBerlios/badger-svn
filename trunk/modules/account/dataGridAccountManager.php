@@ -19,21 +19,16 @@ $dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManage
 $dataGrid['actionNew'] = "newAccount.php";
 $dataGrid['actionDelete'] = "deleteAccount.php?id=";
 
-
 $widgets = new WidgetEngine($tpl); 
 $tpl->addCSS("Widgets/ajax_tables.css");
 $tpl->addJavaScript("js/MochiKit/MochiKit.js");
 $tpl->addJavaScript("js/ajax_tables.js");
-$widgets->addNavigationHead();
-
 $tpl->addOnLoadEvent('sortableManager.sortkey = "accountId";
-        	sortableManager.loadFromURL("xml", "'.$dataGrid['loadXML'].'");
-        sortableManager.initialize();');
-
+        			  sortableManager.loadFromURL("xml", "'.$dataGrid['loadXML'].'");
+        			  sortableManager.initialize();');
+$widgets->addNavigationHead();
 echo $tpl->getHeader("Seitenname");
 echo $widgets->getNavigationBody();
-
-
 ?>
         <div>
         	<?php 
