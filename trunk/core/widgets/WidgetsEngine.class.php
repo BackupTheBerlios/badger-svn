@@ -156,4 +156,10 @@ class WidgetEngine {
 		eval("\$tplNavigationHead = \"".$this->TplEngine->getTemplate("Navigation/header")."\";");
 		$this->TplEngine->addHeaderTag($tplNavigationHead);	
 	}
+	function getNavigationBody() {
+		//Navigation Body
+		$tplNavigationBody = "";
+		eval("\$tplNavigationBody = \"".$this->TplEngine->getTemplate("Navigation/body")."\";");
+		return $tplNavigationBody;
+	}
 }
