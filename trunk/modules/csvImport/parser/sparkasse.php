@@ -70,7 +70,8 @@ function parseToArray($fp, $accountId){
 					$transactionArray[5] = str_replace("\"","",$transactionArray[5]);
 					$transactionArray[5] = str_replace("\\","",$transactionArray[5]);
 					//format amount data to sql format, decimal sign is a .
-					$transactionArray[8] = str_replace(",",".",$transactionArray[3]); 		
+					$transactionArray[8] = str_replace(",",".",$transactionArray[8]);
+					$transactionArray[8] = str_replace("\"","",$transactionArray[8]); 		
 					/**
 					 * transaction array
 					 * 
