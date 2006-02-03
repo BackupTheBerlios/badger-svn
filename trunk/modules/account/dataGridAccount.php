@@ -24,7 +24,7 @@ $tpl->addJavaScript("js/MochiKit/MochiKit.js");
 $tpl->addJavaScript("js/ajax_tables.js");
 echo $tpl->getHeader("Seitenname"); //write header */
 
-$dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account";
+$dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=2";
 $dataGrid['actionNew'] = "newAccount.php";
 $dataGrid['actionDelete'] = "deleteAccount.php?id=";
 ?>
