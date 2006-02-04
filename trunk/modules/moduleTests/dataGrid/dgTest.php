@@ -22,6 +22,7 @@ $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
 $dataGrid->headerName = array("currency","title","balance"); 
 $dataGrid->headerSize = array(150,200,180);
+$dataGrid->cellAlign = array("left","left","right");
 $dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
 $dataGrid->deleteAction = "xyp.php";
 $dataGrid->editAction = "xyp.php?id=";
@@ -30,15 +31,31 @@ echo $tpl->getHeader("DataGrid");
 
 echo $dataGrid->writeHeader();
 ?>
-
+<a href="javascript:nd();" onclick="dgInit('../../../core/XML/getDataGridXML.php?q=AccountManager');">reload</a>
+<a href="javascript:nd();" onclick="emptyDataGrid();">clear</a>
 <script>
 
+function emptyDataGrid() {
+	dgDataGrid = document.getElementById("dgData");
+	dgRows = dgDataGrid.getElementsByTagName("tr");
 
-function dgInit() {
-	xmlDoc = loadData('<?php echo $dataGrid->sourceXML?>');
+	toBeDeleted = new Array();
+	for (id=0; id<dgRows.length; id++) {
+		toBeDeleted[id] = dgRows[id].id;
+	}
+	for (id=0; id<toBeDeleted.length; id++) {
+		dgDataGrid.removeChild(document.getElementById(toBeDeleted[id]));
+	}
+}
+
+function dgInit(url) {
+	//emptyDataGrid();
+	xmlDoc = loadData(url);
 	xmlRows = xmlDoc.getElementsByTagName("row");
 	
 	dgData = document.getElementById("dgData"); //.getElementsByTagName("tbody")[0];
+	dgRows = dgData.getElementsByTagName("tr");
+	if (dgRows.length>0) {emptyDataGrid()};
 	
 	for (j=0; j<xmlRows.length; j++) {
 		cells = xmlRows[j].getElementsByTagName("cell");
@@ -61,7 +78,8 @@ function dgInit() {
 		//values
 		for (i=0; i<dgHeaderSize.length; i++) {
 			cell = document.createElement("td");
-			cell.width = dgHeaderSize[i];			
+			cell.width = dgHeaderSize[i];
+			cell.align = dgCellAlign[i];
 			cell.innerHTML = cells[i+1].textContent;			
 			newRow.appendChild(cell);
 		} 
@@ -72,8 +90,11 @@ function dgInit() {
 		newRow.appendChild(lastTD);
 		
 		dgData.appendChild(newRow);
+		Behaviour.apply();
 	}
 }
+
+
 
 </script>
 
