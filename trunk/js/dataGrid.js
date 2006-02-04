@@ -43,7 +43,7 @@ function enableMouseEvents() {
 }
 
 //Mouse-Events of the Rows
-Behaviour.register( {
+var behaviour =  {
 	'tr.dgRow' : function(element){
 		element.onmouseover = function(){
 			if (!mouseEventsDisabled) {
@@ -66,7 +66,7 @@ Behaviour.register( {
 			alert("Editieren von ID: " + this.id);
 		}
 	}	
-});
+};
 
 //Key-Events of the Rows
 function dgKeyProcess(event) {
@@ -112,10 +112,14 @@ function dgKeyProcess(event) {
 		}
 	}
 	if (event.keyCode == Event.KEY_RETURN) {
-		alert("Editieren");
+		alert("Editieren von: " + objRowActive.id);
 	}
 	if (event.keyCode == Event.KEY_DELETE) {
-		confirm("ToDo: Wollen Sie die Datens?tze wirklich l?schen?")
+		choise = confirm(dgDeleteMsg);
+		if (choise) {
+			//get all selected row and delete them
+			alert(choise);
+		}
 	}
 
 }
