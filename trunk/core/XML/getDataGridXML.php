@@ -148,6 +148,8 @@ $dgx = new DataGridXML($columns, $rows);
 
 header('Content-Type: text/xml');
 
+echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+
 //construct XML
 echo $dgx->getXML();
 
