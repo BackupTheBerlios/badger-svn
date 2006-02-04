@@ -22,6 +22,7 @@ public $headerSize = array();
 public $deleteMsg;
 public $deleteAction;
 public $editAction;
+public $cellAlign;
 
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
@@ -43,9 +44,6 @@ public $editAction;
 					
 		$output .= '<div id="dgScroll">
 					<table id="dgData" cellpadding="2" cellspacing="0" rules="row">
-						<tbody>
-					
-						</tbody>
 					</table>
 					</div>
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">
@@ -61,10 +59,11 @@ public $editAction;
 		$this->tpl->addJavaScript("js/dataGrid.js");
 		$this->tpl->addOnLoadEvent('dgHeaderName = new Array("'.implode('","',$this->headerName).'");');
 		$this->tpl->addOnLoadEvent('dgHeaderSize = new Array('.implode(',',$this->headerSize).');');
+		$this->tpl->addOnLoadEvent('dgCellAlign = new Array("'.implode('","',$this->cellAlign).'");');
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
-		$this->tpl->addOnLoadEvent('dgInit();');
+		$this->tpl->addOnLoadEvent('dgInit("'.$this->sourceXML.'");');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		
