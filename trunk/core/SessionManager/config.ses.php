@@ -46,7 +46,10 @@ $_db_table_config = "session_master";	// name of the table that will contain ses
 	otherwise session will expire un _session_timeout minutes
 */
 
-$_session_timeout = 3600;
+// Modified by BADGER
+
+//$_session_timeout = 1800;
+$session_timeout = $us->getProperty('badgerSessionTime');
 
 /*
 	this variable is used to generate a more secure sid, because this

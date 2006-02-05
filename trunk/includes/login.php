@@ -21,6 +21,8 @@
 // check if this is a mandatory password change
 // because of standard password
 
+//$us->setProperty('badgerPassword',md5("badger"));
+
 if(isset($_POST['SubmitMandatoryChangePassword'])){
 	// Validate submitted values
 	// Is yet to be implemented
@@ -59,13 +61,18 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$widgets->addToolTipJS();
 		$widgets->addCalendarJS();
 		$widgets->addAutoCompleteJS();
+		
+		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
+		echo $widgets->getNavigationBody();
 		echo $widgets->addToolTipLayer();
+
 		//end of Initialization
 		
 		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
-		echo getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
-		echo "<a href\"".$_SERVER['PHP_SELF']."\">".getBadgerTranslation2('UserSettingsAdmin','linktext_after_successful_mandatory_change')."</a>";
+		$MandatoryCommited = getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
+		$MandatoryCommitedLink = "<a href\"".$_SERVER['PHP_SELF']."\">".getBadgerTranslation2('UserSettingsAdmin','linktext_after_successful_mandatory_change')."</a>";
+		eval("echo \"".$tpl->getTemplate("Login/mandatoryCommited")."\";");
 	};
 	
 	if(isset($validation_change_password ) && $validation_change_password != true){
@@ -75,7 +82,9 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$widgets->addToolTipJS();
 		$widgets->addCalendarJS();
 		$widgets->addAutoCompleteJS();
+		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
+		echo $widgets->getNavigationBody();
 		echo $widgets->addToolTipLayer();
 		//end of Initialization
 		
@@ -184,35 +193,40 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	$passwordcorrect = false;
 	//end of Initialization
 	
-	print("<form name=\"MandatoryChangePassword\" method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
-	echo "<div class=\"USAHeading\">".getBadgerTranslation2('UserSettingsAdmin','mandatory_change_password_heading')."</div><br/>";
+	//print("<form name=\"MandatoryChangePassword\" method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
+	//$MandatoryForm = "<form name=\"MandatoryChangePassword\" method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">";
+	//echo "<div class=\"USAHeading\">".getBadgerTranslation2('UserSettingsAdmin','mandatory_change_password_heading')."</div><br/>";
+	$MandatoryHeading = "<div class=\"USAHeading\">".getBadgerTranslation2('UserSettingsAdmin','mandatory_change_password_heading')."</div><br/>";
 	
+	$MandatorySelf = $_SERVER['PHP_SELF'];
+	
+	/*
 	foreach( $_POST as $key=>$value ){
 		if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
 	};
+	*/
 	
-	echo $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), true);
-	echo "&nbsp;";
-	echo $widgets->createField("OldPassword", 50, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true);
+	$rows = "";
+	foreach( $_POST as $key=>$value ){
+		if($key != "password") {
+			eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+		};
+	};
 	
-	echo "<br/><br/>";
+	echo $rows;
 	
-	echo $widgets->createLabel("NewPassword", getBadgerTranslation2('UserSettingsAdmin','new_password_name'), true);
-	echo "&nbsp;";
-	echo $widgets->createField("NewPassword", 50, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true);
+	$MandatoryOldPasswordLabel = $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), true);
+	$MandatoryOldPasswordField = $widgets->createField("OldPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true);
 	
-	echo "<br/><br/>";
+	$MandatoryNewPasswordLabel = $widgets->createLabel("NewPassword", getBadgerTranslation2('UserSettingsAdmin','new_password_name'), true); 
+	$MandatoryNewPasswordField = $widgets->createField("NewPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true);
 	
-	echo $widgets->createLabel("NewPasswordConfirm", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_name'), true);
-	echo "&nbsp;";
-	echo $widgets->createField("NewPasswordConfirm", 50, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true);
+	$MandatoryNewPasswordConfirmLabel = $widgets->createLabel("NewPasswordConfirm", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_name'), true);
+	$MandatoryNewPasswordConfirmField = $widgets->createField("NewPasswordConfirm", 25, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true);
 	
-	echo "<br/><br/>";
-	
-	echo $widgets->createButton("SubmitMandatoryChangePassword", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+	$MandatorySubmit = $widgets->createButton("SubmitMandatoryChangePassword", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		
-	echo "</form>";
-	
+	eval("echo \"".$tpl->getTemplate("Login/mandatoryLogin")."\";");
 	exit();
 };
 
@@ -229,14 +243,34 @@ if($passwordcorrect == false)
 		// End of Initialization
 		
 		set_session_var('number_of_login_attempts',$attempts + 1);
-		print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
-		print("<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
-		print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
+		//print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
+		$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
+		//print("<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
+		$Self = $_SERVER['PHP_SELF'];
+		
+		//print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
+		//$PasswordInput = "<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />";
+		$PasswordInput = $widgets->createField("password", 50, "", "", true);
+		
+		/*
 		foreach( $_POST as $key=>$value ){
 			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
 		};
-		echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+		*/
 		
+		$rows = "";
+		foreach( $_POST as $key=>$value ){
+			if($key != "password") {
+				eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+			};
+		};
+		
+		echo $rows;
+		
+		//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+		$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+		
+		/*
 		$signature = "";
 		if(isset($_GET)){
 			$signature = $signature."?";
@@ -253,9 +287,13 @@ if($passwordcorrect == false)
 		if($signature != "?"){
 			$signature = $signature."&";
 		};
+		*/
 		
-		print("<br/><a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=true\">".getBadgerTranslation2('badger_login', 'forgot_password')."</a>");
-		print("</form><br />");
+		//print("<br/><a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=true\">".getBadgerTranslation2('badger_login', 'forgot_password')."</a>");
+		//print("</form><br />");
+		
+		eval("echo \"".$tpl->getTemplate("Login/login")."\";");
+		
 		if(isset($_POST['password']) && $_POST['password'] == ""){
 			print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");
 		}elseif(isset($_POST['password'])){
