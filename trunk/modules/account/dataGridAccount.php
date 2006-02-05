@@ -42,9 +42,9 @@ $dataGrid['actionDelete'] = "deleteAccount.php?id=";
         <table id="sortable_table" class="datagrid">
             <thead>
                 <tr>
-                    <th mochi:sortcolumn="accountId str">ID</th>
-                    <th mochi:sortcolumn="valutaDate date">Valuta Date</th>
-                    <th mochi:sortcolumn="title str">Title</th>
+                    <th mochi:sortcolumn="accountId">ID</th>
+                    <th mochi:sortcolumn="valutaDate isoDate">Valuta Date</th>
+                    <th mochi:sortcolumn="title istr">Title</th>
                     <th mochi:sortcolumn="amount">Amount</th>
                 </tr>
             </thead>           

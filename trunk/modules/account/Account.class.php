@@ -359,7 +359,7 @@ class Account extends DataGridHandler {
 				foreach($this->finishedTransactions as $currentTransaction){
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
-						'type' => getBadgerTranslation2('AccountClass', $currentTransaction->getType()), 
+						'type' => getBadgerTranslation2('Account', $currentTransaction->getType()), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getDate() : '',
@@ -403,7 +403,7 @@ class Account extends DataGridHandler {
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'beginDate' => $currentTransaction->getBeginDate()->getDate(),
 						'endDate' => ($tmp = $currentTransaction->getEndDate()) ? $tmp->getDate() : '',
-						'repeatUnit' => getBadgerTranslation2('AccountClass', $currentTransaction->getRepeatUnit()),
+						'repeatUnit' => getBadgerTranslation2('Account', $currentTransaction->getRepeatUnit()),
 						'repeatFrequency' => $currentTransaction->getRepeatFrequency(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
 						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : ''
