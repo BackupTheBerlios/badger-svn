@@ -43,6 +43,60 @@ function handleResponse() {
 	}
 }
 
+function dgInit() {
+	xmlDoc = xmlHttp.responseXML;
+	xmlColumns = xmlDoc.getElementsByTagName("columns");
+	xmlRows = xmlDoc.getElementsByTagName("row");
+	
+	dgData = document.getElementById("dgData"); //.getElementsByTagName("tbody")[0];
+	dgRows = dgData.getElementsByTagName("tr");
+	if (dgRows.length>0) {emptyDataGrid()};
+	
+	for (j=0; j<xmlRows.length; j++) {
+		cells = xmlRows[j].getElementsByTagName("cell");
+		rowID = cells[0].textContent;
+		
+		newRow = document.createElement("tr");
+		newRow.className = "dgRow";
+		newRow.id=rowID;
+		
+		//add checkbox to first cell
+		checkTD = document.createElement("td");
+		checkTD.width="20";
+		checkBox = document.createElement("input");
+		checkBox.id = "check" + rowID;
+		checkBox.name = "check" + rowID;
+		checkBox.type = "checkbox";
+		checkTD.appendChild(checkBox);
+		newRow.appendChild(checkTD);
+		
+		//insert cell values
+		//ToDo: different order to xml sequence (no it's the same)
+		for (i=0; i<dgHeaderSize.length; i++) {
+			cell = document.createElement("td");
+			cell.width = dgHeaderSize[i];
+			cell.align = dgCellAlign[i];
+			cell.innerHTML = cells[i+1].textContent;			
+			newRow.appendChild(cell);
+		} 
+		
+		//insert empty cell as last one (only display purposes)
+		lastTD = document.createElement("td");
+		lastTD.innerHTML = "&nbsp;";
+		newRow.appendChild(lastTD);
+		
+		//add complete row to the grid
+		dgData.appendChild(newRow);
+	}
+	//refresh JS-behaviours of the rows
+	Behaviour.apply();
+	//refresh row count
+	document.getElementById("dgCount").innerHTML = xmlRows.length;
+}
+
+
+
+
 // Row Handling
 function activateRow(objRow) {
 	if (objRow.className == "dgRow") objRow.className = "dgRowActive";

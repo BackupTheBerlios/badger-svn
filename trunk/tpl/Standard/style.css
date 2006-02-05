@@ -32,6 +32,7 @@ body, table {
 
 /* FORMS */
 label {
+	float: left;
 	text-align: right;
 	cursor: pointer;	
 }
@@ -39,10 +40,14 @@ label.mandatory {
 	color: #595959;
 	font-weight: bold;
 }
-input {
+input, textarea {
 	font-family: Arial, Verdana;
 	font-size: 10pt;
-	border: 1px solid #d4d4d4;
+	/*border: 1px solid #d4d4d4;*/
+	border-top: 1px solid #d4d4d4;
+	border-left: 1px solid #d4d4d4;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
 }
 input:focus, textarea:focus {
 	background-color: #efefef;

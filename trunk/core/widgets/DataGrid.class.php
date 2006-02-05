@@ -24,6 +24,7 @@ public $deleteAction;
 public $editAction;
 public $newAction;
 public $cellAlign;
+public $rowCounterName;
 
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
@@ -48,7 +49,7 @@ public $cellAlign;
 					</div>
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">
 						<tr>
-							<td><span id="dgCount"></span> Datensätze</td>
+							<td><span id="dgCount">0</span> '.$this->rowCounterName.'</td>
 						</tr>
 					</table>
 					</div></form>';
