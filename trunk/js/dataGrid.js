@@ -1,14 +1,27 @@
 // XMLHTTPRequest
+xmlHttp = new XMLHttpRequest();
 function loadData(url) {
-	xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("POST", url, 0);
+	//xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange=xmlHttpChange;
+	xmlHttp.open("POST", url, 1);
 	xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlHttp.send(null);
 	
-	return xmlHttp.responseXML;
+	//return xmlHttp.responseXML;
+	
 }
 
-
+function xmlHttpChange() {
+	// if xmlhttp shows "loaded"
+	if (xmlHttp.readyState==4) {
+		// if "OK"
+		if (xmlHttp.status==200) {
+			dgInit();
+		} else {
+			alert("Problem retrieving XML data")
+	    }
+	}
+}
 
 var objRowActive;
 var mouseEventsDisabled;
@@ -63,7 +76,7 @@ var behaviour =  {
 			}
 		}
 		element.ondblclick = function(){
-			alert("Editieren von ID: " + this.id);
+			dgEdit(this.id)
 		}
 	}	
 };
@@ -112,15 +125,55 @@ function dgKeyProcess(event) {
 		}
 	}
 	if (event.keyCode == Event.KEY_RETURN) {
-		alert("Editieren von: " + objRowActive.id);
+		dgEdit(objRowActive.id);
 	}
 	if (event.keyCode == Event.KEY_DELETE) {
-		choise = confirm(dgDeleteMsg);
-		if (choise) {
-			//get all selected row and delete them
-			alert(choise);
-		}
+		dgDelete();
 	}
 
+}
+
+function dgDelete() {
+	choise = confirm(dgDeleteMsg);
+	if (choise) {
+		//get all selected row and delete them aysnc + update table
+		dgData = document.getElementById("dgData");
+		
+		checkbox = Form.getInputs("dgForm","checkbox");
+		//checkif enabled
+		for (i=0; i<checkbox.length; i++) {
+			if ($F(checkbox[i]) == "on") {
+				// if background delete id okay then 
+				alert("ToDo: BackgroundDelete " + dgDeleteAction + " ID:" + checkbox[i].parentNode.parentNode.id);
+				//alert(checkbox[i].id);
+				dgData.removeChild(checkbox[i].parentNode.parentNode);
+				dgCount = document.getElementById("dgCount").innerHTML;
+				dgCount--;
+				document.getElementById("dgCount").innerHTML = dgCount;
+			};
+		} 
+		
+	}
+}
+function dgNew() {
+	alert(dgEditAction);
+}
+
+function dgEdit(id) {
+	alert("Action: "+ dgEditAction + " ID: " + id);
+}
+
+//delete all rows form the grid
+function emptyDataGrid() {
+	dgDataGrid = document.getElementById("dgData");
+	dgRows = dgDataGrid.getElementsByTagName("tr");
+
+	toBeDeleted = new Array();
+	for (id=0; id<dgRows.length; id++) {
+		toBeDeleted[id] = dgRows[id].id;
+	}
+	for (id=0; id<toBeDeleted.length; id++) {
+		dgDataGrid.removeChild(document.getElementById(toBeDeleted[id]));
+	}
 }
 Event.observe(document, 'keypress', dgKeyProcess, false)
