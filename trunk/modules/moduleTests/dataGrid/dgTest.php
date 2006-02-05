@@ -14,6 +14,7 @@ define("BADGER_ROOT", "../../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 
+$widgets = new WidgetEngine($tpl);
 $tpl->addCss("Widgets/dataGrid.css");
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
@@ -24,33 +25,26 @@ $dataGrid->headerName = array("currency","title","balance");
 $dataGrid->headerSize = array(150,200,180);
 $dataGrid->cellAlign = array("left","left","right");
 $dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
-$dataGrid->deleteAction = "xyp.php";
-$dataGrid->editAction = "xyp.php?id=";
+$dataGrid->deleteAction = "deleteXYZ.php";
+$dataGrid->editAction = "editXYZ.php?id=";
+$dataGrid->newAction = "newXYZ.php";
 $dataGrid->initDataGridJS();
 echo $tpl->getHeader("DataGrid");
 
+echo $widgets->createButton("btnNew", "Neu", "dgNew()", "Widgets/table_add.gif");
+echo $widgets->createButton("btnDelete", "Löschen", "dgDelete()", "Widgets/table_delete.gif");
+		
 echo $dataGrid->writeHeader();
 ?>
-<a href="javascript:nd();" onclick="dgInit('../../../core/XML/getDataGridXML.php?q=AccountManager');">reload</a>
-<a href="javascript:nd();" onclick="emptyDataGrid();">clear</a>
+<a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager');">normal</a><br />
+<a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager&ok0=title&od0=a');">Titel aufsteigend</a><br /> 
+<a href="javascript:void(0)" onclick="emptyDataGrid();">clear dataGrid</a>
 <script>
 
-function emptyDataGrid() {
-	dgDataGrid = document.getElementById("dgData");
-	dgRows = dgDataGrid.getElementsByTagName("tr");
-
-	toBeDeleted = new Array();
-	for (id=0; id<dgRows.length; id++) {
-		toBeDeleted[id] = dgRows[id].id;
-	}
-	for (id=0; id<toBeDeleted.length; id++) {
-		dgDataGrid.removeChild(document.getElementById(toBeDeleted[id]));
-	}
-}
-
-function dgInit(url) {
+function dgInit() {
 	//emptyDataGrid();
-	xmlDoc = loadData(url);
+	//xmlDoc = loadData(url);
+	xmlDoc = xmlHttp.responseXML;
 	xmlRows = xmlDoc.getElementsByTagName("row");
 	
 	dgData = document.getElementById("dgData"); //.getElementsByTagName("tbody")[0];
@@ -90,8 +84,11 @@ function dgInit(url) {
 		newRow.appendChild(lastTD);
 		
 		dgData.appendChild(newRow);
-		Behaviour.apply();
+		
+		
 	}
+	Behaviour.apply();
+	document.getElementById("dgCount").innerHTML = xmlRows.length;
 }
 
 
