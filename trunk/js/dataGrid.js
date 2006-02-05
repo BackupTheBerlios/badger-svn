@@ -1,17 +1,37 @@
-// XMLHTTPRequest
-xmlHttp = new XMLHttpRequest();
+var objRowActive;
+var mouseEventsDisabled;
+mouseEventsDisabled = false;
+
+// Create a new XMLHttpRequest object
+var xmlHttp = false;
+/*@cc_on @*/
+/*@if (@_jscript_version >= 5)
+try {
+  xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+} catch (e) {
+  try {
+    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+  } catch (e2) {
+    xmlHttp = false;
+  }
+}
+@end @*/
+if (!xmlHttp && typeof XMLHttpRequest != 'undefined') {
+  xmlHttp = new XMLHttpRequest();
+}
+
+// send a request to the server, define callback-function
+// ToDo: if existing, cancel old request
 function loadData(url) {
-	//xmlHttp = new XMLHttpRequest();
-	xmlHttp.onreadystatechange=xmlHttpChange;
+	xmlHttp.onreadystatechange=handleResponse;
 	xmlHttp.open("POST", url, 1);
 	xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlHttp.send(null);
-	
-	//return xmlHttp.responseXML;
-	
 }
 
-function xmlHttpChange() {
+// callback-function
+// process to server request
+function handleResponse() {
 	// if xmlhttp shows "loaded"
 	if (xmlHttp.readyState==4) {
 		// if "OK"
@@ -22,10 +42,6 @@ function xmlHttpChange() {
 	    }
 	}
 }
-
-var objRowActive;
-var mouseEventsDisabled;
-mouseEventsDisabled = false;
 
 // Row Handling
 function activateRow(objRow) {
@@ -133,6 +149,9 @@ function dgKeyProcess(event) {
 
 }
 
+// delete all selected rows
+//  - delete row in GUI
+//  - send a background delete request to the server
 function dgDelete() {
 	choise = confirm(dgDeleteMsg);
 	if (choise) {
@@ -155,10 +174,13 @@ function dgDelete() {
 		
 	}
 }
+
+// call site to add a new record
 function dgNew() {
 	alert(dgEditAction);
 }
 
+// edit record with ID in a special page
 function dgEdit(id) {
 	alert("Action: "+ dgEditAction + " ID: " + id);
 }
@@ -176,4 +198,6 @@ function emptyDataGrid() {
 		dgDataGrid.removeChild(document.getElementById(toBeDeleted[id]));
 	}
 }
+
+// add event to the document
 Event.observe(document, 'keypress', dgKeyProcess, false)
