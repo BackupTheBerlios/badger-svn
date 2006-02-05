@@ -39,6 +39,10 @@ class Currency {
 	 * @var string
 	 */
 	private $longName;
+	
+	private $badgerDb;
+	
+	private $currencyManager;
 
 	/**
 	 * Creates a currency.
@@ -47,10 +51,19 @@ class Currency {
 	 * @param $symbol string The symbol of the currency.
 	 * @param $longName string The long name of the currency.
 	 */
-	public function Currency($id, $symbol, $longName) {
-		$this->id = $id;
-		$this->symbol = $symbol;
-		$this->longName = $longName;
+	public function __construct(&$badgerDb, &$currencyManager, $data, $symbol = null, $longName = null) {
+    	$this->badgerDb = $badgerDb;
+    	$this->currencyManager = $currencyManager;
+
+    	if (is_array($data)) {
+    		$this->id = $data['currency_id'];
+    		$this->symbol = $data['symbol'];
+    		$this->longName = $data['long_name'];
+    	} else {
+			$this->id = $data;
+			$this->symbol = $symbol;
+			$this->longName = $longName;
+    	}
 	}
 	
 	/**
@@ -71,6 +84,21 @@ class Currency {
 		return $this->symbol;
 	}
 	
+ 	public function setSymbol($symbol) {
+		$this->symbol = $symbol;
+		
+		$sql = "UPDATE currency
+			SET symbol = '" . $this->badgerDb->escapeSimple($symbol) . "'
+			WHERE currency_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Currency', 'SQLError', $dbResult->getMessage());
+		}
+	}
+
 	/**
 	 * Returns the long name.
 	 * 
@@ -78,6 +106,21 @@ class Currency {
 	 */
 	public function getLongName() {
 		return $this->longName;
+	}
+
+ 	public function setLongName($longName) {
+		$this->longName = $longName;
+		
+		$sql = "UPDATE currency
+			SET long_name = '" . $this->badgerDb->escapeSimple($longName) . "'
+			WHERE currency_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Currency', 'SQLError', $dbResult->getMessage());
+		}
 	}
 }
 ?>

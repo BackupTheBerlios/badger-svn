@@ -22,15 +22,25 @@ class Category {
 	private $parent;
 	private $children;
 	
-	public function __construct(&$badgerDb, $categoryManager, $data) {
+	public function __construct(&$badgerDb, $categoryManager, $data, $title = null, $description = null, $outsideCapital = null, $parent = null) {
 		$this->badgerDb = $badgerDb;
 		$this->categoryManager = $categoryManager;
 		
-		$this->id = $data['category_id'];
-		$this->title = $data['title'];
-		$this->description = $data['description'];
-		$this->outsideCapital = $data['outside_capital'];
-		$this->parent = $data['parent_id'];
+    	if (is_array($data)) {
+			$this->id = $data['category_id'];
+			$this->title = $data['title'];
+			$this->description = $data['description'];
+			$this->outsideCapital = $data['outside_capital'];
+			if ($data['parent_id']) {
+				$this->parent = $categoryManager->getCategoryById($data['parent_id']);
+			}
+    	} else {
+    		$this->id = $data;
+    		$this->title = $title;
+    		$this->description = $description;
+    		$this->outsideCapital = $outsideCapital;
+    		$this->parent = $parent;
+    	}
 	}
 	
 	public function getId() {
@@ -95,7 +105,8 @@ class Category {
 	}
 
 	public function getParent() {
-		if (!($this->parent instanceof Category)
+		if (
+			!($this->parent instanceof Category)
 			&& $this->parent
 		) {
 			$this->parent = $this->categoryManager->getCategoryById($this->parent);

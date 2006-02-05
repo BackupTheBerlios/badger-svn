@@ -229,11 +229,11 @@ function transferType($type, $str) {
 			
 		case 'Amount':
 		case 'amount':
-			return new Amount($str);
+			return new Amount($str, true);
 		
 		case 'Date':
 		case 'date':
-			return new Date($str);
+			return new Date($str, true);
 			
 		default:
 			throw new TransferException();

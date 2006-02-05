@@ -236,7 +236,7 @@ abstract class DataGridHandler {
 			if($firstrun) {
 				$firstrun = false;
 			} else {
-				$result .= ' AND ';
+				$result .= "\nAND ";
 			}
 			
 			if ($val['op'] == 'bw'
@@ -247,7 +247,9 @@ abstract class DataGridHandler {
 				$result .= "LOWER(CONVERT(" . $this->getFieldSQLName($val['key']) . ", CHAR)) LIKE ";
 				
 				if ($val['val'] instanceof Amount) {
-					$stringVal = $val['val']->get();
+					$stringVal = $val['val']->getFormatted();
+				} else if ($val['val'] instanceof Date) {
+					$stringVal = $val['val']->getFormatted();
 				} else {
 					$stringVal = (string) strtolower($val['val']);
 				}

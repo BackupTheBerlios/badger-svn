@@ -31,8 +31,18 @@ class Amount {
 	 * 
 	 * @param $amount string The amount.
 	 */
-	public function Amount($amount) {
+	public function Amount($amount, $formatted = false) {
+		global $us;
+		
 		bcscale(2);
+		
+		if ($formatted) {
+			$amount = str_replace(
+				array ($us->getProperty('badgerThousandSeparator'), $us->getProperty('badgerDecimalSeparator')),
+				array ('', '.'),
+				$amount
+			);
+		}
 		
 		$this->set($amount);
 	}

@@ -11,8 +11,10 @@
 *
 **/
 
-require_once (BADGER_ROOT . '/core/XML/DataGridHandler.class.php');
-require_once (BADGER_ROOT . '/modules/account/Category.class.php');
+require_once BADGER_ROOT . '/core/XML/DataGridHandler.class.php';
+require_once BADGER_ROOT . '/modules/account/Category.class.php';
+require_once BADGER_ROOT . '/core/common.php';
+
 class CategoryManager extends DataGridHandler {
 	/**
 	 * List of valid field names.
@@ -23,7 +25,9 @@ class CategoryManager extends DataGridHandler {
 		'categoryId',
 		'title',
 		'description',
-		'outsideCapital'
+		'outsideCapital',
+		'parentId',
+		'parentTitle'
 	);
 		
 	/**
@@ -41,13 +45,6 @@ class CategoryManager extends DataGridHandler {
 	private $allDataFetched = false;
 	
 	/**
-	 * List of Accounts.
-	 * 
-	 * @var object
-	 */
-	private $accounts = array();
-	
-	/**
 	 * The result object of the DB query.
 	 * 
 	 * @var object
@@ -55,6 +52,8 @@ class CategoryManager extends DataGridHandler {
 	private $dbResult;
 	
 	private $categories = array();
+	
+	private $currentCategory = null;
 	
 	function __construct ($badgerDb) {
 		parent::__construct($badgerDb);
@@ -83,7 +82,9 @@ class CategoryManager extends DataGridHandler {
 			'categoryId' => 'integer',
 			'title' => 'string',
 			'description' => 'string',
-			'outsideCapital' => 'boolean'
+			'outsideCapital' => 'boolean',
+			'parentId' => 'integer',
+			'parentTitle' => 'string'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -105,10 +106,12 @@ class CategoryManager extends DataGridHandler {
 	
 	public function getFieldSQLName($fieldName) {
 		$fieldTypes = array (
-			'categoryId' => 'category_id',
-			'title' => 'title',
-			'description' => 'description',
-			'outsideCapital' => 'outside_capital'
+			'categoryId' => 'c.category_id',
+			'title' => 'c.title',
+			'description' => 'c.description',
+			'outsideCapital' => 'c.outside_capital',
+			'parentId' => 'c.parent_id',
+			'parentTitle' => 'p.title'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -135,7 +138,7 @@ class CategoryManager extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		while($this->getNextCategory());
+		while($this->fetchNextCategory());
 		
 		$result = array();
 		
@@ -144,11 +147,18 @@ class CategoryManager extends DataGridHandler {
 				'categoryId' => $currentCategory->getId(),
 				'title' => $currentCategory->getTitle(),
 				'description' => $currentCategory->getDescription(),
-				'outsideCapital' => is_null($tmp = $currentCategory->getOutsideCapital()) ? '' : $tmp
+				'outsideCapital' => is_null($tmp = $currentCategory->getOutsideCapital()) ? '' : $tmp,
+				'parentId' => is_null($tmp = $currentCategory->getParent()) ? '' : $tmp->getId(),
+				'parentTitle' => is_null($tmp = $currentCategory->getParent()) ? '' : $tmp->getTitle()
 			);
 		}
 		
 		return $result;
+	}
+	
+	public function resetCategories() {
+		reset($this->categories);
+		$this->currentCategory = null;
 	}
 	
 	public function getCategoryById($categoryId) {
@@ -175,7 +185,13 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'SQLError', $this->dbResult->getMessage());
 		}
 		
-		$currentCategory = $this->getNextCategory();
+		$tmp = $this->dataFetched;
+		$this->dataFetched = true;
+		
+		$currentCategory = $this->fetchNextCategory();
+		
+		$this->dataFetched = $tmp;
+
 		if($currentCategory) {
 			return $currentCategory;
 		} else {
@@ -190,20 +206,15 @@ class CategoryManager extends DataGridHandler {
 	 * @return mixed ID of the fetched Account if successful, false otherwise.
 	 */
 	public function getNextCategory() {
-		$this->fetchFromDB();
-		$row = false;
-		
-		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-
-			//echo "<pre>"; print_r($row); echo "</pre>";
-
-			$this->categories[$row['category_id']] = new Category(&$this->badgerDb, &$this, $row);
-			return $this->categories[$row['category_id']];
-		} else {
-			$this->allDataFetched = true;
-			return false;    	
+		if (!$this->allDataFetched) {
+			$this->fetchNextCategory();
 		}
+
+		return nextByKey($this->categories, $this->currentCategory);
 	}
+
+
+
 	public function deleteCategory($categoryId){
 		if(isset($this->categories[$categoryId])){
 			unset($this->categories[$categoryId]);
@@ -278,7 +289,9 @@ class CategoryManager extends DataGridHandler {
 		}
 		
 		$sql = "SELECT c.category_id, c.parent_id, c.title, c.description, c.outside_capital
-			FROM category c\n";
+			FROM category c
+				LEFT OUTER JOIN category p ON c.parent_id = p.category_id
+			";
 					
 		$where = $this->getFilterSQL();
 		if($where) {
@@ -298,6 +311,22 @@ class CategoryManager extends DataGridHandler {
 		}
 		
 		$this->dataFetched = true; 	
+	}
+
+	private function fetchNextCategory() {
+		$this->fetchFromDB();
+		$row = false;
+		
+		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
+
+			//echo "<pre>"; print_r($row); echo "</pre>";
+
+			$this->categories[$row['category_id']] = new Category(&$this->badgerDb, &$this, $row);
+			return $this->categories[$row['category_id']];
+		} else {
+			$this->allDataFetched = true;
+			return false;    	
+		}
 	}
 }
 ?>

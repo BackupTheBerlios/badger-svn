@@ -21,25 +21,25 @@ define ('endl', "\n");
 $am = new AccountManager($badgerDb);
 
 while ($acc = $am->getNextAccount()) {
-	echo $acc->getTitle() . endl;
+	echo 'Account Title: ' . $acc->getTitle() . endl;
 }
 
 $acc1 = $am->getAccountById(1);
-echo $acc1->getId() . endl;
+echo 'Account Id: ' . $acc1->getId() . endl;
 
 $curr = new Currency(1, 'TUR', 'Teuro');
 $lowerLimit = new Amount(rand(-100, 100));
 $upperLimit = new Amount(rand(1000, 3000));
 
 $acc2 = $am->addAccount('Neues Konto ' . rand(0, 100), $curr, 'Bähschraipunk', $lowerLimit, $upperLimit);
-echo $acc2->getTitle() . endl;
+echo 'New Account Title: ' . $acc2->getTitle() . endl;
 
 $acc3 = $am->addAccount('Temporäres Konto', $curr);
 $tmpId = $acc3->getId();
-echo $tmpId . endl;
+echo 'Temporary Account Id: ' . $tmpId . endl;
 
 $am->deleteAccount($tmpId);
 
 $acc4 = $am->getAccountById($tmpId);
-echo $acc4->getTitle() . endl;
+echo 'Temporary Account Title (never shown): ' . $acc4->getTitle() . endl;
 ?>

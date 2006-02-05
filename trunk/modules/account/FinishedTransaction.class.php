@@ -30,8 +30,6 @@ class FinishedTransaction {
 	private $type;
 	
     function __construct(&$badgerDb, $account, $data, $title = null, $amount = null, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = null, $type = 'FinishedTransaction') {
-    	global $CategoryManager;
-    	
     	$this->badgerDb = $badgerDb;
     	$this->account = $account;
     	
@@ -45,7 +43,8 @@ class FinishedTransaction {
     		}
     		$this->transactionPartner =  $data['transaction_partner'];
     		if ($data['category_id']) {
-    			$this->category = $CategoryManager->getCategoryById($data['category_id']);
+				$cm = new CategoryManager($badgerDb);
+    			$this->category = $cm->getCategoryById($data['category_id']);
     		}
     		if ($data['valuta_date']) {
     			$this->valutaDate = new Date($data['valuta_date']);

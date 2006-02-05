@@ -154,14 +154,31 @@ class Date
      * @param mixed $date optional - date/time to initialize
      * @return object Date the new Date object
      */
-    function Date($date = null)
+    function Date($date = null, $formatted = false)
     {
+    	global $us;
+    	
         $this->tz = Date_TimeZone::getDefault();
         if (is_null($date)) {
             $this->setDate(date("Y-m-d H:i:s"));
         } elseif (is_a($date, 'Date')) {
             $this->copy($date);
         } else {
+        	if ($formatted) {
+	        	$formatString = $us->getProperty('badgerDateFormat');
+	        	
+	       		$dayPos = strpos($formatString, 'dd');
+	       		$monthPos = strpos($formatString, 'mm');
+	       		$yearPos = strpos($formatString, 'yyyy');
+	       		
+	       		$day = substr($date, $dayPos, 2);
+	       		$month = substr($date, $monthPos, 2);
+	       		$year = substr($date, $yearPos, 4);
+	       		
+	       		$date = "$year-$month-$day";
+        	}
+	       		
+        	
             $this->setDate($date);
         }
     }
@@ -286,6 +303,20 @@ class Date
         $this->second = $date->second;
         $this->tz = $date->tz;
     }
+
+	public function getFormatted() {
+		global $us;
+		
+		$formatString = $us->getProperty('badgerDateFormat');
+		
+		$formatString = str_replace(
+			array ('dd', 'mm', 'yyyy'),
+			array ('%d', '%m', '%Y'),
+			$formatString
+		);
+		
+		return $this->format($formatString);
+	}
 
     /**
      *  Date pretty printing, similar to strftime()

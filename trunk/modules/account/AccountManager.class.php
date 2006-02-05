@@ -169,6 +169,7 @@ class AccountManager extends DataGridHandler {
 	
 	public function resetAccounts() {
 		reset($this->accounts);
+		$this->currentAccount = null;
 	}
 
 	/**

@@ -128,6 +128,13 @@ class Account extends DataGridHandler {
 	
 	private $finishedTransactions = array();
 	
+	/**
+	 * list of all properties
+	 * 
+	 * @var array
+	 */
+	private $properties;
+
 	private $type = null;
 	
 	/**
@@ -154,6 +161,8 @@ class Account extends DataGridHandler {
 	private $allFinishedDataFetched = false;
 	
 	private $allPlannedDataFetched = false;
+	
+	private $plannedDataExpanded = false;
 	
 	private $currentFinishedTransaction = null;
 
@@ -226,6 +235,20 @@ class Account extends DataGridHandler {
 			$this->upperLimit = $tmpAccount->getUpperLimit();
 			$this->balance = $tmpAccount->getBalance();
 			$this->currency = $tmpAccount->getCurrency();
+		}
+
+    	$sql = "SELECT prop_key, prop_value
+			FROM account_property
+			WHERE account_id = " . $this->id;
+		
+		$res =& $badgerDb->query($sql);
+
+		$this->properties = array();
+		
+		$row = array();
+		
+		while ($res->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+			$this->properties[$row['prop_key']] = $row['prop_value'];
 		}
 	}
 	
@@ -360,8 +383,8 @@ class Account extends DataGridHandler {
 						'type' => getBadgerTranslation2('Account', $currentTransaction->getType()), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
-						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getDate() : '',
-						'amount' => $currentTransaction->getAmount()->get(),
+						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
+						'amount' => $currentTransaction->getAmount()->getFormatted(),
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
@@ -378,8 +401,8 @@ class Account extends DataGridHandler {
 						'finishedTransactionId' => $currentTransaction->getId(),
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
-						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getDate() : '',
-						'amount' => $currentTransaction->getAmount()->get(),
+						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
+						'amount' => $currentTransaction->getAmount()->getFormatted(),
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
@@ -396,11 +419,11 @@ class Account extends DataGridHandler {
 						'plannedTransactionId' => $currentTransaction->getId(),
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
-						'amount' => $currentTransaction->getAmount()->get(),
+						'amount' => $currentTransaction->getAmount()->getFormatted(),
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
-						'beginDate' => $currentTransaction->getBeginDate()->getDate(),
-						'endDate' => ($tmp = $currentTransaction->getEndDate()) ? $tmp->getDate() : '',
+						'beginDate' => $currentTransaction->getBeginDate()->getFormatted(),
+						'endDate' => ($tmp = $currentTransaction->getEndDate()) ? $tmp->getFormatted() : '',
 						'repeatUnit' => getBadgerTranslation2('Account', $currentTransaction->getRepeatUnit()),
 						'repeatFrequency' => $currentTransaction->getRepeatFrequency(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
@@ -473,12 +496,16 @@ class Account extends DataGridHandler {
 		}
 	}
 	
-	public function addFinishedTransaction($title, $amount, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = false) {
+	public function addFinishedTransaction($amount, $title = null, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = null) {
 		$finishedTransactionId = $this->badgerDb->nextId('finishedTransactionIds');
 		
 		$sql = "INSERT INTO finished_transaction
-			(finished_transaction_id, account_id, title, amount, outside_capital ";
+			(finished_transaction_id, account_id, amount ";
 			
+		if ($title) {
+			$sql .= ", title";
+		}
+
 		if($description){
 			$sql .= ", description";
 		}
@@ -495,9 +522,17 @@ class Account extends DataGridHandler {
 			$sql .= ", category_id";
 		}
 		
+		if ($outsideCapital) {
+			$sql .= ", outside_capital";
+		}
+		
 		$sql .= ")
-			VALUES ($finishedTransactionId, " . $this->id . ", '" . $this->badgerDb->escapeSimple($title) . "', '" . $amount->get() . "', " . $this->badgerDb->quoteSmart($outsideCapital);
+			VALUES ($finishedTransactionId, " . $this->id . ", '" . $amount->get() . "'";
 	
+		if ($title) {
+			$sql .= ", '" . $this->badgerDb->escapeSimple($title) . "'";
+		}
+
 		if($description){
 			$sql .= ", '".  $this->badgerDb->escapeSimple($description) . "'";
 		}
@@ -512,6 +547,10 @@ class Account extends DataGridHandler {
 		
 		if($category) {
 			$sql .= ", " . $category->getId();
+		}
+		
+		if ($outsideCapital) {
+			 $sql .= ", " . $this->badgerDb->quoteSmart($outsideCapital);
 		}
 		
 		$sql .= ")";
@@ -531,6 +570,160 @@ class Account extends DataGridHandler {
 		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction(&$this->badgerDb, &$this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital);
 		
 		return $this->finishedTransactions[$finishedTransactionId];	
+	}
+
+	public function getPlannedTransactionById($plannedTransactionId){
+		if ($this->plannedDataFetched) {
+			if (isset($this->plannedTransactions[$plannedTransactionId])) {
+				return $this->plannedTransactions[$plannedTransactionId];
+			}
+			while ($currentTransaction = $this->fetchNextPlannedTransaction()) {
+				if ($currentTransaction->getId() === $plannedTransactionId) {
+					
+					return $currentTransaction;
+				}
+			}
+		}	
+		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.amount, 
+				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
+				pt.repeat_frequency, pt.category_id
+			FROM planned_transaction pt 
+			WHERE planned_transaction_id = " .  $plannedTransactionId;
+		
+		//echo $sql . "\n";
+		
+		$this->dbResultPlanned =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($this->dbResultPlanned)) {
+			echo "SQL Error: " . $this->dbResultPlanned->getMessage();
+			throw new BadgerException('Account', 'SQLError', $this->dbResultPlanned->getMessage());
+		}
+		
+		$tmp = $this->plannedDataFetched;
+		$this->plannedDataFetched = true;
+		
+		$currentTransaction = $this->fetchNextPlannedTransaction();
+		
+		$this->plannedDataFetched = $tmp;
+		
+		if($currentTransaction){
+			return $currentTransaction;
+		} else {
+			$this->allPlannedDataFetched = false;	
+			throw new BadgerException('Account', 'UnknownPlannedTransactionId', $plannedTransactionId);
+		}
+	}
+	
+	public function deletePlannedTransaction($plannedTransactionId){
+		if(isset($this->plannedTransactions[$plannedTransactionId])){
+			unset($this->plannedTransactions[$plannedTransactionId]);
+		}
+		$sql= "DELETE FROM planned_transaction
+				WHERE planned_transaction_id = $plannedTransactionId";
+				
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+		
+		if($this->badgerDb->affectedRows() != 1){
+			throw new BadgerException('Account', 'UnknownPlannedTransactionId', $plannedTransactionId);
+		}
+	}
+	
+	public function addPlannedTransaction(
+		$title,
+		$amount,
+		$repeatUnit,
+		$repeatFrequency,
+		$beginDate,
+		$endDate = null,
+		$description = null,
+		$transactionPartner = null,
+		$category = null,
+		$outsideCapital = null
+	) {
+		$plannedTransactionId = $this->badgerDb->nextId('plannedTransactionIds');
+		
+		$sql = "INSERT INTO planned_transaction
+			(planned_transaction_id, account_id, title, amount, repeat_unit, repeat_frequency, begin_date ";
+			
+		if ($endDate) {
+			$sql .= ", end_date";
+		}
+
+		if($description){
+			$sql .= ", description";
+		}
+		
+		if($transactionPartner){
+			$sql .= ", transaction_partner";
+		}
+		
+		if ($category) {
+			$sql .= ", category_id";
+		}
+		
+		if ($outsideCapital) {
+			$sql .= ", outside_capital";
+		}
+		
+		$sql .= ")
+			VALUES ($plannedTransactionId, " . $this->id . ", '" . $this->badgerDb->escapeSimple($title) . "', '" . $amount->get() . "', '" . $this->badgerDb->escapeSimple($repeatUnit) . "', " . $repeatFrequency . ", '" . $beginDate->getDate() . "'";  
+	
+		if($endDate){
+			$sql .= ", '".  $endDate->getDate() . "'";
+		}
+			
+		if($description){
+			$sql .= ", '".  $this->badgerDb->escapeSimple($description) . "'";
+		}
+	
+		if($transactionPartner){
+			$sql .= ", '".  $this->badgerDb->escapeSimple($transactionPartner) . "'";
+		}
+		
+		if($category) {
+			$sql .= ", " . $category->getId();
+		}
+		
+		if ($outsideCapital) {
+			 $sql .= ", " . $this->badgerDb->quoteSmart($outsideCapital);
+		}
+		
+		$sql .= ")";
+		
+		
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+		
+		if($this->badgerDb->affectedRows() != 1){
+			throw new BadgerException('Account', 'insertError', $dbResult->getMessage());
+		}
+		
+		$this->plannedTransactions[$plannedTransactionId] = new PlannedTransaction(
+			&$this->badgerDb,
+			&$this,
+			$plannedTransactionId,
+			$repeatUnit,
+			$repeatFrequency,
+			$beginDate,
+			$endDate,
+			$title,
+			$amount, 
+			$description,
+			$transactionPartner,
+			$category,
+			$outsideCapital
+		);
+
+    	return $this->plannedTransactions[$plannedTransactionId];	
 	}
 
 	/**
@@ -694,7 +887,62 @@ class Account extends DataGridHandler {
 //			echo 'date: ' . $date->getDate() . "\n";
 			while($this->targetFutureCalcDate->after($date)){
 //				echo 'date: ' . $date->getDate() . "\n";
-				if(!($date->before($now))) {
+				$inRange = true;
+				foreach ($this->filter as $currentFilter) {
+					if ($currentFilter['key'] == 'valutaDate') {
+						switch ($currentFilter['op']) {
+							case 'eq':
+								if (Date::compare($date, $currentFilter['val']) != 0) {
+									$inRange = false;
+								}
+								break;
+								
+							case 'lt':
+								if (Date::compare($date, $currentFilter['val']) >= 0) {
+									$inRange = false;
+								}
+								break;
+								
+							case 'le':
+								if (Date::compare($date, $currentFilter['val']) > 0) {
+									$inRange = false;
+								}
+								break;
+								
+							case 'gt':
+								if (Date::compare($date, $currentFilter['val']) <= 0) {
+									$inRange = false;
+								}
+								break;
+								
+							case 'ge':
+								if (Date::compare($date, $currentFilter['val']) < 0) {
+									$inRange = false;
+								}
+								break;
+								
+							case 'ne':
+								if (Date::compare($date, $currentFilter['val']) == 0) {
+									$inRange = false;
+								}
+								break;
+		
+							case 'bw':
+							case 'ew':
+							case 'ct': 	
+								if (strncasecmp($date->getFormatted(), $currentFilter['val']->getFormatted(), 9999) != 0) {
+									$inRange = false;
+								}
+			    				break;
+						}
+						
+						if (!$inRange) {
+							break;
+						}
+					}
+				}
+							
+				if(!($date->before($now)) && $inRange) {
 					$this->finishedTransactions[] = new FinishedTransaction(
 						$this->badgerDb,
 						$this,
@@ -748,6 +996,16 @@ class Account extends DataGridHandler {
 		} 
 	}
 
+	public function resetFinishedTransactions() {
+		reset($this->finishedTransactions);
+		$this->currentFinishedTransaction = null;
+	}
+	
+	public function resetPlannedTransaction() {
+		reset($this->plannedTransactions);
+		$this->currentPlannedTransaction = null;
+	}
+	
 	public function getNextFinishedTransaction() {
 		if (!$this->allFinishedDataFetched) {
 			$this->fetchNextFinishedTransaction();
@@ -764,14 +1022,93 @@ class Account extends DataGridHandler {
 		return nextByKey($this->plannedTransactions, $this->currentPlannedTransaction);
 	}
 	
+	public function getNextTransaction() {
+		$this->getTransactions();
+		
+		return nextByKey($this->finishedTransactions, $this->currentFinishedTransaction);
+	}
+	
+    /**
+     * reads out the property defined by $key
+     * 
+     * @param string $key key of the requested value
+     * @throws BadgerException if unknown key is passed
+     * @return mixed the value referenced by $key
+     */
+    public function getProperty($key) {
+    	//echo "<pre>"; print_r($this->properties); echo "</pre>";
+    	if (isset($this->properties[$key])) {
+    		return $this->properties[$key];
+    	} else {
+    		throw new BadgerException('Account', 'illegalPropertyKey', $key);
+    	}
+    }
+    
+    /**
+     * sets property $key to $value
+     * 
+     * @param string $key key of the target value
+     * @param mixed value the value referneced by $key can be every serializable php data
+     * @return void
+     */
+    public function setProperty($key, $value) {
+       	if (isset($this->properties[$key])) {
+    		$sql = "UPDATE account_property
+				SET prop_value = '" . $this->badgerDb->escapeSimple($value) . "'
+				WHERE prop_key = '" . $this->badgerDb->escapeSimple($key) . "'
+					AND account_id = " . $this->id;
+    		
+    		$this->badgerDb->query($sql);
+       	} else {
+       		$sql = "INSERT INTO account_property (prop_key, account_id, prop_value)
+				VALUES ('" . $this->badgerDb->escapeSimple($key) . "', "
+				. $this->id . ", 
+				'" . $this->badgerDb->escapeSimple($value) . "')";
+				
+			$this->badgerDb->query($sql);	
+    		
+       	}
+
+		//echo "<pre>$sql</pre>";
+		//echo $this->badgerDb->getMessage();
+       	$this->properties[$key] = $value;
+    }
+
+	/**
+	 * deletes property $key
+	 * 
+	 * @param string $key key of the target value
+	 * @throws BadgerException if unknown key is passed
+	 * @return void 
+	 */
+ 	public function delProperty($key) {
+		if (isset($this->properties[$key])) {
+    		$sql = "DELETE FROM account_property
+				WHERE prop_key = '" . $this->badgerDb->escapeSimple($key) . "'
+					AND account_id = " . $this->id;
+				
+    		
+    		$this->badgerDb->query($sql);
+			  		
+    		unset ($this->properties[$key]);
+    	} else {
+    		throw new BadgerException('Account', 'illegalPropertyKey', $key);
+    	}
+    }
+
 	private function getTransactions() {
+		if ($this->allPlannedDataFetched && $this->allFinishedDataFetched && $this->plannedDataExpanded) {
+			return;
+		}
 		while ($this->fetchNextFinishedTransaction());
 		
 		while ($this->fetchNextPlannedTransaction());
 
 		$this->expandPlannedTransactions();
 		
-		uasort($this->finishedTransactions, array('Account', 'transferCompare'));
+		uasort($this->finishedTransactions, array('Account', 'transactionCompare'));
+		
+		$this->plannedDataExpanded = true;
 	}
 	
 	private function fetchNextFinishedTransaction() {
@@ -851,7 +1188,7 @@ class Account extends DataGridHandler {
 			return;
 		}
 
-		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.valuta_date, pt.amount, 
+		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.amount, 
 				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
 				pt.repeat_frequency, pt.category_id
 			FROM planned_transaction pt
@@ -861,12 +1198,15 @@ class Account extends DataGridHandler {
 				AND pt.end_date > NOW()\n"; 	
 
 		$where = $this->getFilterSQL();
+		//echo $where = $where . "\n" . $where;
+		$where = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
+		//echo $where;
 		if($where) {
 			$sql .= "AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
-		$order = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc)/', '', $order));
+		$order = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),*/', '', $order));
 		
 		if($order) {
 			$sql .= "ORDER BY $order\n ";
@@ -881,8 +1221,8 @@ class Account extends DataGridHandler {
 		$this->dbResultPlanned =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResultPlanned)) {
-			echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+			echo "SQL Error: " . $this->dbResultPlanned->getMessage();
+			throw new BadgerException('Account', 'SQLError', $this->dbResultPlanned->getMessage());
 		}
 		
 		$row = false;
@@ -890,7 +1230,7 @@ class Account extends DataGridHandler {
 		$this->plannedDataFetched = true;
 	}
 
-	function transferCompare($aa, $bb) {
+	function transactionCompare($aa, $bb) {
 		$tmp = 0;
 
 		$default = 0;
@@ -906,11 +1246,11 @@ class Account extends DataGridHandler {
 			if ($this->order[$run]['dir'] == 'asc') {
 				$a = $aa;
 				$b = $bb;
-				$default = 1;
+				$default = -1;
 			} else {
 				$a = $bb;
 				$b = $aa;
-				$default = -1;
+				$default = 1;
 			}
 			//echo "a: " . $a->getId() . "<br />";
 			
@@ -937,7 +1277,7 @@ class Account extends DataGridHandler {
 				case 'valutaDate':
 					if ($a->getValutaDate() && $b->getValutaDate()) {
 						$tmp = Date::compare($a->getValutaDate(), $b->getValutaDate());
-					} 
+					}
 					break;
 				
 				case 'beginDate':
@@ -947,7 +1287,7 @@ class Account extends DataGridHandler {
 				case 'endDate':
 					if ($a->getEndDate() && $b->getEndDate()) {
 						$tmp = Date::compare($a->getEndDate(), $b->getEndDate());
-					} 
+					}
 					break;
 				
 				case 'amount':
