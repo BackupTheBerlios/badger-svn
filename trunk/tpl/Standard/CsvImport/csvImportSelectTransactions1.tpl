@@ -10,6 +10,7 @@
 	   		<th>$tableHeadDescription</th>
 	   		<th>$tableHeadPeriodical </th>
 	   		<th>$tableHeadExceptional</th>
+	   		<th>$tableHeadOutside</th>
 	   		<th>$tableHeadAccount </th>
 	   		$tplOutput
    		</table>
