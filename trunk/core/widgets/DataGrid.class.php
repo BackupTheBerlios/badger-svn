@@ -22,6 +22,7 @@ public $headerSize = array();
 public $deleteMsg;
 public $deleteAction;
 public $editAction;
+public $newAction;
 public $cellAlign;
 
 	public function __construct($tpl) {
@@ -30,8 +31,7 @@ public $cellAlign;
 	
 	public function writeHeader() {
 		//toDo: Use templateEngine
-		
-		$output = '<div id="dataGrid">
+		$output = '<form id="dgForm"><div id="dataGrid">
 					<table id="dgTableHead" cellpadding="2" cellspacing="0">
 						<tr>
 							<td width="20">&nbsp;</td>';
@@ -48,10 +48,10 @@ public $cellAlign;
 					</div>
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">
 						<tr>
-							<td>xx Datensätze</td>
+							<td><span id="dgCount"></span> Datensätze</td>
 						</tr>
 					</table>
-					</div>';
+					</div></form>';
 		return $output;		
 	}
 	
@@ -63,7 +63,7 @@ public $cellAlign;
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
-		$this->tpl->addOnLoadEvent('dgInit("'.$this->sourceXML.'");');
+		$this->tpl->addOnLoadEvent('loadData("'.$this->sourceXML.'");');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		
