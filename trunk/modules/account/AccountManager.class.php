@@ -11,10 +11,11 @@
 *
 **/
 
-require_once (BADGER_ROOT . '/core/XML/DataGridHandler.class.php');
-require_once (BADGER_ROOT . '/modules/account/Account.class.php');
-require_once (BADGER_ROOT . '/modules/account/Currency.class.php');
-require_once (BADGER_ROOT . '/core/Amount.class.php');
+require_once BADGER_ROOT . '/core/common.php';
+require_once BADGER_ROOT . '/core/XML/DataGridHandler.class.php';
+require_once BADGER_ROOT . '/modules/account/Account.class.php';
+require_once BADGER_ROOT . '/modules/account/Currency.class.php';
+require_once BADGER_ROOT . '/core/Amount.class.php';
 
 /**
  * Manages all Accounts.
@@ -57,6 +58,8 @@ class AccountManager extends DataGridHandler {
 	 */
 	private $accounts = array();
 	
+	private $currentAccount = null;
+
 	/**
 	 * The result object of the DB query.
 	 * 
@@ -148,7 +151,7 @@ class AccountManager extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		while($this->getNextAccount());
+		while($this->fetchNextAccount());
 		
 		$result = array();
 		
@@ -164,26 +167,21 @@ class AccountManager extends DataGridHandler {
 		return $result;
 	}
 	
+	public function resetAccounts() {
+		reset($this->accounts);
+	}
+
 	/**
 	 * Gets next Account from the Database.
 	 * 
-	 * @return mixed ID of the fetched Account if successful, false otherwise.
+	 * @return object The next Account if successful, false otherwise.
 	 */
 	public function getNextAccount() {
-		if($this->allDataFetched){
-			return;
+		if (!$this->allDataFetched) {
+			$this->fetchNextAccount();
 		}
-		
-		$this->fetchFromDB();
-		$row = false;
-		
-		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->accounts[$row['account_id']] = new Account(&$this->badgerDb, &$this, $row);
-			return $this->accounts[$row['account_id']];
-		} else {
-			$this->allDataFetched = true;
-			return false;    	
-		}
+
+		return nextByKey($this->accounts, $this->currentAccount);
 	}
 
 	/**
@@ -220,8 +218,14 @@ class AccountManager extends DataGridHandler {
 			echo "SQL Error: " . $this->dbResult->getMessage();
 			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
 		}
+
+		$tmp = $this->dataFetched;
+		$this->dataFetched = true;
 		
 		$currentAccount = $this->getNextAccount();
+		
+		$this->dataFetched = $tmp;
+		
 		if($currentAccount){
 			return $currentAccount;
 		} else {
@@ -359,6 +363,20 @@ class AccountManager extends DataGridHandler {
 		}
 		
 		$this->dataFetched = true; 	
+	}
+
+	private function fetchNextAccount() {
+		$this->fetchFromDB();
+
+		$row = false;
+		
+		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
+			$this->accounts[$row['account_id']] = new Account(&$this->badgerDb, &$this, $row);
+			return $this->accounts[$row['account_id']];
+		} else {
+			$this->allDataFetched = true;
+			return false;    	
+		}
 	}
 }
 ?>

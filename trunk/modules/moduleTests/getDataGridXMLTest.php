@@ -32,7 +32,10 @@ function testLink($text, $link) {
 		<?php
 			testLink('Alle Transaktionen von Konto #2', 'q=Account&amp;qp=2');
 			testLink('Alle Transaktionen von Konto #1, geordnet nach Titel aufsteigend', 'q=Account&amp;qp=1&amp;ok0=title&amp;od0=a');
-			testLink('Alle Transaktionen von Konto #1, geordnet nach Datum aufsteigend', 'q=Account&amp;qp=1&amp;ok0=valutaDate&amp;od0=a');
+			testLink('Alle Transaktionen von Konto #1, geordnet nach Datum aufsteigend; Geplante Transaktionen für die nächsten 100 Tage berechnen', 'q=Account&amp;qp=1;transaction;100&amp;ok0=valutaDate&amp;od0=a');
+			testLink('Nur ausgeführte Transaktionen von Konto #1', 'q=Account&amp;qp=1;finished');
+			testLink('Nur geplante Transaktionen von Konto #1', 'q=Account&amp;qp=1;planned');
+			
 		?>
 	</dl>
 	

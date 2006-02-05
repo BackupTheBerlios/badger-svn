@@ -770,10 +770,13 @@ class Date
      */
     function compare($d1, $d2)
     {
-        $d1->convertTZ(new Date_TimeZone('UTC'));
-        $d2->convertTZ(new Date_TimeZone('UTC'));
-        $days1 = Date_Calc::dateToDays($d1->day, $d1->month, $d1->year);
-        $days2 = Date_Calc::dateToDays($d2->day, $d2->month, $d2->year);
+    	$d1x = new Date($d1);
+    	$d2x = new Date($d2);
+    	
+        $d1x->convertTZ(new Date_TimeZone('UTC'));
+        $d2x->convertTZ(new Date_TimeZone('UTC'));
+        $days1 = Date_Calc::dateToDays($d1x->day, $d1x->month, $d1x->year);
+        $days2 = Date_Calc::dateToDays($d2x->day, $d2x->month, $d2x->year);
         if ($days1 < $days2) return -1;
         if ($days1 > $days2) return 1;
         if ($d1->hour < $d2->hour) return -1;

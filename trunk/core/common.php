@@ -46,4 +46,30 @@ function unescaped($array, $key) {
 		return stripslashes($array[$key]);
 	}
 }
+
+function nextByKey(&$array, &$key) {
+	if (is_null(key($array))) {
+		return false;
+	}
+	
+	if (!is_null($key)) {
+		if (key($array) != $key) {
+			reset($array);
+			$currentKey = key($array);
+			while (!is_null($currentKey) && ($currentKey != $key)) {
+				next($array);
+				$currentKey = key($array);
+				
+			}
+		}
+
+		$result = next($array);
+	} else {
+		$result = current($array);
+	}
+	
+	$key = key($array);
+	
+	return $result;
+}
 ?>

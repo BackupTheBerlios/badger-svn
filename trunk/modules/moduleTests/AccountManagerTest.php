@@ -20,6 +20,10 @@ define ('endl', "\n");
 
 $am = new AccountManager($badgerDb);
 
+while ($acc = $am->getNextAccount()) {
+	echo $acc->getTitle() . endl;
+}
+
 $acc1 = $am->getAccountById(1);
 echo $acc1->getId() . endl;
 

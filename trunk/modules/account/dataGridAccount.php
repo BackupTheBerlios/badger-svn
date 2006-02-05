@@ -24,7 +24,7 @@ $tpl->addJavaScript("js/MochiKit/MochiKit.js");
 $tpl->addJavaScript("js/ajax_tables.js");
 echo $tpl->getHeader("Seitenname"); //write header */
 
-$dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=2";
+$dataGrid['loadXML'] = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=1";
 $dataGrid['actionNew'] = "newAccount.php";
 $dataGrid['actionDelete'] = "deleteAccount.php?id=";
 ?>
@@ -43,9 +43,9 @@ $dataGrid['actionDelete'] = "deleteAccount.php?id=";
             <thead>
                 <tr>
                     <th mochi:sortcolumn="accountId str">ID</th>
-                    <th mochi:sortcolumn="currency str">Currency</th>
+                    <th mochi:sortcolumn="valutaDate date">Valuta Date</th>
                     <th mochi:sortcolumn="title str">Title</th>
-                    <th mochi:sortcolumn="balance">Balance</th>
+                    <th mochi:sortcolumn="amount">Amount</th>
                 </tr>
             </thead>           
             <tfoot class="invisible">
@@ -56,9 +56,9 @@ $dataGrid['actionDelete'] = "deleteAccount.php?id=";
             <tbody class="mochi-template">
                 <tr mochi:repeat="item domains">
                     <td mochi:content="item.accountId"></td>
-                    <td mochi:content="item.currency"></td>
+                    <td mochi:content="item.valutaDate"></td>
                     <td mochi:content="item.title"></td>
-                    <td mochi:content="item.balance"></td>
+                    <td mochi:content="item.amount"></td>
                 </tr>
             </tbody>
         </table>

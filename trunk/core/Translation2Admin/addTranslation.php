@@ -55,7 +55,7 @@ $langs = $tra->getLangs();
 	
 print("<b>Add new Translation:</b><br/><br/>");
 
-print("<form action=\"".$PHP_SELF."\" method=\"post\">");
+print("<form action=\"".$_SERVER['PHP_SELF']."\" method=\"post\">");
 
 print("Page:<br>");
 print("<input name=\"page\" id=\"page\" size=\"50\" value=\"\" type=\"text\"><br>");
