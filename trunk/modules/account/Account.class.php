@@ -348,8 +348,6 @@ class Account extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		global $tra;
-		
 		$result = array();
 
 		switch ($this->type) {
@@ -832,7 +830,7 @@ class Account extends DataGridHandler {
 			$sql .= "ORDER BY $order\n ";
 		}
 		
-		if ($this->type = 'transaction') {
+		if ($this->type == 'transaction') {
 			$sql = str_replace(Account::TABLE_PLACEHOLDER, 'ft', $sql);
 		}
 		
@@ -874,7 +872,7 @@ class Account extends DataGridHandler {
 			$sql .= "ORDER BY $order\n ";
 		}
 		
-		if ($this->type = 'transaction') {
+		if ($this->type == 'transaction') {
 			$sql = str_replace(Account::TABLE_PLACEHOLDER, 'pt', $sql);
 		}
 		
