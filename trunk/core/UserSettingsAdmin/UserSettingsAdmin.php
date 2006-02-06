@@ -195,15 +195,13 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		$PWFormLabel = getBadgerTranslation2('UserSettingsAdmin','change_password_heading');
 		
 		$OldPwLabel = $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), true);
-		
-		$OldPwField = $widgets->createField("OldPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true);
+		$OldPwField = $widgets->createField("OldPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true, 'password');
 		
 		$NewPwLabel = $widgets->createLabel("NewPassword", getBadgerTranslation2('UserSettingsAdmin','new_password_name'), true);
-		$NewPwField = $widgets->createField("NewPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true);
+		$NewPwField = $widgets->createField("NewPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true, 'password');
 		
 		$ConfPwLabel = $widgets->createLabel("NewPasswordConfirm", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_name'), true);
-		
-		$ConfPwField = $widgets->createField("NewPasswordConfirm", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true);
+		$ConfPwField = $widgets->createField("NewPasswordConfirm", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true, 'password');
 		
 		$btnSubmit = $widgets->createButton("SubmitUserSettings", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		

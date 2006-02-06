@@ -216,13 +216,13 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	echo $rows;
 	
 	$MandatoryOldPasswordLabel = $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), true);
-	$MandatoryOldPasswordField = $widgets->createField("OldPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true);
+	$MandatoryOldPasswordField = $widgets->createField("OldPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true, 'password');
 	
 	$MandatoryNewPasswordLabel = $widgets->createLabel("NewPassword", getBadgerTranslation2('UserSettingsAdmin','new_password_name'), true); 
-	$MandatoryNewPasswordField = $widgets->createField("NewPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true);
+	$MandatoryNewPasswordField = $widgets->createField("NewPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true, 'password');
 	
 	$MandatoryNewPasswordConfirmLabel = $widgets->createLabel("NewPasswordConfirm", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_name'), true);
-	$MandatoryNewPasswordConfirmField = $widgets->createField("NewPasswordConfirm", 25, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true);
+	$MandatoryNewPasswordConfirmField = $widgets->createField("NewPasswordConfirm", 25, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true, 'password');
 	
 	$MandatorySubmit = $widgets->createButton("SubmitMandatoryChangePassword", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		
@@ -250,7 +250,7 @@ if($passwordcorrect == false)
 		
 		//print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
 		//$PasswordInput = "<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />";
-		$PasswordInput = $widgets->createField("password", 50, "", "", true);
+		$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
 		
 		/*
 		foreach( $_POST as $key=>$value ){
@@ -268,7 +268,7 @@ if($passwordcorrect == false)
 		echo $rows;
 		
 		//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
-		$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+		$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','login_button'), "submit", "Widgets/accept.gif");
 		
 		/*
 		$signature = "";
