@@ -1,4 +1,4 @@
-<form name="UserSettings" method="post" action="/trunk/core/UserSettingsAdmin/UserSettingsAdmin.php">
+<form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php">
 	<div class="USAHeading">$USFormLabel</div>
 	
 	<br>
