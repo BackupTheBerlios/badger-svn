@@ -7,7 +7,7 @@
 				   						<td>
 				   							$tableSelectCategory
 				   						</td>
-			   							<td>
+			   							<td nowrap="nowrap">
 				   							$tableValutaDate
 			   							</td>
 			   							<td>

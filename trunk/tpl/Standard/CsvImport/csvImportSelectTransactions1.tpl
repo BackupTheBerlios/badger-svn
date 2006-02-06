@@ -1,6 +1,7 @@
-<form action="" method="post" enctype="multipart/form-data" name="Selection" id="Selection">
+<form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection">
  	<div id="scroll">	
 		<table border = 1 cellpadding = 0, cellspacing = 5>
+			<tr>
 			<th>$tableHeadSelect</th>
 			<th>$tableHeadCategory </th>
 			<th>$tableHeadValutaDate </th>
@@ -12,6 +13,7 @@
 	   		<th>$tableHeadExceptional</th>
 	   		<th>$tableHeadOutside</th>
 	   		<th>$tableHeadAccount </th>
+	   		</tr>
 	   		$tplOutput
    		</table>
 	</div>
