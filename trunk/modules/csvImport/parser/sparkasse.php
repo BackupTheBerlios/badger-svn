@@ -61,17 +61,20 @@ function parseToArray($fp, $accountId){
 					//delete " in the date, because it could cause problems
 					$transactionArray[2] = str_replace("\"","",$transactionArray[2]);
 					$valutaDate = explode(".", $transactionArray[2]); //Valuta Date
-					$valutaDate[4] = $valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
-					//avoid " & \ in the title, transactionpartner & description, those characters could cause problems
+					$valutaDate[4] = "20".$valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
+					$valutaDate1 = new Date($valutaDate[4]);
+					//avoid " in the title, transactionpartner & description, those characters could cause problems
 					$transactionArray[3] = str_replace("\"","",$transactionArray[3]);
 					$transactionArray[3] = str_replace("\\","",$transactionArray[3]);	
 					$transactionArray[4] = str_replace("\"","",$transactionArray[4]);
 					$transactionArray[4] = str_replace("\\","",$transactionArray[4]);					
 					$transactionArray[5] = str_replace("\"","",$transactionArray[5]);
 					$transactionArray[5] = str_replace("\\","",$transactionArray[5]);
-					//format amount data to sql format, decimal sign is a .
-					$transactionArray[8] = str_replace(",",".",$transactionArray[8]);
-					$transactionArray[8] = str_replace("\"","",$transactionArray[8]); 		
+					//remove \" from the amount
+					$transactionArray[8] = str_replace("\"","",$transactionArray[8]); 
+					$transactionArray[8] = str_replace(",",".",$transactionArray[8]);		
+					//format amount to usersettings
+					$amount1 = new Amount($transactionArray[8]);
 					/**
 					 * transaction array
 					 * 
@@ -82,8 +85,8 @@ function parseToArray($fp, $accountId){
 					   "accountId" => $accountId,
 					   "title" => substr($transactionArray[4],0,99),// cut title with more than 100 chars
 					   "description" => $transactionArray[3],
-					   "valutaDate" => $valutaDate[4],
-					   "amount" => $transactionArray[8],
+					   "valutaDate" => $valutaDate1,
+					   "amount" => $amount1,
 					   "transactionPartner" => $transactionArray[5]
 					);
 				} else{

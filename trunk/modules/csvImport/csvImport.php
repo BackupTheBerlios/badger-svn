@@ -11,12 +11,13 @@
 *
 **/
 define("BADGER_ROOT", "../.."); 
-require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
+require_once(BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php');
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
+$widgets->addCalendarJS();
 $tpl->getHeader("CSV-Import");
 echo $widgets->addToolTipLayer();
 
@@ -70,14 +71,40 @@ if (isset($_POST['Upload'])){
 	 		require_once(BADGER_ROOT . "/modules/csvImport/parser/" . $_POST["parserSelect"]);
 	 		$accountId = $_POST["accountSelect"];
 	 		//call to parse function
-	 		$importedTransactions = parseToArray($fp, $accountId);
+	 		$foundTransactions = parseToArray($fp, $accountId);
 	 		//delete existing transactions, criteria are accountid, date & amount
+	 		$LookupTransactionNumber = count($foundTransactions);
+	 		$filteredTransactions = 0;
+	 		$importedTransactionNumber = 0;
+	 		$importedTransactions = NULL;
+	 		for ($foundTransactionNumber = 0; $foundTransactionNumber < $LookupTransactionNumber; $foundTransactionNumber++) {
+	 			$am4 = new AccountManager($badgerDb);
+	 			$account4 = $am4->getAccountById($foundTransactions[$foundTransactionNumber]["accountId"]);
+	 			$existing = false;
+	 			while ($dbTransaction = $account4->getNextFinishedTransaction()){
+	 				
+	 				#echo $dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"]). "<br />";
+	 				#echo $dbTransaction->getAmount()->get() . "<br />";
+	 				#echo $foundTransactions[$foundTransactionNumber]["amount"]->get(). "<br />";
+	 				if($dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"])==0){
+	 					
+	 					if ($dbTransaction->getValutaDate()->compare($foundTransactions[$foundTransactionNumber]["valutaDate"],$dbTransaction->getValutaDate())==0){
+	 						$existing = true;
+	 					}
+	 				}
+	 			}
+	 			if (!$existing){
+ 					$importedTransactions[$importedTransactionNumber] = $foundTransactions[$foundTransactionNumber];
+ 					$importedTransactionNumber++;
+ 				} else {
+ 					$filteredTransactions++;
+ 				}
+	 		}
+	 		if ($filteredTransactions != 0){	
+	 		echo $filteredTransactions . " " . getBadgerTranslation2("importCsv", "echoFilteredTransactionNumber");
+	 		}
 	 		#$bereinigete Transaktionen = 
-	 		for ($importedTransactionNumber = 0; $importedTransactionNumber < count($importedTransactions); $importedTransactionNumber++) {
-	 			#$amount = $importedTransactions[$importedTransactionNumber]["amount"];
-	 			#$date = $importedTransactions[$importedTransactionNumber]["valutaDate"];
-	 			#$accountId = $importedTransactions[$importedTransactionNumber]["accountId"];
-	 		} 
+	 		
 	 		#importedTransactions umstellen auf bereinigte Transaktionen
 	 		$transactionNumber = count($importedTransactions);
 			$tplOutput = NULL;
@@ -92,6 +119,7 @@ if (isset($_POST['Upload'])){
    				$tableHeadDescription = $widgets->createLabel("", getBadgerTranslation2("importCsv", "description"), true);
    				$tableHeadPeriodical = $widgets->createLabel("", getBadgerTranslation2("importCsv", "periodical"), true);
    				$tableHeadExceptional = $widgets->createLabel("", getBadgerTranslation2("importCsv", "Exceptional"), true);
+   				$tableHeadOutside = $widgets->createLabel("", getBadgerTranslation2("importCsv", "outsideCapital"), true);
    				$tableHeadAccount = $widgets->createLabel("", getBadgerTranslation2("importCsv", "account"), true);
 				
    				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
@@ -106,12 +134,12 @@ if (isset($_POST['Upload'])){
 				    	}
 			    	$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, $category,"");
 						    	
-				    #darstellungsbreite übergeben, sepp töten
-			    	$tableValutaDate = $widgets->createField("valutaDate".$outputTransactionNumber, 8, $importedTransactions[$outputTransactionNumber]["valutaDate"]);
+				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
+				    #$tableValutaDate = $widgets->createField("valutaDate".$outputTransactionNumber, 8, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
 						    
 					$tableTitle = $widgets->createField("title".$outputTransactionNumber, 30, $importedTransactions[$outputTransactionNumber]["title"]);
    							
-					$tableAmount = $widgets->createField("amount".$outputTransactionNumber, 8, $importedTransactions[$outputTransactionNumber]["amount"]);
+					$tableAmount = $widgets->createField("amount".$outputTransactionNumber, 8, $importedTransactions[$outputTransactionNumber]["amount"]->getFormatted());
    							
 					$tableTransactionPartner = $widgets->createField("transactionPartner".$outputTransactionNumber, 15, $importedTransactions[$outputTransactionNumber]["transactionPartner"]);
    							
@@ -120,6 +148,8 @@ if (isset($_POST['Upload'])){
 					$tablePeriodicalCheckbox = "<input type=\"checkbox\" name=\"periodical" . $outputTransactionNumber . "\" value=\"select\" />";
    							
 					$tableExceptionalCheckbox = "<input type=\"checkbox\" name=\"exceptional" . $outputTransactionNumber . "\" value=\"select\" />";
+   					
+   					$tableOutsideCheckbox = "<input type=\"checkbox\" name=\"outside" . $outputTransactionNumber . "\" value=\"select\" />";
    							
 						$am1 = new AccountManager($badgerDb);
 						$account1 = array();
@@ -142,8 +172,7 @@ if (isset($_POST['Upload'])){
 				
 	 			eval("echo \"".$tpl->getTemplate("CsvImport/csvImportSelectTransactions1")."\";");
 	 		} else{
-	 			echo "doof";
-	 			#Echo, dass keine neuen Datensätze gefunden wurden
+	 			echo getBadgerTranslation2("importCsv", "noNewTransactions");
 	 		}	
 	  	
 		}
@@ -163,27 +192,35 @@ if (isset($_POST['btnSubmit'])){
 		if (isset($_POST["select" . $selectedTransactionNumber])){
 			// set periodical flag
 			if (isset ($_POST["periodical" . $selectedTransactionNumber])){
-				$periodical = "JA";
+				$periodical = true;
 			}else {
-				$periodical = "NEIN";
+				$periodical = false;
 			}
 			// set periodical flag
 			if (isset ($_POST["exceptional" . $selectedTransactionNumber])){
-				$exceptional = "JA";
+				$exceptional = true;
 			}else {
-				$exceptional = "NEIN";
+				$exceptional = false;
+			}
+			if (isset ($_POST["outside" . $selectedTransactionNumber])){
+				$outside = true;
+			}else {
+				$outside = false;
 			}
 			//create array with one transaction
+			$amount1 = new Amount($_POST['amount' . $selectedTransactionNumber],true);
+			$valutaDate1 = new Date ($_POST['valutaDate' . $selectedTransactionNumber], true);
 			$tableRowArray = array(
 				"categoryId" => $_POST['categorySelect' . $selectedTransactionNumber],
 				"account" => $_POST['account2Select' . $selectedTransactionNumber],
 				"title" => $_POST['title' . $selectedTransactionNumber], 
 				"description" => $_POST['description' . $selectedTransactionNumber],
-				"valutaDate" => $_POST['valutaDate' . $selectedTransactionNumber],
-				"amount" => $_POST['amount' . $selectedTransactionNumber],
+				"valutaDate" => $valutaDate1,
+				"amount" => $amount1,
 				"transactionPartner" => $_POST['transactionPartner' . $selectedTransactionNumber],
 				"periodical" => $periodical,
-				"exceptional" => $exceptional
+				"exceptional" => $exceptional,
+				"outside" => $outside
 			);	
 		}
 		//if a array with one transaction exist
@@ -196,16 +233,23 @@ if (isset($_POST['btnSubmit'])){
 	}
 	if ($writeToDbArray){
 		# array in db schreiben
+		
+		
 		for ($arrayRow = 0; $arrayRow < count($writeToDbArray); $arrayRow++) {
-			echo $writeToDbArray[$arrayRow]['categoryId'];
-			echo $writeToDbArray[$arrayRow]['account'];
-			echo $writeToDbArray[$arrayRow]['title']; 
-			echo $writeToDbArray[$arrayRow]['description'];
-			echo $writeToDbArray[$arrayRow]['valutaDate'];
-			echo $writeToDbArray[$arrayRow]['amount'];
-			echo $writeToDbArray[$arrayRow]['transactionPartner'];
-			echo $writeToDbArray[$arrayRow]['periodical'];
-			echo $writeToDbArray[$arrayRow]['exceptional'];
+			$am3 = new AccountManager($badgerDb);
+			
+			$account3 = $am3->getAccountById($writeToDbArray[$arrayRow]['account']);
+			 
+			echo $writeCategory = $writeToDbArray[$arrayRow]['categoryId'];
+			echo $writeTitle = $writeToDbArray[$arrayRow]['title']; 
+			echo $writeDescription = $writeToDbArray[$arrayRow]['description'];
+			echo $writeValutaDate = $writeToDbArray[$arrayRow]['valutaDate'];
+			echo $writeAmount = $writeToDbArray[$arrayRow]['amount'];
+			echo $writeTransactionPartner = $writeToDbArray[$arrayRow]['transactionPartner'];
+			echo $writePeriodical = $writeToDbArray[$arrayRow]['periodical'];
+			echo $writeExceptional = $writeToDbArray[$arrayRow]['exceptional'];
+			echo $writeOutside = $writeToDbArray[$arrayRow]['outside'];
+			$account3->addFinishedTransaction($writeAmount, $writeTitle, $writeDescription, $writeValutaDate, $writeTransactionPartner, $writeCategory, $writeOutside);
 			echo "<br />";
 		}
 		// echo success message & number of written transactions
@@ -215,5 +259,6 @@ if (isset($_POST['btnSubmit'])){
 		echo getBadgerTranslation2("importCsv", "noTransactionSelected");
 	}
 } 		
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>

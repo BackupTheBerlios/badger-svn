@@ -58,19 +58,21 @@ function parseToArray($fp, $accountId){
 					$transactionArray = explode(";", $line);
 					//format date YY-MM-DD or YYYY-MM-DD
 					$valutaDate = explode(".", $transactionArray[0]); //Valuta Date
-					$valutaDate[4] = $valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
+					$valutaDate[4] = "20".$valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
+					$valutaDate1 = new Date($valutaDate[4]);
 					//avoid " & \ in the title & description, those characters could cause problems
 					$transactionArray[2] = str_replace("\"","",$transactionArray[2]);
 					$transactionArray[2] = str_replace("\\","",$transactionArray[2]);					
-					//format amount data to sql format, decimal sign is a .
-					$transactionArray[3] = str_replace(",",".",$transactionArray[3]); 
-					$transactionArray[4] = str_replace(",",".",$transactionArray[4]);
 					//if transactionArray[3] == "", it is an expenditure, else income
 					if ($transactionArray[3]=="") { 
 						$amount = $transactionArray[4];
 					} else {
 						$amount = $transactionArray[3];
 					}				
+					//format amount to usersettings
+					$amount = str_replace(",",".",$amount);
+					
+					$amount1 = new Amount($amount);
 					/**
 					 * transaction array
 					 * 
@@ -81,8 +83,8 @@ function parseToArray($fp, $accountId){
 					   "accountId" => $accountId,
 					   "title" => substr($transactionArray[2],0,99),// cut title with more than 100 chars
 					   "description" => "",
-					   "valutaDate" => $valutaDate[4],
-					   "amount" => $amount,
+					   "valutaDate" => $valutaDate1,
+					   "amount" => $amount1,
 					   "transactionPartner" => ""
 					);
 				} else{
