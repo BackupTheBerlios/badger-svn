@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 $additionalHeaderTags
 $JSOnLoadEvents
+<script language="javascript" src="{BADGER_ROOT}/js/jsval.js"></script>
 </head>
 <body style="background-image: url('{BADGER_ROOT}/tpl/Standard/back_verlauf_kreis.jpg');background-attachment: fixed;background-repeat: no-repeat;">
 <div id="header" valign="center">

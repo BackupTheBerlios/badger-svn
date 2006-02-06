@@ -120,3 +120,7 @@ input.inputNumberMinus {
 	font-weight: bold;
 }
 /* USER SETTINGS ADMIN END*/
+
+/* FORM VALIDATION  BEGIN */
+input.error, select.error {padding-right: 16px; border: 1px solid red; background-color: #FFFCE2; background-image: url(images/warning_obj.gif); background-position: right; background-repeat: no-repeat;}
+/* FORM VALIDATION  END */
