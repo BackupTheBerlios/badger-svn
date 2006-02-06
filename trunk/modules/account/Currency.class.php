@@ -40,14 +40,26 @@ class Currency {
 	 */
 	private $longName;
 	
+	/**
+	 * The DB object.
+	 * 
+	 * @var object DB
+	 */
 	private $badgerDb;
 	
+	/**
+	 * The CurrencyManager this currency belongs to.
+	 * 
+	 * @var object CurrencyManager
+	 */
 	private $currencyManager;
 
 	/**
 	 * Creates a currency.
 	 * 
-	 * @param $id integer The ID of the currency in the database.
+	 * @param $badgerDb object The DB object.
+	 * @param $currencyManager object The CurrencyManager object who created this Currency.
+	 * @param $data mixed An associative array with the values out of the DB OR the id of the Currency.
 	 * @param $symbol string The symbol of the currency.
 	 * @param $longName string The long name of the currency.
 	 */
@@ -84,6 +96,11 @@ class Currency {
 		return $this->symbol;
 	}
 	
+	/**
+	 * Sets the symbol.
+	 * 
+	 * @param string $symbol The symbol of the currency.
+	 */
  	public function setSymbol($symbol) {
 		$this->symbol = $symbol;
 		
@@ -108,6 +125,11 @@ class Currency {
 		return $this->longName;
 	}
 
+	/**
+	 * Sets the long name.
+	 * 
+	 * @param string $longName The long name of the currency.
+	 */
  	public function setLongName($longName) {
 		$this->longName = $longName;
 		

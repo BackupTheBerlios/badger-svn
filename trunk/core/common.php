@@ -47,6 +47,13 @@ function unescaped($array, $key) {
 	}
 }
 
+/**
+ * Gets the element of $array following the key $key.
+ * 
+ * @param $array array The array to traverse.
+ * @param $key mixed The key to advance by one.
+ * @return mixed The next array element or false if at the end of the array.
+ */
 function nextByKey(&$array, &$key) {
 	if (is_null(key($array))) {
 		return false;

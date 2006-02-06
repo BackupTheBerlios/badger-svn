@@ -25,7 +25,7 @@ abstract class DataGridHandler {
 	/**
 	 * The DB object.
 	 * 
-	 * @var object
+	 * @var object DB
 	 */
 	protected $badgerDb;
 	
@@ -36,6 +36,9 @@ abstract class DataGridHandler {
 	 */
 	protected $order = array();
 	
+	/**
+	 * All filter criteria, structure described in setFilter().
+	 */
 	protected $filter = array();
 	
 	/**
@@ -64,6 +67,13 @@ abstract class DataGridHandler {
 	 */
 	public abstract function getFieldType($fieldName);
 	
+	/**
+	 * Returns the SQL name of the given field.
+	 * 
+	 * @param $fieldName string The field name to get the SQL name of.
+	 * @throws BadgerException If an unknown field name was given.
+	 * @return The SQL name of $fieldName.
+	 */
 	public abstract function getFieldSQLName($fieldName);
 	
 	/**

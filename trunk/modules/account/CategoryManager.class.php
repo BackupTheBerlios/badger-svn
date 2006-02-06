@@ -15,6 +15,12 @@ require_once BADGER_ROOT . '/core/XML/DataGridHandler.class.php';
 require_once BADGER_ROOT . '/modules/account/Category.class.php';
 require_once BADGER_ROOT . '/core/common.php';
 
+/**
+ * Manages all Categories.
+ * 
+ * @author Eni Kao, Mampfred
+ * @version $LastChangedRevision$
+ */
 class CategoryManager extends DataGridHandler {
 	/**
 	 * List of valid field names.
@@ -51,10 +57,25 @@ class CategoryManager extends DataGridHandler {
 	 */
 	private $dbResult;
 	
+	/**
+	 * List of Categories.
+	 * 
+	 * @var array of Category
+	 */
 	private $categories = array();
 	
+	/**
+	 * The key of the current data element.
+	 * 
+	 * @var integer  
+	 */
 	private $currentCategory = null;
 	
+	/**
+	 * Creates an CategoryManager.
+	 * 
+	 * @param $badgerDb object The DB object.
+	 */
 	function __construct ($badgerDb) {
 		parent::__construct($badgerDb);
 	}
@@ -104,6 +125,13 @@ class CategoryManager extends DataGridHandler {
 		return $this->fieldNames;
 	}
 	
+	/**
+	 * Returns the SQL name of the given field.
+	 * 
+	 * @param $fieldName string The field name to get the SQL name of.
+	 * @throws BadgerException If an unknown field name was given.
+	 * @return The SQL name of $fieldName.
+	 */
 	public function getFieldSQLName($fieldName) {
 		$fieldTypes = array (
 			'categoryId' => 'c.category_id',
@@ -156,11 +184,22 @@ class CategoryManager extends DataGridHandler {
 		return $result;
 	}
 	
+	/**
+	 * Resets the internal counter of category.
+	 */
 	public function resetCategories() {
 		reset($this->categories);
 		$this->currentCategory = null;
 	}
 	
+	/**
+	 * Returns the Category identified by $categoryId.
+	 * 
+	 * @param integer $categoryId The ID of the requested Category.
+	 * @throws BadgerException SQLError If an SQL Error occurs.
+	 * @throws BadgerException UnknownCategoryId If $categoryId is not in the Database
+	 * @return object The Category object identified by $categoryId. 
+	 */
 	public function getCategoryById($categoryId) {
 		if ($this->dataFetched){
 			if(isset($this->categories[$categoryId])) {
@@ -201,9 +240,9 @@ class CategoryManager extends DataGridHandler {
 	}
 		
 	/**
-	 * Gets next Account from the Database.
+	 * Returns the next Category.
 	 * 
-	 * @return mixed ID of the fetched Account if successful, false otherwise.
+	 * @return mixed The next Category object or false if we are at the end of the list.
 	 */
 	public function getNextCategory() {
 		if (!$this->allDataFetched) {
@@ -213,8 +252,13 @@ class CategoryManager extends DataGridHandler {
 		return nextByKey($this->categories, $this->currentCategory);
 	}
 
-
-
+	/**
+	 * Deletes the Category identified by $categoryId.
+	 * 
+	 * @param integer $categoryId The ID of the Category to delete.
+	 * @throws BadgerException SQLError If an SQL Error occurs.
+	 * @throws BadgerException UnknownCategoryId If $categoryId is not in the Database
+	 */
 	public function deleteCategory($categoryId){
 		if(isset($this->categories[$categoryId])){
 			unset($this->categories[$categoryId]);
@@ -229,11 +273,21 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($dbResult->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() != 1){
 			throw new BadgerException('CategoryManager', 'UnknownCategoryId', $categoryId);
 		}
 	}
 	
+	/**
+	 * Creates a new Category.
+	 * 
+	 * @param string $title The title of the new Category.
+	 * @param string $description The description of the new Category.
+	 * @param boolean $outsideCapital The origin of the new Category.
+	 * @throws BadgerException SQLError If an SQL Error occurs.
+	 * @throws BadgerException insertError If the account cannot be inserted.
+	 * @return object The new Account object.
+	 */
 	public function addCategory($title, $description = null, $outsideCapital = false) {
 		$categoryId = $this->badgerDb->nextId('categoryIds');
 		
@@ -269,11 +323,11 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($dbResult->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() != 1){
 			throw new BadgerException('CategoryManager', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->categories[$categoryId] = new Category(&$this->badgerDb, &$this, $title, $description, $outsideCapital);
+		$this->categories[$categoryId] = new Category(&$this->badgerDb, &$this, $categoryId, $title, $description, $outsideCapital);
 		
 		return $this->categories[$categoryId];	
 	}
@@ -313,6 +367,11 @@ class CategoryManager extends DataGridHandler {
 		$this->dataFetched = true; 	
 	}
 
+	/**
+	 * Fetches the next category from DB.
+	 * 
+	 * @return mixed The fetched Category object or false if there are no more.
+	 */
 	private function fetchNextCategory() {
 		$this->fetchFromDB();
 		$row = false;

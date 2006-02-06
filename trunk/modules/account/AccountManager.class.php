@@ -54,10 +54,15 @@ class AccountManager extends DataGridHandler {
 	/**
 	 * List of Accounts.
 	 * 
-	 * @var object
+	 * @var array of Account
 	 */
 	private $accounts = array();
 	
+	/**
+	 * The key of the current data element.
+	 * 
+	 * @var integer  
+	 */
 	private $currentAccount = null;
 
 	/**
@@ -119,6 +124,13 @@ class AccountManager extends DataGridHandler {
 		return $this->fieldNames;
 	}
 	
+	/**
+	 * Returns the SQL name of the given field.
+	 * 
+	 * @param $fieldName string The field name to get the SQL name of.
+	 * @throws BadgerException If an unknown field name was given.
+	 * @return The SQL name of $fieldName.
+	 */
 	public function getFieldSQLName($fieldName) {
 		$fieldSQLNames = array (
 			'accountId' => 'a.account_id',
@@ -167,15 +179,18 @@ class AccountManager extends DataGridHandler {
 		return $result;
 	}
 	
+	/**
+	 * Resets the internal counter of account.
+	 */
 	public function resetAccounts() {
 		reset($this->accounts);
 		$this->currentAccount = null;
 	}
 
 	/**
-	 * Gets next Account from the Database.
+	 * Returns the next Account.
 	 * 
-	 * @return object The next Account if successful, false otherwise.
+	 * @return mixed The next Account object or false if we are at the end of the list.
 	 */
 	public function getNextAccount() {
 		if (!$this->allDataFetched) {
@@ -242,7 +257,6 @@ class AccountManager extends DataGridHandler {
 	 * @param integer $accountId The ID of the Account to delete.
 	 * @throws BadgerException SQLError If an SQL Error occurs.
 	 * @throws BadgerException UnknownAccountId If $accountId is not in the Database
-	 * @return void
 	 */
 	public function deleteAccount($accountId){
 		if(isset($this->accounts[$accountId])){
@@ -366,6 +380,11 @@ class AccountManager extends DataGridHandler {
 		$this->dataFetched = true; 	
 	}
 
+	/**
+	 * Fetches the next account from DB.
+	 * 
+	 * @return mixed The fetched Account object or false if there are no more.
+	 */
 	private function fetchNextAccount() {
 		$this->fetchFromDB();
 

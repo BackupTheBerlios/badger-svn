@@ -14,6 +14,7 @@ define ('BADGER_ROOT', '../..');
 
 require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
+require_once BADGER_ROOT . '/modules/account/CurrencyManager.class.php';
 
 header('Content-Type: text/plain');
 define ('endl', "\n");
@@ -27,7 +28,8 @@ while ($acc = $am->getNextAccount()) {
 $acc1 = $am->getAccountById(1);
 echo 'Account Id: ' . $acc1->getId() . endl;
 
-$curr = new Currency(1, 'TUR', 'Teuro');
+$cm = new CurrencyManager($badgerDb);
+$curr = $cm->getCurrencyById(1);
 $lowerLimit = new Amount(rand(-100, 100));
 $upperLimit = new Amount(rand(1000, 3000));
 

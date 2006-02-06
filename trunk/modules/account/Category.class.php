@@ -11,18 +11,89 @@
 *
 **/
 
+/**
+ * A category (of transactions).
+ * 
+ * @author Eni Kao, Mampfred
+ * @version $LastChangedRevision$
+*/
 class Category {
+	/**
+	 * The DB object.
+	 * 
+	 * @var object DB
+	 */
 	private $badgerDb;
+
+	/**
+	 * The CategoryManager this category belongs to.
+	 * 
+	 * @var object CategoryManager
+	 */
 	private $categoryManager;
 	
+	/**
+	 * The id of this category.
+	 * 
+	 * @var integer
+	 */
 	private $id;
+	
+	/**
+	 * The title of this category.
+	 * 
+	 * @var string
+	 */
 	private $title;
+	
+	/**
+	 * The description of this category.
+	 * 
+	 * @var string
+	 */
 	private $description;
+	
+	/**
+	 * The origin of this category.
+	 * 
+	 * @var boolean
+	 */
 	private $outsideCapital;
+	
+	/**
+	 * The parent of this category, if any.
+	 * 
+	 * @var object Category
+	 */
 	private $parent;
+	
+	/**
+	 * A list of all children of this category, if any.
+	 * 
+	 * @var array of Category
+	 */
 	private $children;
 	
-	public function __construct(&$badgerDb, $categoryManager, $data, $title = null, $description = null, $outsideCapital = null, $parent = null) {
+	/**
+	 * Creates a Category.
+	 * 
+	 * @param $badgerDb object The DB object.
+	 * @param $categoryManager object The CategoryManager object who created this Category.
+	 * @param $data mixed An associative array with the values out of the DB OR the id of the Category.
+	 * @param $title string The title of the Category.
+	 * @param $description string The description of the Category.
+	 * @param $outsideCapital boolean The origin of the Category.
+	 * @param $parent object Category object with the parent of the Category.
+	 */
+	public function __construct(
+		&$badgerDb,
+		&$categoryManager,
+		$data,
+		$title = null,
+		$description = null,
+		$outsideCapital = null,
+		$parent = null
+	) {
 		$this->badgerDb = $badgerDb;
 		$this->categoryManager = $categoryManager;
 		
@@ -43,14 +114,29 @@ class Category {
     	}
 	}
 	
+	/**
+	 * Returns the id.
+	 * 
+	 * @return integer The id of this category.
+	 */
 	public function getId() {
 		return $this->id;
 	}
 	
+	/**
+	 * Returns the title.
+	 * 
+	 * @return string The title of this category.
+	 */
 	public function getTitle() {
 		return $this->title;
 	}
 	
+ 	/**
+ 	 * Sets the title.
+ 	 * 
+ 	 * @param $title string The title of this category.
+ 	 */
  	public function setTitle($title) {
 		$this->title = $title;
 		
@@ -66,10 +152,20 @@ class Category {
 		}
 	}
 
+	/**
+	 * Returns the description.
+	 * 
+	 * @return string The description of this category.
+	 */
 	public function getDescription() {
 		return $this->description;
 	}
 	
+ 	/**
+ 	 * Sets the description.
+ 	 * 
+ 	 * @param $description string The description of this category.
+ 	 */
  	public function setDescription($description) {
 		$this->description = $description;
 		
@@ -85,10 +181,20 @@ class Category {
 		}
 	}
 
+	/**
+	 * Returns the origin.
+	 * 
+	 * @return boolean true if this category is outside capital.
+	 */
 	public function getOutsideCapital() {
 		return $this->outsideCapital;
 	}
 	
+ 	/**
+ 	 * Sets the origin.
+ 	 * 
+ 	 * @param $outsideCapital boolean true if this category is outside capital.
+ 	 */
  	public function setOutsideCapital($outsideCapital) {
 		$this->outsideCapital = $outsideCapital;
 		
@@ -104,6 +210,11 @@ class Category {
 		}
 	}
 
+	/**
+	 * Returns the parent.
+	 * 
+	 * @return object Category object with the parent of this category.
+	 */
 	public function getParent() {
 		if (
 			!($this->parent instanceof Category)
@@ -115,6 +226,11 @@ class Category {
 		return $this->parent;
 	}
 	
+	/**
+	 * Sets the parent.
+	 * 
+	 * @param $parent object Category object with the parent of this category.
+	 */
  	public function setParent($parent) {
 		$this->parent = $parent;
 		$parent->addChild($this);
@@ -131,6 +247,11 @@ class Category {
 		}
 	}
 
+	/**
+	 * Returns the children.
+	 * 
+	 * @return array List of Category objects with the children of this category.
+	 */
 	public function getChildren() {
 		if (!is_array($this->children)) {
 			$sql = "SELECT category_id
@@ -154,6 +275,13 @@ class Category {
 		return $this->children;
 	}
 	
+	/**
+	 * Adds a child.
+	 * 
+	 * Does no changes to the database, this is done in setParent().
+	 * 
+	 * @param $child object The Category object of the new child.
+	 */
 	private function addChild($child) {
 		$this->children[$child->getId()] = $child;
 	}

@@ -122,10 +122,25 @@ class Account extends DataGridHandler {
 	 */
 	private $currency;
 	
+	/**
+	 * The date up to when we should calculate planned transactions.
+	 * 
+	 * @var object Date
+	 */
 	private $targetFutureCalcDate;
 	
+	/**
+	 * List of planned transactions.
+	 * 
+	 * @var array
+	 */
 	private $plannedTransactions = array();
 	
+	/**
+	 * List of finished (and, after call to expandPlannedTransactions(), the expanded planned transactions).
+	 * 
+	 * @var array
+	 */
 	private $finishedTransactions = array();
 	
 	/**
@@ -135,6 +150,11 @@ class Account extends DataGridHandler {
 	 */
 	private $properties;
 
+	/**
+	 * Type of requested data (all transactions / only planned / only finished).
+	 * 
+	 * @var string
+	 */
 	private $type = null;
 	
 	/**
@@ -145,56 +165,110 @@ class Account extends DataGridHandler {
 	private $accountManager;
 	
 	/**
-	 * Have the query been executed?
+	 * Has the query to finished transactions been executed?
 	 * 
 	 * @var bool
 	 */
 	private $finishedDataFetched = false;
 	
+	/**
+	 * Has the query to planned transactions been executed?
+	 * 
+	 * @var bool
+	 */
 	private $plannedDataFetched = false;
 
 	/**
-	 * Has all data been fetched from the DB?
+	 * Has all finished data been fetched from the DB?
 	 * 
 	 * @var bool
 	 */
 	private $allFinishedDataFetched = false;
 	
+	/**
+	 * Has all planned data been fetched from the DB?
+	 * 
+	 * @var bool
+	 */
 	private $allPlannedDataFetched = false;
 	
+	/**
+	 * Has the planned data been expanded?
+	 * 
+	 * @var bool
+	 */
 	private $plannedDataExpanded = false;
 	
+	/**
+	 * The key of the current finished data element.
+	 * 
+	 * @var mixed string (if expanded) or integer  
+	 */
 	private $currentFinishedTransaction = null;
 
+	/**
+	 * The key of the current planned data element.
+	 * 
+	 * @var integer
+	 */
 	private $currentPlannedTransaction = null;
 
 	/**
-	 * The result object of the DB query.
+	 * The result object of the finished transaction DB query.
 	 * 
 	 * @var object
 	 */
 	private $dbResultFinished;
+
+	/**
+	 * The result object of the planned transaction DB query.
+	 * 
+	 * @var object
+	 */
 	private $dbResultPlanned;
 	
+	/**
+	 * The placeholder for the current table (ft or pt) in transaction type
+	 * 
+	 * @var string
+	 */
 	const TABLE_PLACEHOLDER = '__TABLE__'; 
 
 	/**
 	 * Creates an Account.
 	 * 
-	 * @param $accountManager object The AccountManager who created this Account.
-	 * @param $data array An associative array with the values out of the DB.
+	 * @param $badgerDb object The DB object.
+	 * @param $accountManager mixed The AccountManager object who created this Account OR the qp part out of getDataGridXML.php.
+	 * @param $data mixed An associative array with the values out of the DB OR the id of the Account.
+	 * @param $title string The title of the Account.
+	 * @param $description string The description of the Account.
+	 * @param $lowerLimit object An Amount object with the lower limit of the Account.
+	 * @param $upperLimit object An Amount object with the upper limit of the Account.
+	 * @param $currency object An Currency object with the currency of the Account.
 	 */
-	function __construct(&$badgerDb, &$accountManager, $data = null, $title = null, $description = null, $lowerLimit = null, $upperLimit = null, $currency = null) {
+	function __construct(
+		&$badgerDb,
+		&$accountManager,
+		$data = null,
+		$title = null,
+		$description = null,
+		$lowerLimit = null,
+		$upperLimit = null,
+		$currency = null
+	) {
 		$this->badgerDb = $badgerDb;
 		
 		$this->targetFutureCalcDate = new Date();
+		//Standard: One Year
 		$this->targetFutureCalcDate->addSeconds(1 * 365 * 24 * 60 * 60);
 		$this->type = 'transaction';
 
 		if (!is_string($accountManager)) {
+			//called with data array or all parameters
 			$this->accountManager = $accountManager;
 			
 			if (is_array($data)) {
+				//called with data array
 				$this->id = $data['account_id'];
 				$this->title = $data['title'];
 				$this->description = $data['description'];
@@ -203,6 +277,7 @@ class Account extends DataGridHandler {
 				$this->balance = new Amount($data['balance']);
 				$this->currency = new Currency($data['currency_id'], $data['currency_symbol'], $data['currency_long_name']);
 			} else {
+				//called with all parameters
 				$this->id = $data;
 				$this->title = $title;
 				$this->description = $description;
@@ -212,8 +287,10 @@ class Account extends DataGridHandler {
 				$this->balance = new Amount(0);
 			}
 		} else {
+			//called from getDataGridXML.php
 			$this->accountManager = new AccountManager(&$badgerDb);
 			
+			//Filter out given parameters
 			list($selectedId, $type, $targetDays) = explode(';', $accountManager . ';;');
 			settype($selectedId, 'integer');
 			if (in_array($type, array('transaction', 'finished', 'planned'), true)) {
@@ -226,6 +303,7 @@ class Account extends DataGridHandler {
 				$this->targetFutureCalcDate->addSeconds($targetDays * 24 * 60 * 60);
 			}
 			
+			//copy account data
 			$tmpAccount = $this->accountManager->getAccountById($selectedId);
 			
 			$this->id = $tmpAccount->getId();
@@ -237,6 +315,7 @@ class Account extends DataGridHandler {
 			$this->currency = $tmpAccount->getCurrency();
 		}
 
+		//Get all properties
     	$sql = "SELECT prop_key, prop_value
 			FROM account_property
 			WHERE account_id = " . $this->id;
@@ -306,6 +385,13 @@ class Account extends DataGridHandler {
 		return $this->fieldNames[$this->type];
 	}
 
+	/**
+	 * Returns the SQL name of the given field.
+	 * 
+	 * @param $fieldName string The field name to get the SQL name of.
+	 * @throws BadgerException If an unknown field name was given.
+	 * @return The SQL name of $fieldName.
+	 */
 	public function getFieldSQLName($fieldName) {
 		$fieldSQLNames = array (
 			'transaction' => array (
@@ -375,7 +461,7 @@ class Account extends DataGridHandler {
 
 		switch ($this->type) {
 			case 'transaction':
-				$this->getTransactions();
+				$this->fetchTransactions();
 		
 				foreach($this->finishedTransactions as $currentTransaction){
 					$result[] = array (
@@ -436,6 +522,13 @@ class Account extends DataGridHandler {
 		return $result;
 	}
 
+	/**
+	 * Returns the finished transaction identified by $finishedTransactionId.
+	 * 
+	 * @param $finishedTransactionId integer The id of the requested finished transaction.
+	 * @throws BadgerException If $finishedTransactionId is unknown to the DB.
+	 * @return object FinishedTransaction object of the finished transaction identified by $finishedTransactionId.
+	 */
 	public function getFinishedTransactionById($finishedTransactionId){
 		if ($this->finishedDataFetched) {
 			if (isset($this->finishedTransactions[$finishedTransactionId])) {
@@ -447,7 +540,8 @@ class Account extends DataGridHandler {
 					return $currentTransaction;
 				}
 			}
-		}	
+		}
+		
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 				ft.outside_capital, ft.transaction_partner, ft.category_id
 			FROM finished_transaction ft 
@@ -477,6 +571,12 @@ class Account extends DataGridHandler {
 		}
 	}
 	
+	/**
+	 * Deletes the finished transaction identified by $finishedTransactionId.
+	 * 
+	 * @param $finishedTransactionId integer The id of the finished transaction to delete.
+	 * @throws BadgerException If $finishedTransactionId is unknown to the DB.
+	 */
 	public function deleteFinishedTransaction($finishedTransactionId){
 		if(isset($this->finishedTransactions[$finishedTransactionId])){
 			unset($this->finishedTransactions[$finishedTransactionId]);
@@ -496,7 +596,28 @@ class Account extends DataGridHandler {
 		}
 	}
 	
-	public function addFinishedTransaction($amount, $title = null, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = null) {
+	/**
+	 * Adds a new finished transaction to this account.
+	 * 
+	 * @param $amount object Amount object with the amount of the new finished transaction.
+	 * @param $title string Title of the new finished transaction.
+	 * @param $description string Description of the new finished transaction.
+	 * @param $valutaDate object Date object with the valuta date of the new finished transaction.
+	 * @param $transactionPartner string Transaction partner of the new finished transaction.
+	 * @param $category object Category object with the category of the new finished transaction.
+	 * @param $outsideCapital bool True if the new finished transaction is outside capital, false otherwise.
+	 * @throws BadgerException If an error occured while inserting.
+	 * @return object The new FinishedTransaction object.
+	 */
+	public function addFinishedTransaction(
+		$amount,
+		$title = null,
+		$description = null,
+		$valutaDate = null,
+		$transactionPartner = null,
+		$category = null,
+		$outsideCapital = null
+	) {
 		$finishedTransactionId = $this->badgerDb->nextId('finishedTransactionIds');
 		
 		$sql = "INSERT INTO finished_transaction
@@ -572,6 +693,13 @@ class Account extends DataGridHandler {
 		return $this->finishedTransactions[$finishedTransactionId];	
 	}
 
+	/**
+	 * Returns the planned transaction identified by $plannedTransactionId.
+	 * 
+	 * @param $plannedTransactionId integer The id of the requested planned transaction.
+	 * @throws BadgerException If $plannedTransactionId is unknown to the DB.
+	 * @return object PlannedTransaction object of the planned transaction identified by $plannedTransactionId.
+	 */
 	public function getPlannedTransactionById($plannedTransactionId){
 		if ($this->plannedDataFetched) {
 			if (isset($this->plannedTransactions[$plannedTransactionId])) {
@@ -614,6 +742,12 @@ class Account extends DataGridHandler {
 		}
 	}
 	
+	/**
+	 * Deletes the planned transaction identified by $plannedTransactionId.
+	 * 
+	 * @param $plannedTransactionId integer The id of the planned transaction to delete.
+	 * @throws BadgerException If $plannedTransactionId is unknown to the DB.
+	 */
 	public function deletePlannedTransaction($plannedTransactionId){
 		if(isset($this->plannedTransactions[$plannedTransactionId])){
 			unset($this->plannedTransactions[$plannedTransactionId]);
@@ -633,6 +767,22 @@ class Account extends DataGridHandler {
 		}
 	}
 	
+	/**
+	 * Adds a new planned transaction to this account.
+	 * 
+	 * @param $title string Title of the new planned transaction.
+	 * @param $amount object Amount object with the amount of the new planned transaction.
+	 * @param $repeatUnit string The repeat unit (day, week, month, year) of the new planned transaction.
+	 * @param $repeatFrequency integer The repeat frequency of the new planned transaction.
+	 * @param $beginDate object Date object with the begin date of the new planned transaction.
+	 * @param $endDate object Date object with the end date of the new planned transaction.
+	 * @param $description string Description of the new planned transaction.
+	 * @param $transactionPartner string Transaction partner of the new planned transaction.
+	 * @param $category object Category object with the category of the new planned transaction.
+	 * @param $outsideCapital bool True if the new planned transaction is outside capital, false otherwise.
+	 * @throws BadgerException If an error occured while inserting.
+	 * @return object The new PlannedTransaction object.
+	 */
 	public function addPlannedTransaction(
 		$title,
 		$amount,
@@ -744,6 +894,11 @@ class Account extends DataGridHandler {
 		return $this->title;
 	}
 	
+	/**
+	 * Sets the title.
+	 * 
+	 * @param $title string The title of this account.
+	 */
 	public function setTitle($title) {
 		$this->title = $title;
 		
@@ -768,6 +923,11 @@ class Account extends DataGridHandler {
 		return $this->description;
 	}
 	
+	/**
+	 * Sets the description.
+	 * 
+	 * @param $description string The description of this account.
+	 */
 	public function setDescription($description) {
 		$this->description = $description;
 		
@@ -792,6 +952,11 @@ class Account extends DataGridHandler {
 		return $this->lowerLimit;
 	}
 	
+	/**
+	 * Sets the lower limit.
+	 * 
+	 * @param $lowerLimit object Amount object with the lower limit of this account. 
+	 */
 	public function setLowerLimit($lowerLimit) {
 		$this->lowerLimit = $lowerLimit;
 		
@@ -816,6 +981,11 @@ class Account extends DataGridHandler {
 		return $this->upperLimit;
 	}
 	
+	/**
+	 * Sets the upper limit.
+	 * 
+	 * @param $upperLimit object Amount object with the upper limit of this account. 
+	 */
 	public function setUpperLimit($upperLimit) {
 		$this->upperLimit = $upperLimit;
 		
@@ -849,6 +1019,11 @@ class Account extends DataGridHandler {
 		return $this->currency;
 	}
 
+	/**
+	 * Sets the currency.
+	 * 
+	 * @param $currency object Currency object with the currency of this account.
+	 */
 	public function setCurrency($currency) {
 		$this->currency = $currency;
 		
@@ -864,14 +1039,33 @@ class Account extends DataGridHandler {
 		}
 	}
 	
+	/**
+	 * Returns the date up to when the planned transactions will be expanded.
+	 * 
+	 * @return object A Date object with the date up to when the planned transactions will be expanded.
+	 */
 	public function getTargetFutureCalcDate() {
 		return $this->targetFutureCalcDate;
 	}
 	
+	/**
+	 * Sets the date up to when the planned transactions will be expanded.
+	 * 
+	 * @param $date object A Date object with the date up to when the planned transactions will be expanded.
+	 */
 	public function setTargetFutureCalcDate($date) {
 		$this->targetFutureCalcDate = $date;
 	}
 	
+	/**
+	 * Expands the planned transactions.
+	 * 
+	 * All occurences of planned transactions between now and the targetFutureCalcDate will be inserted
+	 * in finishedTransactions. For distinction the planned transactions will have a 'p' as first character
+	 * in their id.
+	 * 
+	 * @throws BadgerException If an illegal repeat unit is used.
+	 */
 	public function expandPlannedTransactions(){
 		$now = new Date();
 		
@@ -885,9 +1079,11 @@ class Account extends DataGridHandler {
 //			echo 'date: ' . $date->getDate() . "\n";
 			$dayOfMonth = $date->getDay();
 //			echo 'date: ' . $date->getDate() . "\n";
+			//While we have not reached targetFutureCalcDate
 			while($this->targetFutureCalcDate->after($date)){
 //				echo 'date: ' . $date->getDate() . "\n";
 				$inRange = true;
+				//Check if there is one or more valutaDate filter and apply them
 				foreach ($this->filter as $currentFilter) {
 					if ($currentFilter['key'] == 'valutaDate') {
 						switch ($currentFilter['op']) {
@@ -957,6 +1153,7 @@ class Account extends DataGridHandler {
 						'PlannedTransaction'
 					);
 				}
+				//do the date calculation
 				switch ($currentTransaction->getRepeatUnit()){
 					case 'day': 
 						$date->addSeconds($currentTransaction->getRepeatFrequency() * 24 * 60 * 60);
@@ -967,7 +1164,9 @@ class Account extends DataGridHandler {
 						break;
 						
 					case 'month':
+						//Set the month
 						$date = new Date(Date_Calc::endOfMonthBySpan($currentTransaction->getRepeatFrequency(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+						//And count back as far as the last valid day of this month
 						while($date->getDay() > $dayOfMonth){
 							$date->subtractSeconds(24 * 60 * 60);
 						}
@@ -996,16 +1195,27 @@ class Account extends DataGridHandler {
 		} 
 	}
 
+	/**
+	 * Resets the internal counter of finished transactions.
+	 */
 	public function resetFinishedTransactions() {
 		reset($this->finishedTransactions);
 		$this->currentFinishedTransaction = null;
 	}
 	
+	/**
+	 * Resets the internal counter of planned transactions.
+	 */
 	public function resetPlannedTransaction() {
 		reset($this->plannedTransactions);
 		$this->currentPlannedTransaction = null;
 	}
 	
+	/**
+	 * Returns the next finished transaction.
+	 * 
+	 * @return mixed The next FinishedTransaction object or false if we are at the end of the list.
+	 */
 	public function getNextFinishedTransaction() {
 		if (!$this->allFinishedDataFetched) {
 			$this->fetchNextFinishedTransaction();
@@ -1014,6 +1224,11 @@ class Account extends DataGridHandler {
 		return nextByKey($this->finishedTransactions, $this->currentFinishedTransaction);
 	}
 	
+	/**
+	 * Returns the next planned transaction.
+	 * 
+	 * @return mixed The next PlannedTransaction object or false if we are at the end of the list.
+	 */
 	public function getNextPlannedTransaction() {
 		if (!$this->allPlannedDataFetched) {
 			$this->fetchNextPlannedTransaction();
@@ -1022,8 +1237,16 @@ class Account extends DataGridHandler {
 		return nextByKey($this->plannedTransactions, $this->currentPlannedTransaction);
 	}
 	
+	/**
+	 * Returns the next transaction.
+	 * 
+	 * Essentially the same as getNextFinishedTransaction, but first fetches all planned transactions
+	 * and expands them.
+	 * 
+	 * @return mixed The next FinishedTransaction object or false if we are at the end of the list.
+	 */
 	public function getNextTransaction() {
-		$this->getTransactions();
+		$this->fetchTransactions();
 		
 		return nextByKey($this->finishedTransactions, $this->currentFinishedTransaction);
 	}
@@ -1096,7 +1319,10 @@ class Account extends DataGridHandler {
     	}
     }
 
-	private function getTransactions() {
+	/**
+	 * Fetches all planned and finished transactions, expands the planned transactions and sorts the finishedTransaction array.
+	 */
+	private function fetchTransactions() {
 		if ($this->allPlannedDataFetched && $this->allFinishedDataFetched && $this->plannedDataExpanded) {
 			return;
 		}
@@ -1111,6 +1337,11 @@ class Account extends DataGridHandler {
 		$this->plannedDataExpanded = true;
 	}
 	
+	/**
+	 * Fetches the next finished transaction from DB.
+	 * 
+	 * @return mixed The fetched FinishedTransaction object or false if there are no more.
+	 */
 	private function fetchNextFinishedTransaction() {
 		$this->fetchFinishedFromDB();
 
@@ -1126,6 +1357,11 @@ class Account extends DataGridHandler {
 		
 	}
 
+	/**
+	 * Fetches the next planned transaction from DB.
+	 * 
+	 * @return mixed The fetched PlannedTransaction object or false if there are no more.
+	 */
 	private function fetchNextPlannedTransaction() {
 		$this->fetchPlannedFromDB();
 
@@ -1142,7 +1378,7 @@ class Account extends DataGridHandler {
 	}
 
 	/**
-	 * Prepares and executes the SQL query.
+	 * Prepares and executes the SQL query for finished transactions.
 	 * 
 	 * @throws BadgerException If an SQL error occured.
 	 */
@@ -1183,6 +1419,11 @@ class Account extends DataGridHandler {
 		$this->finishedDataFetched = true; 	
 	}
 
+	/**
+	 * Prepares and executes the SQL query for planned transactions.
+	 * 
+	 * @throws BadgerException If an SQL error occured.
+	 */
 	private function fetchPlannedFromDB() {
 		if ($this->plannedDataFetched) {
 			return;
@@ -1230,6 +1471,16 @@ class Account extends DataGridHandler {
 		$this->plannedDataFetched = true;
 	}
 
+	/**
+	 * Compares two transactions according to $this->order.
+	 * 
+	 * For use with usort type of sort functions.
+	 * 
+	 * @param $aa object The first FinishedTransaction object.
+	 * @param $bb object The second FinishedTransaction object.
+	 * 
+	 * @return integer -1 if $aa is smaller than $bb, 0 if they are equal, 1 if $aa is bigger than $bb.
+	 */
 	function transactionCompare($aa, $bb) {
 		$tmp = 0;
 

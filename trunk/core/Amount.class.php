@@ -190,6 +190,12 @@ class Amount {
 		return $this;
 	}
 	
+	/**
+	 * Compares this Amount to $b.
+	 * 
+	 * @param $b object The Amount object to compare with.
+	 * @return integer -1 if this is smaller than $b, 0 if they are equal, 1 if this is bigger than $b.
+	 */
 	public function compare($b) {
 		if ($b instanceof Amount) {
 			return bccomp($this->amount, $b->amount);

@@ -15,21 +15,119 @@ require_once BADGER_ROOT . '/core/Date.php';
 require_once BADGER_ROOT . '/core/Amount.class.php';
 require_once BADGER_ROOT . '/modules/account/Category.class.php';
 
+/**
+ * A finished transaction.
+ * 
+ * @author Eni Kao, Mampfred
+ * @version $LastChangedRevision$
+*/
 class FinishedTransaction {
+	/**
+	 * The DB object.
+	 * 
+	 * @var object DB
+	 */
 	private $badgerDb;
+
+	/**
+	 * The Account this category belongs to.
+	 * 
+	 * @var object Account
+	 */
 	private $account;
 	
+	/**
+	 * The id of this transaction.
+	 * 
+	 * @var integer
+	 */
 	private $id;
+
+	/**
+	 * The title of this transaction.
+	 * 
+	 * @var string
+	 */
 	private $title;
+
+	/**
+	 * The description of this transaction.
+	 * 
+	 * @var string
+	 */
 	private $description;
+
+	/**
+	 * The valuta date of this transaction.
+	 * 
+	 * @var object Date
+	 */
 	private $valutaDate;
+
+	/**
+	 * The amount of this transaction.
+	 * 
+	 * @var object Amount
+	 */
 	private $amount;
+
+	/**
+	 * The origin of this transaction.
+	 * 
+	 * @var boolean
+	 */
 	private $outsideCapital;
+
+	/**
+	 * The transaction partner of this transaction.
+	 * 
+	 * @var string
+	 */
 	private $transactionPartner;
+
+	/**
+	 * The category of this transaction.
+	 * 
+	 * @var object Category
+	 */
 	private $category;
+
+	/**
+	 * The type of this transaction.
+	 * 
+	 * 'FinishedTransaction' or 'PlannedTransaction' (a expanded one)
+	 * 
+	 * @var string
+	 */
 	private $type;
 	
-    function __construct(&$badgerDb, $account, $data, $title = null, $amount = null, $description = null, $valutaDate = null, $transactionPartner = null, $category = null, $outsideCapital = null, $type = 'FinishedTransaction') {
+	/**
+	 * Creates a Finished Transaction.
+	 * 
+	 * @param $badgerDb object The DB object.
+	 * @param $account object The Account object who created this Transaction.
+	 * @param $data mixed An associative array with the values out of the DB OR the id of the Transaction.
+	 * @param $title string The title of the Transaction.
+	 * @param $amount object The Amount object with the amount of this Transaction.
+	 * @param $description string The description of the Transaction.
+	 * @param $valutaDate object The Date object with the valuta date of the Transaction.
+	 * @param $transactionPartner string The transaction partner of the Transaction
+	 * @param $outsideCapital boolean The origin of the Transaction.
+	 * @param $type string The type of the Transaction.
+	 */
+    function __construct(
+    	&$badgerDb,
+    	&$account,
+    	$data,
+    	$title = null,
+    	$amount = null,
+    	$description = null,
+    	$valutaDate = null,
+    	$transactionPartner = null,
+    	$category = null,
+    	$outsideCapital = null,
+    	$type = 'FinishedTransaction'
+    ) {
     	$this->badgerDb = $badgerDb;
     	$this->account = $account;
     	
@@ -63,14 +161,29 @@ class FinishedTransaction {
     	}
     }
     
+	/**
+	 * Returns the id.
+	 * 
+	 * @return integer The id of this transaction.
+	 */
     public function getId() {
     	return $this->id;
     }
     
+	/**
+	 * Returns the title.
+	 * 
+	 * @return string The title of this transaction.
+	 */
     public function getTitle() {
     	return $this->title;
     }
     
+ 	/**
+ 	 * Sets the title.
+ 	 * 
+ 	 * @param $title string The title of this transaction.
+ 	 */
  	public function setTitle($title) {
 		$this->title = $title;
 		
@@ -86,10 +199,20 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the description.
+	 * 
+	 * @return string The description of this transaction.
+	 */
     public function getDescription() {
     	return $this->description;
     }
     
+ 	/**
+ 	 * Sets the description.
+ 	 * 
+ 	 * @param $description string The description of this transaction.
+ 	 */
  	public function setDescription($description) {
 		$this->description = $description;
 		
@@ -105,10 +228,20 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the valuta date.
+	 * 
+	 * @return object The Date object with the valuta date of this transaction.
+	 */
     public function getValutaDate() {
     	return $this->valutaDate;
     }
     
+ 	/**
+ 	 * Sets the valuta date.
+ 	 * 
+ 	 * @param $valutaDate object The Date object with the valuta date of this transaction.
+ 	 */
  	public function setValutaDate($valutaDate) {
 		$this->valutaDate = $valutaDate;
 		
@@ -124,10 +257,20 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the amount.
+	 * 
+	 * @return object The Amount object with the amount of this transaction.
+	 */
     public function getAmount() {
     	return $this->amount;
     }
     
+ 	/**
+ 	 * Sets the amount.
+ 	 * 
+ 	 * @param $amount object The Amount object with the amount of this transaction.
+ 	 */
  	public function setAmount($amount) {
 		$this->amount = $amount;
 		
@@ -143,10 +286,20 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the origin.
+	 * 
+	 * @return boolean true if this transaction is outside capital.
+	 */
     public function getOutsideCapital() {
     	return $this->outsideCapital;
     }
     
+ 	/**
+ 	 * Sets the origin.
+ 	 * 
+ 	 * @param $outsideCapital boolean true if this transaction is outside capital.
+ 	 */
  	public function setOutsideCapital($outsideCapital) {
 		$this->outsideCapital = $outsideCapital;
 		
@@ -162,10 +315,20 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the transaction partner.
+	 * 
+	 * @return string The transaction partner of this transaction.
+	 */
     public function getTransactionPartner() {
     	return $this->transactionPartner;
     }
     
+ 	/**
+ 	 * Sets the transaction partner.
+ 	 * 
+ 	 * @param $transactionPartner string The transaction partner of this transaction.
+ 	 */
  	public function setTransactionPartner($transactionPartner) {
 		$this->transactionPartner = $transactionPartner;
 		
@@ -181,10 +344,20 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the category.
+	 * 
+	 * @return object The Category object with the category of this transaction.
+	 */
     public function getCategory() {
     	return $this->category;
     }
  
+ 	/**
+ 	 * Sets the Category.
+ 	 * 
+ 	 * @param $category object The Category object with the category of this transaction.
+ 	 */
  	public function setCategory($category) {
 		$this->category = $category;
 		
@@ -200,6 +373,11 @@ class FinishedTransaction {
 		}
 	}
 	
+	/**
+	 * Returns the type.
+	 * 
+	 * @return string The type of this transaction.
+	 */
 	public function getType() {
 		return $this->type;
 	}

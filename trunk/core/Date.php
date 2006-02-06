@@ -152,6 +152,7 @@ class Date
      * @access public
      * @see setDate()
      * @param mixed $date optional - date/time to initialize
+     * @param boolean $formatted true if $date is formatted according to UserSettings, false otherwise.
      * @return object Date the new Date object
      */
     function Date($date = null, $formatted = false)
@@ -304,6 +305,11 @@ class Date
         $this->tz = $date->tz;
     }
 
+	/**
+	 * Returns the date formatted according to UserSettings.
+	 * 
+	 * @return string The date formatted according to UserSettings.
+	 */
 	public function getFormatted() {
 		global $us;
 		
