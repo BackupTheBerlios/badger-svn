@@ -161,7 +161,7 @@ class CurrencyManager extends DataGridHandler {
 		
 		$result = array();
 		
-		foreach($this->currency as $currentCurrency){
+		foreach($this->currencies as $currentCurrency){
 			$result[] = array (
 				'currencyId' => $currentCurrency->getId(),
 				'symbol' => $currentCurrency->getSymbol(),

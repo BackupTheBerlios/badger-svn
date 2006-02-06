@@ -45,5 +45,12 @@ function testLink($text, $link) {
 			testLink('Alle Kategorien', 'q=CategoryManager');
 		?>
 	</dl>
+
+	<h1>CurrencyManager</h1>
+	<dl>
+		<?php
+			testLink('Alle Währungen', 'q=CurrencyManager');
+		?>
+	</dl>
 </body>
 </html>
