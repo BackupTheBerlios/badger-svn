@@ -288,7 +288,7 @@ class CategoryManager extends DataGridHandler {
 	 * @throws BadgerException insertError If the account cannot be inserted.
 	 * @return object The new Account object.
 	 */
-	public function addCategory($title, $description = null, $outsideCapital = false) {
+	public function addCategory($title, $description = null, $outsideCapital = null) {
 		$categoryId = $this->badgerDb->nextId('categoryIds');
 		
 		$sql = "INSERT INTO category
