@@ -1271,7 +1271,7 @@ class Account extends DataGridHandler {
      * sets property $key to $value
      * 
      * @param string $key key of the target value
-     * @param mixed value the value referneced by $key can be every serializable php data
+     * @param string $value the value referneced by $key 
      * @return void
      */
     public function setProperty($key, $value) {
