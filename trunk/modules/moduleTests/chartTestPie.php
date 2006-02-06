@@ -4,8 +4,8 @@
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
 
 //change the chart to a bar chart
-$chart [ 'chart_type' ] = "pie";
+$piechart [ 'chart_type' ] = "pie";
 
-SendChartData ();
+SendChartData ( $piechart );
 
 ?>

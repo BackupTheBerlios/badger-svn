@@ -4,8 +4,8 @@
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
 
 //change the chart to a bar chart
-$chart [ 'chart_type' ] = "line";
+$linechart [ 'chart_type' ] = "line";
 
-SendChartData ();
+SendChartData ( $linechart );
 
 ?>
