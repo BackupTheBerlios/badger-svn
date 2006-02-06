@@ -466,7 +466,7 @@ class PlannedTransaction {
  	/**
  	 * Sets the repeat frequency.
  	 * 
- 	 * @param $repeatFrequency string The repeat frequency of this transaction.
+ 	 * @param $repeatFrequency int The repeat frequency of this transaction.
  	 */
  	public function setRepeatFrequency($repeatFrequency) {
 		$this->repeatFrequency = $repeatFrequency;
