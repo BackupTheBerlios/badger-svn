@@ -20,9 +20,24 @@
 #ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
 
 /**
+ * The current Version of BADGER
+ */
+define('BADGER_VERSION', '0.5');
+
+/**
  * Common functions
  */
 require_once BADGER_ROOT . '/core/common.php';
+
+/**
+ * Date class
+ */
+require_once BADGER_ROOT . '/core/Date.php';
+
+/**
+ * Amount class
+ */
+require_once BADGER_ROOT . '/core/Amount.class.php';
 
 /**
  * makes use of the dbAdapter database abstraction layer

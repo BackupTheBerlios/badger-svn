@@ -33,8 +33,8 @@ body, table {
 
 /* FORMS */
 label {
-	float: left;
-	text-align: right;
+/*	float: left;
+	text-align: right;*/
 	cursor: pointer;	
 }
 label.mandatory {
