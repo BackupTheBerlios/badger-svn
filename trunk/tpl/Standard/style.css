@@ -24,6 +24,7 @@ body, table {
 	font-size: 8pt;
 }
 
+/* sperber: CSV-Report */
 #scroll {
 	height: 450px;
 	width: 100%;
@@ -63,28 +64,25 @@ input.inputNumberMinus {
 	text-align: right;
 	color: #F50000;
 }
-
 /* END FORMS */
+
 
 /* SUGGEST */
 .SuggestFramework_List {
 	border: 1px solid #CCCCCC;
 	border-top: 0;
 }
-
 .SuggestFramework_Heading {
 	padding: 0 1px 0 1px;
 	background-color: #CCCCCC;
 	color: #FFFFFF;
 	font-weight: bold;
 }
-
 .SuggestFramework_Highlighted {
 	padding: 0 1px 0 1px;
 	background-color: Highlight;
 	color: HighlightText;
 }
-
 .SuggestFramework_Normal {
 	padding: 0 1px 0 1px;
 	background-color: #FFFFFF;
@@ -122,5 +120,13 @@ input.inputNumberMinus {
 /* USER SETTINGS ADMIN END*/
 
 /* FORM VALIDATION  BEGIN */
-input.error, select.error {padding-right: 16px; border: 1px solid red; background-color: #FFFCE2; background-image: url(images/warning_obj.gif); background-position: right; background-repeat: no-repeat;}
+input.error, select.error {
+	padding-right: 16px;
+	border: 1px solid red;
+	background-color: #FFFCE2;
+	/*
+	background-image: url(images/warning_obj.gif);
+	background-position: right;
+	background-repeat: no-repeat; -> unused*/
+}
 /* FORM VALIDATION  END */
