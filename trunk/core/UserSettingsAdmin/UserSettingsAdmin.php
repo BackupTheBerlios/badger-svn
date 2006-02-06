@@ -31,7 +31,7 @@ echo $widgets->addToolTipLayer();
 if( isset( $_POST['SubmitUserSettings'] ) ){
 	// Validate submitted values
 	// Is yet to be implemented
-	// So let´s just say that all is well for now
+	// So letï¿½s just say that all is well for now
 
 	$validation_user_settings = true;
 	$validation_user_settings_errors = "";
@@ -100,11 +100,11 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		$us->setProperty('badgerMaxLoginAttempts',$_POST['MaximumLoginAttempts']);
 		$us->setProperty('badgerLockOutTime',$_POST['LockOutTime']);
 		if($_POST['Seperators'] == ".,"){
-			$us->setProperty('badgerDecimalSeperator',",");
-			$us->setProperty('badgerThousandSeperator',".");
+			$us->setProperty('badgerDecimalSeparator',",");
+			$us->setProperty('badgerThousandSeparator',".");
 		}else{
-			$us->setProperty('badgerDecimalSeperator',".");
-			$us->setProperty('badgerThousandSeperator',",");
+			$us->setProperty('badgerDecimalSeparator',".");
+			$us->setProperty('badgerThousandSeparator',",");
 		};
 		if($change_password == true){
 			$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
@@ -167,7 +167,7 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 			",." => "12,345.67"
 		);
 		
-		if($us->getProperty('badgerDecimalSeperator') == ","){
+		if($us->getProperty('badgerDecimalSeparator') == ","){
 			$seperators_default = ".,";
 		}else{
 			$seperators_default = ",.";
