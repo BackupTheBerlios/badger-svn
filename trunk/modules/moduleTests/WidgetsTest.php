@@ -19,9 +19,20 @@ $widgets->addCalendarJS();
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Seitenname");
-echo $widgets->getNavigationBody();
+echo $widgets->getNavigationBody(); 
 ?>
-	<form name="mainform">
+<script>
+/***************************************************************
+** Standard translation
+*****************************************************************/
+function _jsVal_Language() {
+    this.err_form = "Please enter/select values for the following fields:\n\n";
+    this.err_select = "Please select a valid \"%FIELDNAME%\"";
+    this.err_enter = "Please enter a valid \"%FIELDNAME%\"";
+};
+
+</script>
+	<form name="mainform" onSubmit="return validateCompleteForm(this, 'error');">
 		<?php
 		
 		echo "<br />";
@@ -37,7 +48,9 @@ echo $widgets->getNavigationBody();
 		echo $widgets->createLabel("fieldname", "name:", true);
 		echo "&nbsp;";
 		echo $widgets->createField("fieldname", 25, "value", "description", true);
-		echo "<br /><br />";		
+		echo "<br /><br />";
+		echo $widgets->createField("passwortfeld", 25, "value", "description", true, "password", "minlength='30''");
+		echo "<br /><br />";	
 		echo $widgets->createButton("button", "klick mich", "submit", "navigation/cancel.gif");
 		echo "<br /><br />";
 		echo $widgets->addImage("navigation/cancel.gif");
