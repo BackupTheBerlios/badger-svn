@@ -292,7 +292,7 @@ if($passwordcorrect == false)
 		//print("<br/><a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=true\">".getBadgerTranslation2('badger_login', 'forgot_password')."</a>");
 		//print("</form><br />");
 		
-		eval("echo \"".$tpl->getTemplate("Login/login")."\";");
+		eval("echo \"".$tpl->getTemplate("Login/login2")."\";");
 		
 		if(isset($_POST['password']) && $_POST['password'] == ""){
 			print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");
