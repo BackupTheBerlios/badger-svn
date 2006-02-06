@@ -21,7 +21,7 @@ echo $widgets->addToolTipLayer();
         Name: <input type="text" required="1" regexp="/^\w*$/" name="name"><br />
         Password: <input type="password" required="1" minlength="3" maxlength="8" name="password"><br />
         Alter: <input type="text" name="age" id="age" maxlength="3" size="3" required="1" minvalue="10" maxvalue="90" /><br />
-        Asche: <input type="text" required="1" regexp="money" name="asche"><br />
+        Asche: <input type="text" required="1" regexp="JSVAL_RX_MONEY" name="asche"><br />
         
         <input type="submit" value="test">
 
