@@ -33,8 +33,6 @@ function handleBadgerException($e){
 	echo "<b>" ;
 	echo getBadgerTranslation2( 'badgerException' , 'Error' );
 	echo "</b><br />";
-	echo getBadgerTranslation2( 'badgerException' , 'Errorcode');
-	echo ": ";
 	echo getBadgerTranslation2( $e->getBadgerErrorPage(), $e->getBadgerErrorId());	
 
 	/**
