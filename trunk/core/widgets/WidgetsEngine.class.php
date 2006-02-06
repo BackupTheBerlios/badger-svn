@@ -24,12 +24,13 @@ class WidgetEngine {
 	private $ToolTipLayerAdded = false;
 	private $AutoCompleteJSAdded = false;
 	private $CalendarJSAdded = false;	
-	private $TplEngine;
+	private $tpl;
 	private $settings;
+	private $writtenHeader = false;
 	
-	public function __construct($TplEngine) {
-		$this->TplEngine = $TplEngine;
-		$this->settings = $this->TplEngine->getSettingsObj();
+	public function __construct($tpl) {
+		$this->tpl = $tpl;
+		$this->settings = $this->tpl->getSettingsObj();
 	}
 	
 	private function getFormatedDateToday($format) {
@@ -40,24 +41,28 @@ class WidgetEngine {
 		return date($format, time());
 	}
 	public function addToolTipJS() {
-		$this->TplEngine->addJavaScript("js/overlib_mini.js");
-		$this->TplEngine->addJavaScript("js/overlib_cssw3c.js");
+		$this->tpl->addJavaScript("js/overlib_mini.js");
+		$this->tpl->addJavaScript("js/overlib_cssw3c.js");
 		$this->ToolTipJSAdded = true;
 	}
 	public function addCalendarJS() {
-		$this->TplEngine->addJavaScript("js/calendar.js.php?badgerRoot=".$this->TplEngine->getBadgerRoot());
-		$this->TplEngine->addOnLoadEvent("initCalendar();");
+		$this->tpl->addJavaScript("js/calendar.js.php?badgerRoot=".$this->tpl->getBadgerRoot());
+		$this->tpl->addOnLoadEvent("initCalendar();");
 		$this->CalendarJSAdded = true;
 	}
 	public function addAutoCompleteJS() {
-		$this->TplEngine->addJavaScript("js/SuggestFramework.js");
-		$this->TplEngine->addOnLoadEvent("initializeSuggestFramework();");
+		$this->tpl->addJavaScript("js/SuggestFramework.js");
+		$this->tpl->addOnLoadEvent("initializeSuggestFramework();");
 		$this->AutoCompleteJSAdded = true;
 	}
 	
 	public function addToolTipLayer() {
-		$this->ToolTipLayerAdded = true;
-		return "<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"></div>\n";	
+		if ($this->tpl->isHeaderWritten()) {		
+			$this->ToolTipLayerAdded = true;
+			return "<div id=\"overDiv\" style=\"position:absolute; visibility:hidden; z-index:1000;\"></div>\n";	
+		} else {
+			throw new badgerException('widgetsEngine', 'HeaderIsNotWritten', 'Function: addToolTipLayer()'); 
+		}
 	}
 	
 	public function addToolTipLink($link, $text, $linkname) {
@@ -65,10 +70,10 @@ class WidgetEngine {
 			if ($this->ToolTipLayerAdded) {
 				return "<a href=\"".$link."\" class=\"ToolTip\" onmouseover=\"return overlib('".$text."', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\">".$linkname."</a>\n";
 			} else 	{
-				throw new badgerException('widgetsEngine.ToolTipLayerNotAdded', '');
+				throw new badgerException('widgetsEngine', 'ToolTipLayerNotAdded');
 			}
 		} else {
-			throw new badgerException('widgetsEngine.ToolTipJSNotAdded', ''); 
+			throw new badgerException('widgetsEngine', 'ToolTipJSNotAdded'); 
 		}
 		
 	}
@@ -79,10 +84,10 @@ class WidgetEngine {
 		$strDateField = ""; 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
-			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->TplEngine->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
+			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->tpl->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
 			return $strDateField;
 		} else {
-			throw new badgerException('widgetsEngine.CalendarJSNotAdded', ''); 
+			throw new badgerException('widgetsEngine', 'CalendarJSNotAdded'); 
 		}
 	}
 	
@@ -90,7 +95,7 @@ class WidgetEngine {
 		if($this->AutoCompleteJSAdded) {
 			return "<input id=\"".$fieldname."\" name=\"".$fieldname."\" type=\"text\" action=\"autocomplete.html\" />";
 		} else {
-			throw new badgerException('widgetsEngine.AutoCompleteJSNotAdded', ''); 
+			throw new badgerException('widgetsEngine', 'AutoCompleteJSNotAdded'); 
 		}
 	}
 	
@@ -102,7 +107,11 @@ class WidgetEngine {
 		}
 	}
 	
-	public function createField($fieldname, $size, $value="", $description="", $mandatory=false, $type="text"){
+	public function createField($fieldname, $size, $value="", $description="", $mandatory=false, $type="text", $valCondition=""){
+		// 'required' and 'regexp' are no XHTML attributes to input field
+		// -> we've to add an extended namespace
+		
+		// formatings of numbers
 		if (is_numeric($value)) {
 			if ($value<0) {
 				$class = "inputNumberMinus";
@@ -112,10 +121,17 @@ class WidgetEngine {
 		} else {
 			$class = "inputString";
 		}
-			
-		$output = "<input type='$type' id='$fieldname' name='$fieldname' size='$size' class='$class' value='$value' />";
+		
+		//$valCondition
+		//example:
+		//    minvalue="10" maxvalue="90" regexp="money"
+
+		//required
+		$mandatory = (($mandatory) ? "1" : "0");
+		
+		$output = "<input type='$type' id='$fieldname' name='$fieldname' size='$size' class='$class' value='$value' required='$mandatory' $valCondition />";
 		if($description) {
-			$helpImg = "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/Widgets/help.gif' border='0' />";
+			$helpImg = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
 			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
 		return $output;
@@ -137,40 +153,47 @@ class WidgetEngine {
 			
 		return $output;
 	}
+	
 	public function addImage($file) {
-		return "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/$file' />";
+		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' />";
 	}
+	
 	public function createSelectField($name, $options, $default="", $description="", $mandatory=false) {	
 		$selectField = "<select name='$name' id='$name'>\n";
 		if(isset($options)) {
 			foreach( $options as $key=>$value ){
+				//default value
 				$selected = (($key==$default) ? "selected" : "");
+				//options 
 				$selectField .= "\t<option $selected value='$key'>$value</option>\n";
 			};
-			/*
-			for ($i=0; $i < count($values); $i++) {
-				$selected = (($ids[$i]==$default) ? "selected" : "");
-				$selectField .= "\t<option $selected value='$ids[$i]'>$values[$i]</option>\n";
-			}
-			*/
 		}
 		$selectField .= "</select>\n";
 		if($description) {
-			$helpImg = "<img src='".$this->TplEngine->getBadgerRoot()."/tpl/".$this->TplEngine->getThemeName()."/Widgets/help.gif' border='0' />";
+			$helpImg = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
 			$selectField .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
 		return $selectField;
 	}
 	function addNavigationHead() {
-		//Navigation Head
 		$tplNavigationHead = "";
-		eval("\$tplNavigationHead = \"".$this->TplEngine->getTemplate("Navigation/header")."\";");
-		$this->TplEngine->addHeaderTag($tplNavigationHead);	
+		//Navigation Head
+		if (!$this->tpl->isHeaderWritten()) {
+			eval("\$tplNavigationHead = \"".$this->tpl->getTemplate("Navigation/header")."\";");
+			$this->tpl->addHeaderTag($tplNavigationHead);
+		} else {
+			throw new badgerException('widgetsEngine', 'HeaderIsAlreadyWritten', 'Function: addNavigationHead()'); 
+		}
+		
 	}
 	function getNavigationBody() {
-		//Navigation Body
 		$tplNavigationBody = "";
-		eval("\$tplNavigationBody = \"".$this->TplEngine->getTemplate("Navigation/body")."\";");
-		return $tplNavigationBody;
+		//Navigation Body
+		if ($this->tpl->isHeaderWritten()) {
+			eval("\$tplNavigationBody = \"".$this->tpl->getTemplate("Navigation/body")."\";");
+			return $tplNavigationBody;
+		} else {
+			throw new badgerException('widgetsEngine', 'HeaderIsNotWritten', 'Function: getNavigationBody()'); 
+		}		
 	}
 }
