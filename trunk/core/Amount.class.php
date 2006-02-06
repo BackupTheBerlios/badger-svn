@@ -32,8 +32,6 @@ class Amount {
 	 * @param $amount string The amount.
 	 */
 	public function Amount($amount = 0, $formatted = false) {
-		global $us;
-		
 		bcscale(2);
 		
 		$this->set($amount, $formatted);
@@ -115,6 +113,8 @@ class Amount {
 	 * @param $amount string The new amount.
 	 */
 	public function set($amount, $formatted = false) {
+		global $us;
+		
 		if ($formatted) {
 			$amount = str_replace(
 				array ($us->getProperty('badgerThousandSeparator'), $us->getProperty('badgerDecimalSeparator')),
