@@ -23,6 +23,7 @@ class TemplateEngine {
 	private $additionalHeaderTags;
 	private $settings;
 	private $jsOnLoadEvents = array();
+	private $writtenHeader = false;
 
 	function __construct($settings, $badgerRoot) {
 		$this->settings = $settings;
@@ -41,7 +42,7 @@ class TemplateEngine {
 				$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
 				$templatefile=str_replace("{BADGER_ROOT}",$this->badgerRoot,$templatefile);
 			} else 	{
-				throw new badgerException('templateEngine.noTemplate', $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl'); 
+				throw new badgerException('templateEngine', 'noTemplate', $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl'); 
 				//$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
 			}
 			$templatefile = preg_replace("'<if ([^>]*?)>(.*?)</if>'si", "\".( (\\1) ? \"\\2\" : \"\").\"", $templatefile);
@@ -81,6 +82,7 @@ class TemplateEngine {
 		}
 		
 		// write complete header
+		$this->writtenHeader = true;
 		return eval("echo \"".$this->getTemplate($template)."\";");		
 	}
 	
@@ -102,6 +104,9 @@ class TemplateEngine {
 	}
 	public function getBadgerRoot() {
 		return $this->badgerRoot;
+	}
+	public function isHeaderWritten() {
+		return $this->writtenHeader;
 	}
 
 }
