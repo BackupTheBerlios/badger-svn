@@ -14,48 +14,46 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php');
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
-
+//include widget functionalaty
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $tpl->getHeader("CSV-Import");
 echo $widgets->addToolTipLayer();
-
+//create account manger object
 $am = new AccountManager($badgerDb);
 
 //if no Upload yet, show form
 if (!isset($_POST['btnSubmit'])){
 	if (!isset($_POST['Upload'])){	
+		
 		$fileLabel =  $widgets->createLabel("file", getBadgerTranslation2("importCsv", "selectFile").":", true);
-		# description internatiolisierne--> ist tooltip
-		# sepp muss durchsuchen widget machen
+		# widget for browse field has to be developed
 		//$fileField = $widgets->createField("file", 50, "", "description", true);
 		$fileField = "<input name=\"file\" type=\"file\" size=\"50\" />";
 		
 		$selectParserLabel =  $widgets->createLabel("parserSelect", getBadgerTranslation2("importCsv", "selectParser").":", true);
-    	
-    	$sql = "SELECT * FROM csv_parser";
-      	$parser = array();
-      	$res =& $badgerDb->query($sql);
-      	while ($res->fetchInto ($row)){ 
-      		$parser[$row[2]] = $row[1];
-      	}
-      	#description internationalisieren
+    		//sql to get CSV Parsers
+	    	$sql = "SELECT * FROM csv_parser";
+	      	$parser = array();
+	      	$res =& $badgerDb->query($sql);
+	      	while ($res->fetchInto ($row)){ 
+	      		$parser[$row[2]] = $row[1];
+	      	}
       	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, "", getBadgerTranslation2("importCsv", "toolTipParserSelect"));
 		
 		$accountSelectLabel =  $widgets->createLabel("accountSelect", getBadgerTranslation2("importCsv", "targetAccount").":", true);					      	
 		
-		$account = array();
-    	while ($currentAccount = $am->getNextAccount()) {
-    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
-    	}
-      	
+			//get accounts
+			$account = array();
+	    	while ($currentAccount = $am->getNextAccount()) {
+	    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
+	    	}
       	
 	    $accountSelectFile = $widgets->createSelectField("accountSelect", $account, "", getBadgerTranslation2("importCsv", "toolTopAccountSelect"));  
 
 		$uploadButton = $widgets->createButton("Upload", getBadgerTranslation2("importCsv", "upload"), "submit", "Widgets/table_save.gif");
-
-
+		//use tempate engine
 		eval("echo \"".$tpl->getTemplate("CsvImport/csvImportSelectFileForm")."\";");
 		
 	}
@@ -72,27 +70,27 @@ if (isset($_POST['Upload'])){
 	 		$accountId = $_POST["accountSelect"];
 	 		//call to parse function
 	 		$foundTransactions = parseToArray($fp, $accountId);
-	 		//delete existing transactions, criteria are accountid, date & amount
+	 	//delete existing transactions, criteria are accountid, date & amount
 	 		$LookupTransactionNumber = count($foundTransactions);
 	 		$filteredTransactions = 0;
 	 		$importedTransactionNumber = 0;
 	 		$importedTransactions = NULL;
+	 		//for every transaction received from the parser
 	 		for ($foundTransactionNumber = 0; $foundTransactionNumber < $LookupTransactionNumber; $foundTransactionNumber++) {
 	 			$am4 = new AccountManager($badgerDb);
 	 			$account4 = $am4->getAccountById($foundTransactions[$foundTransactionNumber]["accountId"]);
 	 			$existing = false;
+	 			//get every transaction from the DB
 	 			while ($dbTransaction = $account4->getNextFinishedTransaction()){
-	 				
-	 				#echo $dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"]). "<br />";
-	 				#echo $dbTransaction->getAmount()->get() . "<br />";
-	 				#echo $foundTransactions[$foundTransactionNumber]["amount"]->get(). "<br />";
+	 				//if amount is already in the db
 	 				if($dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"])==0){
-	 					
+	 				//if date is already in the db	
 	 					if ($dbTransaction->getValutaDate()->compare($foundTransactions[$foundTransactionNumber]["valutaDate"],$dbTransaction->getValutaDate())==0){
 	 						$existing = true;
 	 					}
 	 				}
 	 			}
+	 			//if date & amount not in the db, write to array
 	 			if (!$existing){
  					$importedTransactions[$importedTransactionNumber] = $foundTransactions[$foundTransactionNumber];
  					$importedTransactionNumber++;
@@ -101,14 +99,13 @@ if (isset($_POST['Upload'])){
  				}
 	 		}
 	 		if ($filteredTransactions != 0){	
-	 		echo $filteredTransactions . " " . getBadgerTranslation2("importCsv", "echoFilteredTransactionNumber");
+	 			//feedback to user about filtered transactions
+	 			echo $filteredTransactions . " " . getBadgerTranslation2("importCsv", "echoFilteredTransactionNumber");
 	 		}
-	 		#$bereinigete Transaktionen = 
 	 		
-	 		#importedTransactions umstellen auf bereinigte Transaktionen
 	 		$transactionNumber = count($importedTransactions);
 			$tplOutput = NULL;
-	 		//show content of the array
+	 		//show content of the array, using the template engine
 	 		if ($transactionNumber > 0){  		
    				$tableHeadSelect = $widgets->createLabel("", getBadgerTranslation2("importCsv", "select"), true);
    				$tableHeadCategory = $widgets->createLabel("", getBadgerTranslation2("importCsv", "category"), true);
@@ -125,7 +122,7 @@ if (isset($_POST['Upload'])){
    				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
    					
 					$tableSelectCheckbox = "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\" />";
-   							
+   						//get categories		
 						$cm = new CategoryManager($badgerDb);
 						$category = array();
 				    	$category[""]= "";
@@ -135,8 +132,7 @@ if (isset($_POST['Upload'])){
 			    	$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, $category,"");
 						    	
 				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
-				    #$tableValutaDate = $widgets->createField("valutaDate".$outputTransactionNumber, 8, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
-						    
+				    						    
 					$tableTitle = $widgets->createField("title".$outputTransactionNumber, 30, $importedTransactions[$outputTransactionNumber]["title"]);
    							
 					$tableAmount = $widgets->createField("amount".$outputTransactionNumber, 8, $importedTransactions[$outputTransactionNumber]["amount"]->getFormatted());
@@ -150,12 +146,13 @@ if (isset($_POST['Upload'])){
 					$tableExceptionalCheckbox = "<input type=\"checkbox\" name=\"exceptional" . $outputTransactionNumber . "\" value=\"select\" />";
    					
    					$tableOutsideCheckbox = "<input type=\"checkbox\" name=\"outside" . $outputTransactionNumber . "\" value=\"select\" />";
-   							
+   						//get accounts	
 						$am1 = new AccountManager($badgerDb);
 						$account1 = array();
 				    	while ($currentAccount = $am1->getNextAccount()) {
 				    		$account1[$currentAccount->getId()] = $currentAccount->getTitle();	
 				    	}
+						//get selected account
 						$am2 = new AccountManager($badgerDb);
 						$account2 = NULL;
 						while ($currentAccount = $am2->getNextAccount()) {
@@ -231,26 +228,20 @@ if (isset($_POST['btnSubmit'])){
 			$selectedTransaction++;
 		}
 	}
+	//write array to db
 	if ($writeToDbArray){
-		# array in db schreiben
-		
-		
 		for ($arrayRow = 0; $arrayRow < count($writeToDbArray); $arrayRow++) {
-			$am3 = new AccountManager($badgerDb);
-			
-			$account3 = $am3->getAccountById($writeToDbArray[$arrayRow]['account']);
-			 
-			echo $writeCategory = $writeToDbArray[$arrayRow]['categoryId'];
-			echo $writeTitle = $writeToDbArray[$arrayRow]['title']; 
-			echo $writeDescription = $writeToDbArray[$arrayRow]['description'];
-			echo $writeValutaDate = $writeToDbArray[$arrayRow]['valutaDate'];
-			echo $writeAmount = $writeToDbArray[$arrayRow]['amount'];
-			echo $writeTransactionPartner = $writeToDbArray[$arrayRow]['transactionPartner'];
-			echo $writePeriodical = $writeToDbArray[$arrayRow]['periodical'];
-			echo $writeExceptional = $writeToDbArray[$arrayRow]['exceptional'];
-			echo $writeOutside = $writeToDbArray[$arrayRow]['outside'];
+			#$am3 = new AccountManager($badgerDb);
+			$writeCategory = $writeToDbArray[$arrayRow]['categoryId'];
+			$writeTitle = $writeToDbArray[$arrayRow]['title']; 
+			$writeDescription = $writeToDbArray[$arrayRow]['description'];
+			$writeValutaDate = $writeToDbArray[$arrayRow]['valutaDate'];
+			$writeAmount = $writeToDbArray[$arrayRow]['amount'];
+			$writeTransactionPartner = $writeToDbArray[$arrayRow]['transactionPartner'];
+			$writePeriodical = $writeToDbArray[$arrayRow]['periodical'];
+			$writeExceptional = $writeToDbArray[$arrayRow]['exceptional'];
+			$writeOutside = $writeToDbArray[$arrayRow]['outside'];
 			$account3->addFinishedTransaction($writeAmount, $writeTitle, $writeDescription, $writeValutaDate, $writeTransactionPartner, $writeCategory, $writeOutside);
-			echo "<br />";
 		}
 		// echo success message & number of written transactions
 		echo "<br/>" . count($writeToDbArray) . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
