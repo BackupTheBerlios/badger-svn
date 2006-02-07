@@ -217,7 +217,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -246,7 +246,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -275,7 +275,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -304,7 +304,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -333,7 +333,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -362,7 +362,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -391,7 +391,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -420,7 +420,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -449,7 +449,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -478,7 +478,7 @@ class PlannedTransaction {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}

@@ -147,7 +147,7 @@ class Category {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -176,7 +176,7 @@ class Category {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -205,7 +205,7 @@ class Category {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -242,7 +242,7 @@ class Category {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -261,7 +261,7 @@ class Category {
 			$dbResult =& $this->badgerDb->query($sql);
 			
 			if (PEAR::isError($dbResult)) {
-				echo "SQL Error: " . $dbResult->getMessage();
+				//echo "SQL Error: " . $dbResult->getMessage();
 				throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
 			}
 			

@@ -543,7 +543,7 @@ class Account extends DataGridHandler {
 		}
 		
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
-				ft.outside_capital, ft.transaction_partner, ft.category_id
+				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
 			FROM finished_transaction ft 
 			WHERE finished_transaction_id = " .  $finishedTransactionId;
 		
@@ -552,7 +552,7 @@ class Account extends DataGridHandler {
 		$this->dbResultFinished =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResultFinished)) {
-			echo "SQL Error: " . $this->dbResultFinished->getMessage();
+			////echo "SQL Error: " . $this->dbResultFinished->getMessage();
 			throw new BadgerException('Account', 'SQLError', $this->dbResultFinished->getMessage());
 		}
 		
@@ -587,7 +587,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -616,7 +616,9 @@ class Account extends DataGridHandler {
 		$valutaDate = null,
 		$transactionPartner = null,
 		$category = null,
-		$outsideCapital = null
+		$outsideCapital = null,
+		$exceptional = null,
+		$periodical = null
 	) {
 		$finishedTransactionId = $this->badgerDb->nextId('finishedTransactionIds');
 		
@@ -647,6 +649,14 @@ class Account extends DataGridHandler {
 			$sql .= ", outside_capital";
 		}
 		
+		if ($exceptional) {
+			$sql .= ", exceptional";
+		}
+		
+		if ($periodical) {
+			$sql .= ", periodical";
+		}
+		
 		$sql .= ")
 			VALUES ($finishedTransactionId, " . $this->id . ", '" . $amount->get() . "'";
 	
@@ -674,13 +684,21 @@ class Account extends DataGridHandler {
 			 $sql .= ", " . $this->badgerDb->quoteSmart($outsideCapital);
 		}
 		
+		if ($exceptional) {
+			 $sql .= ", " . $this->badgerDb->quoteSmart($exceptional);
+		}
+		
+		if ($periodical) {
+			 $sql .= ", " . $this->badgerDb->quoteSmart($periodical);
+		}
+		
 		$sql .= ")";
 		
 		
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -688,7 +706,7 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction(&$this->badgerDb, &$this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital);
+		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction(&$this->badgerDb, &$this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital, $exceptional, $periodical);
 		
 		return $this->finishedTransactions[$finishedTransactionId];	
 	}
@@ -723,7 +741,7 @@ class Account extends DataGridHandler {
 		$this->dbResultPlanned =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResultPlanned)) {
-			echo "SQL Error: " . $this->dbResultPlanned->getMessage();
+			//echo "SQL Error: " . $this->dbResultPlanned->getMessage();
 			throw new BadgerException('Account', 'SQLError', $this->dbResultPlanned->getMessage());
 		}
 		
@@ -758,7 +776,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -849,7 +867,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -909,7 +927,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -938,7 +956,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -967,7 +985,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -996,7 +1014,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -1034,7 +1052,7 @@ class Account extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -1069,19 +1087,19 @@ class Account extends DataGridHandler {
 	public function expandPlannedTransactions(){
 		$now = new Date();
 		
-//		header('content-type: text/plain');
+		//header('content-type: text/plain');
 		
 		//echo "<pre>"; print_r($this->plannedTransactions); echo "</pre>";
 		
 		foreach($this->plannedTransactions as $currentTransaction){ 
-//			echo 'begin_date: ' . $currentTransaction['begin_date'] . "\n";
+			//echo 'begin_date: ' . $currentTransaction['begin_date'] . "\n";
 			$date = new Date($currentTransaction->getBeginDate());
-//			echo 'date: ' . $date->getDate() . "\n";
+			//echo 'date: ' . $date->getDate() . "\n";
 			$dayOfMonth = $date->getDay();
-//			echo 'date: ' . $date->getDate() . "\n";
+			//echo 'date: ' . $date->getDate() . "\n";
 			//While we have not reached targetFutureCalcDate
 			while($this->targetFutureCalcDate->after($date)){
-//				echo 'date: ' . $date->getDate() . "\n";
+				//echo 'date: ' . $date->getDate() . "\n";
 				$inRange = true;
 				//Check if there is one or more valutaDate filter and apply them
 				foreach ($this->filter as $currentFilter) {
@@ -1150,6 +1168,9 @@ class Account extends DataGridHandler {
 						$currentTransaction->getTransactionPartner(),
 						$currentTransaction->getCategory(),
 						$currentTransaction->getOutsideCapital(),
+						false,
+						true,
+						$currentTransaction,
 						'PlannedTransaction'
 					);
 				}
@@ -1174,6 +1195,7 @@ class Account extends DataGridHandler {
 					
 					case 'year':
 						$newYear = $date->getYear() + $currentTransaction->getRepeatFrequency();
+						//echo "Year: " . $date->getYear() . " repeatFrequency: " . $currentTransaction->getRepeatFrequency() . " newYear: $newYear\n";
 						if (
 							$dayOfMonth == 29
 							&& $date->getMonth() == 2
@@ -1388,7 +1410,7 @@ class Account extends DataGridHandler {
 		}
 		
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
-				ft.outside_capital, ft.transaction_partner, ft.category_id
+				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
 			FROM finished_transaction ft 
 				LEFT OUTER JOIN category c ON ft.category_id = c.category_id
 			WHERE account_id = " .  $this->id . "\n";
@@ -1412,7 +1434,7 @@ class Account extends DataGridHandler {
 		$this->dbResultFinished =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResultFinished)) {
-			echo "SQL Error: " . $this->dbResultFinished->getMessage();
+			//echo "SQL Error: " . $this->dbResultFinished->getMessage();
 			throw new BadgerException('Account', 'SQLError', $this->dbResultFinished->getMessage());
 		}
 		
@@ -1462,7 +1484,7 @@ class Account extends DataGridHandler {
 		$this->dbResultPlanned =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResultPlanned)) {
-			echo "SQL Error: " . $this->dbResultPlanned->getMessage();
+			//echo "SQL Error: " . $this->dbResultPlanned->getMessage();
 			throw new BadgerException('Account', 'SQLError', $this->dbResultPlanned->getMessage());
 		}
 		

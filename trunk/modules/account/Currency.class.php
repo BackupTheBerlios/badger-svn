@@ -111,7 +111,7 @@ class Currency {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Currency', 'SQLError', $dbResult->getMessage());
 		}
 	}
@@ -140,7 +140,7 @@ class Currency {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Currency', 'SQLError', $dbResult->getMessage());
 		}
 	}

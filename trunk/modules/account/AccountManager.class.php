@@ -231,7 +231,7 @@ class AccountManager extends DataGridHandler {
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
-			echo "SQL Error: " . $this->dbResult->getMessage();
+			//echo "SQL Error: " . $this->dbResult->getMessage();
 			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
 		}
 
@@ -268,7 +268,7 @@ class AccountManager extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -327,7 +327,7 @@ class AccountManager extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -373,7 +373,7 @@ class AccountManager extends DataGridHandler {
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
-			echo "SQL Error: " . $this->dbResult->getMessage();
+			//echo "SQL Error: " . $this->dbResult->getMessage();
 			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
 		}
 		

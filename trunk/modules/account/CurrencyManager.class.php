@@ -208,7 +208,7 @@ class CurrencyManager extends DataGridHandler {
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
-			echo "SQL Error: " . $this->dbResult->getMessage();
+			//echo "SQL Error: " . $this->dbResult->getMessage();
 			throw new BadgerException('CurrencyManager', 'SQLError', $this->dbResult->getMessage());
 		}
 		
@@ -257,7 +257,7 @@ class CurrencyManager extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('CurrencyManager', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -284,7 +284,7 @@ class CurrencyManager extends DataGridHandler {
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			echo "SQL Error: " . $dbResult->getMessage();
+			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('CurrencyManager', 'SQLError', $dbResult->getMessage());
 		}
 		
@@ -323,7 +323,7 @@ class CurrencyManager extends DataGridHandler {
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
-			echo "SQL Error: " . $this->dbResult->getMessage();
+			//echo "SQL Error: " . $this->dbResult->getMessage();
 			throw new BadgerException('CurrencyManager', 'SQLError', $this->dbResult->getMessage());
 		}
 		

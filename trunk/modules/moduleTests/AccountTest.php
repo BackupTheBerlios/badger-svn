@@ -49,6 +49,7 @@ try {
 	echo 'Property 123 (2): ' . $acc->getProperty('123') . endl;
 } catch (BadgerException $ex) {
 	handleBadgerException($ex);
+	echo endl;
 } 
 
 while ($trans = $acc->getNextPlannedTransaction()) {
@@ -60,11 +61,9 @@ while ($trans = $acc->getNextFinishedTransaction()) {
 }
 
 $acc->resetFinishedTransactions();
-
 while ($trans = $acc->getNextTransaction()) {
-	echo 'Transaction Title: ' . $trans->getTitle() . endl;
+	echo 'Transaction Title: ' . $trans->getTitle() . ' Source Planned title: ' . (is_null($tmp = $trans->getSourcePlannedTransaction()) ? '' : $tmp->getTitle()) . endl;
 }
-
 
 $trans1 = $acc->getFinishedTransactionById(1);
 echo 'Finished Transaction Id: ' . $trans1->getId() . endl;
