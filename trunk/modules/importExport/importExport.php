@@ -188,11 +188,9 @@ function getDbDump() {
 		'finished_transaction',
 		'i18n',
 		'langs',
-		'langs_avail',
 		'navi',
 		'plannedTransactionIds_seq',
 		'planned_transaction',
-		's_egger_testet_quantum',
 		'session_global',
 		'session_master',
 		'user_settings'
@@ -221,7 +219,7 @@ function dumpTable($tableName) {
 	$dbResult =& $badgerDb->query($sql);
 	
 	if (PEAR::isError($dbResult)) {
-		throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage());
+		throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage() . ' ' . $sql);
 	}
 	
 	$row = false;
