@@ -200,20 +200,12 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	
 	$MandatorySelf = $_SERVER['PHP_SELF'];
 	
-	/*
 	foreach( $_POST as $key=>$value ){
-		if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
-	};
-	*/
-	
-	$rows = "";
-	foreach( $_POST as $key=>$value ){
-		if($key != "password") {
-			eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+		if($key != "password" && $key != "logout") {
+			$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
+			eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
 		};
 	};
-	
-	echo $rows;
 	
 	$MandatoryOldPasswordLabel = $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), true);
 	$MandatoryOldPasswordField = $widgets->createField("OldPassword", 25, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true, 'password');
@@ -252,45 +244,24 @@ if($passwordcorrect == false)
 		//$PasswordInput = "<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />";
 		$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
 		
-		/*
-		foreach( $_POST as $key=>$value ){
-			if($key != "password") print("<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />");
-		};
-		*/
+		//--
 		
-		$rows = "";
+		eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
+		
 		foreach( $_POST as $key=>$value ){
-			if($key != "password") {
-				eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+			if($key != "password" && $key != "logout") {
+				$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
+				//eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+				eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
 			};
 		};
-		
-		echo $rows;
+				
+		//--
 		
 		//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','login_button'), "submit", "Widgets/accept.gif");
 		
-		/*
-		$signature = "";
-		if(isset($_GET)){
-			$signature = $signature."?";
-			foreach( $_GET as $key=>$value ){
-				if($key != "send_password"){
-					if($signature != "?"){
-						$signature = $signature . "&";
-					};
-				$signature = $signature . $key . "=" . $value;
-				};
-			};
-		};
 		
-		if($signature != "?"){
-			$signature = $signature."&";
-		};
-		*/
-		
-		//print("<br/><a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=true\">".getBadgerTranslation2('badger_login', 'forgot_password')."</a>");
-		//print("</form><br />");
 		
 		eval("echo \"".$tpl->getTemplate("Login/login2")."\";");
 		
