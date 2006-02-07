@@ -26,6 +26,7 @@ public $editAction;
 public $newAction;
 public $cellAlign;
 public $rowCounterName;
+public $initialSort;
 
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
@@ -38,7 +39,7 @@ public $rowCounterName;
 						<tr>
 							<td width="20">&nbsp;</td>';
 			for ($i=0; $i < count($this->headerName); $i++) {
-				$output .= '<td width="'.$this->headerSize[$i].'">'.$this->headerName[$i].'</td>';
+				$output .= '<td id="'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.$this->headerName[$i].'</td>';
 			}
 		$output .= '		<td></td>
 						</tr>
@@ -66,7 +67,9 @@ public $rowCounterName;
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
-		$this->tpl->addOnLoadEvent('loadData("'.$this->sourceXML.'");');
+		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
+		$this->tpl->addOnLoadEvent('dgInitialSort = "'.$this->initialSort.'";');
+		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + dgInitialSort);');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		
