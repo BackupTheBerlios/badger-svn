@@ -231,7 +231,8 @@ if (isset($_POST['btnSubmit'])){
 	//write array to db
 	if ($writeToDbArray){
 		for ($arrayRow = 0; $arrayRow < count($writeToDbArray); $arrayRow++) {
-			#$am3 = new AccountManager($badgerDb);
+			$am3 = new AccountManager($badgerDb);
+			$account3 = $am3->getAccountById($writeToDbArray[$arrayRow]['account']);
 			$writeCategory = $writeToDbArray[$arrayRow]['categoryId'];
 			$writeTitle = $writeToDbArray[$arrayRow]['title']; 
 			$writeDescription = $writeToDbArray[$arrayRow]['description'];
