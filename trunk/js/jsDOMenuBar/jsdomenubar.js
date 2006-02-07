@@ -95,7 +95,7 @@ function popUpMenuBarMenu(menuBarObj, menuBarItemObj, menuObj) { // Private meth
     menuObj.initialLeft = parseInt(menuObj.style.left) - getScrollLeft();
     menuObj.initialTop = parseInt(menuObj.style.top) - getScrollTop();
   }
-  menuObj.style.visibility = "visible";
+  menuObj.style.display = "block";
 }
 
 /*

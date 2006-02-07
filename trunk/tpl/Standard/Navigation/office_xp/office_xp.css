@@ -10,7 +10,7 @@ Menu related selectors
 	padding-bottom: 1px;
 	padding-top: 1px;
 	position: absolute; /* Do not alter this line! */
-	visibility: hidden;
+	display: none;
 	z-index: 10;
 }
 

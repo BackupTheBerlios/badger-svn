@@ -356,7 +356,7 @@ function popUpSubMenu(menuItemObj) { // Private method
     menuObj.initialLeft = parseInt(menuObj.style.left) - getScrollLeft();
     menuObj.initialTop = parseInt(menuObj.style.top) - getScrollTop();
   }
-  menuObj.style.visibility = "visible";
+  menuObj.style.display = "show";
 }
 
 /*
@@ -524,12 +524,12 @@ function activatePopUpMenu(e) { // Private method
   if (!popUpMenuObj) {
     return;
   }
-  var state = popUpMenuObj.menuObj.style.visibility;
-  if (state == "visible") {
+  var state = popUpMenuObj.menuObj.style.display;
+  if (state == "block") {
     for (var i = 1; i <= menuCount; i++) {
       var menuObj = getElmId("DOMenu" + i);
       if (menuObj.mode == "cursor") {
-        menuObj.style.visibility = "hidden";
+        menuObj.style.display = "none";
         menuObj.style.left = "0px";
         menuObj.style.top = "0px";
         menuObj.initialLeft = 0;
@@ -570,11 +570,11 @@ function leftClickHandler(e) { // Private method
     hideMenuBarMenus();
   }
   if (popUpMenuObj) {
-    var state = popUpMenuObj.menuObj.style.visibility;
-    if (state == "visible" && (hideValue == 0 || hideValue == 2)) {
+    var state = popUpMenuObj.menuObj.style.display;
+    if (state == "block" && (hideValue == 0 || hideValue == 2)) {
       activatePopUpMenu(e);
     }
-    if ((state == "hidden" || state == "") && (showValue == 0 || showValue == 2)) {
+    if ((state == "none" || state == "") && (showValue == 0 || showValue == 2)) {
       activatePopUpMenu(e);
     }
   }
@@ -592,12 +592,12 @@ function rightClickHandler(e) { // Private method
     hideMenuBarMenus();
   }
   if (popUpMenuObj) {
-    var state = popUpMenuObj.menuObj.style.visibility;
-    if (state == "visible" && (hideValue == 1 || hideValue == 2)) {
+    var state = popUpMenuObj.menuObj.style.display;
+    if (state == "block" && (hideValue == 1 || hideValue == 2)) {
       activatePopUpMenu(e);
       return false;
     }
-    if ((state == "hidden" || state == "") && (showValue == 1 || showValue == 2)) {
+    if ((state == "none" || state == "") && (showValue == 1 || showValue == 2)) {
       activatePopUpMenu(e);
       return false;
     }
@@ -952,10 +952,10 @@ function jsDOMenu() { // Public method
     }
   };
   this.show = function() { // Public method
-    this.menuObj.style.visibility = "visible";
+    this.menuObj.style.display = "block";
   };
   this.hide = function() { // Public method
-    this.menuObj.style.visibility = "hidden";
+    this.menuObj.style.display = "none";
     if (this.menuObj.mode == "cursor") {
       this.menuObj.style.left = "0px";
       this.menuObj.style.top = "0px";
@@ -1031,11 +1031,11 @@ function hideAllMenus() { // Public method
     if (!menuObj.alwaysVisible) {
       if (menuObj.style.position == "fixed") {
         menuObj.style.position == "absolute";
-        menuObj.style.visibility = "hidden";
+        menuObj.style.display = "none";
         menuObj.style.position == "fixed";
       }
       else {
-        menuObj.style.visibility = "hidden";
+        menuObj.style.display = "block";
         if (menuObj.mode == "cursor") {
           menuObj.style.left = "0px";
           menuObj.style.top = "0px";
@@ -1058,7 +1058,7 @@ function hideCursorMenus() { // Public method
   for (var i = 1; i <= menuCount; i++) {
     var menuObj = getElmId("DOMenu" + i);
     if (menuObj.mode == "cursor" && !menuObj.alwaysVisible) {
-      menuObj.style.visibility = "hidden";
+      menuObj.style.display = "none";
       menuObj.style.left = "0px";
       menuObj.style.top = "0px";
       menuObj.initialLeft = 0;
@@ -1080,11 +1080,11 @@ function hideVisibleMenus() { // Public method
     if ((menuObj.mode == "absolute" || menuObj.mode == "fixed") && !menuObj.alwaysVisible) {
       if (menuObj.style.position == "fixed") {
         menuObj.style.position = "absolute";
-        menuObj.style.visibility = "hidden";
+        menuObj.style.display = "none";
         menuObj.style.position = "fixed";
       }
       else {
-        menuObj.style.visibility = "hidden";
+        menuObj.style.display = "none";
         menuObj.style.left = "0px";
         menuObj.style.top = "0px";
         menuObj.initialLeft = 0;
@@ -1120,11 +1120,11 @@ function hideMenus(menuObj) { // Public method
   }
   if (menuObj.style.position == "fixed") {
     menuObj.style.position = "absolute";
-    menuObj.style.visibility = "hidden";
+    menuObj.style.display = "none";
     menuObj.style.position = "fixed";
   }
   else {
-    menuObj.style.visibility = "hidden";
+    menuObj.style.display = "none";
     menuObj.style.left = "0px";
     menuObj.style.top = "0px";
     menuObj.initialLeft = 0;
