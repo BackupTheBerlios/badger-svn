@@ -45,12 +45,18 @@ function handleResponse() {
 
 function dgInit() {
 	xmlDoc = xmlHttp.responseXML;
-	xmlColumns = xmlDoc.getElementsByTagName("columns");
+	xmlColumns = xmlDoc.getElementsByTagName("column");
 	xmlRows = xmlDoc.getElementsByTagName("row");
 	
 	dgData = document.getElementById("dgData"); //.getElementsByTagName("tbody")[0];
 	dgRows = dgData.getElementsByTagName("tr");
 	if (dgRows.length>0) {emptyDataGrid()};
+	
+	var columns = new Array();
+	for (j=0; j<xmlColumns.length; j++) {
+		//alert(xmlColumns[j].textContent);
+		columns[xmlColumns[j].textContent] = j; 
+	}	
 	
 	for (j=0; j<xmlRows.length; j++) {
 		cells = xmlRows[j].getElementsByTagName("cell");
@@ -71,15 +77,19 @@ function dgInit() {
 		newRow.appendChild(checkTD);
 		
 		//insert cell values
-		//ToDo: different order to xml sequence (no it's the same)
-		for (i=0; i<dgHeaderSize.length; i++) {
+		// dgColumnOrder[0] -> 'balance' : name of the column
+		// columns['balance'] -> '1' : first column
+		// cells[1].textContent -> '899.23' : value
+		for (i=0; i<dgColumnOrder.length; i++) {
 			cell = document.createElement("td");
 			cell.width = dgHeaderSize[i];
 			cell.align = dgCellAlign[i];
-			cell.innerHTML = cells[i+1].textContent;			
+			//alert("dgCO: " + dgColumnOrder[i]);
+			//alert("columns[]=" + columns[dgColumnOrder[i]]);
+			//alert("cells[]=" + cells[columns[dgColumnOrder[i]]].textContent);
+			cell.innerHTML = cells[columns[dgColumnOrder[i]]].textContent;
 			newRow.appendChild(cell);
-		} 
-		
+		}		
 		//insert empty cell as last one (only display purposes)
 		lastTD = document.createElement("td");
 		lastTD.innerHTML = "&nbsp;";
