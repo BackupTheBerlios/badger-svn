@@ -25,11 +25,10 @@ require_once(BADGER_ROOT . '/core/navi/StandardNavigation.class.php');
 require_once(BADGER_ROOT . '/core/navi/NavigationFromDB.class.php');
 //require_once(BADGER_ROOT . '/core/UserSettings.class.php'); // sollte das nicht auch in die Includes??
 
-global $callerBadgerRoot;
-
 if (isset($_GET['part'])) {
+	$callerBadgerRoot = (isset($_GET['badger_root']))?$_GET['badger_root']:"";
 	
-	$navi = NavigationFromDB::getNavigation();
+	$navi = NavigationFromDB::getNavigation($callerBadgerRoot);
 	$naviObj = new StandardNavigation();
 	$naviObj->setStructure($navi);
 	
@@ -40,14 +39,12 @@ if (isset($_GET['part'])) {
 	
 	switch ($_GET['part']) {
 		case 'css':
-			header('Content-Type: text/css');
-			
+			header('Content-Type: text/css');			
 			echo $naviObj->getCSS();
 			break;
 		
 		case 'js':
 			header('Content-Type: text/javascript');
-			$callerBadgerRoot = $_GET['badger_root'];
 			echo $naviObj->getJS();
 			break;
 	}

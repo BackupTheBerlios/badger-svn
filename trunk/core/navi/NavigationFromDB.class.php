@@ -26,8 +26,12 @@ class NavigationFromDB {
 	 * 
 	 * @return array The navigation structure.
 	 */
-	public static function getNavigation() {
+	 
+	static $callerBadgerRoot = "";
+	
+	public static function getNavigation($callerBadgerRoot) {
 		global $badgerDb;
+		NavigationFromDB::$callerBadgerRoot = $callerBadgerRoot;
 		
 		$settings = new UserSettings($badgerDb);
 		
@@ -88,8 +92,7 @@ class NavigationFromDB {
 	 * @return string The input string with replaced {BADGER_ROOT}
 	 */
 	private static function replaceBadgerRoot($str) {
-		global $callerBadgerRoot; 
-		return str_replace('{BADGER_ROOT}', BADGER_ROOT, $str);
+		return str_replace('{BADGER_ROOT}', NavigationFromDB::$callerBadgerRoot, $str);
 	}
 }
 ?>
