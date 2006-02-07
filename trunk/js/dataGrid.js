@@ -28,11 +28,13 @@ function loadData(url) {
 	xmlHttp.open("POST", url, 1);
 	xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlHttp.send(null);
+	mouseShowHourGlass();
 }
 
 // callback-function
 // process to server request
 function handleResponse() {
+	mouseShowNormal();
 	// if xmlhttp shows "loaded"
 	if (xmlHttp.readyState==4) {
 		// if "OK"
@@ -221,7 +223,6 @@ function dgKeyProcess(event) {
 	if (event.keyCode == Event.KEY_DELETE) {
 		dgDelete();
 	}
-
 }
 
 // delete all selected rows
@@ -252,7 +253,7 @@ function dgDelete() {
 
 // call site to add a new record
 function dgNew() {
-	alert(dgEditAction);
+	alert("Action: "+ dgNewAction);
 }
 
 // edit record with ID in a special page
@@ -311,3 +312,17 @@ function serializeParameter() {
 
 // add event to the document
 Event.observe(document, 'keypress', dgKeyProcess, false)
+
+// mouse functions
+// used when saving a document
+function mouseShowHourGlass() {
+	for (id=0; id<document.childNodes.length; id++) {
+		document.childNodes[id].style.cursor='wait';
+	}
+}
+
+function mouseShowNormal() {
+	for (id=0; id<document.childNodes.length; id++) {
+		//document.all[id].style.cursor='auto';
+	}
+}
