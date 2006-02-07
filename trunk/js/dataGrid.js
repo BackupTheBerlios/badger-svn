@@ -1,6 +1,16 @@
 var objRowActive;
 var mouseEventsDisabled;
 mouseEventsDisabled = false;
+var urlParameter = new Object;
+
+urlParameter["ok0"] = "";
+urlParameter["od0"] = "";
+
+function serializeParamter () {
+	for (var parameter in urlParameter)
+	    //Eigenschaft + Mitarbeiter[Eigenschaft];
+	}
+}
 
 // Create a new XMLHttpRequest object
 var xmlHttp = false;
@@ -157,6 +167,12 @@ var behaviour =  {
 		}
 		element.ondblclick = function(){
 			dgEdit(this.id)
+		}
+	},
+	'#dgTableHead tr td' : function(element){
+		element.onclick = function(){
+			loadData(dgSourceXML + '&ok0='+this.id+'&od0=a');
+			//alert(this.id);
 		}
 	}	
 };
