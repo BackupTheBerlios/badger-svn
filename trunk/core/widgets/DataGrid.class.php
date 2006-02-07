@@ -18,6 +18,7 @@
 class DataGrid {
 private $tpl;
 public $headerName = array();
+public $columnOrder = array();
 public $headerSize = array();
 public $deleteMsg;
 public $deleteAction;
@@ -59,6 +60,7 @@ public $rowCounterName;
 	public function initDataGridJS() {
 		$this->tpl->addJavaScript("js/dataGrid.js");
 		$this->tpl->addOnLoadEvent('dgHeaderName = new Array("'.implode('","',$this->headerName).'");');
+		$this->tpl->addOnLoadEvent('dgColumnOrder = new Array("'.implode('","',$this->columnOrder).'");');
 		$this->tpl->addOnLoadEvent('dgHeaderSize = new Array('.implode(',',$this->headerSize).');');
 		$this->tpl->addOnLoadEvent('dgCellAlign = new Array("'.implode('","',$this->cellAlign).'");');
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
