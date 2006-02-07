@@ -88,6 +88,7 @@ class NavigationFromDB {
 	 * @return string The input string with replaced {BADGER_ROOT}
 	 */
 	private static function replaceBadgerRoot($str) {
+		global $callerBadgerRoot; 
 		return str_replace('{BADGER_ROOT}', BADGER_ROOT, $str);
 	}
 }
