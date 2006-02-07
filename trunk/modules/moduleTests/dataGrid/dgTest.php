@@ -37,11 +37,7 @@ echo $tpl->getHeader("DataGrid");
 echo $widgets->createButton("btnNew", "Neu", "dgNew()", "Widgets/table_add.gif");
 echo $widgets->createButton("btnDelete", "Löschen", "dgDelete()", "Widgets/table_delete.gif");
 		
-echo $dataGrid->writeHeader();
+echo $dataGrid->writeDataGrid();
 ?>
-<a href="javascript:void(0)" onclick="loadData(sourceXML);">normal</a><br />
-<a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=title&od0=a');">title aufsteigend</a> <a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=title&od0=d');">title absteigend</a><br />
-<a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=balance&od0=a');">balance aufsteigend</a> <a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=balance&od0=d');">balance absteigend</a><br />
-<a href="javascript:void(0)" onclick="emptyDataGrid();">clear dataGrid</a>
 </body>
 </html>

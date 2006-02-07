@@ -3,15 +3,6 @@ var mouseEventsDisabled;
 mouseEventsDisabled = false;
 var urlParameter = new Object;
 
-urlParameter["ok0"] = "";
-urlParameter["od0"] = "";
-
-function serializeParamter () {
-	for (var parameter in urlParameter)
-	    //Eigenschaft + Mitarbeiter[Eigenschaft];
-	}
-}
-
 // Create a new XMLHttpRequest object
 var xmlHttp = false;
 /*@cc_on @*/
@@ -171,8 +162,11 @@ var behaviour =  {
 	},
 	'#dgTableHead tr td' : function(element){
 		element.onclick = function(){
-			loadData(dgSourceXML + '&ok0='+this.id+'&od0=a');
-			//alert(this.id);
+			id = this.id.replace("dgColumn","");
+			//alert(id);
+			addNewSortOrder(id);
+			//alert(serializeParameter());
+			loadData(dgSourceXML + serializeParameter());
 		}
 	}	
 };
@@ -277,6 +271,41 @@ function emptyDataGrid() {
 	for (id=0; id<toBeDeleted.length; id++) {
 		dgDataGrid.removeChild(document.getElementById(toBeDeleted[id]));
 	}
+}
+
+//change sort order and hide/show sort images
+var activeColumn;
+function addNewSortOrder(column) {
+	if(activeColumn) $("dgColumn"+activeColumn).style.background = "";
+	if(column==urlParameter["ok0"]) {
+		//click on the same column:  asc -> desc, desc -> asc
+		if (urlParameter["od0"]=="a") {
+			urlParameter["od0"]="d";
+			$("dgColumn"+column).style.background = "green";
+		} else {
+			urlParameter["od0"]="a";
+			$("dgColumn"+column).style.background = "red";
+		}
+	} else {
+		urlParameter["ok2"] = urlParameter["ok1"];
+		urlParameter["od2"] = urlParameter["od1"];
+		urlParameter["ok1"] = urlParameter["ok2"];
+		urlParameter["od1"] = urlParameter["od2"];
+		urlParameter["ok0"] = column;
+		urlParameter["od0"] = "a";
+		$("dgColumn"+column).style.background = "red";
+	}
+	activeColumn = column;
+}
+
+//convert array to string
+function serializeParameter() {
+	var urlParameterString ="";
+	for (var parameter in urlParameter)
+		if(parameter!="extend" && urlParameter[parameter]!=undefined) { 
+	    	urlParameterString = urlParameterString+"&"+parameter+"="+urlParameter[parameter];
+	    }
+	return urlParameterString;
 }
 
 // add event to the document

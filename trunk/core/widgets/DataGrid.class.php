@@ -32,14 +32,14 @@ public $initialSort;
 		$this->tpl = $tpl;
 	}
 	
-	public function writeHeader() {
+	public function writeDataGrid() {
 		//toDo: Use templateEngine
 		$output = '<form id="dgForm"><div id="dataGrid">
 					<table id="dgTableHead" cellpadding="2" cellspacing="0">
 						<tr>
 							<td width="20">&nbsp;</td>';
 			for ($i=0; $i < count($this->headerName); $i++) {
-				$output .= '<td id="'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.$this->headerName[$i].'</td>';
+				$output .= '<td id="dgColumn'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.$this->headerName[$i].'</td>';
 			}
 		$output .= '		<td></td>
 						</tr>
