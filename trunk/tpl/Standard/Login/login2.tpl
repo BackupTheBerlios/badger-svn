@@ -7,6 +7,7 @@
 				<tr>
 					<td>$SubmitButton</td>
 				</tr>
+			</table>
 			</form>
 		</td>
 	</tr>

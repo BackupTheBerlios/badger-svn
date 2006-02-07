@@ -26,6 +26,7 @@
 					<td></td>
 					<td>$MandatorySubmit</td>
 				</tr>
+			</table>
 			</form>
 		</td>
 	</tr>

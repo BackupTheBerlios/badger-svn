@@ -14,6 +14,7 @@
 				<tr>
 					<td>$MandatoryCommitedLink</td>
 				</tr>
+			</table>
 			</form>
 		</td>
 	</tr>
