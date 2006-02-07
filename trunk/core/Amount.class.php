@@ -29,7 +29,8 @@ class Amount {
 	/**
 	 * Creates an amount.
 	 * 
-	 * @param $amount string The amount.
+	 * @param $amount mixed The new amount, either as Amount or as string.
+	 * @param $formatted boolean true if the $amount string is formatted according to UserSettings
 	 */
 	public function Amount($amount = 0, $formatted = false) {
 		bcscale(2);
@@ -110,19 +111,24 @@ class Amount {
 	/**
 	 * Sets the amount;
 	 * 
-	 * @param $amount string The new amount.
+	 * @param $amount mixed The new amount, either as Amount or as string.
+	 * @param $formatted boolean true if the $amount string is formatted according to UserSettings
 	 */
 	public function set($amount, $formatted = false) {
 		global $us;
 		
-		if ($formatted) {
-			$amount = str_replace(
-				array ($us->getProperty('badgerThousandSeparator'), $us->getProperty('badgerDecimalSeparator')),
-				array ('', '.'),
-				$amount
-			);
+		if ($amount instanceof Amount) {
+			$this->amount = $amount->amount;
+		} else {
+			if ($formatted) {
+				$amount = str_replace(
+					array ($us->getProperty('badgerThousandSeparator'), $us->getProperty('badgerDecimalSeparator')),
+					array ('', '.'),
+					$amount
+				);
+			}
+			$this->amount = $amount;
 		}
-		$this->amount = $amount;
 	}
 	
 	/**

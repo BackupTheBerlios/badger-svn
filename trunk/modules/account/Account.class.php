@@ -1555,6 +1555,10 @@ class Account extends DataGridHandler {
 				case 'valutaDate':
 					if ($a->getValutaDate() && $b->getValutaDate()) {
 						$tmp = Date::compare($a->getValutaDate(), $b->getValutaDate());
+					} else if ($a->getValutaDate() && !$b->getValutaDate()) {
+						$tmp = -$default;
+					} else if (!$a->getValutaDate() && $b->getValutaDate()) {
+						$tmp = $default;
 					}
 					break;
 				

@@ -14,6 +14,7 @@
 require_once BADGER_ROOT . '/core/Date.php';
 require_once BADGER_ROOT . '/core/Amount.class.php';
 require_once BADGER_ROOT . '/modules/account/Category.class.php';
+require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 
 /**
  * A finished transaction.
