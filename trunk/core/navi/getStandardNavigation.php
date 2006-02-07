@@ -25,6 +25,7 @@ require_once(BADGER_ROOT . '/core/navi/StandardNavigation.class.php');
 require_once(BADGER_ROOT . '/core/navi/NavigationFromDB.class.php');
 //require_once(BADGER_ROOT . '/core/UserSettings.class.php'); // sollte das nicht auch in die Includes??
 
+global $callerBadgerRoot;
 
 if (isset($_GET['part'])) {
 	
@@ -46,7 +47,7 @@ if (isset($_GET['part'])) {
 		
 		case 'js':
 			header('Content-Type: text/javascript');
-			
+			$callerBadgerRoot = $_GET['badger_root'];
 			echo $naviObj->getJS();
 			break;
 	}
