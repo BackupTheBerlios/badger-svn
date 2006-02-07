@@ -46,6 +46,7 @@ function handleResponse() {
 
 function dgInit() {
 	xmlDoc = xmlHttp.responseXML;
+	//alert(xmlHttp.responseText);
 	xmlColumns = xmlDoc.getElementsByTagName("column");
 	xmlRows = xmlDoc.getElementsByTagName("row");
 	

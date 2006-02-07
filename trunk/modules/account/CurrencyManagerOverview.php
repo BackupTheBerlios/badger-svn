@@ -20,12 +20,12 @@ $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
-$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=2";
-$dataGrid->initialSort = "&ok0=title&od0=a";
-$dataGrid->headerName = array("Title","type","description","valutaDate","amount","categoryTitle");
-$dataGrid->columnOrder = array("title","type","description","valutaDate","amount","categoryTitle");  
-$dataGrid->headerSize = array(200,200,180,150,150,150);
-$dataGrid->cellAlign = array("left","left","left","right","right","left");
+$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";
+$dataGrid->initialSort = "";
+$dataGrid->headerName = array("Symbol","LongName");
+$dataGrid->columnOrder = array("symbol","longName");  
+$dataGrid->headerSize = array(200,200);
+$dataGrid->cellAlign = array("left","left");
 $dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
 $dataGrid->rowCounterName = "Datensätze";
 $dataGrid->deleteAction = "deleteXYZ.php";
@@ -39,6 +39,5 @@ echo $widgets->createButton("btnDelete", "Löschen", "dgDelete()", "Widgets/table
 		
 echo $dataGrid->writeDataGrid();
 ?>
-
 </body>
 </html>

@@ -24,8 +24,8 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManage
 $dataGrid->initialSort = "&ok0=title&od0=a";
 $dataGrid->headerName = array("Title","Balance","Currency");
 $dataGrid->columnOrder = array("title","balance","currency");  
-$dataGrid->headerSize = array(150,200,180);
-$dataGrid->cellAlign = array("left","left","right");
+$dataGrid->headerSize = array(200,150,30);
+$dataGrid->cellAlign = array("left","right","left");
 $dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
 $dataGrid->rowCounterName = "Datensätze";
 $dataGrid->deleteAction = "deleteXYZ.php";
