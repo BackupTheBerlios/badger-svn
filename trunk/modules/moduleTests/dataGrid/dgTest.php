@@ -21,7 +21,8 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-$dataGrid->headerName = array("currency","title","balance"); 
+$dataGrid->headerName = array("Currency","Title","Balance");
+$dataGrid->columnOrder = array("currency","title","balance");  
 $dataGrid->headerSize = array(150,200,180);
 $dataGrid->cellAlign = array("left","left","right");
 $dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
