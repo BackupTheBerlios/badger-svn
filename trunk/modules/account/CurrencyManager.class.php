@@ -308,7 +308,7 @@ class CurrencyManager extends DataGridHandler {
 		}
 		
 		$sql = "SELECT c.currency_id, c.symbol, c.long_name
-			FROM currency c";
+			FROM currency c\n";
 					
 		$where = $this->getFilterSQL();
 		if($where) {
@@ -323,7 +323,7 @@ class CurrencyManager extends DataGridHandler {
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
-			//echo "SQL Error: " . $this->dbResult->getMessage();
+			//echo "SQL Error: " . $sql;
 			throw new BadgerException('CurrencyManager', 'SQLError', $this->dbResult->getMessage());
 		}
 		

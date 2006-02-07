@@ -134,7 +134,7 @@ class AccountManager extends DataGridHandler {
 	public function getFieldSQLName($fieldName) {
 		$fieldSQLNames = array (
 			'accountId' => 'a.account_id',
-			'currency' => 'c.title',
+			'currency' => 'c.symbol',
 			'title' => 'a.title',
 			'balance' => 'SUM(ft.amount)'    	
 		);
@@ -170,7 +170,7 @@ class AccountManager extends DataGridHandler {
 		foreach($this->accounts as $currentAccount){
 			$result[] = array (
 				'accountId' => $currentAccount->getId(),
-				'currency' => $currentAccount->getCurrency()->getSymbol(),
+				'currency' => is_null($tmp = $currentAccount->getCurrency()) ? '' : $tmp->getSymbol(),
 				'title' => $currentAccount->getTitle(),
 				'balance' => $currentAccount->getBalance()->get()
 			);
@@ -220,12 +220,12 @@ class AccountManager extends DataGridHandler {
 			}
 		}	
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, c.symbol currency_symbol, c.long_name currency_long_name, SUM(ft.amount) balance
+				a.upper_limit, a.currency_id, SUM(ft.amount) balance
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
 			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, currency_symbol, currency_long_name
+				a.upper_limit, a.currency_id
 			HAVING a.account_id = $accountId";
 		
 		$this->dbResult =& $this->badgerDb->query($sql);
@@ -351,12 +351,12 @@ class AccountManager extends DataGridHandler {
 		}
 		
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, c.symbol currency_symbol, c.long_name currency_long_name, SUM(ft.amount) balance
+				a.upper_limit, a.currency_id, SUM(ft.amount) balance
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
 			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, currency_symbol, currency_long_name \n";
+				a.upper_limit, a.currency_id \n";
 		
 		$where = $this->getFilterSQL();
 		if($where) {

@@ -17,6 +17,7 @@ require_once BADGER_ROOT . '/core/Amount.class.php';
 require_once BADGER_ROOT . '/modules/account/Currency.class.php';
 require_once BADGER_ROOT . '/core/Date.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
+require_once BADGER_ROOT . '/modules/account/CurrencyManager.class.php';
 require_once BADGER_ROOT . '/modules/account/FinishedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
 
@@ -275,7 +276,11 @@ class Account extends DataGridHandler {
 				$this->lowerLimit = new Amount($data['lower_limit']);
 				$this->upperLimit = new Amount($data['upper_limit']);
 				$this->balance = new Amount($data['balance']);
-				$this->currency = new Currency($data['currency_id'], $data['currency_symbol'], $data['currency_long_name']);
+				
+				if ($data['currency_id']) {
+					$currencyManager = new CurrencyManager($badgerDb);
+					$this->currency = $currencyManager->getCurrencyById($data['currency_id']);
+				}
 			} else {
 				//called with all parameters
 				$this->id = $data;
