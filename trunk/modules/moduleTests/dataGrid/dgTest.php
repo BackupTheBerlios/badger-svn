@@ -21,6 +21,7 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
+$dataGrid->initialSort = "&ok0=title&od0=a";
 $dataGrid->headerName = array("Currency","Title","Balance");
 $dataGrid->columnOrder = array("currency","title","balance");  
 $dataGrid->headerSize = array(150,200,180);
@@ -38,9 +39,9 @@ echo $widgets->createButton("btnDelete", "Löschen", "dgDelete()", "Widgets/table
 		
 echo $dataGrid->writeHeader();
 ?>
-<a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager');">normal</a><br />
-<a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager&ok0=title&od0=a');">title aufsteigend</a> <a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager&ok0=title&od0=d');">title absteigend</a><br />
-<a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager&ok0=balance&od0=a');">balance aufsteigend</a> <a href="javascript:void(0)" onclick="loadData('../../../core/XML/getDataGridXML.php?q=AccountManager&ok0=balance&od0=d');">balance absteigend</a><br />
+<a href="javascript:void(0)" onclick="loadData(sourceXML);">normal</a><br />
+<a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=title&od0=a');">title aufsteigend</a> <a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=title&od0=d');">title absteigend</a><br />
+<a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=balance&od0=a');">balance aufsteigend</a> <a href="javascript:void(0)" onclick="loadData(sourceXML + '&ok0=balance&od0=d');">balance absteigend</a><br />
 <a href="javascript:void(0)" onclick="emptyDataGrid();">clear dataGrid</a>
 </body>
 </html>
