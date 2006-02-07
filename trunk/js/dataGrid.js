@@ -317,7 +317,7 @@ Event.observe(document, 'keypress', dgKeyProcess, false)
 // used when saving a document
 function mouseShowHourGlass() {
 	for (id=0; id<document.childNodes.length; id++) {
-		document.childNodes[id].style.cursor='wait';
+		//document.childNodes[id].style.cursor='wait';
 	}
 }
 
