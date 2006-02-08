@@ -21,26 +21,47 @@ $widgets->addToolTipJS();
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
 		case 'delete':
+			//background delete
+			//called by dataGrid
 			if (isset($_GET['ID'])) {
 				$ID = $_GET['ID'];
 				$cm->deleteCurrency($ID);
-				//Fehler
+				//catch error?
 			} else {
-				//Fehler keine ID	
+				//error: no ID	
 			}			
 			break;		
 		case 'new':
 		case 'edit':
+			//background activity   add record, update record
+			if (isset($_POST['hiddenID'])) {
+				switch ($_POST['hiddenID']) {
+				case 'new':
+					//add new record
+					//check if $_POST['symbol'], $_POST['longName'] is set?????
+					$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
+					break;
+				default:
+					//update record
+					$currency = $cm->getCurrencyById($_POST['hiddenID']);
+					$currency->setSymbol($_POST['symbol']);
+					$currency->setLongName($_POST['longname']);
+					$ID = $currency->getId();
+				}				
+			}			
+			
+			//frontend form
 			echo $tpl->getHeader("CurrencyManager - New");
 			echo $widgets->addToolTipLayer();
-			if (isset($_GET['ID'])) {
-				$ID = $_GET['ID'];
-				//load data for this ID
+			if (isset($_GET['ID']) || $ID) {
+				//edit: load values for this ID
+				if (!$ID) {$ID = $_GET['ID'];};
 				$currency = $cm->getCurrencyById($ID);
 				$symbolValue = $currency->getSymbol();
 				$langnameValue = $currency->getLongName();				
 			} else {
-				$ID = "";
+				//new: empty values
+				$ID = "new";
 				$symbolValue = "";
 				$langnameValue = ""; 
 			}
@@ -53,10 +74,9 @@ if (isset($_GET['action'])) {
 			$longnameField = $widgets->createField("longname", 20, $langnameValue, "ToolTip I18N", true, "text", "");
 			$submitBtn = $widgets->createButton("submit", "Speichern I18N", "submit", "Widgets/accept.gif");
 
-			//print site
+			//add vars to template, print site
 			eval("echo \"".$tpl->getTemplate("Account/Currency")."\";");
 
 			break;
 	}	
-	
 }
