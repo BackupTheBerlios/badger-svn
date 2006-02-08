@@ -19,4 +19,8 @@
     <td>$parentLabel </td>
     <td>$parentField  </td>
   </tr>
+  <tr>
+    <td>&nbsp </td>
+    <td>$submitBtn </td>
+  </tr>
 </table>

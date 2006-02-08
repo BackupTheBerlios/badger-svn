@@ -27,4 +27,8 @@
     <td>$targetFutureCalcDateLabel </td>
     <td>$targetFutureCalcDateField  </td>
   </tr>
+  <tr>
+    <td>&nbsp </td>
+    <td>$submitBtn </td>
+  </tr>
 </table>

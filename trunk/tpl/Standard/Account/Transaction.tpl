@@ -31,4 +31,8 @@
     <td>$periodicalLabel </td>
     <td>$periodicalField  </td>
   </tr>
+  <tr>
+    <td>&nbsp </td>
+    <td>$submitBtn </td>
+  </tr>
 </table>
