@@ -39,14 +39,16 @@ public $initialSort;
 						<tr>
 							<td width="20">&nbsp;</td>';
 			for ($i=0; $i < count($this->headerName); $i++) {
-				$output .= '<td id="dgColumn'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.$this->headerName[$i].'</td>';
+				$output .= '<td id="dgColumn'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.
+							$this->headerName[$i].'&nbsp;'.
+						   '<img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/dropEmpty.png" id="dgImg'.$this->columnOrder[$i].'" /></td>';
 			}
 		$output .= '		<td></td>
 						</tr>
 					</table>';
 					
 		$output .= '<div id="dgScroll">
-					<table id="dgData" cellpadding="2" cellspacing="0" rules="row">
+					<table id="dgData" cellpadding="2" cellspacing="0">
 					</table>
 					</div>
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">
@@ -70,6 +72,7 @@ public $initialSort;
 		$this->tpl->addOnLoadEvent('dgNewAction = "'. $this->newAction .'";');
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
 		$this->tpl->addOnLoadEvent('dgInitialSort = "'.$this->initialSort.'";');
+		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + dgInitialSort);');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
