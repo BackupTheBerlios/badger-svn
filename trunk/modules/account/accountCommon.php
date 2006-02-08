@@ -44,7 +44,7 @@ function getDailyAmount($account, $startDate, $endDate) {
 		}
 
 		//fill all dates between last and this transaction with the old amount
-		while ($currentDate->before($currentTransaction->getValutaDate())) {
+		while (is_null($tmp = $currentTransaction->getValutaDate()) ? false : $currentDate->before($tmp)) {
 			$result[$currentDate->getDate()] = new Amount($currentAmount);
 			
 			$currentDate->addSeconds(24 * 60 * 60);
