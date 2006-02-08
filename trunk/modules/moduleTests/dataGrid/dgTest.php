@@ -20,22 +20,26 @@ $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
-$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-$dataGrid->initialSort = "&ok0=title&od0=a";
-$dataGrid->headerName = array("Currency","Title","Balance");
-$dataGrid->columnOrder = array("currency","title","balance");  
-$dataGrid->headerSize = array(150,200,180);
-$dataGrid->cellAlign = array("left","left","right");
-$dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
-$dataGrid->rowCounterName = "Datensätze";
-$dataGrid->deleteAction = "deleteXYZ.php";
-$dataGrid->editAction = "editXYZ.php?id=";
-$dataGrid->newAction = "newXYZ.php";
+$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";
+$dataGrid->headerName = array("Symbol","LongName");
+$dataGrid->columnOrder = array("symbol","longName");
+$dataGrid->initialSort = "symbol";  
+$dataGrid->headerSize = array(200,200);
+$dataGrid->cellAlign = array("left","left");
+$dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
+$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
+$dataGrid->deleteAction = "CurrencyManager.php?action=delete&ID=";
+$dataGrid->editAction = "CurrencyManager.php?action=edit&ID=";
+$dataGrid->newAction = "CurrencyManager.php?action=new";
 $dataGrid->initDataGridJS();
-echo $tpl->getHeader("DataGrid");
 
-echo $widgets->createButton("btnNew", "Neu", "dgNew()", "Widgets/table_add.gif");
-echo $widgets->createButton("btnDelete", "Löschen", "dgDelete()", "Widgets/table_delete.gif");
+$widgets->addNavigationHead();
+echo $tpl->getHeader("Currency Manager");
+echo $widgets->getNavigationBody(); 
+
+echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnTest", "test", "alert(dgGetAllIds())", "");
 		
 echo $dataGrid->writeDataGrid();
 ?>
