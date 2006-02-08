@@ -16,14 +16,23 @@ require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/includes/charts/charts.php';
+require_once BADGER_ROOT . '/core/Date/Span.php';
+require_once BADGER_ROOT . '/core/widgets/DataGrid.class.php';
 
 if (isset($_GET['mode'])) {
 	$mode = $_GET['mode'];
+} else if (isset($_POST['mode'])) {
+	$mode =$_POST['mode'];
 } else {
-	$mode = 'CHANGEME';
+	$mode = 'selectPage';
 }
 
 switch ($mode) {
+	case 'selectPage':
+	default:
+		showSelectPage();
+		break;
+
 	case 'trendPage':
 		printTrendPage();
 		break;
@@ -39,14 +48,57 @@ switch ($mode) {
 	case 'categoryData':
 		showCategoryData();
 		break;
+}
 
-	case 'CHANGEME':
-		echo '<a href="' . BADGER_ROOT . '/modules/account/statistics.php?mode=trendPage' . '">Trend</a><br /><a href="' . BADGER_ROOT . '/modules/account/statistics.php?mode=categoryPage' . '">Kuchen</a>';
-		break;
+function showSelectPage() {
+	global $tpl;
+	$widgets = new WidgetEngine($tpl); 
+
+	$widgets->addCalendarJS();
+	$tpl->addCss("Widgets/dataGrid.css");
+	$tpl->addJavaScript("js/behaviour.js");
+	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addJavaScript("js/statistics.js");
+	
+	$dataGrid = new DataGrid($tpl);
+	$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
+	$dataGrid->headerName = array("Titel","Kontostand");
+	$dataGrid->columnOrder = array("title","balance");  
+	$dataGrid->initialSort = "title";
+	$dataGrid->headerSize = array(200,150);
+	$dataGrid->cellAlign = array("left","right");
+	$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
+	$dataGrid->initDataGridJS();
+
+	$widgets->addNavigationHead();
+
+	$selectTitle = 'Statistik-Auswahl';
+	echo $tpl->getHeader($selectTitle);
+	
+	echo $widgets->getNavigationBody();
+
+	$selectFormAction = BADGER_ROOT . '/modules/statistics/statistics.php';
+	
+	$trendRadio = $widgets->createField('mode', null, 'trendPage', '', false, 'radio');
+	$trendLabel = $widgets->createLabel('mode', 'Trend');
+	
+	$categoryRadio = $widgets->createField('mode', null, 'categoryPage', '', false, 'radio');
+	$categoryLabel = $widgets->createLabel('mode', 'Kategorien');
+
+	$accountSelect = $dataGrid->writeDataGrid();
+	$accountField = $widgets->createField('accounts', null, null, '', false, 'hidden');
+
+	$startDateField = $widgets->addDateField("beginDate", "01.01.2006");
+	$endDateField = $widgets->addDateField("endDate", "01.01.2006");
+	
+	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();');
+
+	eval(' echo "' . $tpl->getTemplate('statistics/select') . '";');
+	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
 function printTrendPage() {
-	echo InsertChart(BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/account/statistics.php?mode=trendData&accounts=1;2&startDate=2006-02-01&endDate=2006-02-28", 750, 500, '99cc00');
+	echo InsertChart(BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/statistics/statistics.php?mode=trendData&accounts=1;2&startDate=2006-01-01&endDate=2006-12-31", 750, 500, '99cc00');
 }
 
 function showTrendData() {
@@ -82,9 +134,11 @@ function showTrendData() {
 		}
 	}
 	
+	$numDates = count($totals);
+	
 	$chart = array ();
 	$chart['chart_type'] = 'line';
-	$chart['axis_category']['skip'] = 1;
+	$chart['axis_category']['skip'] = $numDates / 16;
 	$chart['axis_category']['size'] = 14;
 	$chart['axis_category']['orientation'] = 'diagonal_up';
 	$chart['axis_value']['size'] = 14;
@@ -106,7 +160,7 @@ function showTrendData() {
 }
 
 function printCategoryPage() {
-	echo InsertChart(BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/account/statistics.php?mode=categoryData&accounts=1;2&startDate=2006-02-01&endDate=2006-02-28&type=o", 750, 500, '99cc00');
+	echo InsertChart(BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/statistics/statistics.php?mode=categoryData&accounts=1;2&startDate=2006-02-01&endDate=2006-02-28&type=i", 750, 500, '99cc00');
 }
 
 function showCategoryData() {
@@ -207,7 +261,11 @@ function showCategoryData() {
 	
 	foreach($categories as $key => $val) {
 		$chart['chart_data'][0][] = $val['title'];
-		$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
+		if ($type == 'i') {
+			$chart['chart_data'][1][] = $val['amount']->get();
+		} else {
+			$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
+		}
 	}
 	
 	SendChartData($chart);
