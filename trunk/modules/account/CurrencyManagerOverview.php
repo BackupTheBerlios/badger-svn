@@ -21,9 +21,9 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";
-$dataGrid->initialSort = "";
 $dataGrid->headerName = array("Symbol","LongName");
-$dataGrid->columnOrder = array("symbol","longName");  
+$dataGrid->columnOrder = array("symbol","longName");
+$dataGrid->initialSort = "symbol";  
 $dataGrid->headerSize = array(200,200);
 $dataGrid->cellAlign = array("left","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');

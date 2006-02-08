@@ -21,9 +21,9 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-$dataGrid->initialSort = "&ok0=title&od0=a";
 $dataGrid->headerName = array("Title","Balance","Currency");
 $dataGrid->columnOrder = array("title","balance","currency");  
+$dataGrid->initialSort = "title";
 $dataGrid->headerSize = array(200,150,100);
 $dataGrid->cellAlign = array("left","right","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
