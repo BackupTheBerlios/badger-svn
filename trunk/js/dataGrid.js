@@ -238,7 +238,8 @@ function dgDelete() {
 		//checkif enabled
 		for (i=0; i<checkbox.length; i++) {
 			if ($F(checkbox[i]) == "on") {
-				// if background delete id okay then 
+				// if background delete id okay then
+				
 				alert("ToDo: BackgroundDelete " + dgDeleteAction + " ID:" + checkbox[i].parentNode.parentNode.id);
 				//alert(checkbox[i].id);
 				dgData.removeChild(checkbox[i].parentNode.parentNode);
@@ -253,12 +254,12 @@ function dgDelete() {
 
 // call site to add a new record
 function dgNew() {
-	alert("Action: "+ dgNewAction);
+	document.location.href = dgNewAction;
 }
 
 // edit record with ID in a special page
 function dgEdit(id) {
-	alert("Action: "+ dgEditAction + " ID: " + id);
+	document.location.href = dgEditAction + id;
 }
 
 //delete all rows form the grid
