@@ -40,16 +40,18 @@ $chart [ 'axis_value' ] = array (   'min'           =>  -1000,
                                     'orientation'   =>  "horizontal"
                                    );
 
-$chart [ 'chart_border' ] = array (   'top_thickness'     =>  0,
+$chart [ 'chart_border' ] = array (   'top_thickness'     =>  1,
                                       'bottom_thickness'  =>  1,
                                       'left_thickness'    =>  1,
-                                      'right_thickness'   =>  0,
+                                      'right_thickness'   =>  1,
                                       'color'             =>  "000000"
                                    );
 
                                    
 $chart [ 'chart_data' ] = array ( array ( "",         "Januar", "Februar", "Maerz", "April", "Mai", "Juni", "Juli", "August"),
                                   array ( "Prognose",     1000,     1300,     1800,     2300  ,  2800, 1200, 1400, 1900),
+                                  array ( "Dispo-Limit",     -800,     -800,     -800,     -800  ,  -800, -800, -800, -800),
+                                  array ( "Investieren!",     2000,     2000,     2000,     2000  ,  2000, 2000, 2000, 2000),
                                   array ( "mit Taschengeld",     800,     1100,     1600,     2100  ,  2600, 1000, 1200, 1700),
                                   array ( "mit Sparziel",     900,     1200,     1700,     -2200  ,  2700, 1100, 1300, 1800)
                                 );
@@ -77,32 +79,55 @@ $chart [ 'chart_rect' ] = array ( 'x'=>50,
                                   'positive_alpha'  =>  100,
                                   'negative_alpha'  =>  30
                                 );
-$chart [ 'chart_transition' ] = array ( 'type'      =>  "drop",
+$chart [ 'chart_value' ] = array (  'prefix'         =>  "", 
+                                    'suffix'         =>  "", 
+                                    'decimals'       =>  0,
+                                    'decimal_char'   =>  ".",  
+                                    'separator'      =>  "",
+                                    'position'       =>  "cursor",
+                                    'hide_zero'      =>  true, 
+                                    'as_percentage'  =>  false, 
+                                    'font'           =>  "Arial", 
+                                    'bold'           =>  false, 
+                                    'size'           =>  10, 
+                                    'color'          =>  "000000", 
+                                    'alpha'          =>  90
+                                  ); 
+$chart [ 'chart_transition' ] = array( 'type'      =>  "drop",
                                         'delay'     =>  1, 
-                                        'duration'  =>  5, 
+                                        'duration'  =>  10, 
                                         'order'     =>  "all"                                 
                                       ); 
                                
-$chart [ 'legend_rect' ] = array (   'x'               =>  5,
+$chart [ 'legend_rect' ] = array (   'x'               =>  50,
                                      'y'               =>  5, 
-                                     'width'           =>  390, 
+                                     'width'           =>  700, 
                                      'height'          =>  5, 
                                      'margin'          =>  5,
                                      'fill_color'      =>  "FFFFFF",
                                      'fill_alpha'      =>  100, 
-                                     'line_color'      =>  "C0C0C0",
+                                     'line_color'      =>  "000000",
                                      'line_alpha'      =>  100, 
-                                     'line_thickness'  =>  2
+                                     'line_thickness'  =>  1
                                  ); 
 $chart [ 'legend_label' ] = array (   'layout'  =>  "horizontal",
                                       'bullet'  =>  "circle",
                                       'font'    =>  "Arial", 
-                                      'bold'    =>  true, 
-                                      'size'    =>  10, 
+                                      'bold'    =>  false, 
+                                      'size'    =>  11, 
                                       'color'   =>  "000000", 
                                       'alpha'   =>  90
                                   ); 
-
+$chart [ 'legend_transition' ] = array ( 'type'      =>  "slide_left",
+                                         'delay'     =>  1, 
+                                         'duration'  =>  10 
+                                       ); 
+$chart [ 'series_color' ] = array (  "FF0000", 
+									 "000000",
+									 "0000FF",
+									 "FF8000",
+									 "404040"
+									);                                       
 SendChartData ( $chart );
 
 ?>
