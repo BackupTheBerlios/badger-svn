@@ -71,9 +71,9 @@ public $initialSort;
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
 		$this->tpl->addOnLoadEvent('dgNewAction = "'. $this->newAction .'";');
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
-		$this->tpl->addOnLoadEvent('dgInitialSort = "'.$this->initialSort.'";');
 		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
-		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + dgInitialSort);');
+		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'");');
+		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		
