@@ -1,6 +1,6 @@
 <form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php">
 	<fieldset>
-		<legend>Heading</ledgend>
+		<legend>$FsHeading</ledgend>
 		<div class="USAHeading">$USFormLabel</div>
 		<br>
 			<table>
@@ -58,5 +58,6 @@
 				<td>$btnSubmit</td>
 			</tr>
 		</table>
+	$Feedback
 	</fieldset>
 </form>

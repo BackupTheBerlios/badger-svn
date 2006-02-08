@@ -70,6 +70,7 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		//end of Initialization
 		
 		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
+		$MandatoryCommitedFsHeading = getBadgerTranslation2('UserSettingsAdmin','mandatory_commited_fs_heading');
 		$MandatoryCommited = getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
 		$MandatoryCommitedLink = "<a href\"".$_SERVER['PHP_SELF']."\">".getBadgerTranslation2('UserSettingsAdmin','linktext_after_successful_mandatory_change')."</a>";
 		eval("echo \"".$tpl->getTemplate("Login/mandatoryCommited")."\";");
@@ -193,11 +194,8 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	$passwordcorrect = false;
 	//end of Initialization
 	
-	//print("<form name=\"MandatoryChangePassword\" method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
-	//$MandatoryForm = "<form name=\"MandatoryChangePassword\" method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">";
-	//echo "<div class=\"USAHeading\">".getBadgerTranslation2('UserSettingsAdmin','mandatory_change_password_heading')."</div><br/>";
 	$MandatoryHeading = "<div class=\"USAHeading\">".getBadgerTranslation2('UserSettingsAdmin','mandatory_change_password_heading')."</div><br/>";
-	
+	$MandatoryFsHeading = getBadgerTranslation2('UserSettingsAdmin','mandatory_fs_heading');
 	$MandatorySelf = $_SERVER['PHP_SELF'];
 	
 	foreach( $_POST as $key=>$value ){
@@ -234,14 +232,12 @@ if($passwordcorrect == false)
 		echo $widgets->addToolTipLayer();
 		// End of Initialization
 		
+		$FsHeading = getBadgerTranslation2('badger_login', 'fs_heading'); 
+		
 		set_session_var('number_of_login_attempts',$attempts + 1);
-		//print("<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />");
 		$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
-		//print("<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."\">");
 		$Self = $_SERVER['PHP_SELF'];
 		
-		//print("<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />");
-		//$PasswordInput = "<input name=\"password\" id=\"password\" size=\"50\" maxlength=\"150\" value=\"\" type=\"password\" /><br />";
 		$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
 		
 		//--

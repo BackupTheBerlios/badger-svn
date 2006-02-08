@@ -6,7 +6,7 @@
 		<tr>
 			<td>
 				<fieldset>
-					<legend>Heading</legend>
+					<legend>$MandatoryCommitedFsHeading</legend>
 						<table>
 							<tr>
 								<td>$MandatoryCommited</td>

@@ -7,7 +7,7 @@
 			<td>
 				<form name="MandatoryChangePassword" method="post" action="$MandatorySelf">
 					<fieldset>
-						<legend>Heading</legend>
+						<legend>$MandatoryFsHeading</legend>
 							<div class="USAHeading">$MandatoryHeading</div><br/>
 								<table>
 									<tr>

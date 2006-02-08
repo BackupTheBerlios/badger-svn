@@ -118,7 +118,7 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 // Print form for change of User Settings.
 
 		$USFormLabel = getBadgerTranslation2('UserSettingsAdmin','user_settings_heading');
-		
+		$FsHeading = getBadgerTranslation2('UserSettingsAdmin', 'fs_heading');
 		//$templates = array();
 		
 		$templatesString = "\$templates = array(";
@@ -205,49 +205,45 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		
 		$btnSubmit = $widgets->createButton("SubmitUserSettings", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 		
+		// Begin of Feedback
+		
+		$Feedback = "<br/>";
+		
+		if((
+				isset($validation_user_settings) && $validation_user_settings == true
+				&&
+				$change_password == true
+				&&
+				isset($validation_change_password )	&&	$validation_change_password == true
+			)||(
+				isset($validation_user_settings) && $validation_user_settings == true
+				&&
+				$change_password == false
+			)
+		){
+			if($change_password == true){
+				$Feedback .= getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
+			};
+		$Feedback .= getBadgerTranslation2('UserSettingsAdmin','user_settings_change_commited')."<br/><br/>";
+		};
+		
+		if($change_password == true && isset($validation_change_password ) && $validation_change_password != true){
+			$Feedback .= $validation_change_password_errors;
+		};
+		
+		// If Validation for User Settings had returned
+		// a bad result, print the error messages
+		if(isset($validation_user_settings) && $validation_user_settings != true){
+			$Feedback .= "<div class=\"USAError\">".$validation_user_settings_errors."</div><br/><br/>";
+		};
+		
+		// End of Feedback
+		
 		eval("echo \"".$tpl->getTemplate("UserSettingsAdmin/UserSettingsAdmin")."\";");
-		
-		//$rows = "";
-		//for
-		//eval("\$rows .=  \"".$tpl->getTemplate("UserSettingsAdmin/PWChange")."\";");
-		//for end
-		//echo $rows;
-		
-		//echo "<input name=\"SubmitChangePassword\" value=\"".getBadgerTranslation2('UserSettingsAdmin','submit_button')."\" type=\"submit\">";
-
 //--
 
 
-// If Validation for User Settings had returned
-// a bad result, print the error messages
-if(isset($validation_user_settings) && $validation_user_settings != true){
-	print("<div class=\"USAError\">".$validation_user_settings_errors."</div><br/><br/>");
-};
 
-//--
-
-
-if((
-		isset($validation_user_settings) && $validation_user_settings == true
-		&&
-		$change_password == true
-		&&
-		isset($validation_change_password )	&&	$validation_change_password == true
-	)||(
-		isset($validation_user_settings) && $validation_user_settings == true
-		&&
-		$change_password == false
-	)
-){
-	if($change_password == true){
-		print(getBadgerTranslation2('UserSettingsAdmin','user_settings_change_commited')."<br/><br/>");
-		echo getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
-	};
-};
-
-if($change_password == true && isset($validation_change_password ) && $validation_change_password != true){
-	echo $validation_change_password_errors;
-};
 
 //--
 
