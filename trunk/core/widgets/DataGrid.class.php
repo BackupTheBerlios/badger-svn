@@ -67,6 +67,7 @@ public $initialSort;
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
+		$this->tpl->addOnLoadEvent('dgNewAction = "'. $this->newAction .'";');
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
 		$this->tpl->addOnLoadEvent('dgInitialSort = "'.$this->initialSort.'";');
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + dgInitialSort);');
