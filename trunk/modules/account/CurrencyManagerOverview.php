@@ -28,9 +28,9 @@ $dataGrid->headerSize = array(200,200);
 $dataGrid->cellAlign = array("left","left");
 $dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
 $dataGrid->rowCounterName = "Datensätze";
-$dataGrid->deleteAction = "deleteXYZ.php";
-$dataGrid->editAction = "editXYZ.php?id=";
-$dataGrid->newAction = "newXYZ.php";
+$dataGrid->deleteAction = "CurrencyManager.php?action=delete&ID=";
+$dataGrid->editAction = "CurrencyManager.php?action=edit&ID=";
+$dataGrid->newAction = "CurrencyManager.php?action=new";
 $dataGrid->initDataGridJS();
 echo $tpl->getHeader("DataGrid");
 
