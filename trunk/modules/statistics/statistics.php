@@ -91,7 +91,7 @@ function showSelectPage() {
 	$startDateField = $widgets->addDateField("beginDate", "01.01.2006");
 	$endDateField = $widgets->addDateField("endDate", "01.01.2006");
 	
-	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();');
+	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
 
 	eval(' echo "' . $tpl->getTemplate('statistics/select') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');

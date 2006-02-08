@@ -1,6 +1,6 @@
 <h1>$selectTitle</h1>
 
-<form method="post" action="$selectFormAction" id="selectForm">
+<form method="post" action="$selectFormAction" id="selectForm" name="mainform">
 
 	<h2>Typ</h2>
 	<p>
