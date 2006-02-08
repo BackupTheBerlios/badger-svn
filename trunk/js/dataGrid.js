@@ -279,15 +279,15 @@ function emptyDataGrid() {
 //change sort order and hide/show sort images
 var activeColumn;
 function addNewSortOrder(column) {
-	if(activeColumn) $("dgColumn"+activeColumn).style.background = "";
+	if(activeColumn) changeColumnSortImage(activeColumn, "empty");
 	if(column==urlParameter["ok0"]) {
 		//click on the same column:  asc -> desc, desc -> asc
 		if (urlParameter["od0"]=="a") {
 			urlParameter["od0"]="d";
-			$("dgColumn"+column).style.background = "green";
+			changeColumnSortImage(column, "desc");
 		} else {
 			urlParameter["od0"]="a";
-			$("dgColumn"+column).style.background = "red";
+			changeColumnSortImage(column, "asc");
 		}
 	} else {
 		urlParameter["ok2"] = urlParameter["ok1"];
@@ -296,10 +296,27 @@ function addNewSortOrder(column) {
 		urlParameter["od1"] = urlParameter["od2"];
 		urlParameter["ok0"] = column;
 		urlParameter["od0"] = "a";
-		$("dgColumn"+column).style.background = "red";
+		changeColumnSortImage(column, "asc");
 	}
 	activeColumn = column;
 }
+
+//change the image for sorting direction
+function changeColumnSortImage(id, newstatus) {
+	switch(newstatus) {
+		case 'empty':
+			$("dgImg"+id).src = dgTplPath + "dropEmpty.png";
+			break;
+		case 'asc':
+			$("dgImg"+id).src = dgTplPath + "dropDown.png";
+			break;
+		case 'desc':
+			$("dgImg"+id).src = dgTplPath + "dropUp.png";
+			break;
+	}
+	
+}
+
 
 //convert array to string
 function serializeParameter() {
