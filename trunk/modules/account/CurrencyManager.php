@@ -48,7 +48,7 @@ if (isset($_GET['action'])) {
 					$currency->setLongName($_POST['longname']);
 					$ID = $currency->getId();
 				}				
-			}			
+			}
 			
 			//frontend form
 			echo $tpl->getHeader("CurrencyManager - New");
