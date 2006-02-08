@@ -275,10 +275,10 @@ function dgEdit(id) {
 
 function dgGetAllIds() {
 	checkbox = Form.getInputs("dgForm","checkbox");
-	allIDs = "";
+	allIDs = new Array;
 	for (i=0; i<checkbox.length; i++) {
 			//alert(checkbox[i].parentNode.parentNode.id);
-			if ($F(checkbox[i]) == "on") allIDs = allIDs + checkbox[i].parentNode.parentNode.id +";";
+			if ($F(checkbox[i]) == "on") allIDs[i] = checkbox[i].parentNode.parentNode.id;
 	}
 	return allIDs;
 }
