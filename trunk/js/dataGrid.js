@@ -278,7 +278,7 @@ function dgGetAllIds() {
 	allIDs = new Array;
 	for (i=0; i<checkbox.length; i++) {
 			//alert(checkbox[i].parentNode.parentNode.id);
-			if ($F(checkbox[i]) == "on") allIDs[i] = checkbox[i].parentNode.parentNode.id;
+			if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.id);
 	}
 	return allIDs;
 }

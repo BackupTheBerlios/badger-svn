@@ -112,14 +112,6 @@ function _getElementIndex(arr, element){
    return -1;
 };
 
-/***************************************************************
-** Standard translation
-*****************************************************************/
-function _jsVal_Language() {
-    this.err_form = "Please enter/select values for the following fields:\n\n";
-    this.err_select = "Please select a valid \"%FIELDNAME%\"";
-    this.err_enter = "Please enter a valid \"%FIELDNAME%\"";
-};
 
 /***************************************************************
 ** Field Class
