@@ -18,7 +18,9 @@ require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
-$tpl->getHeader("CSV-Import");
+$widgets->addNavigationHead();
+echo $tpl->getHeader("CSV-Import");
+echo $widgets->getNavigationBody(); 
 echo $widgets->addToolTipLayer();
 //create account manger object
 $am = new AccountManager($badgerDb);
