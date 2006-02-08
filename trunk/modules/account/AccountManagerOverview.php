@@ -26,16 +26,16 @@ $dataGrid->headerName = array("Title","Balance","Currency");
 $dataGrid->columnOrder = array("title","balance","currency");  
 $dataGrid->headerSize = array(200,150,30);
 $dataGrid->cellAlign = array("left","right","left");
-$dataGrid->deleteMsg = "Wollen sie die Datensätze wirklich löschen?"; //TODO Translation
-$dataGrid->rowCounterName = "Datensätze";
+$dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
+$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "deleteXYZ.php";
 $dataGrid->editAction = "editXYZ.php?id=";
 $dataGrid->newAction = "newXYZ.php";
 $dataGrid->initDataGridJS();
 echo $tpl->getHeader("DataGrid");
 
-echo $widgets->createButton("btnNew", "Neu", "dgNew()", "Widgets/table_add.gif");
-echo $widgets->createButton("btnDelete", "Löschen", "dgDelete()", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 		
 echo $dataGrid->writeDataGrid();
 ?>
