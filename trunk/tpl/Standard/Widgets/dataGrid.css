@@ -19,6 +19,7 @@
 	color: #ffffff;
 	font-weight: bold;
 	width: 100%;
+	cursor: pointer;
 }
 #dgScroll {
 	height: 180px;
