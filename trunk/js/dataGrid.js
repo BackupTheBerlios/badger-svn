@@ -229,36 +229,48 @@ function dgKeyProcess(event) {
 //  - delete row in GUI
 //  - send a background delete request to the server
 function dgDelete() {
-	choise = confirm(dgDeleteMsg);
-	if (choise) {
-		//get all selected row and delete them aysnc + update table
-		dgData = document.getElementById("dgData");
-		
+	if(dgDeleteAction) {
+		dgData = document.getElementById("dgData");	
 		checkbox = Form.getInputs("dgForm","checkbox");
-		//checkif enabled
+		
+		//count selected checkboxes
+		counter=0;
 		for (i=0; i<checkbox.length; i++) {
-			if ($F(checkbox[i]) == "on") {
-				// if background delete id okay then
-				
-				alert("ToDo: BackgroundDelete " + dgDeleteAction + " ID:" + checkbox[i].parentNode.parentNode.id);
-				//alert(checkbox[i].id);
-				dgData.removeChild(checkbox[i].parentNode.parentNode);
-				dgCount = document.getElementById("dgCount").innerHTML;
-				dgCount--;
-				document.getElementById("dgCount").innerHTML = dgCount;
-			};
-		} 		
+				if ($F(checkbox[i]) == "on") counter++;
+		}
+		
+		//asks use, if he is sure
+		choise = confirm(dgDeleteMsg +"("+counter+")");
+		if (choise) {
+			//checkif enabled
+			for (i=0; i<checkbox.length; i++) {
+				if ($F(checkbox[i]) == "on") {
+					// if background delete id okay then
+					
+					alert("ToDo: BackgroundDelete " + dgDeleteAction + " ID:" + checkbox[i].parentNode.parentNode.id);
+					//alert(checkbox[i].id);
+					dgData.removeChild(checkbox[i].parentNode.parentNode);
+					dgCount = document.getElementById("dgCount").innerHTML;
+					dgCount--;
+					document.getElementById("dgCount").innerHTML = dgCount;
+				};
+			} //for checkbox.length	
+		} //if (choise)
 	}
 }
 
 // call site to add a new record
 function dgNew() {
-	document.location.href = dgNewAction;
+	if(dgNewAction) {
+		document.location.href = dgNewAction;
+	}
 }
 
 // edit record with ID in a special page
 function dgEdit(id) {
-	document.location.href = dgEditAction + id;
+	if(dgEditAction) {
+		document.location.href = dgEditAction + id;
+	}
 }
 
 //delete all rows form the grid
