@@ -1,3 +1,4 @@
+<form method="post" action="$FormAction">
 <table>
   <tr>
     <td>$symbolLabel </td>
@@ -11,4 +12,9 @@
     <td>&nbsp </td>
     <td>$submitBtn </td>
   </tr>
+  <tr>
+    <td>&nbsp</td>
+    <td>$hiddenID </td>
+  </tr>
 </table>
+</form>
