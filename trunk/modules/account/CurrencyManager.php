@@ -30,25 +30,32 @@ if (isset($_GET['action'])) {
 			}			
 			break;		
 		case 'new':
+		case 'edit':
 			echo $tpl->getHeader("CurrencyManager - New");
 			echo $widgets->addToolTipLayer();
-			//formular ausgeben
-			$symbolLabel = $widgets->createLabel("symbol", "Symbol", true);
-			$symbolField = $widgets->createField("symbol", 20, "", "ToolTip I18N", true, "text", "");
-			$longnameLabel = $widgets->createLabel("longname", "LongName", true);
-			$longnameField = $widgets->createField("longname", 20, "", "ToolTip I18N", true, "text", "");
-			$submitBtn = $widgets->createButton("submit", "Speichern I18N", "submit", "Widgets/accept.gif");
-
-			eval("echo \"".$tpl->getTemplate("Account/Currency")."\";");
-			
-			break;
-		case 'edit':
 			if (isset($_GET['ID'])) {
 				$ID = $_GET['ID'];
-				//formular ausgeben und mit werten füllen
+				//load data for this ID
+				$currency = $cm->getCurrencyById($ID);
+				$symbolValue = $currency->getSymbol();
+				$langnameValue = $currency->getLongName();				
 			} else {
-				//Fehler keine ID	
+				$ID = "";
+				$symbolValue = "";
+				$langnameValue = ""; 
 			}
+			//set vars with values
+			$FormAction = $_SERVER['PHP_SELF'];
+			$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
+			$symbolLabel = $widgets->createLabel("symbol", getBadgerTranslation2('accountCurrency', 'symbol'), true);
+			$symbolField = $widgets->createField("symbol", 20, $symbolValue, "ToolTip I18N", true, "text", "");
+			$longnameLabel = $widgets->createLabel("longname", getBadgerTranslation2('accountCurrency', 'longname'), true);
+			$longnameField = $widgets->createField("longname", 20, $langnameValue, "ToolTip I18N", true, "text", "");
+			$submitBtn = $widgets->createButton("submit", "Speichern I18N", "submit", "Widgets/accept.gif");
+
+			//print site
+			eval("echo \"".$tpl->getTemplate("Account/Currency")."\";");
+
 			break;
 	}	
 	
