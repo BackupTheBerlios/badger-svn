@@ -32,7 +32,10 @@ $dataGrid->deleteAction = "deleteXYZ.php";
 $dataGrid->editAction = "editXYZ.php?id=";
 $dataGrid->newAction = "newXYZ.php";
 $dataGrid->initDataGridJS();
-echo $tpl->getHeader("DataGrid");
+
+$widgets->addNavigationHead();
+echo $tpl->getHeader("Account Manager");
+echo $widgets->getNavigationBody(); 
 
 echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
