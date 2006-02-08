@@ -11,7 +11,7 @@
 
 #dataGrid {
 	border: 1px solid #ececec;
-	width: 99.9%;
+	/*width: 99.9%;*/
 	background-color: #ffffff;
 }
 #dgTableHead {

@@ -27,6 +27,7 @@ public $newAction;
 public $cellAlign;
 public $rowCounterName;
 public $initialSort;
+public $width = "99.9%";
 
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
@@ -34,7 +35,7 @@ public $initialSort;
 	
 	public function writeDataGrid() {
 		//toDo: Use templateEngine
-		$output = '<form id="dgForm"><div id="dataGrid">
+		$output = '<form id="dgForm"><div id="dataGrid" style="width:'.$this->width.'">
 					<table id="dgTableHead" cellpadding="2" cellspacing="0">
 						<tr>
 							<td width="20">&nbsp;</td>';
