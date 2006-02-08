@@ -1,23 +1,23 @@
 function submitSelect() {
 	accountsField = document.getElementById('accounts');
 	
+	accountsField.value = '';
+	
 	accountIds = dgGetAllIds();
 	first = true;
 
 	for (i = 0; i < accountIds.length; i++) {
 		if (accountIds[i]) {
 			if (!first) {
-				accountField.value += ';';
+				accountsField.value += ';';
 			} else {
 				first = false;
 			}
-			accountField.valu += accountIds[i];
+			accountsField.value += accountIds[i];
 		}
 	}
 	
 	form = document.getElementById('selectForm');
 	
-	alert(form);
-
 	form.submit();
 }

@@ -67,6 +67,7 @@ function showSelectPage() {
 	$dataGrid->initialSort = "title";
 	$dataGrid->headerSize = array(200,150);
 	$dataGrid->cellAlign = array("left","right");
+	$dataGrid->width = '410px';
 	$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 	$dataGrid->initDataGridJS();
 
@@ -88,24 +89,81 @@ function showSelectPage() {
 	$accountSelect = $dataGrid->writeDataGrid();
 	$accountField = $widgets->createField('accounts', null, null, '', false, 'hidden');
 
-	$startDateField = $widgets->addDateField("beginDate", "01.01.2006");
-	$endDateField = $widgets->addDateField("endDate", "01.01.2006");
+	$startDateField = $widgets->addDateField("startDate", "01.01.2006");
+	$endDateField = $widgets->addDateField("endDate", "31.12.2006");
 	
 	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
 
-	eval(' echo "' . $tpl->getTemplate('statistics/select') . '";');
+	eval('echo "' . $tpl->getTemplate('statistics/select') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
 function printTrendPage() {
-	echo InsertChart(BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/statistics/statistics.php?mode=trendData&accounts=1;2&startDate=2006-01-01&endDate=2006-12-31", 750, 500, '99cc00');
+	global $tpl;
+	global $badgerDb;
+	
+	$widgets = new WidgetEngine($tpl); 
+	
+	$widgets->addNavigationHead();
+
+	$trendTitle = 'Trendanzeige'; 
+	echo $tpl->getHeader($trendTitle);
+
+	echo $widgets->getNavigationBody();
+	
+	if (!isset($_POST['accounts']) || !isset($_POST['startDate']) || !isset($_POST['endDate'])) {
+		throw new BadgerException('statistics', 'missingParameter');
+	}
+	
+	$accountIds = explode(';', $_POST['accounts']);
+	$accountIdsClean = '';
+	$first = true;
+	foreach($accountIds as $key => $val) {
+		settype($accountIds[$key], 'integer');
+		
+		if (!$first) {
+			$accountIdsClean .= ';';
+		} else {
+			$first = false;
+		}
+		$accountIdsClean .= $accountIds[$key];
+	}
+	
+	$startDate = new Date($_POST['startDate'], true);
+	$endDate = new Date($_POST['endDate'], true);
+	
+	$accountManager = new AccountManager($badgerDb);
+	
+	$accountList = '';
+	
+	foreach($accountIds as $currentAccountId) {
+		$currentAccount = $accountManager->getAccountById($currentAccountId);
+		
+		$accountTitle = $currentAccount->getTitle();
+		eval('$accountList .= "' . $tpl->getTemplate('statistics/trendAccountLine') . '";');
+	}	
+	
+	$startDateFormatted = $startDate->getFormatted();
+	$endDateFormatted = $endDate->getFormatted();
+
+	$trendChart = InsertChart(
+		BADGER_ROOT . "/includes/charts/charts.swf",
+		BADGER_ROOT . "/includes/charts/charts_library",
+		BADGER_ROOT . "/modules/statistics/statistics.php?mode=trendData&accounts=$accountIdsClean&startDate=" . $startDate->getDate() . '&endDate=' . $endDate->getDate(),
+		750,
+		500,
+		'99cc00'
+	);
+
+	eval('echo "' . $tpl->getTemplate('statistics/trend') . '";');
+	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
 function showTrendData() {
 	global $badgerDb;
 	
 	if (!isset($_GET['accounts']) || !isset($_GET['startDate']) || !isset($_GET['endDate'])) {
-		throw new BadgerException('accountStatistics', 'missingParameter');
+		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
 	$accounts = explode(';', $_GET['accounts']);
@@ -167,7 +225,7 @@ function showCategoryData() {
 	global $badgerDb;
 	
 	if (!isset($_GET['accounts']) || !isset($_GET['startDate']) || !isset($_GET['endDate']) || !isset($_GET['type'])) {
-		throw new BadgerException('accountStatistics', 'missingParameter');
+		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
 	$accounts = explode(';', $_GET['accounts']);

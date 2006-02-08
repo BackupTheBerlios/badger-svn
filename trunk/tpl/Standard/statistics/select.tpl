@@ -8,14 +8,15 @@
 		$categoryRadio $categoryLabel
 	</p>
 
-	<h2>Konten</h2>
-	<p>
-		$accountSelect
-		$accountField
-	</p>
-	
 	<h2>Zeitraum</h2>
 	<p>Von: $startDateField bis: $endDateField</p>
 	
-	<p>$submitButton</p>
+	$accountField
 </form>
+
+<h2>Konten</h2>
+<p>
+	$accountSelect
+</p>
+
+<p>$submitButton</p>
