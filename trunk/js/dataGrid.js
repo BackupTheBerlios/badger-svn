@@ -247,8 +247,7 @@ function dgDelete() {
 				dgCount--;
 				document.getElementById("dgCount").innerHTML = dgCount;
 			};
-		} 
-		
+		} 		
 	}
 }
 
@@ -313,8 +312,7 @@ function changeColumnSortImage(id, newstatus) {
 		case 'desc':
 			$("dgImg"+id).src = dgTplPath + "dropUp.png";
 			break;
-	}
-	
+	}	
 }
 
 
