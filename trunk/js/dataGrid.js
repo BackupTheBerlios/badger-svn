@@ -269,14 +269,18 @@ function dgNew() {
 // edit record with ID in a special page
 function dgEdit(id) {
 	if(dgEditAction) {
-		checkbox = Form.getInputs("dgForm","checkbox");		
-		allIDs = "";
-		for (i=0; i<checkbox.length; i++) {
-				//alert(checkbox[i].parentNode.parentNode.id);
-				if ($F(checkbox[i]) == "on") allIDs = allIDs + checkbox[i].parentNode.parentNode.id +";";
-		}
-		document.location.href = dgEditAction + id + "&allIDs=" + allIDs;
+		document.location.href = dgEditAction + id;
 	}
+}
+
+function dgGetAllIds() {
+	checkbox = Form.getInputs("dgForm","checkbox");
+	allIDs = "";
+	for (i=0; i<checkbox.length; i++) {
+			//alert(checkbox[i].parentNode.parentNode.id);
+			if ($F(checkbox[i]) == "on") allIDs = allIDs + checkbox[i].parentNode.parentNode.id +";";
+	}
+	return allIDs;
 }
 
 //delete all rows form the grid
