@@ -1,4 +1,4 @@
-<form method="post" action="$FormAction">
+<form method="post" action="$FormAction?action=edit">
 <table>
   <tr>
     <td>$symbolLabel </td>
