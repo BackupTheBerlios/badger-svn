@@ -270,7 +270,6 @@ function dgNew() {
 function dgEdit(id) {
 	if(dgEditAction) {
 		checkbox = Form.getInputs("dgForm","checkbox");		
-		//count selected checkboxes
 		allIDs = "";
 		for (i=0; i<checkbox.length; i++) {
 				//alert(checkbox[i].parentNode.parentNode.id);
