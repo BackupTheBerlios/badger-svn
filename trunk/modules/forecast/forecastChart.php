@@ -7,10 +7,10 @@ require_once(BADGER_ROOT . "/includes/charts/charts.php");
 $chart [ 'chart_type' ] = "line";
 $chart [ 'axis_category' ] = array (   'skip'         =>  0,
                                        'font'         =>  "Arial", 
-                                       'bold'         =>  true, 
-                                       'size'         =>  12, 
-                                       'color'        =>  "ffffff", 
-                                       'alpha'        =>  25,
+                                       'bold'         =>  false, 
+                                       'size'         =>  10, 
+                                       'color'        =>  "000000", 
+                                       'alpha'        =>  100,
                                        'orientation'  =>  "horizontal"
                                    ); 
 $chart [ 'axis_ticks' ] = array (   'value_ticks'      =>  true, 
@@ -77,7 +77,7 @@ $chart [ 'chart_rect' ] = array ( 'x'=>50,
                                   'positive_color'  =>  "ffffff",
                                   'negative_color'  =>  "000000",
                                   'positive_alpha'  =>  100,
-                                  'negative_alpha'  =>  30
+                                  'negative_alpha'  =>  10
                                 );
 $chart [ 'chart_value' ] = array (  'prefix'         =>  "", 
                                     'suffix'         =>  "", 
@@ -93,9 +93,9 @@ $chart [ 'chart_value' ] = array (  'prefix'         =>  "",
                                     'color'          =>  "000000", 
                                     'alpha'          =>  90
                                   ); 
-$chart [ 'chart_transition' ] = array( 'type'      =>  "drop",
+$chart [ 'chart_transition' ] = array( 'type'      =>  "slide_left",
                                         'delay'     =>  1, 
-                                        'duration'  =>  10, 
+                                        'duration'  =>  1, 
                                         'order'     =>  "all"                                 
                                       ); 
                                
@@ -118,9 +118,9 @@ $chart [ 'legend_label' ] = array (   'layout'  =>  "horizontal",
                                       'color'   =>  "000000", 
                                       'alpha'   =>  90
                                   ); 
-$chart [ 'legend_transition' ] = array ( 'type'      =>  "slide_left",
+$chart [ 'legend_transition' ] = array ( 'type'      =>  "slide_down",
                                          'delay'     =>  1, 
-                                         'duration'  =>  10 
+                                         'duration'  =>  1 
                                        ); 
 $chart [ 'series_color' ] = array (  "FF0000", 
 									 "000000",
