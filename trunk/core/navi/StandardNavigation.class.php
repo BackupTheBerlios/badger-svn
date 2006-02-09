@@ -340,7 +340,7 @@ class StandardNavigation implements Navigation {
 		
 		//we know only now how wide the menu should be, but the calls above refer to this JS object.
 		//Therefore we prepend the Menu creation call to $result
-		$result = "$menuName = new jsDOMenu('" . $this->calcMenuWidth($longestName) . "', 'fixed');\n" . $result;
+		$result = "$menuName = new jsDOMenu('" . $this->calcMenuWidth($longestName) . "', 'absolute');\n" . $result;
 		
 		return $result;
 	}
