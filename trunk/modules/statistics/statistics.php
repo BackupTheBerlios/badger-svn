@@ -55,6 +55,7 @@ function showSelectPage() {
 	$widgets = new WidgetEngine($tpl); 
 
 	$widgets->addCalendarJS();
+	$widgets->addToolTipJS();
 	$tpl->addCss("Widgets/dataGrid.css");
 	$tpl->addJavaScript("js/behaviour.js");
 	$tpl->addJavaScript("js/prototype.js");
@@ -65,9 +66,9 @@ function showSelectPage() {
 	$dataGrid->headerName = array("Titel","Kontostand");
 	$dataGrid->columnOrder = array("title","balance");  
 	$dataGrid->initialSort = "title";
-	$dataGrid->headerSize = array(200,150);
+	$dataGrid->headerSize = array(180,100);
 	$dataGrid->cellAlign = array("left","right");
-	$dataGrid->width = '410px';
+	$dataGrid->width = '290px';
 	$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 	$dataGrid->initDataGridJS();
 
@@ -77,6 +78,7 @@ function showSelectPage() {
 	echo $tpl->getHeader($selectTitle);
 	
 	echo $widgets->getNavigationBody();
+	$widgets->addToolTipLayer();
 
 	$selectFormAction = BADGER_ROOT . '/modules/statistics/statistics.php';
 	
@@ -89,6 +91,24 @@ function showSelectPage() {
 	$accountSelect = $dataGrid->writeDataGrid();
 	$accountField = $widgets->createField('accounts', null, null, '', false, 'hidden');
 
+	$monthArray = array (
+		'fullYear' => 'Ganzes Jahr',
+		'jan' => 'Januar',
+		'feb' => 'Februar',
+		'mar' => 'März',
+		'apr' => 'April',
+		'may' => 'Mai',
+		'jun' => 'Juni',
+		'jul' => 'Juli',
+		'aug' => 'August',
+		'sep' => 'September',
+		'oct' => 'October',
+		'nov' => 'November',
+		'dec' => 'December'
+	);
+	$monthSelect = $widgets->createSelectField('monthSelect', $monthArray, 'fullYear', 'Description', false);
+	$yearInput = $widgets->createField('yearSelect', 4, 2006, 'Beschreibung');
+	
 	$startDateField = $widgets->addDateField("startDate", "01.01.2006");
 	$endDateField = $widgets->addDateField("endDate", "31.12.2006");
 	
