@@ -81,24 +81,26 @@ if (isset($_POST['Upload'])){
 	 		for ($foundTransactionNumber = 0; $foundTransactionNumber < $LookupTransactionNumber; $foundTransactionNumber++) {
 	 			$am4 = new AccountManager($badgerDb);
 	 			$account4 = $am4->getAccountById($foundTransactions[$foundTransactionNumber]["accountId"]);
-	 			$existing = false;
-	 			//get every transaction from the DB
-	 			while ($dbTransaction = $account4->getNextFinishedTransaction()){
-	 				//if amount is already in the db
-		 			if($dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"])==0){
-	 				//if date is already in the db	
-	 					if ($dbTransaction->getValutaDate()->compare($foundTransactions[$foundTransactionNumber]["valutaDate"],$dbTransaction->getValutaDate())==0){
-	 						$existing = true;
-	 					}
-	 				}		
-	 			}
-	 			//if date & amount not in the db, write to array
-	 			if (!$existing){
- 					$importedTransactions[$importedTransactionNumber] = $foundTransactions[$foundTransactionNumber];
+	 			//set filter to read existing transactions from database
+	 			$account4->setFilter(array (
+					array (
+						'key' => 'valutaDate',
+						'op' => 'eq',
+						'val' => $foundTransactions[$foundTransactionNumber]["valutaDate"]
+					),
+					array (
+						'key' => 'amount',
+						'op' => 'eq',
+						'val' => $foundTransactions[$foundTransactionNumber]["amount"]
+					)
+				));
+				//if there is a transaction with same amount & valutaDate in the database
+				if ($existing = $account4->getNextFinishedTransaction()) {
+					$filteredTransactions++;
+				} else {
+					$importedTransactions[$importedTransactionNumber] = $foundTransactions[$foundTransactionNumber];
  					$importedTransactionNumber++;
- 				} else {
- 					$filteredTransactions++;
- 				}
+				}
 	 		}
 	 		if ($filteredTransactions != 0){	
 	 			//feedback to user about filtered transactions
