@@ -85,12 +85,12 @@ if (isset($_POST['Upload'])){
 	 			//get every transaction from the DB
 	 			while ($dbTransaction = $account4->getNextFinishedTransaction()){
 	 				//if amount is already in the db
-	 				if($dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"])==0){
+		 			if($dbTransaction->getAmount()->compare($foundTransactions[$foundTransactionNumber]["amount"])==0){
 	 				//if date is already in the db	
 	 					if ($dbTransaction->getValutaDate()->compare($foundTransactions[$foundTransactionNumber]["valutaDate"],$dbTransaction->getValutaDate())==0){
 	 						$existing = true;
 	 					}
-	 				}
+	 				}		
 	 			}
 	 			//if date & amount not in the db, write to array
 	 			if (!$existing){
@@ -171,7 +171,7 @@ if (isset($_POST['Upload'])){
 				
 	 			eval("echo \"".$tpl->getTemplate("CsvImport/csvImportSelectTransactions1")."\";");
 	 		} else{
-	 			echo getBadgerTranslation2("importCsv", "noNewTransactions");
+	 			echo " " . getBadgerTranslation2("importCsv", "noNewTransactions");
 	 		}	
 	  	
 		}
@@ -244,7 +244,7 @@ if (isset($_POST['btnSubmit'])){
 			$writePeriodical = $writeToDbArray[$arrayRow]['periodical'];
 			$writeExceptional = $writeToDbArray[$arrayRow]['exceptional'];
 			$writeOutside = $writeToDbArray[$arrayRow]['outside'];
-			$account3->addFinishedTransaction($writeAmount, $writeTitle, $writeDescription, $writeValutaDate, $writeTransactionPartner, $writeCategory, $writeOutside);
+			$account3->addFinishedTransaction($writeAmount, $writeTitle, $writeDescription, $writeValutaDate, $writeTransactionPartner, $writeCategory, $writeOutside, $writeExceptional, $writePeriodical);
 		}
 		// echo success message & number of written transactions
 		echo "<br/>" . count($writeToDbArray) . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
