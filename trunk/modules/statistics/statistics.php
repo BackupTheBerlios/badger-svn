@@ -92,6 +92,18 @@ function showSelectPage() {
 	$startDateField = $widgets->addDateField("startDate", "01.01.2006");
 	$endDateField = $widgets->addDateField("endDate", "31.12.2006");
 	
+	$inputRadio = $widgets->createField('type', null, 'i', '', false, 'radio');
+	$inputLabel = $widgets->createLabel('type', 'Eingaben');
+	
+	$outputRadio = $widgets->createField('type', null, 'o', '', false, 'radio');
+	$outputLabel = $widgets->createLabel('type', 'Ausgaben');
+
+	$summarizeRadio = $widgets->createField('summarize', null, 't', '', false, 'radio');
+	$summarizeLabel = $widgets->createLabel('summarize', 'Unterkategorien unter der Hauptkategorie zusammenfassen');
+
+	$distinguishRadio = $widgets->createField('summarize', null, 'f', '', false, 'radio');
+	$distinguishLabel = $widgets->createLabel('summarize', 'Unterkategorien eigenständig aufführen');
+
 	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
 
 	eval('echo "' . $tpl->getTemplate('statistics/select') . '";');
@@ -218,13 +230,86 @@ function showTrendData() {
 }
 
 function printCategoryPage() {
-	echo InsertChart(BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/statistics/statistics.php?mode=categoryData&accounts=1;2&startDate=2006-02-01&endDate=2006-02-28&type=i", 750, 500, '99cc00');
+	global $tpl;
+	global $badgerDb;
+	
+	$widgets = new WidgetEngine($tpl); 
+	
+	$widgets->addNavigationHead();
+
+	$categoryTitle = 'Kategorieanzeige'; 
+	echo $tpl->getHeader($categoryTitle);
+
+	echo $widgets->getNavigationBody();
+	
+	if (!isset($_POST['accounts']) || !isset($_POST['startDate']) || !isset($_POST['endDate']) || !isset($_POST['type']) || !isset($_POST['summarize'])) {
+		throw new BadgerException('statistics', 'missingParameter');
+	}
+	
+	$accountIds = explode(';', $_POST['accounts']);
+	$accountIdsClean = '';
+	$first = true;
+	foreach($accountIds as $key => $val) {
+		settype($accountIds[$key], 'integer');
+		
+		if (!$first) {
+			$accountIdsClean .= ';';
+		} else {
+			$first = false;
+		}
+		$accountIdsClean .= $accountIds[$key];
+	}
+	
+	$startDate = new Date($_POST['startDate'], true);
+	$endDate = new Date($_POST['endDate'], true);
+	
+	$type = $_POST['type'];
+	if ($type !== 'o') {
+		$type = 'i';
+		$typeText = 'Einnahmen';
+	} else {
+		$typeText = 'Ausgaben';
+	}
+	
+	$summarize = $_POST['summarize'];
+	if ($summarize !== 't') {
+		$summarize = 'f';
+		$summarizeText = 'Unterkategorien werden eigenständig aufgeführt.';
+	} else {
+		$summarizeText = 'Unterkategorien werden unter den Hauptkategorien zusammengefasst.';
+	}
+
+	$accountManager = new AccountManager($badgerDb);
+	
+	$accountList = '';
+	
+	foreach($accountIds as $currentAccountId) {
+		$currentAccount = $accountManager->getAccountById($currentAccountId);
+		
+		$accountTitle = $currentAccount->getTitle();
+		eval('$accountList .= "' . $tpl->getTemplate('statistics/categoryAccountLine') . '";');
+	}	
+	
+	$startDateFormatted = $startDate->getFormatted();
+	$endDateFormatted = $endDate->getFormatted();
+
+	$categoryChart = InsertChart(
+		BADGER_ROOT . "/includes/charts/charts.swf",
+		BADGER_ROOT . "/includes/charts/charts_library",
+		BADGER_ROOT . "/modules/statistics/statistics.php?mode=categoryData&accounts=$accountIdsClean&startDate=" . $startDate->getDate() . '&endDate=' . $endDate->getDate() . '&type=' . $type . '&summarize=' . $summarize,
+		750,
+		500,
+		'99cc00'
+	);
+
+	eval('echo "' . $tpl->getTemplate('statistics/category') . '";');
+	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
 function showCategoryData() {
 	global $badgerDb;
 	
-	if (!isset($_GET['accounts']) || !isset($_GET['startDate']) || !isset($_GET['endDate']) || !isset($_GET['type'])) {
+	if (!isset($_GET['accounts']) || !isset($_GET['startDate']) || !isset($_GET['endDate']) || !isset($_GET['type']) || !isset($_GET['summarize'])) {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
@@ -237,9 +322,13 @@ function showCategoryData() {
 	$endDate = new Date($_GET['endDate']);
 	
 	$type = $_GET['type'];
-	
 	if ($type !== 'o') {
 		$type = 'i';
+	}
+
+	$summarize = $_GET['summarize'];
+	if ($summarize !== 't') {
+		$summarize = 'f';
 	}
 
 	$accountManager = new AccountManager($badgerDb);
@@ -282,6 +371,10 @@ function showCategoryData() {
 			}
 			
 			if ($category = $currentTransaction->getCategory()) {
+				if ($summarize == 't' && $category->getParent()) {
+					$category = $category->getParent();
+				}
+
 				if (isset($categories[$category->getId()])) {
 					$categories[$category->getId()]['count']++;
 					$categories[$category->getId()]['amount']->add($currentTransaction->getAmount());

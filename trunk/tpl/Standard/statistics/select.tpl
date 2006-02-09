@@ -11,6 +11,18 @@
 	<h2>Zeitraum</h2>
 	<p>Von: $startDateField bis: $endDateField</p>
 	
+	<h2>Art der Transaktionen (nur Kategorien)</h2>
+	<p>
+		$inputRadio $inputLabel<br />
+		$outputRadio $outputLabel
+	</p>
+
+	<h2>Kategorien zusammenfassen (nur Kategorien)</h2>
+	<p>
+		$summarizeRadio $summarizeLabel<br />
+		$distinguishRadio $distinguishLabel
+	</p>
+
 	$accountField
 </form>
 
