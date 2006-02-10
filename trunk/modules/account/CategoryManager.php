@@ -12,12 +12,12 @@
 **/
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
-require_once(BADGER_ROOT . '/modules/account/CurrencyManager.class.php');
+require_once(BADGER_ROOT . '/modules/account/CategoryManager.class.php');
 
-$redirectPageAfterSave = "CurrencyManagerOverview.php";
-$pageTitle = "Currency Manager"; //I18N
+$redirectPageAfterSave = "CategoryManagerOverview.php";
+$pageTitle = "Category Manager"; //I18N
 
-$cm = new CurrencyManager($badgerDb);
+$cm = new CategoryManager($badgerDb);
 
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
@@ -28,7 +28,7 @@ if (isset($_GET['action'])) {
 				$IDs = explode(",",$_GET['ID']);				
 				//check if we can delete this item (or is the currency used)
 				foreach($IDs as $ID){
-					$cm->deleteCurrency($ID);
+					$cm->deleteCategory($ID);
 				}
 				//dg should show this message!!!! ToDo
 				echo "deletion was successful!";
@@ -67,29 +67,42 @@ function printFrontend() {
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
 		$ID = $_GET['ID'];
-		$currency = $cm->getCurrencyById($ID);
-		$symbolValue = $currency->getSymbol();
-		$langnameValue = $currency->getLongName();				
+		$category = $cm->getCategoryById($ID);
+		$titleValue = $category->getTitle();
+		$descriptionValue = $category->getDescription();
+		$outsideCapitalValue = $category->getOutsideCapital();
+		if($category->getParent()) {
+			$parentValue = $category->getParent()->getTitle();
+		} else {
+			$parentValue = "";
+		}
 	} else {
 		//new: empty values
 		$ID = "new";
-		$symbolValue = "";
-		$langnameValue = ""; 
+		$titleValue = "";
+		$descriptionValue = "";
+		$outsideCapitalValue = "";
+		$parentValue = "";
 	}
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	//Fields & Labels
-	$symbolLabel = $widgets->createLabel("symbol", getBadgerTranslation2('accountCurrency', 'symbol'), true);
-	$symbolField = $widgets->createField("symbol", 20, $symbolValue, "", true, "text", "maxlength='3'");
-	$longnameLabel = $widgets->createLabel("longname", getBadgerTranslation2('accountCurrency', 'longname'), true);
-	$longnameField = $widgets->createField("longname", 20, $langnameValue, "", true, "text", "");
+	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountCategory', 'title'), true);
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
+	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountCategory', 'description'), false);
+	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	$parentLabel = $widgets->createLabel("parent", getBadgerTranslation2('accountCategory', 'parent'), false);
+	$parentField = $widgets->createField("parent", 30, $parentValue, "", false, "text", "");
+	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountCategory', 'outsideCapital'), false);
+	$outsideCapitalField = $widgets->createField("outsideCapital", 30, $outsideCapitalValue, "", false, "text", "");
+	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
 	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href=$redirectPageAfterSave", "Widgets/back.gif");
 
 	//add vars to template, print site
-	eval("echo \"".$tpl->getTemplate("Account/Currency")."\";");
+	eval("echo \"".$tpl->getTemplate("Account/Category")."\";");
 }
 
 
@@ -101,13 +114,13 @@ function updateRecord() {
 	case 'new':
 		//add new record
 		//check if $_POST['symbol'], $_POST['longName'] is set?????
-		$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
+		//$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
 		break;
 	default:
 		//update record
-		$currency = $cm->getCurrencyById($_POST['hiddenID']);
-		$currency->setSymbol($_POST['symbol']);
-		$currency->setLongName($_POST['longname']);
+		//$currency = $cm->getCurrencyById($_POST['hiddenID']);
+		//$currency->setSymbol($_POST['symbol']);
+		//$currency->setLongName($_POST['longname']);
 		//$ID = $currency->getId();
 	}
 	//REDIRECT

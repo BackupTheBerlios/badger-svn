@@ -78,8 +78,14 @@ function printFrontend() {
 	} else {
 		//new: empty values
 		$ID = "new";
-		$symbolValue = "";
-		$langnameValue = ""; 
+		$account = "";
+		$titleValue = "";
+		$descriptionValue = "";
+		$lowerLimitValue = "";
+		$upperLimitValue = "";
+		$balanceValue = "";
+		$currencyValue = "";
+		$targetFutureCalcDateValue = "";
 	}
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
@@ -119,14 +125,13 @@ function updateRecord() {
 		case 'new':
 			//add new record
 			//check if $_POST['symbol'], $_POST['longName'] is set?????
-			$ID = $am->addCurrency($_POST['symbol'], $_POST['longname']);
+			//$ID = $am->addCurrency($_POST['symbol'], $_POST['longname']);
 			break;
 		default:
 			//update record
-			$account = $am->getCurrencyById($_POST['hiddenID']);
-			$account->setSymbol($_POST['symbol']);
-			$account->setLongName($_POST['longname']);
-			$ID = $account->getId();
+			//$account = $am->getCurrencyById($_POST['hiddenID']);
+			//$account->setSymbol($_POST['symbol']);
+			//$account->setLongName($_POST['longname']);
 		}
 		//REDIRECT
 		header("Location: $redirectPageAfterSave");
