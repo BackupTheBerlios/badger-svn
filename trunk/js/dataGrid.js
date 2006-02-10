@@ -194,6 +194,7 @@ var behaviour =  {
 					}
 				}
 			} //if($F(this)=="on")
+			this.focus();
 		} //element.onclick 
 	}
 };
@@ -235,9 +236,11 @@ function dgKeyProcess(event) {
 			objNextRow = objRowActive.previousSibling;
 			if (objNextRow) {
 				if(objNextRow.tagName!="TR") objNextRow = objNextRow.previousSibling; //only FF, difference in the DOM
-				deactivateRow(objRowActive);
-				activateRow(objNextRow);
-				objRowActive = objNextRow;
+				if(objNextRow) {
+					deactivateRow(objRowActive);
+					activateRow(objNextRow);
+					objRowActive = objNextRow;
+				}
 			}
 		}
 	}
