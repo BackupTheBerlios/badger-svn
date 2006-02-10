@@ -1,7 +1,6 @@
 <form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php">
 	<fieldset>
 		<legend>$FsHeading</ledgend>
-		<div class="USAHeading">$USFormLabel</div>
 		<br>
 			<table>
 			<tr>
@@ -38,8 +37,10 @@
 				<td>$SessionTimeField</td>
 			</tr>
 		</table>
+	</fieldset>
 		<br/>
-		<div class="USAHeading">$PWFormLabel</div>
+	<fieldset>
+		<legend>$PWFormLabel</ledgend>
 		<br/>
 		<table>
 			<tr>
@@ -53,11 +54,13 @@
 				<td>$ConfPwLabel</td>
 				<td>$ConfPwField</td>
 			</tr>
+		</table>
+	$Feedback
+	</fieldset>
+		<table>
 			<tr>
 				<td></td>
 				<td>$btnSubmit</td>
 			</tr>
 		</table>
-	$Feedback
-	</fieldset>
 </form>
