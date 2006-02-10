@@ -1,12 +1,7 @@
-.btnOK, .btnReset {
-  background: #efefef;
-  font-size: 11px;
-  font-weight: bold;
-  font-family: trebuchet ms,sans-serif,verdana;
-  color: #444444;
-  background-color: #efefef;
-  border: 1px solid #cccccc;
-  width: 70px;
+#dgMessage {
+	display: none;
+	font-weight: bold;
+	color: red;
 }
 
 #dataGrid {

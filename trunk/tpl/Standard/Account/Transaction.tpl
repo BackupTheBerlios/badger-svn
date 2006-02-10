@@ -37,4 +37,5 @@
     <td>$submitBtn </td>
   </tr>
 </table>
+$hiddenID
 </form>

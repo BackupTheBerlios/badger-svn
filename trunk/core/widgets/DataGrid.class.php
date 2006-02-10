@@ -17,6 +17,7 @@
  */
 class DataGrid {
 private $tpl;
+private $LoadingMessage;
 public $headerName = array();
 public $columnOrder = array();
 public $headerSize = array();
@@ -31,6 +32,7 @@ public $width = "99.9%";
 
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
+		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 	}
 	
 	public function writeDataGrid() {
@@ -54,7 +56,7 @@ public $width = "99.9%";
 					</div>
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">
 						<tr>
-							<td><span id="dgCount">0</span> '.$this->rowCounterName.'</td>
+							<td><span id="dgCount">0</span> '.$this->rowCounterName.'&nbsp;&nbsp;<span id="dgMessage"></span></td>
 						</tr>
 					</table>
 					</div></form>';
@@ -73,6 +75,7 @@ public $width = "99.9%";
 		$this->tpl->addOnLoadEvent('dgNewAction = "'. $this->newAction .'";');
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
 		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
+		$this->tpl->addOnLoadEvent('dgLoadingMessage = "'.$this->LoadingMessage.'";');
 		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'");');
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');

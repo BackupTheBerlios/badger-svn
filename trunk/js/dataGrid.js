@@ -28,13 +28,18 @@ function loadData(url) {
 	xmlHttp.open("POST", url, 1);
 	xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlHttp.send(null);
-	mouseShowHourGlass();
+	messageLayer('show', dgLoadingMessage);
+}
+function deleteData(url) {
+	//xmlHttp.onreadystatechange=handleResponse;
+	xmlHttp.open("POST", url, 1);
+	xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlHttp.send(null);
 }
 
 // callback-function
 // process to server request
 function handleResponse() {
-	mouseShowNormal();
 	// if xmlhttp shows "loaded"
 	if (xmlHttp.readyState==4) {
 		// if "OK"
@@ -52,7 +57,7 @@ function dgInit() {
 	xmlColumns = xmlDoc.getElementsByTagName("column");
 	xmlRows = xmlDoc.getElementsByTagName("row");
 	
-	dgData = document.getElementById("dgData"); //.getElementsByTagName("tbody")[0];
+	dgData = $("dgData"); //.getElementsByTagName("tbody")[0];
 	dgRows = dgData.getElementsByTagName("tr");
 	if (dgRows.length>0) {emptyDataGrid()};
 	
@@ -105,7 +110,8 @@ function dgInit() {
 	//refresh JS-behaviours of the rows
 	Behaviour.apply();
 	//refresh row count
-	document.getElementById("dgCount").innerHTML = xmlRows.length;
+	$("dgCount").innerHTML = xmlRows.length;
+	messageLayer('hide');
 }
 
 
@@ -230,31 +236,24 @@ function dgKeyProcess(event) {
 //  - send a background delete request to the server
 function dgDelete() {
 	if(dgDeleteAction) {
-		dgData = document.getElementById("dgData");	
+		dgData = $("dgData");	
 		checkbox = Form.getInputs("dgForm","checkbox");
 		
+		allSelectedIds = dgGetAllIds();
 		//count selected checkboxes
-		counter=0;
-		for (i=0; i<checkbox.length; i++) {
-				if ($F(checkbox[i]) == "on") counter++;
-		}
 		
 		//asks use, if he is sure
-		choise = confirm(dgDeleteMsg +"("+counter+")");
+		choise = confirm(dgDeleteMsg +"("+allSelectedIds.length+")");
 		if (choise) {
-			//checkif enabled
-			for (i=0; i<checkbox.length; i++) {
-				if ($F(checkbox[i]) == "on") {
-					// if background delete id okay then
-					
-					alert("ToDo: BackgroundDelete " + dgDeleteAction + " ID:" + checkbox[i].parentNode.parentNode.id);
-					//alert(checkbox[i].id);
-					dgData.removeChild(checkbox[i].parentNode.parentNode);
-					dgCount = document.getElementById("dgCount").innerHTML;
-					dgCount--;
-					document.getElementById("dgCount").innerHTML = dgCount;
-				};
-			} //for checkbox.length	
+			//background delete -> ToDo: check result of deletion
+			deleteData(dgDeleteAction + allSelectedIds);
+			//delete rows from dataGrid
+			for (i=0; i<allSelectedIds.length; i++) {
+				dgData.removeChild(checkbox[i].parentNode.parentNode);
+				dgCount = $("dgCount").innerHTML;
+				dgCount--;
+				$("dgCount").innerHTML = dgCount;
+			}
 		} //if (choise)
 	}
 }
@@ -277,15 +276,14 @@ function dgGetAllIds() {
 	checkbox = Form.getInputs("dgForm","checkbox");
 	allIDs = new Array;
 	for (i=0; i<checkbox.length; i++) {
-			//alert(checkbox[i].parentNode.parentNode.id);
-			if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.id);
+		if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.id);
 	}
 	return allIDs;
 }
 
 //delete all rows form the grid
 function emptyDataGrid() {
-	dgDataGrid = document.getElementById("dgData");
+	dgDataGrid = $("dgData");
 	dgRows = dgDataGrid.getElementsByTagName("tr");
 
 	toBeDeleted = new Array();
@@ -293,7 +291,7 @@ function emptyDataGrid() {
 		toBeDeleted[id] = dgRows[id].id;
 	}
 	for (id=0; id<toBeDeleted.length; id++) {
-		dgDataGrid.removeChild(document.getElementById(toBeDeleted[id]));
+		dgDataGrid.removeChild($(toBeDeleted[id]));
 	}
 }
 
@@ -337,7 +335,6 @@ function changeColumnSortImage(id, newstatus) {
 	}	
 }
 
-
 //convert array to string
 function serializeParameter() {
 	var urlParameterString ="";
@@ -347,20 +344,21 @@ function serializeParameter() {
 	    }
 	return urlParameterString;
 }
+function messageLayer(action, message) {
+	switch(action) {
+		case 'show':
+			divMessage = $("dgMessage");
+			divMessage.style.display = "block";
+			divMessage.innerHTML = message;
+			break;
+		case 'hide':
+			divMessage = $("dgMessage");
+			divMessage.style.display = "none";
+			break;
+	}
+}
+
 
 // add event to the document
 Event.observe(document, 'keypress', dgKeyProcess, false)
 
-// mouse functions
-// used when saving a document
-function mouseShowHourGlass() {
-	for (id=0; id<document.childNodes.length; id++) {
-		//document.childNodes[id].style.cursor='wait';
-	}
-}
-
-function mouseShowNormal() {
-	for (id=0; id<document.childNodes.length; id++) {
-		//document.all[id].style.cursor='auto';
-	}
-}

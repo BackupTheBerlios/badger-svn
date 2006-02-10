@@ -25,12 +25,15 @@ if (isset($_GET['action'])) {
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
-				$ID = $_GET['ID'];				
+				$IDs = explode(",",$_GET['ID']);				
 				//check if we can delete this item (or is the currency used)
-				$cm->deleteCurrency($ID);
-				//catch error?
+				foreach($IDs as $ID){
+					$cm->deleteCurrency($ID);
+				}
+				//dg should show this message!!!! ToDo
+				echo "deletion was successful!";
 			} else {
-				//error: no ID	
+				echo "no ID was transmitted!";	
 			}			
 			break;
 		case 'save':
@@ -83,7 +86,7 @@ function printFrontend() {
 	$longnameField = $widgets->createField("longname", 20, $langnameValue, "", true, "text", "");
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
-	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "", "Widgets/back.gif");
+	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href=$redirectPageAfterSave", "Widgets/back.gif");
 
 	//add vars to template, print site
 	eval("echo \"".$tpl->getTemplate("Account/Currency")."\";");

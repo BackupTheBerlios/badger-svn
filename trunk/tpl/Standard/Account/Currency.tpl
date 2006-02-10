@@ -9,12 +9,9 @@
     <td>$longnameField </td>
   </tr>
   <tr>
-    <td>&nbsp </td>
+    <td>$backBtn </td>
     <td>$submitBtn </td>
   </tr>
-  <tr>
-    <td>$backBtn </td>
-    <td>$hiddenID </td>
-  </tr>
 </table>
+$hiddenID
 </form>
