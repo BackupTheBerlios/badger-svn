@@ -13,7 +13,7 @@
     <td>$submitBtn </td>
   </tr>
   <tr>
-    <td>&nbsp</td>
+    <td>$backBtn </td>
     <td>$hiddenID </td>
   </tr>
 </table>

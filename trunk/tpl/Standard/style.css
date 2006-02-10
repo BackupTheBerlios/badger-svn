@@ -41,7 +41,7 @@ label {
 	cursor: pointer;	
 }
 label.mandatory {
-	color: #595959;
+	/*color: #595959;*/
 	font-weight: bold;
 }
 legend {

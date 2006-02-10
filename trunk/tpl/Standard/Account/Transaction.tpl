@@ -33,7 +33,7 @@
     <td>$periodicalField  </td>
   </tr>
   <tr>
-    <td>&nbsp </td>
+    <td>$backBtn </td>
     <td>$submitBtn </td>
   </tr>
 </table>

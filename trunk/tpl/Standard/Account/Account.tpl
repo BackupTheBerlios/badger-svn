@@ -5,7 +5,7 @@
     <td>$titleField </td>
   </tr>
   <tr>
-    <td>$descrptionLabel </td>
+    <td>$descriptionLabel </td>
     <td>$descriptionField </td>
   </tr>
   <tr>
@@ -29,7 +29,7 @@
     <td>$targetFutureCalcDateField  </td>
   </tr>
   <tr>
-    <td>&nbsp </td>
+    <td>$backBtn </td>
     <td>$submitBtn </td>
   </tr>
 </table>
