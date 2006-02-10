@@ -1,3 +1,4 @@
+<form method="post" action="$FormAction?action=save">
 <table>
   <tr>
     <td>$descriptionLabel </td>
@@ -36,3 +37,4 @@
     <td>$submitBtn </td>
   </tr>
 </table>
+</form>
