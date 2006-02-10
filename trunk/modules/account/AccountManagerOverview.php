@@ -28,9 +28,9 @@ $dataGrid->headerSize = array(200,150,100);
 $dataGrid->cellAlign = array("left","right","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
-$dataGrid->deleteAction = "deleteXYZ.php";
-$dataGrid->editAction = "editXYZ.php?id=";
-$dataGrid->newAction = "newXYZ.php";
+$dataGrid->deleteAction = "AccountManager.php?action=delete&ID=";
+$dataGrid->editAction = "AccountManager.php?action=edit&ID=";
+$dataGrid->newAction = "AccountManager.php?action=new";
 $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();

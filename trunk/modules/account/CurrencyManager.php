@@ -17,6 +17,8 @@ require_once(BADGER_ROOT . '/modules/account/CurrencyManager.class.php');
 $redirectPageAfterSave = "CurrencyManagerOverview.php";
 $pageTitle = "Currency Manager"; //I18N
 
+$cm = new CurrencyManager($badgerDb);
+
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
 		case 'delete':
@@ -33,7 +35,11 @@ if (isset($_GET['action'])) {
 			break;
 		case 'save':
 			//add record, update record
-			updateRecord();
+			if (isset($_POST['hiddenID'])) {
+				updateRecord();
+			} else {
+				header("Location: $redirectPageAfterSave");
+			}
 			break;		
 		case 'new':
 		case 'edit':
@@ -45,13 +51,16 @@ if (isset($_GET['action'])) {
 function printFrontend() {
 	global $pageTitle;
 	global $tpl;
-	global $badgerDb;
+	global $cm;
+	global $redirectPageAfterSave;
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
-	$cm = new CurrencyManager($badgerDb);
-	
+
+	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
+	echo $widgets->getNavigationBody();	
 	echo $widgets->addToolTipLayer();
+	
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
 		$ID = $_GET['ID'];
@@ -67,11 +76,14 @@ function printFrontend() {
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
+	//Fields & Labels
 	$symbolLabel = $widgets->createLabel("symbol", getBadgerTranslation2('accountCurrency', 'symbol'), true);
 	$symbolField = $widgets->createField("symbol", 20, $symbolValue, "", true, "text", "maxlength='3'");
 	$longnameLabel = $widgets->createLabel("longname", getBadgerTranslation2('accountCurrency', 'longname'), true);
 	$longnameField = $widgets->createField("longname", 20, $langnameValue, "", true, "text", "");
+	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
+	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "", "Widgets/back.gif");
 
 	//add vars to template, print site
 	eval("echo \"".$tpl->getTemplate("Account/Currency")."\";");
@@ -80,24 +92,22 @@ function printFrontend() {
 
 function updateRecord() {
 	global $redirectPageAfterSave;
-	global $badgerDb;
-	$cm = new CurrencyManager($badgerDb);
+	global $cm;
 	
-	if (isset($_POST['hiddenID'])) {
-		switch ($_POST['hiddenID']) {
-		case 'new':
-			//add new record
-			//check if $_POST['symbol'], $_POST['longName'] is set?????
-			$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
-			break;
-		default:
-			//update record
-			$currency = $cm->getCurrencyById($_POST['hiddenID']);
-			$currency->setSymbol($_POST['symbol']);
-			$currency->setLongName($_POST['longname']);
-			$ID = $currency->getId();
-		}
-		//REDIRECT
-		header("Location: $redirectPageAfterSave");
-	}	
+	switch ($_POST['hiddenID']) {
+	case 'new':
+		//add new record
+		//check if $_POST['symbol'], $_POST['longName'] is set?????
+		$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
+		break;
+	default:
+		//update record
+		$currency = $cm->getCurrencyById($_POST['hiddenID']);
+		$currency->setSymbol($_POST['symbol']);
+		$currency->setLongName($_POST['longname']);
+		$ID = $currency->getId();
+	}
+	//REDIRECT
+	header("Location: $redirectPageAfterSave");
+
 }
