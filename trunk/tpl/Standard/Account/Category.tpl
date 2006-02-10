@@ -5,12 +5,8 @@
     <td>$titleField </td>
   </tr>
   <tr>
-    <td>$descrptionLabel </td>
+    <td>$descriptionLabel </td>
     <td>$descriptionField </td>
-  </tr>
-  <tr>
-    <td>$outsideCapitalLabel </td>
-    <td>$outsideCapitalField  </td>
   </tr>
   <tr>
     <td>$outsideCapitalLabel </td>
