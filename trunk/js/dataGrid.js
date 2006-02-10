@@ -1,6 +1,6 @@
 var objRowActive;
 var mouseEventsDisabled;
-mouseEventsDisabled = false;
+var mouseEventsDisabled = false;
 var urlParameter = new Object;
 
 // Create a new XMLHttpRequest object
@@ -169,15 +169,33 @@ var behaviour =  {
 			dgEdit(this.id)
 		}
 	},
-	'#dgTableHead tr td' : function(element){
+	'td.dgColumn' : function(element){
 		element.onclick = function(){
 			id = this.id.replace("dgColumn","");
-			//alert(id);
 			addNewSortOrder(id);
-			//alert(serializeParameter());
 			loadData(dgSourceXML + serializeParameter());
 		}
-	}	
+	},
+	'#dgSelector' : function(element){
+		element.onclick = function(){
+			checkbox = Form.getInputs("dgForm","checkbox");
+			if($F(this)=="on") {
+				//select all checkboxes		
+				for (i=0; i<checkbox.length; i++) {
+					if(checkbox[i].id!="dgSelector") {
+						selectRow(checkbox[i].parentNode.parentNode);
+					}
+				}
+			} else {
+				//deselect all checkboxes	
+				for (i=0; i<checkbox.length; i++) {
+					if(checkbox[i].id!="dgSelector") {
+						deselectRow(checkbox[i].parentNode.parentNode);
+					}
+				}
+			} //if($F(this)=="on")
+		} //element.onclick 
+	}
 };
 
 //Key-Events of the Rows

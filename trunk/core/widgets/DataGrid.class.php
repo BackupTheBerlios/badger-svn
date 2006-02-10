@@ -40,9 +40,9 @@ public $width = "99.9%";
 		$output = '<form id="dgForm"><div id="dataGrid" style="width:'.$this->width.'">
 					<table id="dgTableHead" cellpadding="2" cellspacing="0">
 						<tr>
-							<td width="20">&nbsp;</td>';
+							<td width="20"><input id="dgSelector" type="checkbox" /></td>';
 			for ($i=0; $i < count($this->headerName); $i++) {
-				$output .= '<td id="dgColumn'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.
+				$output .= '<td class="dgColumn" id="dgColumn'.$this->columnOrder[$i].'" width="'.$this->headerSize[$i].'">'.
 							$this->headerName[$i].'&nbsp;'.
 						   '<img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/dropEmpty.png" id="dgImg'.$this->columnOrder[$i].'" /></td>';
 			}
