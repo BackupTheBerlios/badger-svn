@@ -36,14 +36,12 @@ echo $widgets->getNavigationBody();
 
 ?>
 <?
-$hallo = "supidupitest";
+
 
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
 echo "<br /><br /><br /><br /><br /><br /><br />";
 
-
-echo InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php", 800, 400, "ECE9D8");
-echo "<br /><br />";
+echo InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php?account=1", 800, 400, "ECE9D8");
 
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 ?>

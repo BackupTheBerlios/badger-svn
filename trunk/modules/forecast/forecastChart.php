@@ -1,9 +1,76 @@
 <?php
 define("BADGER_ROOT", "../..");
 //include charts.php to access the SendChartData function
+require_once(BADGER_ROOT . "/includes/fileHeaderBackEnd.inc.php");
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
+require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
-//change the chart to a line chart
+$startDate= new Date();
+#end date aus forecast php übergeben
+$endDate = new Date('2006-03-31');
+# accountId aus forecast php übergeben
+#if (isset($_GET['account'])) {
+#	$accountId = $_GET['account'];
+#} else {$accountId = 0; 
+#}
+$accountId = 1;
+# savingTarget aus forecast php übergeben, wenn nicht angegeben, standard = 0
+$savingTarget = new Amount(0);
+//get daily amounts from db
+$am = new AccountManager($badgerDb);
+$totals = array();
+
+$currentAccount = $am->getAccountById($accountId);
+//get LowerLimit for account from db
+
+#$currentAccount->SetLowerLimit(NULL);
+if (!is_null($currentAccount->getLowerLimit()->get())){
+	$lowerLimit = $currentAccount->getLowerLimit();
+} else {
+	//lowerLimit nicht vorhanden, wie wenn in forecast php nicht angekreuzt
+	
+}
+#$currentAccount->SetUpperLimit(NULL);
+if (!is_null($currentAccount->getUpperLimit()->get())){
+	$upperLimit = $currentAccount->getUpperLimit();
+} else {
+	//UpperLimit nicht vorhanden, wie wenn in forecast php nicht angekreuzt
+	
+}
+//calculate every days balance
+$currentBalances = getDailyAmount($currentAccount, $startDate, $endDate);
+foreach ($currentBalances as $balanceKey => $balanceVal) {
+	if (isset($totals[$balanceKey])) {
+		$totals[$balanceKey]->add($balanceVal);
+	} else {
+		$totals[$balanceKey] = $balanceVal;
+	}
+}
+//calculate spending money, if saving target should be reached
+$countDay = count($totals); //get numbers of days between today & endDate
+$endDateBalance = $totals[$endDate->getDate()]; //get balance of end date
+$freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend 
+$dailyPocketMoney = new Amount ($freeMoney->div($countDay));
+	
+$chart['chart_data'] = array();
+$chart['chart_data'][0][0] = '';
+#internationalisieren
+$chart['chart_data'][1][0] = 'Dispo Limit'; //lower limit of the account
+$chart['chart_data'][2][0] = 'Spargrenze'; //upper limit of the account
+$chart['chart_data'][3][0] = 'Prognose'; //account balance for every day between today & end date, if no other expenses / income than in the finished transactions 
+
+foreach($totals as $key => $val) {
+	$tmp = new Date($key);
+	$chart['chart_data'][0][] = $tmp->getFormatted();
+	$chart['chart_data'][1][] = $lowerLimit->get();
+	$chart['chart_data'][2][] = $upperLimit->get();
+	$chart['chart_data'][3][] = $val->get();
+
+}
+
+
+//for documentation see: http://www.maani.us/charts/index.php?menu=Reference
 $chart [ 'chart_type' ] = "line";
 $chart [ 'axis_category' ] = array (   'skip'         =>  0,
                                        'font'         =>  "Arial", 
@@ -23,8 +90,8 @@ $chart [ 'axis_ticks' ] = array (   'value_ticks'      =>  true,
                                     'minor_count'      =>  4
                                 ); 
 
-$chart [ 'axis_value' ] = array (   'min'           =>  -1000,  
-                                    'max'           =>  5000, 
+$chart [ 'axis_value' ] = array (   'min'           =>  0, //automatically adjusted  
+                                    'max'           =>  0, //automatically adjusted
                                     'steps'         =>  10,  
                                     'prefix'        =>  "", 
                                     'suffix'        =>  "", 
@@ -47,7 +114,7 @@ $chart [ 'chart_border' ] = array (   'top_thickness'     =>  1,
                                       'color'             =>  "000000"
                                    );
 
-                                   
+ /*                                  
 $chart [ 'chart_data' ] = array ( array ( "",         "Januar", "Februar", "Maerz", "April", "Mai", "Juni", "Juli", "August"),
                                   array ( "Prognose",     1000,     1300,     1800,     2300  ,  2800, 1200, 1400, 1900),
                                   array ( "Dispo-Limit",     -800,     -800,     -800,     -800  ,  -800, -800, -800, -800),
@@ -55,6 +122,7 @@ $chart [ 'chart_data' ] = array ( array ( "",         "Januar", "Februar", "Maer
                                   array ( "mit Taschengeld",     800,     1100,     1600,     2100  ,  2600, 1000, 1200, 1700),
                                   array ( "mit Sparziel",     900,     1200,     1700,     -2200  ,  2700, 1100, 1300, 1800)
                                 );
+*/
 $chart [ 'chart_pref' ] = array (   'line_thickness'  =>  1,  
                                     'point_shape'     =>  "none", 
                                     'fill_shape'      =>  false
@@ -123,10 +191,11 @@ $chart [ 'legend_transition' ] = array ( 'type'      =>  "slide_down",
                                          'duration'  =>  1 
                                        ); 
 $chart [ 'series_color' ] = array (  "FF0000", 
-									 "000000",
+									 "00FF00",									 
 									 "0000FF",
 									 "FF8000",
-									 "404040"
+									 "404040",
+									 "800040"
 									);                                       
 SendChartData ( $chart );
 
