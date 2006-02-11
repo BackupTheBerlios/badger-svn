@@ -30,6 +30,8 @@
 		$summarizeRadio $summarizeLabel<br />
 		$distinguishRadio $distinguishLabel
 	</fieldset>
+	
+	$accountField
 </form>
 <fieldset style="position: absolute; left: 34em; top: 10em; width: 410px; height: 22em;">
 	<legend>Konten</legend>

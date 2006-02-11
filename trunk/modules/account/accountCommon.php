@@ -33,6 +33,14 @@ function getDailyAmount($account, $startDate, $endDate) {
 	
 	$result = array();
 	
+	$startDate->setHour(0);
+	$startDate->setMinute(0);
+	$startDate->setSecond(0);
+	
+	$endDate->setHour(0);
+	$endDate->setMinute(0);
+	$endDate->setSecond(0);
+
 	$currentDate = new Date($startDate);
 	$currentAmount = new Amount();
 	
@@ -48,6 +56,11 @@ function getDailyAmount($account, $startDate, $endDate) {
 			$result[$currentDate->getDate()] = new Amount($currentAmount);
 			
 			$currentDate->addSeconds(24 * 60 * 60);
+			
+			if ($currentDate->after($endDate)) {
+				//we reached $endDAte
+				break;
+			}
 		}
 
 		$currentAmount->add($currentTransaction->getAmount());

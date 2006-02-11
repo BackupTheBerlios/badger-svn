@@ -95,7 +95,7 @@ function showSelectPage() {
 		'fullYear' => 'Ganzes Jahr',
 		'jan' => 'Januar',
 		'feb' => 'Februar',
-		'mar' => 'März',
+		'mar' => 'Mï¿½rz',
 		'apr' => 'April',
 		'may' => 'Mai',
 		'jun' => 'Juni',

@@ -20,8 +20,8 @@ header('Content-Type: text/plain');
 
 $am = new AccountManager($badgerDb);
 $account = $am->getAccountById(1);
-$startDate = new Date('2006-03-10');
-$endDate = new Date('2010-12-12');
+$startDate = new Date();
+$endDate = new Date('2006-03-31');
 
 $values = getDailyAmount($account, $startDate, $endDate);
 
