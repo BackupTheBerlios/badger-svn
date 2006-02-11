@@ -807,8 +807,10 @@ class Date
      */
     function compare($d1, $d2)
     {
-    	$d1x = new Date($d1);
-    	$d2x = new Date($d2);
+    	$d1x = new Date(1);
+    	$d1x->copy($d1);
+    	$d2x = new Date(2);
+    	$d2x->copy($d2);
     	
         $d1x->convertTZ(new Date_TimeZone('UTC'));
         $d2x->convertTZ(new Date_TimeZone('UTC'));
@@ -816,12 +818,12 @@ class Date
         $days2 = Date_Calc::dateToDays($d2x->day, $d2x->month, $d2x->year);
         if ($days1 < $days2) return -1;
         if ($days1 > $days2) return 1;
-        if ($d1->hour < $d2->hour) return -1;
-        if ($d1->hour > $d2->hour) return 1;
-        if ($d1->minute < $d2->minute) return -1;
-        if ($d1->minute > $d2->minute) return 1;
-        if ($d1->second < $d2->second) return -1;
-        if ($d1->second > $d2->second) return 1;
+        if ($d1x->hour < $d2x->hour) return -1;
+        if ($d1x->hour > $d2x->hour) return 1;
+        if ($d1x->minute < $d2x->minute) return -1;
+        if ($d1x->minute > $d2x->minute) return 1;
+        if ($d1x->second < $d2x->second) return -1;
+        if ($d1x->second > $d2x->second) return 1;
         return 0;
     }
 
