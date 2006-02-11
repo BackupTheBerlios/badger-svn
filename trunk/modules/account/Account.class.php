@@ -1091,6 +1091,9 @@ class Account extends DataGridHandler {
 	 */
 	public function expandPlannedTransactions(){
 		$now = new Date();
+		$now->setHour(0);
+		$now->setMinute(0);
+		$now->setSecond(0);
 		
 		//header('content-type: text/plain');
 		
@@ -1099,12 +1102,15 @@ class Account extends DataGridHandler {
 		foreach($this->plannedTransactions as $currentTransaction){ 
 			//echo 'begin_date: ' . $currentTransaction['begin_date'] . "\n";
 			$date = new Date($currentTransaction->getBeginDate());
+//			$date->setHour(0);
+//			$date->setMinute(0);
+//			$date->setSecond(0);
 			//echo 'date: ' . $date->getDate() . "\n";
 			$dayOfMonth = $date->getDay();
 			//echo 'date: ' . $date->getDate() . "\n";
 			//While we have not reached targetFutureCalcDate
 			while($this->targetFutureCalcDate->after($date)){
-				//echo 'date: ' . $date->getDate() . "\n";
+				//echo 'date: ' . print_r($date) . "\n";
 				$inRange = true;
 				//Check if there is one or more valutaDate filter and apply them
 				foreach ($this->filter as $currentFilter) {
@@ -1160,7 +1166,7 @@ class Account extends DataGridHandler {
 						}
 					}
 				}
-							
+
 				if(!($date->before($now)) && $inRange) {
 					$this->finishedTransactions[] = new FinishedTransaction(
 						$this->badgerDb,
@@ -1179,6 +1185,7 @@ class Account extends DataGridHandler {
 						'PlannedTransaction'
 					);
 				}
+
 				//do the date calculation
 				switch ($currentTransaction->getRepeatUnit()){
 					case 'day': 

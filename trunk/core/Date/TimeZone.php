@@ -259,6 +259,9 @@ class Date_TimeZone
      */
     function inDaylightTime($date)
     {
+		if (strpos(strtolower(php_uname('s')), 'windows') > 0) {
+			return false;
+		}
         $env_tz = "";
         if(getenv("TZ")) {
             $env_tz = getenv("TZ");
@@ -266,7 +269,7 @@ class Date_TimeZone
         putenv("TZ=".$this->id);
         $ltime = localtime($date->getTime(), true);
         putenv("TZ=".$env_tz);
-        return $ltime['tm_isdst'];
+        return false; $ltime['tm_isdst'];
     }
 
     /**

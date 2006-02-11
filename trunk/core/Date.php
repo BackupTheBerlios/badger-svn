@@ -606,13 +606,14 @@ class Date
         // convert to UTC
         if ($this->tz->getOffset($this) > 0) {
             $this->subtractSeconds(intval(abs($this->tz->getOffset($this)) / 1000));
-        } else {
+        } else if ($this->tz->getOffset($this) < 0){
             $this->addSeconds(intval(abs($this->tz->getOffset($this)) / 1000));
         }
+
         // convert UTC to new timezone
         if ($tz->getOffset($this) > 0) {
             $this->addSeconds(intval(abs($tz->getOffset($this)) / 1000));
-        } else {
+        } else if ($tz->getOffset($this) < 0){
             $this->subtractSeconds(intval(abs($tz->getOffset($this)) / 1000));
         }
         $this->tz = $tz;
@@ -807,11 +808,11 @@ class Date
      */
     function compare($d1, $d2)
     {
-    	$d1x = clone $d1;
-    	$d2x = clone $d2;
+    	$d1x = $d1;
+    	$d2x = $d2;
     	
-        $d1x->convertTZ(new Date_TimeZone('UTC'));
-        $d2x->convertTZ(new Date_TimeZone('UTC'));
+        //$d1x->convertTZ(new Date_TimeZone('UTC'));
+        //$d2x->convertTZ(new Date_TimeZone('UTC'));
         $days1 = Date_Calc::dateToDays($d1x->day, $d1x->month, $d1x->year);
         $days2 = Date_Calc::dateToDays($d2x->day, $d2x->month, $d2x->year);
         if ($days1 < $days2) return -1;
