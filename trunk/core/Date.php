@@ -807,10 +807,8 @@ class Date
      */
     function compare($d1, $d2)
     {
-    	$d1x = new Date(1);
-    	$d1x->copy($d1);
-    	$d2x = new Date(2);
-    	$d2x->copy($d2);
+    	$d1x = clone $d1;
+    	$d2x = clone $d2;
     	
         $d1x->convertTZ(new Date_TimeZone('UTC'));
         $d2x->convertTZ(new Date_TimeZone('UTC'));
@@ -1296,6 +1294,9 @@ class Date
             $this->second = $s;
         }
     }
+    
+    public function __clone() {
+    	$this->tz = clone $this->tz;
+    }
 }
-
 ?>
