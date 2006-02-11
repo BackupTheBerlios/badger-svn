@@ -102,9 +102,7 @@ class Category {
 			$this->title = $data['title'];
 			$this->description = $data['description'];
 			$this->outsideCapital = $data['outside_capital'];
-			if ($data['parent_id']) {
-				$this->parent = $categoryManager->getCategoryById($data['parent_id']);
-			}
+			$this->parent = $data['parent_id'];
     	} else {
     		$this->id = $data;
     		$this->title = $title;

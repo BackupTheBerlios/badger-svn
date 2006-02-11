@@ -1165,7 +1165,7 @@ class Account extends DataGridHandler {
 					$this->finishedTransactions[] = new FinishedTransaction(
 						$this->badgerDb,
 						$this,
-						'p' . $currentTransaction->getId(),
+						'p' . $currentTransaction->getId() . '_' . $date->getDate(),
 						$currentTransaction->getTitle(),
 						$currentTransaction->getAmount(),
 						$currentTransaction->getDescription(),

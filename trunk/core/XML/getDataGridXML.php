@@ -41,8 +41,6 @@ require_once BADGER_ROOT . '/core/XML/DataGridXML.class.php';
 require_once BADGER_ROOT . '/core/Amount.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 
-$CategoryManager = new CategoryManager($badgerDb);
-
 //q parameter is mandatory
 if (!isset($_GET['q'])){
 	echo 'Missing Parameter q';
@@ -50,6 +48,8 @@ if (!isset($_GET['q'])){
 }
 
 $dgr = new DataGridRepository($badgerDb);
+
+$logger->log('getDataGridXML: REQUEST_URI: ' . $_SERVER['REQUEST_URI']);
 
 //Unknown DataGridHandler if no result
 try{

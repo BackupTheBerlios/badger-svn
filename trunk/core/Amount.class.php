@@ -58,7 +58,7 @@ class Amount {
 		$decPoint = $us->getProperty('badgerDecimalSeparator');
 		$thousandsSep = $us->getProperty('badgerThousandSeparator');
 		
-		$str = $this->amount;
+		$str = ($this->amount ? $this->amount : '0');
 		
 		$str = trim($str);
 		
