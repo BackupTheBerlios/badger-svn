@@ -22,6 +22,11 @@ echo $tpl->getHeader("PageTitle"); //write header
 // Beispiel: Einfügen des aktuellen Datum in das Template
 $aktuellesDatum = date("d.m.Y");
 eval("echo \"".$tpl->getTemplate("templateTest")."\";");
+?>
+<a href="#" onclick="openBadgerPrintView();">sdfsdfsdfsdfsdf</a>
+
+<?php
+
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 
 ?>
