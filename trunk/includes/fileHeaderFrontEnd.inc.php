@@ -20,10 +20,9 @@ require_once(BADGER_ROOT . "/includes/includes.php");
 require_once(BADGER_ROOT . "/core/UserSettings.class.php");
 $us = new UserSettings($badgerDb);
 $tpl = new TemplateEngine($us, BADGER_ROOT);
+$tpl->addCSS("style.css");
 if (isset($_GET['print'])) {
 	$tpl->addCSS("print.css");
-} else {
-	$tpl->addCSS("style.css");
 }
 require(BADGER_ROOT . "/includes/login.php");
 ?>
