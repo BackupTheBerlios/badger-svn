@@ -10,3 +10,4 @@
 <div class="flashContainer">
 	$trendChart
 </div>
+<div class="flashClear"></div>

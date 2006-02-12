@@ -12,3 +12,4 @@
 <div class="flashContainer">
 	$categoryChart
 </div>
+<div class="flashClear"></div>
