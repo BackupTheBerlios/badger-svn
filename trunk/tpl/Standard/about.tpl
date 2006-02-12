@@ -4,21 +4,23 @@
 
 <p><a href="http://badger.berlios.de/" target="_blank">http://badger.berlios.de/</a></p>
 <p>$releasedUnder <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public Licence</a></p>
-<p>This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.</p>
+<blockquote cite="http://www.gnu.org/licenses/gpl.html">
+	<p>This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.</p>
+	
+	<p>This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.</p>
+	
+	<p>You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</p>
+</blockquote>
 
-<p>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</p>
-
-<p>You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</p>
-
-<p>Copyright &copy; 2006 by $copyrightBy</p>
+<p>Copyright &copy; 2006 $copyrightBy</p>
 
 <h2>$developerTeam</h2>
 <ul>
@@ -39,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.<
 	<li><a href="http://eclipse.org/" target="_blank">Eclipse</a></li>
 	<li><a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">FamFamFam Silk Icons</a> $by Mark James</li>
 	<li><a href="http://www.tufat.com/s_html2ps_html2pdf.htm" target="_blank">HTML2PS/PDF</a> $by Darren</li>
-	<li><a href="http://jsval.berlios.de/" target="_blank">JS Validate</a> $by Karl Seguin, Timo Haberkern</li>
+	<li><a href="http://jsval.fantastic-bits.de/" target="_blank">JS Validate</a> $by Karl Seguin, Timo Haberkern</li>
 	<li><a href="http://www.tohzhiqiang.per.sg/projects/jsdomenubar/" target="_blank">jsDOMenuBar</a> $by Toh Zhiqiang</li>
 	<li><a href="http://www.mysql.com/" target="_blank">MySQL</a></li>
 	<li><a href="http://www.bosrup.com/web/overlib/" target="_blank">overLIB</a> $by Erik Bosrup</li>

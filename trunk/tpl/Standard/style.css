@@ -34,6 +34,15 @@ body, table {
 	overflow: scroll;
 }
 
+blockquote {
+	font-family: monospace;
+	border: 1px dashed grey;
+	margin: auto;
+	padding-left: 1em;
+	padding-right: 1em;
+	width: 90%;	
+}
+
 /* FORMS */
 label {
 /*	float: left;
