@@ -32,6 +32,25 @@ if (isset($_GET['pocketMoney1'])) {
 if (isset($_GET['pocketMoney2'])) {
 	$pocketMoney2 = new Amount($_GET['pocketMoney2']);
 }
+//get graphs to be shown
+if (isset($_GET['showLowerLimit'])) {
+	$showLowerLimit = $_GET['showLowerLimit'];
+}
+if (isset($_GET['showUpperLimit'])) {
+	$showUpperLimit = $_GET['showUpperLimit'];
+}
+if (isset($_GET['showPlannedTransactions'])) {
+	$showPlannedTransactions = $_GET['showPlannedTransactions'];
+}
+if (isset($_GET['showSavingTarget'])) {
+	$showSavingTarget = $_GET['showSavingTarget'];
+}
+if (isset($_GET['showPocketMoney1'])) {
+	$showPocketMoney1 = $_GET['showPocketMoney1'];
+}
+if (isset($_GET['pocketMoney2'])) {
+	$showPocketMoney2 = $_GET['showPocketMoney2'];
+}
 //get daily amounts from db
 $am = new AccountManager($badgerDb);
 $totals = array();
@@ -63,40 +82,80 @@ foreach ($currentBalances as $balanceKey => $balanceVal) {
 		$totals[$balanceKey] = $balanceVal;
 	}
 }
-//calculate spending money, if saving target should be reached
-$countDay = count($totals)-1; //get numbers of days between today & endDate
-$laststanding = new Amount($totals[$endDate->getDate()]);
-$endDateBalance = $laststanding; //get balance of end date
-$freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend
-$dailyPocketMoney = new Amount ($freeMoney->div($countDay)); //calculate daily pocket money = free money / count of Days
+if ($showSavingTarget == 1){
+	//calculate spending money, if saving target should be reached
+	$countDay = count($totals)-1; //get numbers of days between today & endDate
+	$laststanding = new Amount($totals[$endDate->getDate()]);
+	$endDateBalance = $laststanding; //get balance of end date
+	$freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend
+	$dailyPocketMoney = new Amount ($freeMoney->div($countDay)); //calculate daily pocket money = free money / count of Days
+}
 
 $chart['chart_data'] = array();
 $chart['chart_data'][0][0] = '';
 #internationalisieren
-$chart['chart_data'][1][0] = 'Dispo Limit'; //lower limit of the account
-$chart['chart_data'][2][0] = 'Spargrenze'; //upper limit of the account
-$chart['chart_data'][3][0] = 'Geplante Transaktionen'; //account balance for every day between today & end date, if no other expenses / income than in the finished transactions 
-$chart['chart_data'][4][0] = 'Verlauf mit Sparziel';
-$chart['chart_data'][5][0] = 'Verlauf mit Taschengeld1';
-$chart['chart_data'][6][0] = 'Verlauf mit Taschengeld2';
+$numberOfGraph1=1;
+if ($showLowerLimit ==1){
+$chart['chart_data'][$numberOfGraph1][0] = getBadgerTranslation2("forecast", "lowerLimit"); //lower limit of the account
+$numberOfGraph1++;
+}
+if ($showUpperLimit ==1){
+$chart['chart_data'][$numberOfGraph1][0] = getBadgerTranslation2("forecast", "upperLimit"); //upper limit of the account
+$numberOfGraph1++;
+}
+if ($showPlannedTransactions ==1){
+$chart['chart_data'][$numberOfGraph1][0] = getBadgerTranslation2("forecast", "plannedTransactions"); //account balance for every day between today & end date, if no other expenses / income than in the finished transactions 
+$numberOfGraph1++;
+}
+if ($showSavingTarget ==1){
+$chart['chart_data'][$numberOfGraph1][0] = getBadgerTranslation2("forecast", "savingTarget");
+$numberOfGraph1++;
+}
+if ($showPocketMoney1 ==1){
+$chart['chart_data'][$numberOfGraph1][0] = getBadgerTranslation2("forecast", "pocketMoney1");
+$numberOfGraph1++;
+}
+if ($showPocketMoney2 ==1){
+$chart['chart_data'][$numberOfGraph1][0] = getBadgerTranslation2("forecast", "pocketMoney2");
+$numberOfGraph1++;
+}
 
 $day = 0;
 foreach($totals as $key => $val) {
 	$tmp = new Date($key);
 	$chart['chart_data'][0][] = $tmp->getFormatted();
-	$chart['chart_data'][1][] = $lowerLimit->get();
-	$chart['chart_data'][2][] = $upperLimit->get();
-	$chart['chart_data'][3][] = $val->get();
+	$numberOfGraph = 1;
+	if ($showLowerLimit ==1){
+		$chart['chart_data'][$numberOfGraph][] = $lowerLimit->get();
+		$numberOfGraph++;
+	}
+	if ($showUpperLimit ==1){
+		$chart['chart_data'][$numberOfGraph][] = $upperLimit->get();
+		$numberOfGraph++;
+	}
+	if ($showPlannedTransactions ==1){
+		$chart['chart_data'][$numberOfGraph][] = $val->get();
+		$numberOfGraph++;
+	}
 	//to keep $dailyPocketMoney
 	$dailyPocketMoneyLoop = new Amount ($dailyPocketMoney->get());
 	$val1 = new Amount ($val->get());
-	$chart['chart_data'][4][] = $val1->sub($dailyPocketMoneyLoop->mul($day))->get();
+	if ($showSavingTarget ==1){
+		$chart['chart_data'][$numberOfGraph][] = $val1->sub($dailyPocketMoneyLoop->mul($day))->get();
+		$numberOfGraph++;
+	}
 	$PocketMoney1Loop = new Amount ($pocketMoney1->get());
 	$val2 = new Amount ($val->get());
-	$chart['chart_data'][5][] = $val2->sub($PocketMoney1Loop->mul($day))->get();
+	if ($showPocketMoney1 ==1){
+		$chart['chart_data'][$numberOfGraph][] = $val2->sub($PocketMoney1Loop->mul($day))->get();
+		$numberOfGraph++;
+	}
 	$PocketMoney2Loop = new Amount ($pocketMoney2->get());
 	$val3 = new Amount ($val->get());
-	$chart['chart_data'][6][] = $val3->sub($PocketMoney2Loop->mul($day))->get();
+	if ($showPocketMoney2 == 1){
+		$chart['chart_data'][$numberOfGraph][] = $val3->sub($PocketMoney2Loop->mul($day))->get();
+		$numberOfGraph++;
+	}
 	$day++;
 }
 
@@ -144,15 +203,6 @@ $chart [ 'chart_border' ] = array (   'top_thickness'     =>  1,
                                       'color'             =>  "000000"
                                    );
 
- /*                                  
-$chart [ 'chart_data' ] = array ( array ( "",         "Januar", "Februar", "Maerz", "April", "Mai", "Juni", "Juli", "August"),
-                                  array ( "Prognose",     1000,     1300,     1800,     2300  ,  2800, 1200, 1400, 1900),
-                                  array ( "Dispo-Limit",     -800,     -800,     -800,     -800  ,  -800, -800, -800, -800),
-                                  array ( "Investieren!",     2000,     2000,     2000,     2000  ,  2000, 2000, 2000, 2000),
-                                  array ( "mit Taschengeld",     800,     1100,     1600,     2100  ,  2600, 1000, 1200, 1700),
-                                  array ( "mit Sparziel",     900,     1200,     1700,     -2200  ,  2700, 1100, 1300, 1800)
-                                );
-*/
 $chart [ 'chart_pref' ] = array (   'line_thickness'  =>  1,  
                                     'point_shape'     =>  "none", 
                                     'fill_shape'      =>  false
@@ -220,13 +270,27 @@ $chart [ 'legend_transition' ] = array ( 'type'      =>  "none",
                                          'delay'     =>  1, 
                                          'duration'  =>  1 
                                        ); 
-$chart [ 'series_color' ] = array (  "FF0000", 
-									 "00FF00",									 
-									 "0000FF",
-									 "FF8000",
-									 "404040",
-									 "800040"
-									);                                       
+$chart [ 'series_color' ] = array ();                                       
+
+if ($showLowerLimit ==1){
+$chart['series_color'][] = "FF0000";
+}
+if ($showUpperLimit ==1){
+$chart['series_color'][] = "00FF00";
+}
+if ($showPlannedTransactions ==1){
+$chart['series_color'][] = "0000FF"; 
+}
+if ($showSavingTarget ==1){
+$chart['series_color'][] = "FF8000";
+}
+if ($showPocketMoney1 ==1){
+$chart['series_color'][] = "404040";
+}
+if ($showPocketMoney2 ==1){
+$chart['series_color'][] = "800040";
+}
+
 SendChartData ( $chart );
 
 ?>
