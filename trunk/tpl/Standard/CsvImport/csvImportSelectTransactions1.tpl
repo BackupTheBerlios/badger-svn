@@ -1,6 +1,6 @@
 <form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection">
  	<div id="scroll">	
-		<table border = 1 cellpadding = 0, cellspacing = 5>
+		<table border = "1" cellpadding="2" cellspacing="0">
 			<tr>
 			<th>$tableHeadSelect</th>
 			<th>$tableHeadCategory </th>
