@@ -47,6 +47,11 @@ blockquote {
 	width: 90%;	
 }
 
+.flashContainer {
+	background-color: white;
+	width: auto;
+}
+
 /* FORMS */
 label {
 /*	float: left;

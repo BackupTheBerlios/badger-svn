@@ -7,4 +7,6 @@
 
 <p>In der Zeit von $startDateFormatted bis $endDateFormatted.</p>
 
-$trendChart
+<div class="flashContainer">
+	$trendChart
+</div>

@@ -183,7 +183,8 @@ function printTrendPage() {
 		BADGER_ROOT . "/modules/statistics/statistics.php?mode=trendData&accounts=$accountIdsClean&startDate=" . $startDate->getDate() . '&endDate=' . $endDate->getDate(),
 		750,
 		500,
-		'99cc00'
+		'99cc00',
+		true
 	);
 
 	eval('echo "' . $tpl->getTemplate('statistics/trend') . '";');
@@ -318,7 +319,8 @@ function printCategoryPage() {
 		BADGER_ROOT . "/modules/statistics/statistics.php?mode=categoryData&accounts=$accountIdsClean&startDate=" . $startDate->getDate() . '&endDate=' . $endDate->getDate() . '&type=' . $type . '&summarize=' . $summarize,
 		750,
 		500,
-		'99cc00'
+		'99cc00',
+		true
 	);
 
 	eval('echo "' . $tpl->getTemplate('statistics/category') . '";');

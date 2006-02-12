@@ -9,4 +9,6 @@
 
 <p>$summarizeText</p>
 
-$categoryChart
+<div class="flashContainer">
+	$categoryChart
+</div>

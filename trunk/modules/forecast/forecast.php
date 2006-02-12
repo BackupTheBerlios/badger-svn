@@ -33,7 +33,7 @@ $pocketmoney1 = 12;
 $pocketMoney2 = 30;
 
 ?>
-<div style="background-color: white">
+<div class="flashContainer">
 <?php
 echo InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php?endDate=$endDate&account=$account&savingTarget=$savingTarget&pocketMoney1=$pocketmoney1&pocketMoney2=$pocketMoney2", 800, 400, "ECE9D8", true);
 ?>
