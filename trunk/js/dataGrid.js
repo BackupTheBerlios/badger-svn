@@ -332,8 +332,8 @@ function addNewSortOrder(column) {
 	} else {
 		urlParameter["ok2"] = urlParameter["ok1"];
 		urlParameter["od2"] = urlParameter["od1"];
-		urlParameter["ok1"] = urlParameter["ok2"];
-		urlParameter["od1"] = urlParameter["od2"];
+		urlParameter["ok1"] = urlParameter["ok0"];
+		urlParameter["od1"] = urlParameter["od0"];
 		urlParameter["ok0"] = column;
 		urlParameter["od0"] = "a";
 		changeColumnSortImage(column, "asc");
@@ -365,6 +365,7 @@ function serializeParameter() {
 	    }
 	return urlParameterString;
 }
+
 function messageLayer(action, message) {
 	switch(action) {
 		case 'show':
