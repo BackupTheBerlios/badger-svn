@@ -1438,7 +1438,7 @@ class Account extends DataGridHandler {
 		} 
 		
 		$order = $this->getOrderSQL();				
-		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),/', '', $order));
+		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order));
 		if($order) {
 			$sql .= "ORDER BY $order\n ";
 		}
@@ -1485,15 +1485,15 @@ class Account extends DataGridHandler {
 		$where = $this->getFilterSQL();
 		//echo $where = $where . "\n" . $where;
 		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
-		$where = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
+		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
 		//echo $where;
 		if($where) {
 			$sql .= "AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
-		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),/', '', $order);
-		$order = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),/', '', $order));
+		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order);
+		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),*/', '', $order));
 		
 		if($order) {
 			$sql .= "ORDER BY $order\n ";

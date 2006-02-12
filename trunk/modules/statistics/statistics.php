@@ -193,14 +193,17 @@ function printTrendPage() {
 
 function showTrendData() {
 	global $badgerDb;
+	global $logger;
 	
+	$logger->log('statistics::showTrendData: REQUEST_URI: ' . $_SERVER['REQUEST_URI']);
+
 	if (!isset($_GET['accounts']) || !isset($_GET['startDate']) || !isset($_GET['endDate'])) {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
-	$accounts = explode(';', $_GET['accounts']);
-	foreach($accounts as $key => $val) {
-		settype($accounts[$key], 'integer');
+	$accountIds = explode(';', $_GET['accounts']);
+	foreach($accountIds as $key => $val) {
+		settype($accountIds[$key], 'integer');
 	}
 	
 	$startDate = new Date($_GET['startDate']);
@@ -209,9 +212,14 @@ function showTrendData() {
 	$accountManager = new AccountManager($badgerDb);
 
 	$totals = array();
+	$accounts = array();
 
-	foreach($accounts as $currentAccountId) {
+	$currentAccountIndex = 0;
+
+	foreach($accountIds as $currentAccountId) {
 		$currentAccount = $accountManager->getAccountById($currentAccountId);
+		
+		$accounts[$currentAccountIndex][0] = $currentAccount->getTitle();
 		
 		$currentBalances = getDailyAmount($currentAccount, $startDate, $endDate);
 		
@@ -221,7 +229,11 @@ function showTrendData() {
 			} else {
 				$totals[$balanceKey] = $balanceVal;
 			}
+			
+			$accounts[$currentAccountIndex][] = $balanceVal->get();
 		}
+		
+		$currentAccountIndex++;
 	}
 	
 	$numDates = count($totals);
@@ -238,12 +250,22 @@ function showTrendData() {
 	$chart['chart_data'] = array();
 	
 	$chart['chart_data'][0][0] = '';
-	$chart['chart_data'][1][0] = ''; //Kontostandverlauf zwischen dem ' . $startDate->getFormatted() . ' und dem ' . $endDate->getFormatted();
+	if (count($accounts) > 1) {
+		$chart['chart_data'][1][0] = 'Gesamt';
+	} else {
+		$chart['chart_data'][1][0] = $accounts[0][0];
+	}
 	
 	foreach($totals as $key => $val) {
 		$tmp = new Date($key);
 		$chart['chart_data'][0][] = $tmp->getFormatted();
 		$chart['chart_data'][1][] = $val->get();
+	}
+	
+	if (count($accounts) > 1) {
+		foreach($accounts as $val) {
+			$chart['chart_data'][] = $val;
+		}
 	}
 	
 	SendChartData($chart);
@@ -323,6 +345,22 @@ function printCategoryPage() {
 		true
 	);
 
+	$categories = gatherCategories($accountIds, $startDate, $endDate, $type, $summarize == 't');
+	
+	$categoryHead = 'Kategorie';
+	$countHead = 'Anzahl';
+	$amountHead = 'Summe';
+	
+	$categoryTableBody = '';
+
+	foreach ($categories as $currentCategory) {
+		$categoryTitle = $currentCategory['title'];
+		$categoryCount = $currentCategory['count'];
+		$categoryAmount = $currentCategory['amount']->getFormatted();
+		
+		eval('$categoryTableBody .= "' . $tpl->getTemplate('statistics/categoryCategoryTableRow') . '";');
+	}
+	
 	eval('echo "' . $tpl->getTemplate('statistics/category') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
@@ -347,10 +385,40 @@ function showCategoryData() {
 		$type = 'i';
 	}
 
-	$summarize = $_GET['summarize'];
-	if ($summarize !== 't') {
-		$summarize = 'f';
+	if ($_GET['summarize'] !== 't') {
+		$summarize = false;
+	} else {
+		$summarize = true;
 	}
+	
+	$categories = gatherCategories($accounts, $startDate, $endDate, $type, $summarize);
+
+	$chart = array();
+	$chart['chart_type'] = '3d pie';
+	//$chart['axis_category']['size'] = 14;
+	$chart['axis_value']['size'] = 14;
+	$chart['legend_label']['size'] = 14;
+	$chart['legend_label']['bold'] = false;
+	
+	$chart['chart_data'] = array();
+	
+	$chart['chart_data'][0][0] = '';
+	$chart['chart_data'][1][0] = '';
+	
+	foreach($categories as $key => $val) {
+		$chart['chart_data'][0][] = $val['title'];
+		if ($type == 'i') {
+			$chart['chart_data'][1][] = $val['amount']->get();
+		} else {
+			$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
+		}
+	}
+	
+	SendChartData($chart);
+}
+
+function gatherCategories($accountIds, $startDate, $endDate, $type, $summarize) {
+	global $badgerDb;
 
 	$accountManager = new AccountManager($badgerDb);
 
@@ -362,7 +430,7 @@ function showCategoryData() {
 		)
 	);
 
-	foreach($accounts as $currentAccountId) {
+	foreach($accountIds as $currentAccountId) {
 		$currentAccount = $accountManager->getAccountById($currentAccountId);
 		
 		//echo 'Account: ' . $currentAccount->getTitle() . '<br />';
@@ -392,7 +460,7 @@ function showCategoryData() {
 			}
 			
 			if ($category = $currentTransaction->getCategory()) {
-				if ($summarize == 't' && $category->getParent()) {
+				if ($summarize && $category->getParent()) {
 					$category = $category->getParent();
 				}
 
@@ -418,29 +486,8 @@ function showCategoryData() {
 	if ($categories['none']['count'] == 0) {
 		unset($categories['none']);
 	}
-
-	$chart = array ();
-	$chart['chart_type'] = '3d pie';
-	//$chart['axis_category']['size'] = 14;
-	$chart['axis_value']['size'] = 14;
-	$chart['legend_label']['size'] = 14;
-	$chart['legend_label']['bold'] = false;
 	
-	$chart['chart_data'] = array();
-	
-	$chart['chart_data'][0][0] = '';
-	$chart['chart_data'][1][0] = ''; //Kontostandverlauf zwischen dem ' . $startDate->getFormatted() . ' und dem ' . $endDate->getFormatted();
-	
-	foreach($categories as $key => $val) {
-		$chart['chart_data'][0][] = $val['title'];
-		if ($type == 'i') {
-			$chart['chart_data'][1][] = $val['amount']->get();
-		} else {
-			$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
-		}
-	}
-	
-	SendChartData($chart);
+	return $categories;
 }
 
 function compareCategories($a, $b) {

@@ -13,3 +13,12 @@
 	$categoryChart
 </div>
 <div class="flashClear"></div>
+
+<table>
+	<tr>
+		<th>$categoryHead</th>
+		<th>$countHead</th>
+		<th>$amountHead</th>
+	</tr>
+	$categoryTableBody
+</table>

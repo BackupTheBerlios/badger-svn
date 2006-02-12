@@ -38,3 +38,6 @@
 	$accountSelect
 </fieldset>
 <p style="margin-top: 26em;">$submitButton</p>
+
+<div id="flashContainer" class="flashContainer"></div>
+<div class="flashClear"></div>
