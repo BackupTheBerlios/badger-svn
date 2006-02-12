@@ -114,8 +114,9 @@ class WidgetEngine {
 		// -> we've to add an extended namespace
 		
 		// formatings of numbers
-		if (is_numeric($value)) {
-			if ($value<0) {
+		$compValue = str_replace(",",".", $value);
+		if (is_numeric($compValue)) {
+			if ($compValue<0) {
 				$class = "inputNumberMinus";
 			} else {
 				$class = "inputNumber";
@@ -133,7 +134,7 @@ class WidgetEngine {
 		
 		$output = "<input type='$type' id='$fieldname' name='$fieldname' size='$size' class='$class' value='$value' required='$mandatory' $valCondition />";
 		if($description) {
-			$helpImg = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
+			$helpImg = $this->addImage("Widgets/help.gif");
 			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
 		return $output;
@@ -157,7 +158,7 @@ class WidgetEngine {
 	}
 	
 	public function addImage($file) {
-		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' />";
+		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' border='0'/>";
 	}
 	
 	public function createSelectField($name, $options, $default="", $description="", $mandatory=false) {	
@@ -172,8 +173,8 @@ class WidgetEngine {
 		}
 		$selectField .= "</select>\n";
 		if($description) {
-			$helpImg = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
-			$selectField .= $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
+			$helpImg = $this->addImage("Widgets/help.gif");
+			$selectField .= $this->addToolTipLink("", $description, $helpImg);
 		}
 		return $selectField;
 	}
