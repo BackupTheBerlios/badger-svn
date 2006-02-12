@@ -173,7 +173,7 @@ class WidgetEngine {
 		$selectField .= "</select>\n";
 		if($description) {
 			$helpImg = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
-			$selectField .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
+			$selectField .= $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
 		}
 		return $selectField;
 	}
