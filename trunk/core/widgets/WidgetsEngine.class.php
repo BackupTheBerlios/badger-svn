@@ -65,9 +65,11 @@ class WidgetEngine {
 		}
 	}
 	
-	public function addToolTipLink($link, $text, $linkname) {
+	public function addToolTipLink($link, $text, $linkname="") {
 		if($this->ToolTipJSAdded) {
 			if ($this->ToolTipLayerAdded) {
+				if($link=="") $link = "javascript:void(0)";
+				if($linkname=="") $linkname = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
 				return "<a href=\"".$link."\" class=\"ToolTip\" onmouseover=\"return overlib('".$text."', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\">".$linkname."</a>\n";
 			} else 	{
 				throw new badgerException('widgetsEngine', 'ToolTipLayerNotAdded');

@@ -45,6 +45,8 @@ function _jsVal_Language() {
 		echo $widgets->addToolTipLayer();
 		echo $widgets->addToolTipLink("javascript:void(0);", "Description - this is ...", "ToolTip Test");
 		echo "<br />";
+		echo $widgets->addToolTipLink("", "ToolTip");
+		echo "<br />";
 		echo $widgets->createLabel("fieldname", "name:", true);
 		echo "&nbsp;";
 		echo $widgets->createField("fieldname", 25, "value", "description", true);
