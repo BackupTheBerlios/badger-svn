@@ -8,7 +8,7 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $startDate= new Date();
 #end date aus forecast php übergeben
-$endDate = new Date('2006-03-31');
+$endDate = new Date('2007-02-12');
 # accountId aus forecast php übergeben
 #if (isset($_GET['account'])) {
 #	$accountId = $_GET['account'];
@@ -17,6 +17,10 @@ $endDate = new Date('2006-03-31');
 $accountId = 1;
 # savingTarget aus forecast php übergeben, wenn nicht angegeben, standard = 0
 $savingTarget = new Amount(0);
+# pocketMoney1 aus forecast php
+$pocketMoney1 = new Amount (25);
+# pocketMoney2 aus forecast php
+$pocketMoney2 = new Amount(55);
 //get daily amounts from db
 $am = new AccountManager($badgerDb);
 $totals = array();
@@ -38,6 +42,7 @@ if (!is_null($currentAccount->getUpperLimit()->get())){
 	//UpperLimit nicht vorhanden, wie wenn in forecast php nicht angekreuzt
 	
 }
+
 //calculate every days balance
 $currentBalances = getDailyAmount($currentAccount, $startDate, $endDate);
 foreach ($currentBalances as $balanceKey => $balanceVal) {
@@ -48,29 +53,42 @@ foreach ($currentBalances as $balanceKey => $balanceVal) {
 	}
 }
 //calculate spending money, if saving target should be reached
-$countDay = count($totals); //get numbers of days between today & endDate
+$countDay = count($totals)-1; //get numbers of days between today & endDate
 $endDateBalance = $totals[$endDate->getDate()]; //get balance of end date
-$freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend 
-$dailyPocketMoney = new Amount ($freeMoney->div($countDay));
-	
+$freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend
+$dailyPocketMoney = new Amount ($freeMoney->div($countDay)); //calculate daily pocket money = free money / count of Days
+
 $chart['chart_data'] = array();
 $chart['chart_data'][0][0] = '';
 #internationalisieren
 $chart['chart_data'][1][0] = 'Dispo Limit'; //lower limit of the account
 $chart['chart_data'][2][0] = 'Spargrenze'; //upper limit of the account
-$chart['chart_data'][3][0] = 'Prognose'; //account balance for every day between today & end date, if no other expenses / income than in the finished transactions 
+$chart['chart_data'][3][0] = 'Geplante Transaktionen'; //account balance for every day between today & end date, if no other expenses / income than in the finished transactions 
+$chart['chart_data'][4][0] = 'Verlauf mit Sparziel';
+$chart['chart_data'][5][0] = 'Verlauf mit Taschengeld1';
+$chart['chart_data'][6][0] = 'Verlauf mit Taschengeld2';
 
+$day = 0;
 foreach($totals as $key => $val) {
 	$tmp = new Date($key);
 	$chart['chart_data'][0][] = $tmp->getFormatted();
 	$chart['chart_data'][1][] = $lowerLimit->get();
 	$chart['chart_data'][2][] = $upperLimit->get();
 	$chart['chart_data'][3][] = $val->get();
-
+	//to keep $dailyPocketMoney
+	$dailyPocketMoneyLoop = new Amount ($dailyPocketMoney->get());
+	$val1 = new Amount ($val->get());
+	$chart['chart_data'][4][] = $val1->sub($dailyPocketMoneyLoop->mul($day))->get();
+	$PocketMoney1Loop = new Amount ($pocketMoney1->get());
+	$val2 = new Amount ($val->get());
+	$chart['chart_data'][5][] = $val2->sub($PocketMoney1Loop->mul($day))->get();
+	$PocketMoney2Loop = new Amount ($pocketMoney2->get());
+	$val3 = new Amount ($val->get());
+	$chart['chart_data'][6][] = $val3->sub($PocketMoney2Loop->mul($day))->get();
+	$day++;
 }
 
-
-//for documentation see: http://www.maani.us/charts/index.php?menu=Reference
+//for documentation for the following code see: http://www.maani.us/charts/index.php?menu=Reference
 $chart [ 'chart_type' ] = "line";
 $chart [ 'axis_category' ] = array (   'skip'         =>  0,
                                        'font'         =>  "Arial", 
@@ -161,7 +179,7 @@ $chart [ 'chart_value' ] = array (  'prefix'         =>  "",
                                     'color'          =>  "000000", 
                                     'alpha'          =>  90
                                   ); 
-$chart [ 'chart_transition' ] = array( 'type'      =>  "slide_left",
+$chart [ 'chart_transition' ] = array( 'type'      =>  "none",
                                         'delay'     =>  1, 
                                         'duration'  =>  1, 
                                         'order'     =>  "all"                                 
@@ -186,7 +204,7 @@ $chart [ 'legend_label' ] = array (   'layout'  =>  "horizontal",
                                       'color'   =>  "000000", 
                                       'alpha'   =>  90
                                   ); 
-$chart [ 'legend_transition' ] = array ( 'type'      =>  "slide_down",
+$chart [ 'legend_transition' ] = array ( 'type'      =>  "none",
                                          'delay'     =>  1, 
                                          'duration'  =>  1 
                                        ); 
