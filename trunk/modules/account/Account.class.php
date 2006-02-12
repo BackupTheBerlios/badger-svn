@@ -1421,6 +1421,10 @@ class Account extends DataGridHandler {
 			return;
 		}
 		
+		if ($this->getTypeFilter() == 'planned') {
+			return;
+		}
+
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
 			FROM finished_transaction ft 
@@ -1428,11 +1432,13 @@ class Account extends DataGridHandler {
 			WHERE account_id = " .  $this->id . "\n";
 		
 		$where = $this->getFilterSQL();
+		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
 		if($where) {
 			$sql .= "AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
+		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),/', '', $order));
 		if($order) {
 			$sql .= "ORDER BY $order\n ";
 		}
@@ -1462,6 +1468,10 @@ class Account extends DataGridHandler {
 		if ($this->plannedDataFetched) {
 			return;
 		}
+		
+		if ($this->getTypeFilter() == 'finished') {
+			return;
+		}
 
 		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.amount, 
 				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
@@ -1474,6 +1484,7 @@ class Account extends DataGridHandler {
 
 		$where = $this->getFilterSQL();
 		//echo $where = $where . "\n" . $where;
+		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
 		//echo $where;
 		if($where) {
@@ -1481,7 +1492,8 @@ class Account extends DataGridHandler {
 		} 
 		
 		$order = $this->getOrderSQL();				
-		$order = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),*/', '', $order));
+		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),/', '', $order);
+		$order = trim (preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),/', '', $order));
 		
 		if($order) {
 			$sql .= "ORDER BY $order\n ";
@@ -1503,6 +1515,16 @@ class Account extends DataGridHandler {
 		$row = false;
 		
 		$this->plannedDataFetched = true;
+	}
+	
+	private function getTypeFilter() {
+		foreach ($this->filter as $currentFilter) {
+			if ($currentFilter['key'] == 'type') {
+				return getBadgerTranslation2('Account', $currentFilter['val']);
+			}
+		}
+		
+		return false;
 	}
 
 	/**
