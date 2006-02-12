@@ -127,6 +127,7 @@ class StandardNavigation implements Navigation {
 	 * @return string The JS calls required for the navigation.
 	 */
 	public function getJS() {
+//echo "<pre>"; print_r($this->structure); echo "</pre>\n";
 		//We need the names of the CSS icon classes
 		$structure =& $this->parseIconIds(StandardNavigation::iconName, $this->structure);
 		
@@ -157,7 +158,7 @@ class StandardNavigation implements Navigation {
 					$result .= $this->renderSubMenu("mainMenu$menuNum", $mainElement['menu']);
 					
 					//Add SubMenu
-					$result .= "\nmenuBar.addMenuBarItem(new menuBarItem('$mainElement[name]', mainMenu$menuNum, 'mainMenu$menuNum'));\n";
+					$result .= "\nmenuBar.addMenuBarItem(new menuBarItem('" . $mainElement['name'] . "', mainMenu$menuNum, 'mainMenu$menuNum'));\n";
 
 					//Show icon, if available
 					if (isset($mainElement['iconId'])) {
@@ -321,7 +322,7 @@ class StandardNavigation implements Navigation {
 					//add sub-menu
 					$result .= "$menuName.addMenuItem(new menuItem('$currentElement[name]', '$currentId'));\n";
 					$result .= $this->RenderSubMenu($currentId, $currentElement['menu']);;
-					$result .= "$menuName.items.$currentId.setSubMenu($currentId)\n";
+					$result .= "$menuName.items.$currentId.setSubMenu($currentId);\n";
 
 					//add icon, if defined
 					if (isset($currentElement['iconId'])) {

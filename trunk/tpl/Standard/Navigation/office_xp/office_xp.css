@@ -45,7 +45,9 @@ Menu related selectors
 .jsdomenuarrow {
 	background-image: url(office_xp_arrow.png);
 	background-repeat: no-repeat; /* Do not alter this line! */
-	height: 7px;
+	background-position: center center;
+	height: 1em;
+	margin-top: 3px;
 	position: absolute; /* Do not alter this line! */
 	right: 8px;
 	width: 4px;
@@ -54,9 +56,11 @@ Menu related selectors
 .jsdomenuarrowover {
 	background-image: url(office_xp_arrow_o.png);
 	background-repeat: no-repeat; /* Do not alter this line! */
-	height: 7px;
+	background-position: center center;
+	height: 1em;
+	margin-top: 2px;
 	position: absolute; /* Do not alter this line! */
-	right: 8px;
+	right: 6px;
 	width: 4px;
 }
 

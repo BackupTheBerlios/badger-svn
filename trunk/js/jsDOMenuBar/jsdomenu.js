@@ -356,7 +356,7 @@ function popUpSubMenu(menuItemObj) { // Private method
     menuObj.initialLeft = parseInt(menuObj.style.left) - getScrollLeft();
     menuObj.initialTop = parseInt(menuObj.style.top) - getScrollTop();
   }
-  menuObj.style.display = "show";
+  menuObj.style.display = "block";
 }
 
 /*
@@ -681,7 +681,7 @@ function setSubMenu(menuObj) { // Public method
   else {
     height = arrowElm.offsetHeight;
   }
-  arrowElm.style.top = Math.floor((this.offsetHeight - height) / 2) + px;
+  arrowElm.style.top = Math.floor((this.offsetHeight - height) / 2) + 'px';
   this.subMenu = menuObj;
   this.arrowObj = arrowElm;
   this.setArrowClassName = function(className) { // Public method
