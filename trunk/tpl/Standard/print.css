@@ -1,0 +1,142 @@
+body, form, img {
+	margin: 0px 0px 0px 0px;	
+}
+
+body, table {
+	font-family: Arial, Verdana;
+	font-size: 10pt;
+}
+
+#header {
+	display: none;
+	background-color: #ECE9D8;
+	height: 46px;
+}
+#header table {
+	display: none;
+	font-size: 12pt;	
+}
+#staticMenuBar {
+	display: none;
+	width: 99.6%;
+}
+#content {
+	margin: 5px 5px 5px 5px;
+
+}
+
+#footer {
+	text-align: center;
+	font-size: 8pt;
+}
+
+/* sperber: CSV-Report */
+#scroll {
+	height: 450px;
+	width: 100%;
+	overflow: scroll;
+}
+
+/* FORMS */
+label {
+/*	float: left;
+	text-align: right;*/
+	cursor: pointer;	
+}
+label.mandatory {
+	/*color: #595959;*/
+	font-weight: bold;
+}
+legend {
+	font-weight: bold;
+}
+
+input, textarea {
+	font-family: Arial, Verdana;
+	font-size: 10pt;
+	/*border: 1px solid #d4d4d4;*/
+	border-top: 1px solid #d4d4d4;
+	border-left: 1px solid #d4d4d4;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+input:focus, textarea:focus {
+	background-color: #efefef;
+	border: 1px solid #d4d4d4;
+}
+input.inputString {
+	
+}
+input.inputNumber {
+	text-align: right;
+}	
+input.inputNumberMinus {
+	text-align: right;
+	color: #F50000;
+}
+/* END FORMS */
+
+
+/* SUGGEST */
+.SuggestFramework_List {
+	border: 1px solid #CCCCCC;
+	border-top: 0;
+}
+.SuggestFramework_Heading {
+	padding: 0 1px 0 1px;
+	background-color: #CCCCCC;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.SuggestFramework_Highlighted {
+	padding: 0 1px 0 1px;
+	background-color: Highlight;
+	color: HighlightText;
+}
+.SuggestFramework_Normal {
+	padding: 0 1px 0 1px;
+	background-color: #FFFFFF;
+	color: #000000;
+}
+/* END SUGGEST */
+
+/* TOOLTIP */
+.TTDiv {
+  border: 1px #d4d4d4 solid;
+  background-color: #FFFFCC;
+  line-height: normal;
+} 
+.TTbodyText { 
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold; 
+  color: #000000; 
+  font-style: normal;  
+  text-align: left; 
+  padding: 3px;
+  font-size: 8pt;
+}
+/* TOOLTIP END */
+
+/* LOGIN SCREEN*/
+.LSPrompt {
+	font-weight: bold;
+}
+/* LOGIN SCREEN END*/
+
+/* USER SETTINGS ADMIN */
+.USAHeading {
+	font-weight: bold;
+}
+/* USER SETTINGS ADMIN END*/
+
+/* FORM VALIDATION  BEGIN */
+input.error, select.error {
+	padding-right: 16px;
+	border: 1px solid red;
+	background-color: #FFFCE2;
+	/*
+	background-image: url(images/warning_obj.gif);
+	background-position: right;
+	background-repeat: no-repeat; -> unused*/
+}
+/* FORM VALIDATION  END */
