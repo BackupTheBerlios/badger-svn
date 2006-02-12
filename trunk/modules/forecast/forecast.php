@@ -23,25 +23,22 @@ $widgets->addNavigationHead();
 echo $tpl->getHeader("Charts");
 echo $widgets->getNavigationBody();
 
-#$am = new AccountManager($badgerDb);
-#$account = $am->getAccountById(1);
-#$startDate = new Date('2006-03-10');
-#$endDate = new Date('2010-12-12');
-
-#$values = getDailyAmount($account, $startDate, $endDate);
-
-#print_r($values);
-
 //include charts.php to access the InsertChart function
-
-?>
-<?
-
-
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
 echo "<br /><br /><br />";
+$endDate = "2006-03-28";
+$account = 1;
+$savingTarget = 1000;
+$pocketmoney1 = 12;
+$pocketMoney2 = 30;
 
-echo InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php", 800, 400, "ECE9D8", true);
+?>
+<div style="background-color: white">
+<?php
+echo InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php?endDate=$endDate&account=$account&savingTarget=$savingTarget&pocketMoney1=$pocketmoney1&pocketMoney2=$pocketMoney2", 800, 400, "ECE9D8", true);
+?>
+</div>
+<?php
 
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 ?>

@@ -8,19 +8,30 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $startDate= new Date();
 #end date aus forecast php übergeben
-$endDate = new Date('2007-02-12');
+#$endDate = new Date ("2006-02-15");
+if (isset($_GET['endDate'])) {
+	$endDate = new Date($_GET['endDate']);
+}
 # accountId aus forecast php übergeben
-#if (isset($_GET['account'])) {
-#	$accountId = $_GET['account'];
-#} else {$accountId = 0; 
-#}
-$accountId = 1;
-# savingTarget aus forecast php übergeben, wenn nicht angegeben, standard = 0
-$savingTarget = new Amount(0);
-# pocketMoney1 aus forecast php
-$pocketMoney1 = new Amount (25);
-# pocketMoney2 aus forecast php
-$pocketMoney2 = new Amount(55);
+#$accountId = 1;
+if (isset($_GET['account'])) {
+	$accountId = $_GET['account'];
+}
+// get pocketMoney1 from calling file
+#$savingTarget = new Amount(0);
+if (isset($_GET['savingTarget'])) {
+	$savingTarget = new Amount($_GET['savingTarget']);
+}
+// get pocketMoney1 from calling file
+#$pocketMoney1 = new Amount (25);
+if (isset($_GET['pocketMoney1'])) {
+	$pocketMoney1 = new Amount($_GET['pocketMoney1']);
+}
+// get pocketMoney2 from calling file
+#$pocketMoney2 = new Amount(55);
+if (isset($_GET['pocketMoney2'])) {
+	$pocketMoney2 = new Amount($_GET['pocketMoney2']);
+}
 //get daily amounts from db
 $am = new AccountManager($badgerDb);
 $totals = array();
@@ -54,7 +65,8 @@ foreach ($currentBalances as $balanceKey => $balanceVal) {
 }
 //calculate spending money, if saving target should be reached
 $countDay = count($totals)-1; //get numbers of days between today & endDate
-$endDateBalance = $totals[$endDate->getDate()]; //get balance of end date
+$laststanding = new Amount($totals[$endDate->getDate()]);
+$endDateBalance = $laststanding; //get balance of end date
 $freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend
 $dailyPocketMoney = new Amount ($freeMoney->div($countDay)); //calculate daily pocket money = free money / count of Days
 
@@ -90,7 +102,7 @@ foreach($totals as $key => $val) {
 
 //for documentation for the following code see: http://www.maani.us/charts/index.php?menu=Reference
 $chart [ 'chart_type' ] = "line";
-$chart [ 'axis_category' ] = array (   'skip'         =>  0,
+$chart [ 'axis_category' ] = array (   'skip'         =>  $countDay/12,
                                        'font'         =>  "Arial", 
                                        'bold'         =>  false, 
                                        'size'         =>  10, 
