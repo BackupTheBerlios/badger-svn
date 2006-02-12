@@ -56,7 +56,6 @@ function showSelectPage() {
 
 	$widgets->addCalendarJS();
 	$widgets->addToolTipJS();
-	$tpl->addCss("Widgets/dataGrid.css");
 	$tpl->addJavaScript("js/behaviour.js");
 	$tpl->addJavaScript("js/prototype.js");
 	$tpl->addJavaScript("js/statistics.js");

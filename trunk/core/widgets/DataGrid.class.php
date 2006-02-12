@@ -31,8 +31,14 @@ public $initialSort;
 public $width = "99.9%";
 
 	public function __construct($tpl) {
+		global $print;
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
+		if($print){
+			$tpl->addCss("Widgets/dataGridPrint.css");
+		} else {
+			$tpl->addCss("Widgets/dataGrid.css");
+		}
 	}
 	
 	public function writeDataGrid() {

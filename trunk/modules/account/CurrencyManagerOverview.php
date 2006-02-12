@@ -15,7 +15,6 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 
 $widgets = new WidgetEngine($tpl);
-$tpl->addCss("Widgets/dataGrid.css");
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 

@@ -1,0 +1,51 @@
+#dgMessage {
+	display: none;
+	font-weight: bold;
+	color: red;
+}
+
+#dataGrid {
+	border: 1px solid #ececec;
+	/*width: 99.9%;*/
+	background-color: #ffffff;
+}
+#dgTableHead {
+	background-color: #000000;
+	color: #ffffff;
+	font-weight: bold;
+	width: 100%;
+	cursor: pointer;
+}
+#dgScroll {
+	width: 100%;
+}
+#dgTableFoot {
+	width: 100%;
+	background-color: #ececec;
+}
+#dgData {
+	width: 99.8%;
+}
+#dgData tr {
+	border: 1px solid #ececec;
+}
+
+tr.dgRow {
+	background-color: #ffffff;
+	width: 100%;
+}
+tr.dgRowSelected {
+	background-color: #339900;
+	width: 100%;
+	color: white;
+}
+tr.dgRowSelectedActive {
+	background-color: #44CC00;
+	width: 100%;
+	color: white;
+}
+tr.dgRowActive {
+	background-color: #FFFF00;
+	width: 100%;
+}
+	
