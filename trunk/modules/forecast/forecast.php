@@ -19,8 +19,9 @@ $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addNavigationHead();
-echo $tpl->getHeader("Charts");
+echo $tpl->getHeader("Forecast");
 echo $widgets->getNavigationBody();
+echo $widgets->addToolTipLayer();
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
 
