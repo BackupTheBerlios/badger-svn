@@ -94,7 +94,6 @@ if (isset($_POST['sendData'])){
 		$account = ($_POST["selectedAccount"]);
 		$pocketMoney1 = ($_POST["pocketmoney1"]);			
 		$pocketMoney2 = ($_POST["pocketmoney2"]);
-		
 		$insertChart = InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php?endDate=$endDate&account=$account&savingTarget=$savingTarget&pocketMoney1=$pocketMoney1&pocketMoney2=$pocketMoney2&showLowerLimit=$showLowerLimit&showUpperLimit=$showUpperLimit&showPlannedTransactions=$showPlannedTransactions&showSavingTarget=$showSavingTarget&showPocketMoney1=$showPocketMoney1&showPocketMoney2=$showPocketMoney2", 800, 400, "ECE9D8", true);
 		eval("echo \"".$tpl->getTemplate("forecast/forecastChart")."\";");
 

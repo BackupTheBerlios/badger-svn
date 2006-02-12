@@ -18,10 +18,11 @@ if (isset($_GET['account'])) {
 	$accountId = $_GET['account'];
 }
 // get pocketMoney1 from calling file
-#$savingTarget = new Amount(0);
+$savingTarget = new Amount(0);
 if (isset($_GET['savingTarget'])) {
 	$savingTarget = new Amount($_GET['savingTarget']);
 }
+$savingTarget = new Amount(0);
 // get pocketMoney1 from calling file
 #$pocketMoney1 = new Amount (25);
 if (isset($_GET['pocketMoney1'])) {
@@ -51,6 +52,7 @@ if (isset($_GET['showPocketMoney1'])) {
 if (isset($_GET['pocketMoney2'])) {
 	$showPocketMoney2 = $_GET['showPocketMoney2'];
 }
+
 //get daily amounts from db
 $am = new AccountManager($badgerDb);
 $totals = array();
@@ -82,14 +84,12 @@ foreach ($currentBalances as $balanceKey => $balanceVal) {
 		$totals[$balanceKey] = $balanceVal;
 	}
 }
-if ($showSavingTarget == 1){
 	//calculate spending money, if saving target should be reached
 	$countDay = count($totals)-1; //get numbers of days between today & endDate
 	$laststanding = new Amount($totals[$endDate->getDate()]);
 	$endDateBalance = $laststanding; //get balance of end date
 	$freeMoney = new Amount($endDateBalance->sub($savingTarget)); //endDateBalance - saving target = free money to spend
 	$dailyPocketMoney = new Amount ($freeMoney->div($countDay)); //calculate daily pocket money = free money / count of Days
-}
 
 $chart['chart_data'] = array();
 $chart['chart_data'][0][0] = '';
