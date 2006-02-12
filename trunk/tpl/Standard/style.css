@@ -49,7 +49,7 @@ blockquote {
 
 .flashContainer {
 	background-color: #ECE9D8;
-	width: auto;
+	display: inline;
 }
 
 /* FORMS */
