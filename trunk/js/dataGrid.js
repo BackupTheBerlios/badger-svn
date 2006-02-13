@@ -270,7 +270,7 @@ function dgDelete() {
 			deleteData(dgDeleteAction + allSelectedIds);
 			//delete rows from dataGrid
 			for (i=0; i<allSelectedIds.length; i++) {
-				dgData.removeChild(checkbox[i].parentNode.parentNode);
+				Element.remove($(allSelectedIds[i]));
 				dgCount = $("dgCount").innerHTML;
 				dgCount--;
 				$("dgCount").innerHTML = dgCount;
