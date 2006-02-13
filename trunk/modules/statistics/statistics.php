@@ -52,6 +52,8 @@ switch ($mode) {
 
 function showSelectPage() {
 	global $tpl;
+	global $us;
+	
 	$widgets = new WidgetEngine($tpl); 
 
 	$widgets->addCalendarJS();
@@ -62,12 +64,13 @@ function showSelectPage() {
 	
 	$dataGrid = new DataGrid($tpl);
 	$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-	$dataGrid->headerName = array("Titel","Kontostand");
-	$dataGrid->columnOrder = array("title","balance");  
+	$dataGrid->headerName = array("Titel", "Kontostand", 'Währung');
+	$dataGrid->columnOrder = array("title", "balance", 'currency');  
 	$dataGrid->initialSort = "title";
-	$dataGrid->headerSize = array(180,100);
-	$dataGrid->cellAlign = array("left","right");
-	$dataGrid->width = '290px';
+	$dataGrid->headerSize = array(180, 100, 100);
+	$dataGrid->cellAlign = array("left", 'right', 'right');
+	$dataGrid->width = '30em';
+	$dataGrid->height = '7em';
 	$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 	$dataGrid->initDataGridJS();
 
@@ -81,7 +84,7 @@ function showSelectPage() {
 
 	$selectFormAction = BADGER_ROOT . '/modules/statistics/statistics.php';
 	
-	$trendRadio = $widgets->createField('mode', null, 'trendPage', '', false, 'radio');
+	$trendRadio = $widgets->createField('mode', null, 'trendPage', '', false, 'radio', 'checked="checked"');
 	$trendLabel = $widgets->createLabel('mode', 'Trend');
 	
 	$categoryRadio = $widgets->createField('mode', null, 'categoryPage', '', false, 'radio');
@@ -92,36 +95,47 @@ function showSelectPage() {
 
 	$monthArray = array (
 		'fullYear' => 'Ganzes Jahr',
-		'jan' => 'Januar',
-		'feb' => 'Februar',
-		'mar' => 'Mï¿½rz',
-		'apr' => 'April',
-		'may' => 'Mai',
-		'jun' => 'Juni',
-		'jul' => 'Juli',
-		'aug' => 'August',
-		'sep' => 'September',
-		'oct' => 'October',
-		'nov' => 'November',
-		'dec' => 'December'
+		'1' => 'Januar',
+		'2' => 'Februar',
+		'3' => 'Mï¿½rz',
+		'4' => 'April',
+		'5' => 'Mai',
+		'6' => 'Juni',
+		'7' => 'Juli',
+		'8' => 'August',
+		'9' => 'September',
+		'10' => 'October',
+		'11' => 'November',
+		'12' => 'December'
 	);
-	$monthSelect = $widgets->createSelectField('monthSelect', $monthArray, 'fullYear', 'Description', false);
-	$yearInput = $widgets->createField('yearSelect', 4, 2006, 'Beschreibung');
+	$monthSelect = $widgets->createSelectField('monthSelect', $monthArray, 'fullYear', 'Description', false, 'onchange="updateDateRange();"');
+
+	$now = new Date();
+	$beginOfYear = new Date();
+	$beginOfYear->setMonth(1);
+	$beginOfYear->setDay(1);
 	
-	$startDateField = $widgets->addDateField("startDate", "01.01.2006");
-	$endDateField = $widgets->addDateField("endDate", "31.12.2006");
+	$yearInput = $widgets->createField('yearSelect', 4, $now->getMonth(), 'Beschreibung', false, 'text', 'onchange="updateDateRange();"');
 	
-	$inputRadio = $widgets->createField('type', null, 'i', '', false, 'radio');
+	$startDateField = $widgets->addDateField("startDate", $beginOfYear->getFormatted());
+	$endDateField = $widgets->addDateField("endDate", $now->getFormatted());
+	
+	$inputRadio = $widgets->createField('type', null, 'i', '', false, 'radio', 'checked="checked"');
 	$inputLabel = $widgets->createLabel('type', 'Eingaben');
 	
 	$outputRadio = $widgets->createField('type', null, 'o', '', false, 'radio');
 	$outputLabel = $widgets->createLabel('type', 'Ausgaben');
 
-	$summarizeRadio = $widgets->createField('summarize', null, 't', '', false, 'radio');
+	$summarizeRadio = $widgets->createField('summarize', null, 't', '', false, 'radio', 'checked="checked"');
 	$summarizeLabel = $widgets->createLabel('summarize', 'Unterkategorien unter der Hauptkategorie zusammenfassen');
 
 	$distinguishRadio = $widgets->createField('summarize', null, 'f', '', false, 'radio');
 	$distinguishLabel = $widgets->createLabel('summarize', 'Unterkategorien eigenstÃ¤ndig auffÃ¼hren');
+
+	$dateFormatField = $widgets->createField('dateFormat', null, $us->getProperty('badgerDateFormat'), null, false, 'hidden');
+	$errorMsgAccountMissingField = $widgets->createField('errorMsgAccountMissing', null, 'Sie haben noch kein Konto ausgewählt.', null, false, 'hidden');
+	$errorMsgStartBeforeEndField = $widgets->createField('errorMsgStartBeforeEnd', null, 'Das Startdatum liegt nicht vor dem Enddatum.', null, false, 'hidden');
+	$errorMsgEndInFutureField = $widgets->createField('errorMsgEndInFuture', null, 'Das Enddatum liegt in der Zukunft.', null, false, 'hidden');
 
 	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
 
@@ -209,6 +223,15 @@ function showTrendData() {
 	$startDate = new Date($_GET['startDate']);
 	$endDate = new Date($_GET['endDate']);
 	
+	$now = new Date();
+	$now->setHour(0);
+	$now->setMinute(0);
+	$now->setSecond(0);
+	
+	if ($endDate->after($now)) {
+		$endDate = $now;
+	}
+
 	$accountManager = new AccountManager($badgerDb);
 
 	$totals = array();
