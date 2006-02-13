@@ -34,6 +34,7 @@ $developerTeam = getBadgerTranslation2('about', 'team');
 $usedComponents = getBadgerTranslation2('about', 'programms');
 $by = getBadgerTranslation2('about', 'by');
 
+$pageHeading = $pageHeading;
 eval('echo "' . $tpl->getTemplate('about') . '";');
 eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 ?>
