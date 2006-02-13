@@ -90,6 +90,7 @@ function printFrontend() {
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
+	$pageHeading = $pageTitle;
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountAccount', 'title'), true);
 	$titleField = $widgets->createField("title", 20, $titleValue, "", true, "text", "");

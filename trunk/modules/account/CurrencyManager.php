@@ -79,6 +79,7 @@ function printFrontend() {
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
+	$pageHeading = $pageTitle;
 	//Fields & Labels
 	$symbolLabel = $widgets->createLabel("symbol", getBadgerTranslation2('accountCurrency', 'symbol'), true);
 	$symbolField = $widgets->createField("symbol", 20, $symbolValue, "", true, "text", "maxlength='3'");

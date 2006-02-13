@@ -18,7 +18,7 @@ require_once BADGER_ROOT . '/modules/account/FinishedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
 
 $redirectPageAfterSave = "AccountOverview.php?accountID=".$_GET['accountID'];
-$pageTitle = "Transaction"; //I18N
+$pageTitle = getBadgerTranslation2('accountTransaction','pageTitle');; //I18N
 
 $am = new AccountManager($badgerDb);
 
