@@ -17,9 +17,9 @@ require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 $widgets = new WidgetEngine($tpl); 
 $widgets->addNavigationHead();
 
-$aboutTitle = getBadgerTranslation2('about', 'title');
+$pageHeading = getBadgerTranslation2('about', 'title');
 
-echo $tpl->getHeader($aboutTitle);
+echo $tpl->getHeader($pageHeading);
 
 echo $widgets->getNavigationBody();
 
