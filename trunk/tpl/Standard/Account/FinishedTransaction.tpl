@@ -1,6 +1,10 @@
 <form method="post" action="$FormAction?action=save&accountID=$AccountID">
 <table>
   <tr>
+    <td>$titleLabel </td>
+    <td>$titleField </td>
+  </tr>
+  <tr>
     <td>$descriptionLabel </td>
     <td>$descriptionField </td>
   </tr>
