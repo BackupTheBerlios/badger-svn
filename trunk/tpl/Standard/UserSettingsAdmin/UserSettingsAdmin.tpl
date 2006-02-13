@@ -55,7 +55,6 @@
 				<td>$ConfPwField</td>
 			</tr>
 		</table>
-	$Feedback
 	</fieldset>
 		<table>
 			<tr>
@@ -64,3 +63,5 @@
 			</tr>
 		</table>
 </form>
+<br/>
+$Feedback
