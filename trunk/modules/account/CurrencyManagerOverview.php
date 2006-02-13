@@ -40,6 +40,8 @@ $widgets->addNavigationHead();
 echo $tpl->getHeader($pageTitle);
 echo $widgets->getNavigationBody(); 
 
+echo "<h1>$pageTitle</h1>";
+
 echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 		

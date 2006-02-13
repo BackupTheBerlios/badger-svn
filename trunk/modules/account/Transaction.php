@@ -65,8 +65,14 @@ if (isset($_GET['action'])) {
 						printFrontendFinished($accountID, $ID);
 					}
 				} else {
-					//printFrontendPlanned($accountID, "new");
-					//printFrontendFinished($accountID, "new");
+					switch($_GET['type']) {
+					case 'finished':
+						printFrontendFinished($accountID, "new");
+						break;
+					case 'planned':
+						printFrontendPlanned($accountID, "new");
+						break;
+					}
 				}
 			}
 			break;
@@ -97,8 +103,8 @@ function printFrontendFinished($AccountID, $ID) {
 		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp->getFormatted();
 		$transactionPartnerValue = $transaction->getTransactionPartner();
 		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp->getTitle();
-		$exceptionalValue = $transaction->getExceptional();
-		$periodicalValue = $transaction->getPeriodical();
+		$exceptionalValue = ($transaction->getExceptional()==true) ? 'checked' : '';
+		$periodicalValue = ($transaction->getPeriodical()==true) ? 'checked' : '';
 	} else {
 		//new: empty values
 		$titleValue = "";
@@ -108,13 +114,14 @@ function printFrontendFinished($AccountID, $ID) {
 		$transactionPartnerValue = "";
 		$outsideCapitalValue = "";
 		$categoryValue = "";
-		$exceptionalValue = "";
-		$periodicalValue = "";
+		$exceptionalValue = false;
+		$periodicalValue = false;
 	}
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$transactionType = "finished";
+	$pageHeading = $pageTitle;
 	$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
@@ -134,9 +141,9 @@ function printFrontendFinished($AccountID, $ID) {
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true);
 	$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), true);
-	$exceptionalField = $widgets->createField("exceptional", 30, $exceptionalValue, "", true, "text", "");
+	$exceptionalField = $widgets->createField("exceptional", 30, $exceptionalValue, "", true, "checkbox", $exceptionalValue);
 	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), true);
-	$periodicalField = $widgets->createField("periodical", 30, $periodicalValue, "", true, "text", "");
+	$periodicalField = $widgets->createField("periodical", 30, $periodicalValue, "", true, "checkbox", $periodicalValue);
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
@@ -159,9 +166,9 @@ function printFrontendPlanned($AccountID, $ID) {
 	echo $widgets->getNavigationBody();	
 	echo $widgets->addToolTipLayer();
 	
+	$transactionType = "planned";
 	if($ID!="new") {
-		$acc = $am->getAccountById($AccountID);
-		$transactionType = "planned";
+		$acc = $am->getAccountById($AccountID);		
 		$transaction = $acc->getPlannedTransactionById($ID);
 		
 		$titleValue = $transaction->getTitle();
@@ -178,7 +185,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		//new: empty values
 		$titleValue = "";
 		$descriptionValue = "";
-		$startDateValue = "";
+		$beginDateValue = "";
 		$endDateValue = "";
 		$amountValue = "";
 		$outsideCapitalValue = "";
@@ -190,7 +197,6 @@ function printFrontendPlanned($AccountID, $ID) {
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
-	$transactionType = "";
 	$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");

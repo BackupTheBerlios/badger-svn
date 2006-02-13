@@ -31,7 +31,7 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$a
 $dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colTitle'), getBadgerTranslation2('accountOverview', 'colType'),getBadgerTranslation2('accountOverview', 'colDescription'),getBadgerTranslation2('accountOverview', 'colValutaDate'),getBadgerTranslation2('accountOverview', 'colAmount'),getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
 $dataGrid->columnOrder = array("title","type","description","valutaDate","amount","categoryTitle");  
 $dataGrid->initialSort = "title";
-$dataGrid->height = "400px";
+$dataGrid->height = "350px";
 $dataGrid->headerSize = array(200,190,170,85,100,200);
 $dataGrid->cellAlign = array("left","left","left","left","right","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
@@ -45,10 +45,12 @@ $widgets->addNavigationHead();
 echo $tpl->getHeader($pageTitle);
 echo $widgets->getNavigationBody(); 
 
+echo "<h1>$pageTitle</h1>";
+
 echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('dataGrid', 'new'), "dgNew('type=planned')", "Widgets/table_add.gif");
 echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('dataGrid', 'new'), "dgNew('type=finished')", "Widgets/table_add.gif");
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
-		
+
 echo $dataGrid->writeDataGrid();
 ?>
 
