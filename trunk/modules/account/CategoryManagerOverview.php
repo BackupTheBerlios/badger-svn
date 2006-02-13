@@ -14,6 +14,8 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 
+$pageTitle = getBadgerTranslation2('accountCategory', 'pageTitle');
+
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
@@ -35,7 +37,7 @@ $dataGrid->newAction = "CategoryManager.php?action=new";
 $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();
-echo $tpl->getHeader("Category Manager");
+echo $tpl->getHeader($pageTitle);
 echo $widgets->getNavigationBody(); 
 
 echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");

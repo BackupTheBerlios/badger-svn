@@ -14,6 +14,8 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 
+$pageTitle = getBadgerTranslation2('accountCurrency', 'pageTitle');
+
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
@@ -34,7 +36,7 @@ $dataGrid->newAction = "CurrencyManager.php?action=new";
 $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();
-echo $tpl->getHeader("Currency Manager");
+echo $tpl->getHeader($pageTitle);
 echo $widgets->getNavigationBody(); 
 
 echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
