@@ -1,6 +1,6 @@
+<h1>$pageHeading</h1>
 <form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection" onSubmit="return validateCompleteForm(this, 'error');">
-
-	<fieldset style = "width: 23em">
+	<fieldset style = "width: 23em; height: 11em">
 		<legend>$legendSetting</ledgend>
 		<table>
 			<tr> 
@@ -27,7 +27,7 @@
 		</table>
 	</fieldset>
 <br />
-	<fieldset style = "width: 23em">
+	<fieldset style = "width: 23em; height: 12em">
 		<legend>$legendGraphs</ledgend>
 		<table>
 			<tr> 
