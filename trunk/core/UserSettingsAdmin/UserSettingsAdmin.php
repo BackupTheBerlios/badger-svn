@@ -13,6 +13,7 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
+$pageHeading = getBadgerTranslation2('UserSettingsAdmin', 'title');
 // Initialization
 
 $tpl->addCSS("style.css");
