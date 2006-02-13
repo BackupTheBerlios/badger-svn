@@ -25,9 +25,10 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManag
 $dataGrid->headerName = array(getBadgerTranslation2('accountCurrency', 'colSymbol'),getBadgerTranslation2('accountCurrency', 'colLongName'));
 $dataGrid->columnOrder = array("symbol","longName");
 $dataGrid->initialSort = "symbol";  
-$dataGrid->headerSize = array(200,200);
+$dataGrid->headerSize = array(80,120);
 $dataGrid->cellAlign = array("left","left");
-$dataGrid->height = "400px";
+$dataGrid->width = "220px";
+$dataGrid->height = "200px";
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "CurrencyManager.php?action=delete&ID=";
