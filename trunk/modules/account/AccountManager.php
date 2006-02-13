@@ -15,7 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 
 $redirectPageAfterSave = "AccountManagerOverview.php";
-$pageTitle = "Account Manager"; //I18N
+$pageTitle = getBadgerTranslation2('accountAccount','pageTitleProp');
 
 $am = new AccountManager($badgerDb);
 
