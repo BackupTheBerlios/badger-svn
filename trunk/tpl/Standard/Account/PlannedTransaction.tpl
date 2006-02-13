@@ -9,6 +9,14 @@
     <td>$descriptionField </td>
   </tr>
   <tr>
+    <td>$beginDateLabel </td>
+    <td>$beginDateField </td>
+  </tr>  
+  <tr>
+    <td>$endDateLabel </td>
+    <td>$endDateField </td>
+  </tr>  
+  <tr>
     <td>$amountLabel </td>
     <td>$amountField  </td>
   </tr>
@@ -23,6 +31,14 @@
   <tr>
     <td>$categoryLabel </td>
     <td>$categoryField  </td>
+  </tr>
+  <tr>
+    <td>$repeatUnitLabel </td>
+    <td>$repeatUnitField  </td>
+  </tr>
+  <tr>
+    <td>$repeatFrequencyLabel </td>
+    <td>$repeatFrequencyField  </td>
   </tr>
   <tr>
     <td>$backBtn </td>
