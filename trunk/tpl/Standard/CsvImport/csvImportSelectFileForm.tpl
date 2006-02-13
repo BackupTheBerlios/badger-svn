@@ -1,3 +1,4 @@
+<h1>$pageHeading</h1>
 <form action="" method="post" enctype="multipart/form-data" name="Import" id="Import">
   <p>
     <table border="0" cellpadding="5" cellspacing="5"> 
