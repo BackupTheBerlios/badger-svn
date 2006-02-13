@@ -45,7 +45,7 @@ if (isset($_GET['action'])) {
 		case 'save':
 			//add record, update record
 			if (isset($_POST['hiddenID'])) {
-				updateRecord($_POST['hiddenID'], $_POST['transactionType']);
+				updateRecord($_GET['accountID'], $_POST['hiddenID'], $_POST['hiddenType']);
 			} else {
 				header("Location: $redirectPageAfterSave");
 			}
@@ -173,8 +173,8 @@ function printFrontendPlanned($AccountID, $ID) {
 		
 		$titleValue = $transaction->getTitle();
 		$descriptionValue = $transaction->getDescription();
-		$beginDateValue = is_null($tmp = $transaction->getBeginDate()) ? '' : $tmp->getFormatted();;
-		$endDateValue = is_null($tmp = $transaction->getEndDate()) ? '' : $tmp->getFormatted();;
+		$beginDateValue = is_null($tmp = $transaction->getBeginDate()) ? '' : $tmp->getFormatted();
+		$endDateValue = is_null($tmp = $transaction->getEndDate()) ? '' : $tmp->getFormatted();
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
 		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp->getFormatted();
 		$transactionPartnerValue = $transaction->getTransactionPartner();
@@ -200,6 +200,7 @@ function printFrontendPlanned($AccountID, $ID) {
 	$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
+	$pageHeading = $pageTitle;
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
 	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");	
@@ -230,7 +231,7 @@ function printFrontendPlanned($AccountID, $ID) {
 	eval("echo \"".$tpl->getTemplate("Account/PlannedTransaction")."\";");
 }
 
-function updateRecord($ID, $transactionType) {
+function updateRecord($accountID, $ID, $transactionType) {
 	global $redirectPageAfterSave;
 	global $am;
 	
@@ -249,15 +250,33 @@ function updateRecord($ID, $transactionType) {
 		break;
 	default:
 		//update record
+		$account = $am->getAccountById($accountID);
 		switch ($transactionType) {
 		case 'planned':
-			//$currency = $cm->getCurrencyById($_POST['hiddenID']);
-			//$currency->setSymbol($_POST['symbol']);
-			//$currency->setLongName($_POST['longname']);
-			//$ID = $currency->getId();
+			$transaction = $account->getPlannedTransactionById($ID);
+			$transaction->setTitle($_POST['title']);
+			$transaction->setDescription($_POST['description']);
+			//$transaction->setBeginDate($_POST['beginDate']);
+			//$transaction->setEndDate($_POST['endDate']);
+			//$transaction->setAmount($_POST['amount']);
+			//$transaction->setOutsideCapital($_POST['outsideCapital']); //?
+			$transaction->setTransactionPartner($_POST['transactionPartner']);
+			//$transaction->setCategory($_POST['category']); //ID
+			$transaction->setRepeatUnit($_POST['repeatUnit']);
+	    	$transaction->setRepeatFrequency($_POST['repeatFrequency']);
 			break;
 		case 'finished':
-		
+			$transaction = $account->getFinishedTransactionById($ID);
+			$transaction->setTitle($_POST['title']);
+			$transaction->setDescription($_POST['description']);
+			//$transaction->setValutaDate($_POST['valutaDate']);
+			//$transaction->setAmount($_POST['amount']);
+			$transaction->setOutsideCapital($_POST['outsideCapital']);
+			$transaction->setTransactionPartner($_POST['transactionPartner']);
+			//$transaction->setCategory($_POST['category']); // ID
+			
+			//$transaction->setExceptional(); //checkbox
+			//$transaction->setPeriodical(); //checkbox
 			break;
 		}
 
