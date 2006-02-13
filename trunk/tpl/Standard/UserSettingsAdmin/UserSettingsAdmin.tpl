@@ -1,5 +1,6 @@
+<h1>$pageHeading</h1>
 <form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php">
-	<fieldset style="width: 28em;">
+	<fieldset style="width: 28em; height: 17em">
 		<legend>$FsHeading</ledgend>
 		<br>
 			<table>
@@ -39,7 +40,7 @@
 		</table>
 	</fieldset>
 		<br/>
-	<fieldset style="width: 28em;">
+	<fieldset style="width: 28em; height: 7em">
 		<legend>$PWFormLabel</ledgend>
 		<br/>
 		<table>
