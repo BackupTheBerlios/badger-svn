@@ -45,7 +45,8 @@ $widgets->addNavigationHead();
 echo $tpl->getHeader($pageTitle);
 echo $widgets->getNavigationBody(); 
 
-echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
+echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('dataGrid', 'new'), "dgNew('type=planned')", "Widgets/table_add.gif");
+echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('dataGrid', 'new'), "dgNew('type=finished')", "Widgets/table_add.gif");
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 		
 echo $dataGrid->writeDataGrid();
