@@ -99,8 +99,13 @@ function printFrontend() {
 	$lowerLimitField = $widgets->createField("lowerLimit", 20, $lowerLimitValue, "", false, "text", "class='inputNumber'");
 	$upperLimitLabel = $widgets->createLabel("upperLimit", getBadgerTranslation2('accountAccount', 'upperLimit'), false);
 	$upperLimitField = $widgets->createField("upperLimit", 20, $upperLimitValue, "", false, "text", "class='inputNumber'");
-	$balanceLabel = $widgets->createLabel("balance", getBadgerTranslation2('accountAccount', 'balance'), false);
-	$balanceField = $widgets->createField("balance", 20, $balanceValue, "", false, "text", "class='inputNumber'");
+	if($ID != "new") {
+		$balanceLabel = $widgets->createLabel("balance", getBadgerTranslation2('accountAccount', 'balance'), false);
+		$balanceField = $widgets->createField("balance", 20, $balanceValue, "", false, "text", "class='inputNumber'");
+	} else {
+		$balanceLabel = "";
+		$balanceField = "";
+	}
 	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), false);
 	$currencyField = $widgets->createField("currency", 20, $currencyValue, "", false, "text", "");
 	$targetFutureCalcDateLabel = $widgets->createLabel("targetFutureCalcDate", getBadgerTranslation2('accountAccount', 'targetFutureCalcDate'), false);
