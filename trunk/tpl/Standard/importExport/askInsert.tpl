@@ -2,6 +2,7 @@
 <form name="agreeform" onSubmit="return defaultagree(this)" action="$askInsertAction" enctype="multipart/form-data" method="POST">
 	<p style="color:red; background-color: white; padding: 0.3em; border: 2px solid red; text-align: center;">$askImportWarning</p>
 	<p>$askImportFileUploadLabel $askImportFileUpload</p>
+	<p>$askImportVersionInfo<br />$askImportCurrentVersionInfo $versionInfo</p>
 	<p>
 		<input name="confirmUpload"  id='confirmUpload' type="checkbox" onClick="agreesubmit(this)" value="yes">
 		<b>$askImportYesOptionLabel</b>

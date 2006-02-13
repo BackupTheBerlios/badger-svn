@@ -114,6 +114,10 @@ function printAskInsert() {
 	$askImportFileUpload = $widgets->createField('sqlDump', null, null, '', true, 'file');
 	$askImportFileUploadLabel = $widgets->createLabel('sqlDump', getBadgerTranslation2('importExport', 'askImportFile'));
 
+	$askImportVersionInfo = getBadgerTranslation2('importExport', 'askImportVersionInfo');
+	$askImportCurrentVersionInfo = getBadgerTranslation2('importExport', 'askImportCurrentVersionInfo');
+	$versionInfo = BADGER_VERSION;
+
 	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif", 'disabled="disabled"');	
 
 	eval(' echo "' . $tpl->getTemplate('importExport/askInsert') . '";');
