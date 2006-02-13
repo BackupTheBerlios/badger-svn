@@ -64,7 +64,7 @@ function showSelectPage() {
 	
 	$dataGrid = new DataGrid($tpl);
 	$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-	$dataGrid->headerName = array("Titel", "Kontostand", 'Währung');
+	$dataGrid->headerName = array(getBadgerTranslation2('statistics','accColTitle'), getBadgerTranslation2('statistics','accColBalance'), getBadgerTranslation2('statistics','accColCurrency'));
 	$dataGrid->columnOrder = array("title", "balance", 'currency');  
 	$dataGrid->initialSort = "title";
 	$dataGrid->headerSize = array(180, 100, 100);
@@ -76,7 +76,7 @@ function showSelectPage() {
 
 	$widgets->addNavigationHead();
 
-	$selectTitle = 'Statistik-Auswahl';
+	$selectTitle = getBadgerTranslation2('statistics','pageTitle');
 	echo $tpl->getHeader($selectTitle);
 	
 	echo $widgets->getNavigationBody();
@@ -84,14 +84,14 @@ function showSelectPage() {
 
 	$selectFormAction = BADGER_ROOT . '/modules/statistics/statistics.php';
 	
-	$graphTypeText = "Typ";
-	$categoryTypeText = "Kategorie-Art";
-	$timeFrameText = "Zeitraum";
-	$summarizeCategoriesText = "Kategorien zusammenfassen";
-	$accountsText = "Konten";
-	$differentCurrencyWarningText = "Achtung: Bei der gleichzeitigen Betrachtung mehrerer Konten mit unterschiedlichen Währungen findet keine Umrechnung statt!";
-	$fromText = "von:";
-	$toText = "bis:";
+	$graphTypeText = getBadgerTranslation2('statistics','type');
+	$categoryTypeText = getBadgerTranslation2('statistics','category');
+	$timeFrameText = getBadgerTranslation2('statistics','period');
+	$summarizeCategoriesText = getBadgerTranslation2('statistics','catMerge');
+	$accountsText = getBadgerTranslation2('statistics','accounts');
+	$differentCurrencyWarningText = getBadgerTranslation2('statistics','attention');
+	$fromText = getBadgerTranslation2('statistics','from');
+	$toText = getBadgerTranslation2('statistics','to');
 	
 	$trendRadio = $widgets->createField('mode', null, 'trendPage', '', false, 'radio', 'checked="checked"');
 	$trendLabel = $widgets->createLabel('mode', 'Trend');
@@ -104,47 +104,47 @@ function showSelectPage() {
 
 	$monthArray = array (
 		'fullYear' => 'Ganzes Jahr',
-		'1' => 'Januar',
-		'2' => 'Februar',
-		'3' => 'März',
-		'4' => 'April',
-		'5' => 'Mai',
-		'6' => 'Juni',
-		'7' => 'Juli',
-		'8' => 'August',
-		'9' => 'September',
-		'10' => 'October',
-		'11' => 'November',
-		'12' => 'December'
+		'1' => getBadgerTranslation2('statistics','jan'),
+		'2' => getBadgerTranslation2('statistics','feb'),
+		'3' => getBadgerTranslation2('statistics','mar'),
+		'4' => getBadgerTranslation2('statistics','apr'),
+		'5' => getBadgerTranslation2('statistics','may'),
+		'6' => getBadgerTranslation2('statistics','jun'),
+		'7' => getBadgerTranslation2('statistics','jul'),
+		'8' => getBadgerTranslation2('statistics','aug'),
+		'9' => getBadgerTranslation2('statistics','sep'),
+		'10' => getBadgerTranslation2('statistics','oct'),
+		'11' => getBadgerTranslation2('statistics','nov'),
+		'12' => getBadgerTranslation2('statistics','dec'),
 	);
-	$monthSelect = $widgets->createSelectField('monthSelect', $monthArray, 'fullYear', 'Description', false, 'onchange="updateDateRange();"');
+	$monthSelect = $widgets->createSelectField('monthSelect', $monthArray, 'fullYear', '', false, 'onchange="updateDateRange();"');
 
 	$now = new Date();
 	$beginOfYear = new Date();
 	$beginOfYear->setMonth(1);
 	$beginOfYear->setDay(1);
 	
-	$yearInput = $widgets->createField('yearSelect', 4, $now->getYear(), 'Beschreibung', false, 'text', 'onchange="updateDateRange();"');
+	$yearInput = $widgets->createField('yearSelect', 4, $now->getYear(),'', false, 'text', 'onchange="updateDateRange();"');
 	
 	$startDateField = $widgets->addDateField("startDate", $beginOfYear->getFormatted());
 	$endDateField = $widgets->addDateField("endDate", $now->getFormatted());
 	
 	$inputRadio = $widgets->createField('type', null, 'i', '', false, 'radio', 'checked="checked"');
-	$inputLabel = $widgets->createLabel('type', 'Eingaben');
+	$inputLabel = $widgets->createLabel('type', getBadgerTranslation2('statistics','income'));
 	
 	$outputRadio = $widgets->createField('type', null, 'o', '', false, 'radio');
-	$outputLabel = $widgets->createLabel('type', 'Ausgaben');
+	$outputLabel = $widgets->createLabel('type', getBadgerTranslation2('statistics','expenses'));
 
 	$summarizeRadio = $widgets->createField('summarize', null, 't', '', false, 'radio', 'checked="checked"');
-	$summarizeLabel = $widgets->createLabel('summarize', 'Unterkategorien unter der Hauptkategorie zusammenfassen');
+	$summarizeLabel = $widgets->createLabel('summarize', getBadgerTranslation2('statistics','subCat'));
 
 	$distinguishRadio = $widgets->createField('summarize', null, 'f', '', false, 'radio');
-	$distinguishLabel = $widgets->createLabel('summarize', 'Unterkategorien eigenstÃ¤ndig auffÃ¼hren');
+	$distinguishLabel = $widgets->createLabel('summarize', getBadgerTranslation2('statistics','subCat2'));
 
 	$dateFormatField = $widgets->createField('dateFormat', null, $us->getProperty('badgerDateFormat'), null, false, 'hidden');
-	$errorMsgAccountMissingField = $widgets->createField('errorMsgAccountMissing', null, 'Sie haben noch kein Konto ausgewählt.', null, false, 'hidden');
-	$errorMsgStartBeforeEndField = $widgets->createField('errorMsgStartBeforeEnd', null, 'Das Startdatum liegt nicht vor dem Enddatum.', null, false, 'hidden');
-	$errorMsgEndInFutureField = $widgets->createField('errorMsgEndInFuture', null, 'Das Enddatum liegt in der Zukunft.', null, false, 'hidden');
+	$errorMsgAccountMissingField = $widgets->createField('errorMsgAccountMissing', null, getBadgerTranslation2('statistics','errorMissingAcc'), null, false, 'hidden');
+	$errorMsgStartBeforeEndField = $widgets->createField('errorMsgStartBeforeEnd', null, getBadgerTranslation2('statistics','errorDate'), null, false, 'hidden');
+	$errorMsgEndInFutureField = $widgets->createField('errorMsgEndInFuture', null, getBadgerTranslation2('statistics','errorEndDate'), null, false, 'hidden');
 
 	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
 
