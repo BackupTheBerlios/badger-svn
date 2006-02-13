@@ -175,7 +175,7 @@ abstract class DataGridHandler {
 			if(!$this->hasField($val['key'])){
 				throw new BadgerException('DataGridHandler', 'filterIllegalField', $val['key']);
 			}
-	
+
 			//We trust the caller to check op and val
 			
 			$this->filter[] = array (
@@ -324,12 +324,14 @@ abstract class DataGridHandler {
 		switch ($type) {
 			case 'int':
 			case 'integer':
-			case 'boolean':
-			case 'bool':
 			case 'float':
 			case 'double':
 				return $val;
 			
+			case 'boolean':
+			case 'bool':
+				return ($val ? 'true' : 'false');
+
 			case 'string':
 				return "'" . addslashes($val) . "'";
 				

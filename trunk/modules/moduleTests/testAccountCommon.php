@@ -18,6 +18,7 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 header('Content-Type: text/plain');
 
+/*
 $am = new AccountManager($badgerDb);
 $account = $am->getAccountById(1);
 $startDate = new Date();
@@ -26,4 +27,7 @@ $endDate = new Date('2006-03-31');
 $values = getDailyAmount($account, $startDate, $endDate);
 
 print_r($values);
+*/
+
+print_r(getSpendingMoney(1, new Date('2003-10-10')));
 ?>

@@ -75,4 +75,48 @@ function getDailyAmount($account, $startDate, $endDate) {
 
 	return $result;
 }
+
+function getSpendingMoney($accountId, $startDate) {
+	global $badgerDb;
+
+	$accountManager = new AccountManager($badgerDb);
+	
+	$account = $accountManager->getAccountById($accountId);
+	
+	$account->setType('finished');
+
+	$account->setOrder(array (array ('key' => 'valutaDate', 'dir' => 'asc')));
+	
+	$account->setFilter(array (
+		array (
+			'key' => 'valutaDate',
+			'op' => 'ge',
+			'val' => $startDate
+		),
+		array (
+			'key' => 'periodical',
+			'op' => 'ne',
+			'val' => false
+		),
+		array (
+			'key' => 'exceptional',
+			'op' => 'ne',
+			'val' => false
+		)
+	));
+	
+	$count = 0;
+	$sum = new Amount();
+	
+	while ($currentTransaction = $account->getNextFinishedTransaction()) {
+		$sum->add($currentTransaction->getAmount());
+		$count++;
+	}
+	
+	if ($count > 0) {
+		$sum->div($count);
+	}
+	
+	return $sum;
+}
 ?>

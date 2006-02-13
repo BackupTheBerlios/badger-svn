@@ -70,7 +70,9 @@ class Account extends DataGridHandler {
 			'outsideCapital',
 			'transactionPartner',
 			'categoryId',
-			'categoryTitle'
+			'categoryTitle',
+			'exceptional',
+			'periodical'
 		)
 	);
 
@@ -371,7 +373,9 @@ class Account extends DataGridHandler {
 			'categoryId' => 'integer',
 			'categoryTitle' => 'string',
 			'repeatUnit' => 'string',
-			'repeatFrequency' => 'integer'
+			'repeatFrequency' => 'integer',
+			'exceptional' => 'boolean',
+			'periodical' => 'boolean'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -434,7 +438,9 @@ class Account extends DataGridHandler {
 				'outsideCapital' => 'ft.outside_capital',
 				'transactionPartner' => 'ft.transaction_parter',
 				'categoryId' => 'ft.category_id',
-				'categoryTitle' => 'c.title'
+				'categoryTitle' => 'c.title',
+				'exceptional' => 'ft.exceptional',
+				'periodical' => 'ft.periodical'
 			)
 		);
 	
@@ -497,7 +503,9 @@ class Account extends DataGridHandler {
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
-						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : ''
+						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : '',
+						'exceptional' => is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp,
+						'periodical' => is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp
 					);
 				}
 				break;
@@ -1353,6 +1361,14 @@ class Account extends DataGridHandler {
     	}
     }
 
+	public function getType() {
+		return $this->type;
+	}
+	
+	public function setType($type) {
+		$this->type = $type;
+	}
+
 	/**
 	 * Fetches all planned and finished transactions, expands the planned transactions and sorts the finishedTransaction array.
 	 */
@@ -1434,13 +1450,18 @@ class Account extends DataGridHandler {
 		$where = $this->getFilterSQL();
 		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
 		if($where) {
-			$sql .= "AND $where\n ";
+			$sql .= " AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
 		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order));
+
+		if (substr($order, -1, 1) === ',') {
+			$order = substr($order, 0, strlen($order) - 1);
+		}
+
 		if($order) {
-			$sql .= "ORDER BY $order\n ";
+			$sql .= " ORDER BY $order\n ";
 		}
 		
 		if ($this->type == 'transaction') {
@@ -1448,6 +1469,8 @@ class Account extends DataGridHandler {
 		}
 		
 		//echo "<pre>$sql</pre>";
+		//global $logger;
+		//$logger->log('Account Finished SQL: ' . $sql);
 
 		$this->dbResultFinished =& $this->badgerDb->query($sql);
 		
@@ -1488,15 +1511,20 @@ class Account extends DataGridHandler {
 		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
 		//echo $where;
 		if($where) {
-			$sql .= "AND $where\n ";
+			$sql .= " AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
 		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order);
 		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),*/', '', $order));
+		//global $logger;
+		
+		if (substr($order, -1, 1) === ',') {
+			$order = substr($order, 0, strlen($order) - 1);
+		}
 		
 		if($order) {
-			$sql .= "ORDER BY $order\n ";
+			$sql .= " ORDER BY $order\n ";
 		}
 		
 		if ($this->type == 'transaction') {
@@ -1504,6 +1532,7 @@ class Account extends DataGridHandler {
 		}
 		
 		//echo "<pre>$sql;</pre>";
+		//$logger->log('Account Planned SQL: ' . $sql);
 			
 		$this->dbResultPlanned =& $this->badgerDb->query($sql);
 		
@@ -1585,9 +1614,9 @@ class Account extends DataGridHandler {
 					if ($a->getValutaDate() && $b->getValutaDate()) {
 						$tmp = Date::compare($a->getValutaDate(), $b->getValutaDate());
 					} else if ($a->getValutaDate() && !$b->getValutaDate()) {
-						$tmp = -$default;
+						$tmp = 1;
 					} else if (!$a->getValutaDate() && $b->getValutaDate()) {
-						$tmp = $default;
+						$tmp = -1;
 					}
 					break;
 				
@@ -1616,13 +1645,23 @@ class Account extends DataGridHandler {
 				case 'categoryId':
 					if ($a->getCategory() && $b->getCategory()) {
 						$tmp = $a->getCategory()->getId() - $b->getCategory()->getId();
+					} else if ($a->getCategory() && !$b->getCategory()) {
+						$tmp = -1;
+					} else if (!$a->getCategory() && $b->getCategory()) {
+						$tmp = 1;
 					}
 					break;
 				
 				case 'categoryTitle':
+					//echo "<pre>a: " . $a->getCategory() . " b: " . $b->getCategory();
 					if ($a->getCategory() && $b->getCategory()) {
 						$tmp = strncasecmp($a->getCategory()->getTitle(), $b->getCategory()->getTitle(), 9999);
+					} else if ($a->getCategory()) {
+						$tmp = -1;
+					} else if ($b->getCategory()) {
+						$tmp = 1;
 					}
+					//echo "tmp: $tmp</pre>";
 					break;
 				
 				case 'repeatUnit':
