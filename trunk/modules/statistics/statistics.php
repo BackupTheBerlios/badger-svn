@@ -153,7 +153,6 @@ function showSelectPage() {
 }
 
 function printTrendPage() {
-	//Not used anymore
 	global $tpl;
 	global $badgerDb;
 	
@@ -305,7 +304,6 @@ function showTrendData() {
 }
 
 function printCategoryPage() {
-	//Not used anymore
 	global $tpl;
 	global $badgerDb;
 	
