@@ -61,6 +61,8 @@ function printAskExport() {
 	$askExportLink = BADGER_ROOT . '/modules/importExport/importExport.php?mode=dump';
 	$askExportAction = getBadgerTranslation2('importExport', 'askExportAction');
 	
+	$askExportButton = $widgets->createButton('downloadSQL', $askExportAction, "location.href = '$askExportLink';", "Widgets/accept.gif");
+	
 	eval(' echo "' . $tpl->getTemplate('importExport/ask') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
@@ -70,7 +72,6 @@ function printAskImport(){
 	
 	$widgets->addNavigationHead();
 
-	$tpl->addJavaScript("js/acceptTerms.js");
 	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
 	echo $tpl->getHeader($askTitle);
 	
@@ -93,6 +94,7 @@ function printAskInsert() {
 	global $tpl;
 	$widgets = new WidgetEngine($tpl); 
 	
+	$tpl->addJavaScript("js/acceptTerms.js");
 	$widgets->addNavigationHead();
 
 	$askInsertTitle = getBadgerTranslation2('importExport', 'askInsertTitle');
@@ -112,7 +114,7 @@ function printAskInsert() {
 	$askImportFileUpload = $widgets->createField('sqlDump', null, null, '', true, 'file');
 	$askImportFileUploadLabel = $widgets->createLabel('sqlDump', getBadgerTranslation2('importExport', 'askImportFile'));
 
-	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif");	
+	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif", 'disabled="disabled"');	
 
 	eval(' echo "' . $tpl->getTemplate('importExport/askInsert') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
