@@ -25,9 +25,14 @@ if (isset($_GET['mode'])) {
 switch ($mode) {
 	case 'ask':
 	default:
-		printAsk();
+		printAskExport();
 		break;
-	
+	case 'export':
+		printAskExport();
+		break;
+	case 'import':
+		printAskInsert();
+		break;			
 	case 'dump':
 		sendSqlDump();
 		break;
@@ -41,7 +46,7 @@ switch ($mode) {
 		break;
 }
 
-function printAsk() {
+function printAskExport() {
 	global $tpl;
 	$widgets = new WidgetEngine($tpl); 
 	
@@ -56,7 +61,21 @@ function printAsk() {
 	$askExportText = getBadgerTranslation2('importExport', 'askExportText');
 	$askExportLink = BADGER_ROOT . '/modules/importExport/importExport.php?mode=dump';
 	$askExportAction = getBadgerTranslation2('importExport', 'askExportAction');
+	
+	eval(' echo "' . $tpl->getTemplate('importExport/ask') . '";');
+	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
+}
+function printAskImport(){
+	global $tpl;
+	$widgets = new WidgetEngine($tpl); 
+	
+	$widgets->addNavigationHead();
 
+	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
+	echo $tpl->getHeader($askTitle);
+	
+	echo $widgets->getNavigationBody();
+	
 	$askImportTitle = getBadgerTranslation2('importExport', 'askImportTitle');
 	$askImportInfo = getBadgerTranslation2('importExport', 'askImportInfo');
 	$askImportWarning = getBadgerTranslation2('importExport', 'askImportWarning');
@@ -66,8 +85,8 @@ function printAsk() {
 	$askImportLink = BADGER_ROOT . '/modules/importExport/importExport.php?mode=askInsert';
 	$askImportAction = getBadgerTranslation2('importExport', 'askImportAction');
 	
-	eval(' echo "' . $tpl->getTemplate('importExport/ask') . '";');
-	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
+	eval(' echo "' . $tpl->getTemplate('importExport/askImport') . '";');
+	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');		
 }
 
 function printAskInsert() {

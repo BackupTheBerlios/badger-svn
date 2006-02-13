@@ -10,7 +10,14 @@ h1 {
 	font-family: Arial, Verdana;
 	font-size: 12pt;
 }
-
+h2 {
+	font-family: Arial, Verdana;
+	font-size: 11pt;
+}
+h2 {
+	font-family: Arial, Verdana;
+	font-size: 10pt;
+}
 #header {
 	background-color: #ECE9D8;
 	height: 46px;

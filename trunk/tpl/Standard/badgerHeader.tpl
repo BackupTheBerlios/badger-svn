@@ -6,6 +6,7 @@
 $additionalHeaderTags
 $JSOnLoadEvents
 <script language="javascript" src="{BADGER_ROOT}/js/jsval.js"></script>
+<script language="javascript" src="{BADGER_ROOT}/js/acceptTerms.js"></script>
 </head>
 <body style="background-image: url('{BADGER_ROOT}/tpl/Standard/back_verlauf_kreis.jpg');background-attachment: fixed;background-repeat: no-repeat;">
 <div id="header" valign="center">
