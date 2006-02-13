@@ -17,7 +17,6 @@
 	cursor: pointer;
 }
 #dgScroll {
-	height: 180px;
 	width: 100%;
 	overflow: auto;
 }

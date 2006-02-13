@@ -29,6 +29,7 @@ public $cellAlign;
 public $rowCounterName;
 public $initialSort;
 public $width = "99.9%";
+public $height = "180px";
 
 	public function __construct($tpl) {
 		global $print;
@@ -43,7 +44,7 @@ public $width = "99.9%";
 	
 	public function writeDataGrid() {
 		//toDo: Use templateEngine
-		$output = '<form id="dgForm"><div id="dataGrid" style="width:'.$this->width.'">
+		$output = '<form id="dgForm"><div id="dataGrid" style="width:'.$this->width.';">
 					<table id="dgTableHead" cellpadding="2" cellspacing="0">
 						<tr>
 							<td width="20"><input id="dgSelector" type="checkbox" /></td>';
@@ -56,7 +57,7 @@ public $width = "99.9%";
 						</tr>
 					</table>';
 					
-		$output .= '<div id="dgScroll">
+		$output .= '<div id="dgScroll" style="height:'.$this->height.';">
 					<table id="dgData" cellpadding="2" cellspacing="0">
 					</table>
 					</div>

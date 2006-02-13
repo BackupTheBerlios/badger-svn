@@ -25,6 +25,7 @@ $dataGrid->columnOrder = array("title","balance","currency");
 $dataGrid->initialSort = "title";
 $dataGrid->headerSize = array(200,150,100);
 $dataGrid->cellAlign = array("left","right","left");
+$dataGrid->height = "400px";
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "AccountManager.php?action=delete&ID=";
