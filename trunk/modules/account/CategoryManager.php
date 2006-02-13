@@ -93,7 +93,15 @@ function printFrontend() {
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountCategory', 'description'), false);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
 	$parentLabel = $widgets->createLabel("parent", getBadgerTranslation2('accountCategory', 'parent'), false);
-	$parentField = $widgets->createField("parent", 30, $parentValue, "", false, "text", "");
+	
+	$parentCats = array(""=>getBadgerTranslation2('CategoryManager','no_parent'));
+	while ($cat = $cm->getNextCategory()) {
+		if($cat->getParent() == null){
+			$parentCats[$cat->getId()] = $cat->getTitle();
+		};
+	};
+	$parentField = $widgets->createSelectField("parent", $parentCats, $default="");
+	
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountCategory', 'outsideCapital'), false);
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30, $outsideCapitalValue, "", false, "text", "");
 	
@@ -114,7 +122,10 @@ function updateRecord() {
 	case 'new':
 		//add new record
 		//check if $_POST['symbol'], $_POST['longName'] is set?????
-		//$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
+		$Cat = $cm->addCategory($_POST['title'], $_POST['description'], $_POST['outsideCapital']);
+		if(isset($_POST['parent']) && $_POST['parent'] != ""){
+			$Cat->setParent($cm->getCategoryById($_POST['parent']));
+		};
 		break;
 	default:
 		//update record

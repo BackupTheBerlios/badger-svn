@@ -234,10 +234,11 @@ class Category {
 		$parent->addChild($this);
 		
 		$sql = "UPDATE category
-			SET parent = " . $parent->getId() . "
+			SET parent_id = " . $parent->getId() . "
 			WHERE category_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);
+		//echo $sql;
 		
 		if (PEAR::isError($dbResult)) {
 			//echo "SQL Error: " . $dbResult->getMessage();
