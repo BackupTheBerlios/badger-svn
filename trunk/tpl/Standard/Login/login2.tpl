@@ -9,6 +9,8 @@
 						<td>$SubmitButton</td>
 					</tr>
 				</table>
+				<br/>
+				$Feedback
 			</fieldset>
 			</form>
 		</td>
