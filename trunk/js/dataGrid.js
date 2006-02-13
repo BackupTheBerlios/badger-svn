@@ -280,9 +280,9 @@ function dgDelete() {
 }
 
 // call site to add a new record
-function dgNew() {
+function dgNew(addParam) {
 	if(dgNewAction) {
-		document.location.href = dgNewAction;
+		document.location.href = dgNewAction + addParam;
 	}
 }
 
