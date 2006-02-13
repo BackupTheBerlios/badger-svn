@@ -14,12 +14,15 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php');
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
+
+$pageHeading = getBadgerTranslation2('csv', 'title');
+
 //include widget functionalaty
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addNavigationHead();
-echo $tpl->getHeader("CSV-Import");
+echo $tpl->getHeader($pageHeading);
 echo $widgets->getNavigationBody(); 
 echo $widgets->addToolTipLayer();
 //create account manger object
