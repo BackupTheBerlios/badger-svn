@@ -1,4 +1,7 @@
+<h1>$pageHeading</h1>
+
 <form method="post" action="$FormAction?action=save">
+
 <table>
   <tr>
     <td>$titleLabel </td>
