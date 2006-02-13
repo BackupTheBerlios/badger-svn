@@ -147,7 +147,7 @@ class PlannedTransaction {
     	$category = null,
     	$outsideCapital = null
     ) {
-    	global $CategoryManager;
+    	$CategoryManager = new CategoryManager($badgerDb);
     	
     	$this->badgerDb = $badgerDb;
     	$this->account = $account;
