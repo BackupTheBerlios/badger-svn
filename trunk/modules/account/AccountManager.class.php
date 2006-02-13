@@ -172,7 +172,7 @@ class AccountManager extends DataGridHandler {
 				'accountId' => $currentAccount->getId(),
 				'currency' => is_null($tmp = $currentAccount->getCurrency()) ? '' : $tmp->getSymbol(),
 				'title' => $currentAccount->getTitle(),
-				'balance' => $currentAccount->getBalance()->get()
+				'balance' => $currentAccount->getBalance()->getFormatted()
 			);
 		}
 		

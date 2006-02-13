@@ -33,8 +33,8 @@ if (isset($_GET['part'])) {
 	$naviObj->setStructure($navi);
 	
 	//We do our best to get this cached
-	header('Cache-Control: public');
-	header('Expires: ' . date('r', time() + 24 * 60 * 60));
+	//header('Cache-Control: public');
+	//header('Expires: ' . date('r', time() + 24 * 60 * 60));
 	
 	
 	switch ($_GET['part']) {

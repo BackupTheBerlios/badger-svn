@@ -133,7 +133,7 @@ class StandardNavigation implements Navigation {
 		
 		//absolute / fixed / static
 		$result = 'menuBar = new jsDOMenuBar("static", "staticMenuBar");
-			menuBar.setActivateMode("over");
+			menuBar.setActivateMode("click");
 		';
 		
 		$menuNum = 0;
