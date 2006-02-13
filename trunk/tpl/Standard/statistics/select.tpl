@@ -16,14 +16,15 @@
 		<legend>$timeFrameText</legend>
 		<table>
 			<tr>
-				<td></td>
 				<td>$monthSelect</td>
-				<td></td>
-				<td>$yearInput </td>
+				<td>$yearInput</td>
+			</tr>
+		<table>		
+			<tr>
+				<td>$fromText</td><td>$startDateField</td>
 			</tr>
 			<tr>
-				<td>$fromText</td><td> $startDateField</td>
-				<td>$toText</td><td> $endDateField</td>
+				<td>$toText</td><td>$endDateField</td>
 			</tr>
 		</table>
 	</fieldset>
