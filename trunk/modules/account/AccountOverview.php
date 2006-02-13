@@ -52,7 +52,8 @@ echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('dataGrid', 
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 
 echo $dataGrid->writeDataGrid();
-?>
 
-</body>
-</html>
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
+?>

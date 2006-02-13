@@ -28,7 +28,7 @@ $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapit
 $dataGrid->initialSort = "parentTitle";
 $dataGrid->headerSize = array(200,200,300,120);
 $dataGrid->cellAlign = array("left","left","left","right");
-$dataGrid->height = "400px";
+$dataGrid->height = "350px";
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "CategoryManager.php?action=delete&ID=";
@@ -46,6 +46,8 @@ echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), 
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 		
 echo $dataGrid->writeDataGrid();
+
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
 ?>
-</body>
-</html>
