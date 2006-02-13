@@ -194,7 +194,7 @@ function menuBarItemClick(e) { // Private method
       if (this.clicked) {
         this.className = this.itemClassNameOver;
         if (this.iconObj) {
-          this.iconObj.className = this.iconClassNameOver;
+          //this.iconObj.className = this.iconClassNameOver;
         }
         hideMenus(this.menu.menuObj);
         this.clicked = false;
@@ -203,7 +203,7 @@ function menuBarItemClick(e) { // Private method
       else {
         this.className = this.itemClassNameClick;
         if (this.iconObj && this.iconClassNameClick) {
-          this.iconObj.className = this.iconClassNameClick;
+          //this.iconObj.className = this.iconClassNameClick;
         }
         popUpMenuBarMenu(this.parent.menuBarObj, this, this.menu.menuObj);
         this.clicked = true;
@@ -226,7 +226,7 @@ function menuBarItemClick(e) { // Private method
         }
         this.className = this.itemClassName;
         if (this.iconObj) {
-          this.iconObj.className = this.iconClassName;
+          //this.iconObj.className = this.iconClassName;
         }
         this.clicked = false;
         this.parent.menuBarObj.activated = false;
