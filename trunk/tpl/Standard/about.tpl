@@ -58,4 +58,13 @@
 	<li><a href="http://subclipse.tigris.org/" target="_blank">Subclipse</a></li>
 	<li><a href="http://subversion.tigris.org/" target="_blank">Subversion</a></li>
 	<li><a href="http://sourceforge.net/projects/suggest" target="_blank">Suggest Framework</a> $by Matthew Ratzloff</li>
+	<li><a href="http://www.disoriented.com/FreeExtractor/" target="_blank">FreeExtractor</a> $by Andrew Fawcett</li>	
+	<li><a href="http://www.freebasic.net/target="_blank">FreeBasic</a></li>	
+	<li><a href="http://ssteiner.freebasic.de/index.php?s=fbdl" target="_blank">FreeBasic Addon</a> $by Sebastian Steiner</li>	
+	<li><a href="http://www.apachefriends.org" target="_blank">XAMPP lite</a></li>	
+
+
+
+
+
 </ul>
