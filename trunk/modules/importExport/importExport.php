@@ -51,7 +51,6 @@ function printAskExport() {
 	$widgets = new WidgetEngine($tpl); 
 	
 	$widgets->addNavigationHead();
-
 	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
 	echo $tpl->getHeader($askTitle);
 	
@@ -71,6 +70,7 @@ function printAskImport(){
 	
 	$widgets->addNavigationHead();
 
+	$tpl->addJavaScript("js/acceptTerms.js");
 	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
 	echo $tpl->getHeader($askTitle);
 	

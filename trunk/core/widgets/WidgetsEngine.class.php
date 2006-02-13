@@ -114,7 +114,7 @@ class WidgetEngine {
 		// -> we've to add an extended namespace
 		
 		// formatings of numbers
-		$compValue = str_replace(",",".", $value);
+		$compValue = str_replace(".","", str_replace(",","", $value));
 		if (is_numeric($compValue)) {
 			if ($compValue<0) {
 				$class = "inputNumberMinus";
