@@ -236,7 +236,13 @@ if($passwordcorrect == false)
 		
 		set_session_var('number_of_login_attempts',$attempts + 1);
 		$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
-		$Self = $_SERVER['PHP_SELF'];
+		
+		if(isset($_GET['logout']) && $_GET['logout'] == "true"){
+			$Action = BADGER_ROOT . "/";
+			$Action .= $us->getProperty('badgerStartPage');
+		}else{
+			$Action = $_SERVER['PHP_SELF'];
+		};
 		
 		$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
 		
@@ -262,7 +268,7 @@ if($passwordcorrect == false)
 		
 		unset($isfirst);
 		
-		$Self .= $get_vars;
+		$Action .= $get_vars;
 		
 		eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
 		

@@ -6,4 +6,4 @@
 		</tr>
 		<tr>
 			<td>
-				<form method="post" action="$Self">
+				<form method="post" action="$Action">
