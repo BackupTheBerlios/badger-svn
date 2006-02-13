@@ -4,7 +4,7 @@
 	<p>$askImportFileUploadLabel $askImportFileUpload</p>
 	<p>$askImportVersionInfo<br />$askImportCurrentVersionInfo $versionInfo</p>
 	<p>
-		<input name="confirmUpload"  id='confirmUpload' type="checkbox" onClick="agreesubmit(this)" value="yes">
+		$confirmUploadField
 		<b>$askImportYesOptionLabel</b>
 	</p>
 	<p>$askImportSubmit</p>

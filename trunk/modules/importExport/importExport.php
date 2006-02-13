@@ -118,6 +118,8 @@ function printAskInsert() {
 	$askImportCurrentVersionInfo = getBadgerTranslation2('importExport', 'askImportCurrentVersionInfo');
 	$versionInfo = BADGER_VERSION;
 
+	$confirmUploadField = $widgets->createField('confirmUpload', null, 'yes', null, false, 'checkbox', 'onClick="agreesubmit(this)"');
+
 	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif", 'disabled="disabled"');	
 
 	eval(' echo "' . $tpl->getTemplate('importExport/askInsert') . '";');
