@@ -1,4 +1,4 @@
-<form method="post" action="$FormAction?action=save&accountID=$AccID">
+<form method="post" action="$FormAction?action=save&accountID=$AccountID">
 <table>
   <tr>
     <td>$descriptionLabel </td>
@@ -39,4 +39,5 @@
 </table>
 $hiddenID
 $hiddenAccID
+$hiddenType
 </form>
