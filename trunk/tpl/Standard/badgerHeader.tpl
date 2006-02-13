@@ -13,7 +13,7 @@ $JSOnLoadEvents
 	<table cellpadding="0" cellspacing="0"><tr>
 		<!--<td><img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" /></td>
 		<td>&nbsp;&nbsp;&nbsp;</td>-->
-		<td><img src="{BADGER_ROOT}/tpl/Standard/banner.png" /></td>
+		<td><a href="{BADGER_ROOT}/modules/welcome.php"><img src="{BADGER_ROOT}/tpl/Standard/banner.png" border=0/></a></td>
 	</tr></table>
 </div>
 <div id="staticMenuBar"></div>
