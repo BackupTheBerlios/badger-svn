@@ -15,7 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/CategoryManager.class.php');
 
 $redirectPageAfterSave = "CategoryManagerOverview.php";
-$pageTitle = "Category Manager"; //I18N
+$pageTitle = getBadgerTranslation2 ('accountCategory','pageTitle');
 
 $cm = new CategoryManager($badgerDb);
 

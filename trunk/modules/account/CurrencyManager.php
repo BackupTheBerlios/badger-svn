@@ -15,7 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/CurrencyManager.class.php');
 
 $redirectPageAfterSave = "CurrencyManagerOverview.php";
-$pageTitle = "Currency Manager"; //I18N
+$pageTitle = getBadgerTranslation2('accountCurrency','pageTitle');
 
 $cm = new CurrencyManager($badgerDb);
 

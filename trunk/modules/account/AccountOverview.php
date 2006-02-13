@@ -14,6 +14,8 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 
+$pageTitle = getBadgerTranslation2 ('accountOverview','pageTitle');
+
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
@@ -40,7 +42,7 @@ $dataGrid->newAction = "Transaction.php?action=new&accountID=$accountID";
 $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();
-echo $tpl->getHeader("Account");
+echo $tpl->getHeader($pageTitle);
 echo $widgets->getNavigationBody(); 
 
 echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");

@@ -14,7 +14,7 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 
-$pageTitle = getBadgerTranslation2('accountAccount', 'pagetitle');
+$pageTitle = getBadgerTranslation2('accountAccount', 'pageTitleOverview');
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
