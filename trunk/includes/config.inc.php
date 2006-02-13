@@ -34,7 +34,7 @@
 	 * @var global constant
 	 */	
 
- define("DB_PASSWORD", "w1uri3h");
+ define("DB_PASSWORD", "");
 
   	/**
 	 * Database host address
