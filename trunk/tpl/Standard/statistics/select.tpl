@@ -14,8 +14,18 @@
 	</fieldset>
 	<fieldset style="position: absolute; left: 10em; top: 8em; width: 22em; height: 10em;">
 		<legend>$timeFrameText</legend>
-		<p>$monthSelect $yearInput</p>
-		<p>$fromText $startDateField $toText $endDateField</p>
+		<table>
+			<tr>
+				<td></td>
+				<td>$monthSelect</td>
+				<td></td>
+				<td>$yearInput </td>
+			</tr>
+			<tr>
+				<td>$fromText</td><td> $startDateField</td>
+				<td>$toText</td><td> $endDateField</td>
+			</tr>
+		</table>
 	</fieldset>
 	<fieldset style="position: absolute; left: 1em; top: 20em; width: 31em; height: 4em;">
 		<legend>$summarizeCategoriesText</legend>
