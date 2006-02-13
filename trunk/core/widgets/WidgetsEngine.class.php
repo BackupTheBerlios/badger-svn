@@ -161,8 +161,8 @@ class WidgetEngine {
 		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' border='0'/>";
 	}
 	
-	public function createSelectField($name, $options, $default="", $description="", $mandatory=false) {	
-		$selectField = "<select name='$name' id='$name'>\n";
+	public function createSelectField($name, $options, $default="", $description="", $mandatory=false, $selectAdditional="") {	
+		$selectField = "<select name='$name' id='$name' $selectAdditional >\n";
 		if(isset($options)) {
 			foreach( $options as $key=>$value ){
 				//default value
