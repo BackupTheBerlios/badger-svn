@@ -20,7 +20,7 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CategoryManager";
-$dataGrid->headerName = array("parentTitle","Title","Description","outsideCapital");
+$dataGrid->headerName = array(getBadgerTranslation2('accountCategory', 'colparentTitle'),getBadgerTranslation2('accountCategory', 'colTitle'),getBadgerTranslation2('accountCategory', 'colDescription'),getBadgerTranslation2('accountCategory', 'colOutsideCapital'));
 $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapital");
 //$dataGrid->initialSort = "title";
 $dataGrid->initialSort = "parentTitle";

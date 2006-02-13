@@ -20,7 +20,7 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-$dataGrid->headerName = array("Title","Balance","Currency");
+$dataGrid->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'), getBadgerTranslation2('accountAccount', 'colBalance'),getBadgerTranslation2('accountAccount', 'colCurrency'));
 $dataGrid->columnOrder = array("title","balance","currency");  
 $dataGrid->initialSort = "title";
 $dataGrid->headerSize = array(200,150,100);

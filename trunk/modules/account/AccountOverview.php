@@ -26,7 +26,7 @@ if (isset($_GET['accountID'])) {
 }
 
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID";
-$dataGrid->headerName = array("Title","type","description","valutaDate","amount","categoryTitle");
+$dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colTitle'), getBadgerTranslation2('accountOverview', 'colType'),getBadgerTranslation2('accountOverview', 'colDescription'),getBadgerTranslation2('accountOverview', 'colValutaDate'),getBadgerTranslation2('accountOverview', 'colAmount'),getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
 $dataGrid->columnOrder = array("title","type","description","valutaDate","amount","categoryTitle");  
 $dataGrid->initialSort = "title";
 $dataGrid->height = "400px";

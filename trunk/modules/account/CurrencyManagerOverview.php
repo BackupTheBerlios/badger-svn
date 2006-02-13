@@ -20,7 +20,7 @@ $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";
-$dataGrid->headerName = array("Symbol","LongName");
+$dataGrid->headerName = array(getBadgerTranslation2('accountCurrency', 'colSymbol'),getBadgerTranslation2('accountCurrency', 'colLongName'));
 $dataGrid->columnOrder = array("symbol","longName");
 $dataGrid->initialSort = "symbol";  
 $dataGrid->headerSize = array(200,200);
