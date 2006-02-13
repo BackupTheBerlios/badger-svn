@@ -140,7 +140,7 @@ class WidgetEngine {
 		return $output;
 	}
 	
-	public function createButton($name, $text, $action, $img="", $addTags){
+	public function createButton($name, $text, $action, $img="", $addTags=""){
 		if ($action=="submit") $action = "this.form.submit()";
 		if ($action=="") $action = "void(0);return false;"; 
 		$output = "<button $addTags name='$name' id='$name' onclick=\"javascript:".$action."\">\n";
