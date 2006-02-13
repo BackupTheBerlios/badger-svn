@@ -26,21 +26,21 @@
 	 * 
 	 * @var global constant
 	 */	
- define("DB_USERNAME", "root");
+ define("DB_USERNAME", "projectssql2");
  
   	/**
 	 * Database password
 	 * 
 	 * @var global constant
 	 */	
- define("DB_PASSWORD", "");
+ define("DB_PASSWORD", "b4dg3rdbdb");
  
   	/**
 	 * Database host address
 	 * 
 	 * @var global constant
 	 */	
- define("DB_HOST", "localhost");
+ define("DB_HOST", "edop.de");
  
   	/**
 	 * Name of the database to be used
