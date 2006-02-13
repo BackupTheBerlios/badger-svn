@@ -89,6 +89,8 @@ function printFrontendFinished($AccountID, $ID) {
 		$acc = $am->getAccountById($AccountID);
 		$transactionType = "finished";
 		$transaction = $acc->getFinishedTransactionById($ID);
+		
+		$titleValue = $transaction->getTitle();
 		$descriptionValue = $transaction->getDescription();
 		$valutaDateValue = is_null($tmp = $transaction->getValutaDate()) ? '' : $tmp->getFormatted();
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
@@ -99,6 +101,7 @@ function printFrontendFinished($AccountID, $ID) {
 		$periodicalValue = $transaction->getPeriodical();
 	} else {
 		//new: empty values
+		$titleValue = "";
 		$descriptionValue = "";
 		$valutaDateValue = "";
 		$amountValue = "";
@@ -116,6 +119,8 @@ function printFrontendFinished($AccountID, $ID) {
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
+	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
 	$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), true);
@@ -159,28 +164,28 @@ function printFrontendPlanned($AccountID, $ID) {
 		$transactionType = "planned";
 		$transaction = $acc->getPlannedTransactionById($ID);
 		
+		$titleValue = $transaction->getTitle();
 		$descriptionValue = $transaction->getDescription();
-		/*
-		$valutaDateValue = is_null($tmp = $transaction->getValutaDate()) ? '' : $tmp->getFormatted();
+		$beginDateValue = is_null($tmp = $transaction->getBeginDate()) ? '' : $tmp->getFormatted();;
+		$endDateValue = is_null($tmp = $transaction->getEndDate()) ? '' : $tmp->getFormatted();;
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
 		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp->getFormatted();
 		$transactionPartnerValue = $transaction->getTransactionPartner();
 		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp->getTitle();
-		$exceptionalValue = $transaction->getExceptional();
-		$periodicalValue = $transaction->getPeriodical();
-		*/
+		$repeatUnitValue = $transaction->getRepeatUnit();
+    	$repeatFrequencyValue = $transaction->getRepeatFrequency();
 	} else {
 		//new: empty values
-		/*
+		$titleValue = "";
 		$descriptionValue = "";
-		$valutaDateValue = "";
+		$startDateValue = "";
+		$endDateValue = "";
 		$amountValue = "";
-		$transactionPartnerValue = "";
 		$outsideCapitalValue = "";
+		$transactionPartnerValue = "";		
 		$categoryValue = "";
-		$exceptionalValue = "";
-		$periodicalValue = "";
-		*/
+		$repeatUnitValue = "";
+    	$repeatFrequencyValue = "";
 	}
 
 	//set vars with values
@@ -190,12 +195,14 @@ function printFrontendPlanned($AccountID, $ID) {
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
-	
+	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
-	/*
-	$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), true);
-	$valutaDateField = $widgets->createField("valutaDate", 30, $valutaDateValue, "", true, "text", "");
+	$beginDateLabel = $widgets->createLabel("beginDate", getBadgerTranslation2('accountTransaction', 'beginDate'), true);
+	$beginDateField = $widgets->createField("beginDate", 30, $beginDateValue, "", true, "text", "");
+	$endDateLabel = $widgets->createLabel("endDate", getBadgerTranslation2('accountTransaction', 'endDate'), true);
+	$endDateField = $widgets->createField("endDate", 30, $endDateValue, "", true, "text", "");
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
 	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), true);
@@ -204,12 +211,11 @@ function printFrontendPlanned($AccountID, $ID) {
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30, $outsideCapitalValue, "", true, "text", "");
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true);
 	$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
-	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), true);
-	$exceptionalField = $widgets->createField("exceptional", 30, $exceptionalValue, "", true, "text", "");
-	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), true);
-	$periodicalField = $widgets->createField("periodical", 30, $periodicalValue, "", true, "text", "");
-	*/
-
+	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatUnit'), true);
+	$repeatUnitField = $widgets->createField("repeatUnit", 30, $repeatUnitValue, "", true, "text", "");
+	$repeatFrequencyLabel = $widgets->createLabel("repeatFrequency", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
+	$repeatFrequencyField = $widgets->createField("repeatFrequency", 30, $repeatFrequencyValue, "", true, "text", "");
+	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
 	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
