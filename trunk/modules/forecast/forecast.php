@@ -15,11 +15,13 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
+$pageHeading = getBadgerTranslation2('forecast','title');
+
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addNavigationHead();
-echo $tpl->getHeader("Forecast");
+echo $tpl->getHeader($pageHeading);
 echo $widgets->getNavigationBody();
 echo $widgets->addToolTipLayer();
 //include charts.php to access the InsertChart function
