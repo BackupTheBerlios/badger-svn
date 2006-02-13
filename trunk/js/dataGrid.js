@@ -297,7 +297,9 @@ function dgGetAllIds() {
 	checkbox = Form.getInputs("dgForm","checkbox");
 	allIDs = new Array;
 	for (i=0; i<checkbox.length; i++) {
-		if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.id);
+		if(checkbox[i].id.indexOf("check") != -1 ) {
+			if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.id);
+		}
 	}
 	return allIDs;
 }
