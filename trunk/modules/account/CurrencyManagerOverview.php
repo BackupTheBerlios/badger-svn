@@ -25,6 +25,7 @@ $dataGrid->columnOrder = array("symbol","longName");
 $dataGrid->initialSort = "symbol";  
 $dataGrid->headerSize = array(200,200);
 $dataGrid->cellAlign = array("left","left");
+$dataGrid->height = "400px";
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "CurrencyManager.php?action=delete&ID=";

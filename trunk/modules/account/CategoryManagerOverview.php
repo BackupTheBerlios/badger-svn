@@ -26,6 +26,7 @@ $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapit
 $dataGrid->initialSort = "parentTitle";
 $dataGrid->headerSize = array(200,200,300,120);
 $dataGrid->cellAlign = array("left","left","left","right");
+$dataGrid->height = "400px";
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "CategoryManager.php?action=delete&ID=";

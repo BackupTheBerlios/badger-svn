@@ -29,6 +29,7 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$a
 $dataGrid->headerName = array("Title","type","description","valutaDate","amount","categoryTitle");
 $dataGrid->columnOrder = array("title","type","description","valutaDate","amount","categoryTitle");  
 $dataGrid->initialSort = "title";
+$dataGrid->height = "400px";
 $dataGrid->headerSize = array(200,200,180,85,150,200);
 $dataGrid->cellAlign = array("left","left","left","left","right","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
