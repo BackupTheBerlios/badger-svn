@@ -14,11 +14,7 @@
 	</fieldset>
 	<fieldset style="position: absolute; left: 10em; top: 8em; width: 22em; height: 10em;">
 		<legend>$timeFrameText</legend>
-		<table>
-			<tr>
-				<td>$monthSelect</td>
-				<td>$yearInput</td>
-			</tr>
+			<p>$monthSelect $yearInput</p>
 		<table>		
 			<tr>
 				<td>$fromText</td><td>$startDateField</td>
