@@ -22,7 +22,7 @@ $savingTarget = new Amount(0);
 if (isset($_GET['savingTarget'])) {
 	$savingTarget = new Amount($_GET['savingTarget']);
 }
-$savingTarget = new Amount(0);
+
 // get pocketMoney1 from calling file
 #$pocketMoney1 = new Amount (25);
 if (isset($_GET['pocketMoney1'])) {
@@ -63,18 +63,11 @@ $currentAccount = $am->getAccountById($accountId);
 #$currentAccount->SetLowerLimit(NULL);
 if (!is_null($currentAccount->getLowerLimit()->get())){
 	$lowerLimit = $currentAccount->getLowerLimit();
-} else {
-	//lowerLimit nicht vorhanden, wie wenn in forecast php nicht angekreuzt
-	
 }
 #$currentAccount->SetUpperLimit(NULL);
 if (!is_null($currentAccount->getUpperLimit()->get())){
 	$upperLimit = $currentAccount->getUpperLimit();
-} else {
-	//UpperLimit nicht vorhanden, wie wenn in forecast php nicht angekreuzt
-	
 }
-
 //calculate every days balance
 $currentBalances = getDailyAmount($currentAccount, $startDate, $endDate);
 foreach ($currentBalances as $balanceKey => $balanceVal) {
