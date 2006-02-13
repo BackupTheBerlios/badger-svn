@@ -3,22 +3,22 @@
 <form method="post" action="$selectFormAction" id="selectForm" name="mainform">
 		
 	<fieldset style="position: absolute; left: 1em; top: 8em; width: 7em; height: 4em;">
-		<legend>Typ</legend>
+		<legend>$graphTypeText</legend>
 		$trendRadio $trendLabel<br />
 		$categoryRadio $categoryLabel
 	</fieldset>
 	<fieldset style="position: absolute; left: 1em; top: 14em; width: 7em; height: 4em;">
-		<legend>Kategorie-Art</legend>
+		<legend>$categoryTypeText</legend>
 		$inputRadio $inputLabel<br />
 		$outputRadio $outputLabel
 	</fieldset>
 	<fieldset style="position: absolute; left: 10em; top: 8em; width: 22em; height: 10em;">
-		<legend>Zeitraum</legend>
+		<legend>$timeFrameText</legend>
 		<p>$monthSelect $yearInput</p>
-		<p>Von: $startDateField bis: $endDateField</p>
+		<p>$fromText $startDateField $toText $endDateField</p>
 	</fieldset>
 	<fieldset style="position: absolute; left: 1em; top: 20em; width: 31em; height: 4em;">
-		<legend>Kategorien zusammenfassen</legend>
+		<legend>$summarizeCategoriesText</legend>
 		$summarizeRadio $summarizeLabel<br />
 		$distinguishRadio $distinguishLabel
 	</fieldset>
@@ -30,9 +30,9 @@
 	$errorMsgEndInFutureField
 </form>
 <fieldset style="position: absolute; left: 34em; top: 8em; width: 410px; height: 16em;">
-	<legend>Konten</legend>
+	<legend>$accountsText</legend>
 	$accountSelect
-	<p>Achtung: Bei der gleichzeitigen Betrachtung mehrerer Konten mit unterschiedlichen Währungen findet keine Umrechnung statt!</p>
+	<p>$differentCurrencyWarningText</p>
 </fieldset>
 <p style="margin-top: 19em;">$submitButton</p>
 

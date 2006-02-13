@@ -84,6 +84,15 @@ function showSelectPage() {
 
 	$selectFormAction = BADGER_ROOT . '/modules/statistics/statistics.php';
 	
+	$graphTypeText = "Typ";
+	$categoryTypeText = "Kategorie-Art";
+	$timeFrameText = "Zeitraum";
+	$summarizeCategoriesText = "Kategorien zusammenfassen";
+	$accountsText = "Konten";
+	$differentCurrencyWarningText = "Achtung: Bei der gleichzeitigen Betrachtung mehrerer Konten mit unterschiedlichen Währungen findet keine Umrechnung statt!";
+	$fromText = "von:";
+	$toText = "bis:";
+	
 	$trendRadio = $widgets->createField('mode', null, 'trendPage', '', false, 'radio', 'checked="checked"');
 	$trendLabel = $widgets->createLabel('mode', 'Trend');
 	
@@ -97,7 +106,7 @@ function showSelectPage() {
 		'fullYear' => 'Ganzes Jahr',
 		'1' => 'Januar',
 		'2' => 'Februar',
-		'3' => 'Mï¿½rz',
+		'3' => 'März',
 		'4' => 'April',
 		'5' => 'Mai',
 		'6' => 'Juni',
@@ -115,7 +124,7 @@ function showSelectPage() {
 	$beginOfYear->setMonth(1);
 	$beginOfYear->setDay(1);
 	
-	$yearInput = $widgets->createField('yearSelect', 4, $now->getMonth(), 'Beschreibung', false, 'text', 'onchange="updateDateRange();"');
+	$yearInput = $widgets->createField('yearSelect', 4, $now->getYear(), 'Beschreibung', false, 'text', 'onchange="updateDateRange();"');
 	
 	$startDateField = $widgets->addDateField("startDate", $beginOfYear->getFormatted());
 	$endDateField = $widgets->addDateField("endDate", $now->getFormatted());
