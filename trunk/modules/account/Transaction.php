@@ -158,8 +158,9 @@ function printFrontendPlanned($AccountID, $ID) {
 		$acc = $am->getAccountById($AccountID);
 		$transactionType = "planned";
 		$transaction = $acc->getPlannedTransactionById($ID);
-		/*
+		
 		$descriptionValue = $transaction->getDescription();
+		/*
 		$valutaDateValue = is_null($tmp = $transaction->getValutaDate()) ? '' : $tmp->getFormatted();
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
 		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp->getFormatted();
@@ -189,9 +190,10 @@ function printFrontendPlanned($AccountID, $ID) {
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
-	/*
+	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
+	/*
 	$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), true);
 	$valutaDateField = $widgets->createField("valutaDate", 30, $valutaDateValue, "", true, "text", "");
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
@@ -210,10 +212,10 @@ function printFrontendPlanned($AccountID, $ID) {
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
-	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href=$redirectPageAfterSave", "Widgets/back.gif");
+	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
 
 	//add vars to template, print site
-	eval("echo \"".$tpl->getTemplate("Account/FinishedTransaction")."\";");
+	eval("echo \"".$tpl->getTemplate("Account/PlannedTransaction")."\";");
 }
 
 function updateRecord($ID, $transactionType) {
