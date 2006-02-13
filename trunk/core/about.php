@@ -17,7 +17,7 @@ require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 $widgets = new WidgetEngine($tpl); 
 $widgets->addNavigationHead();
 
-$aboutTitle = 'Über BADGER finance';
+$aboutTitle = getBadgerTranslation2('about', 'title');
 
 echo $tpl->getHeader($aboutTitle);
 
@@ -25,14 +25,14 @@ echo $widgets->getNavigationBody();
 
 $badgerImage = $widgets->addImage('badger-logo.gif');
 $version = BADGER_VERSION;
-$from = 'vom';
+$from = getBadgerTranslation2('about', 'from');
 $dateObj = new Date(filemtime(BADGER_ROOT . '/includes/includes.php'));
 $date = $dateObj->getFormatted();
-$releasedUnder = 'Veröffentlicht unter';
-$copyrightBy = 'Die Mitglieder des BADGER-Entwicklungs-Teams.';
-$developerTeam = 'Entwicklungs-Team';
-$usedComponents = 'Verwendete Programme und Komponenten';
-$by = 'von';
+$releasedUnder = getBadgerTranslation2('about', 'published');
+$copyrightBy = getBadgerTranslation2('about', 'members');
+$developerTeam = getBadgerTranslation2('about', 'team');
+$usedComponents = getBadgerTranslation2('about', 'programms');
+$by = getBadgerTranslation2('about', 'by');
 
 eval('echo "' . $tpl->getTemplate('about') . '";');
 eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
