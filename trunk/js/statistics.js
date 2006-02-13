@@ -58,8 +58,10 @@ function submitSelect() {
 
 	writeFlash(encodeURIComponent(url));
 	
-	return;
+	flashContainer = $("flashContainer");
+	window.scrollTo(0, flashContainer.offsetTop);
 
+	return;
 }
 
 function writeFlash(url) {
