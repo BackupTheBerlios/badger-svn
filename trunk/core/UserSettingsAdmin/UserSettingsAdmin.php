@@ -99,6 +99,9 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		$us->setProperty('badgerDateFormat',$_POST['DateFormat']);
 		$us->setProperty('badgerMaxLoginAttempts',$_POST['MaximumLoginAttempts']);
 		$us->setProperty('badgerLockOutTime',$_POST['LockOutTime']);
+		$us->setProperty('badgerStartPage', $_POST['StartPageField']);
+		$us->setProperty('badgerSessionTime', $_POST['SessionTimeField']);
+
 		if($_POST['Seperators'] == ".,"){
 			$us->setProperty('badgerDecimalSeparator',",");
 			$us->setProperty('badgerThousandSeparator',".");
@@ -144,12 +147,12 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		
 		
 		$TemplateLabel = $widgets->createLabel("Template", getBadgerTranslation2('UserSettingsAdmin','template_name'), true);
-		$TemplateField = $widgets->createSelectField("Template", $templates, $default=$us->getProperty('badgerTemplate'), $description=getBadgerTranslation2('UserSettingsAdmin','template_description'), true);
+		$TemplateField = $widgets->createSelectField("Template", $templates, $default=$us->getProperty('badgerTemplate'), $description=getBadgerTranslation2('UserSettingsAdmin','template_description'), true, 'style="width: 10em;"');
 		
 		$langs = $tr->getLangs();
 		$LanguageLabel = $widgets->createLabel("Language", getBadgerTranslation2('UserSettingsAdmin','language_name'), true);
 
-		$LanguageField = $widgets->createSelectField("Language", $langs, $default=$us->getProperty('badgerLanguage'), $description=getBadgerTranslation2('UserSettingsAdmin','language_description'), $mandatory=true);
+		$LanguageField = $widgets->createSelectField("Language", $langs, $default=$us->getProperty('badgerLanguage'), $description=getBadgerTranslation2('UserSettingsAdmin','language_description'), $mandatory=true, 'style="width: 10em;"');
 		
 		$date_formats = array(
 			"dd.mm.yyyy" => getBadgerTranslation2('DateFormats','dd.mm.yyyy'),
@@ -160,7 +163,7 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		);
 		
 		$DateFormatLabel = $widgets->createLabel("DateFormat", getBadgerTranslation2('UserSettingsAdmin','date_format_name'), true);
-		$DateFormatField = $widgets->createSelectField("DateFormat", $date_formats, $default=$us->getProperty('badgerDateFormat'), $description=getBadgerTranslation2('UserSettingsAdmin','date_format_description'), $mandatory=true);
+		$DateFormatField = $widgets->createSelectField("DateFormat", $date_formats, $default=$us->getProperty('badgerDateFormat'), $description=getBadgerTranslation2('UserSettingsAdmin','date_format_description'), $mandatory=true, 'style="width: 10em;"');
 		
 		$seperators = array(
 			".," => "12.345,67",
@@ -174,21 +177,21 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		};
 		
 		$SeperatorsLabel = $widgets->createLabel("Seperators", getBadgerTranslation2('UserSettingsAdmin','seperators_name'), true);
-		$SeperatorsField = $widgets->createSelectField("Seperators", $seperators, $default=$seperators_default, $description=getBadgerTranslation2('UserSettingsAdmin','seperators_description'), $mandatory=true);
+		$SeperatorsField = $widgets->createSelectField("Seperators", $seperators, $default=$seperators_default, $description=getBadgerTranslation2('UserSettingsAdmin','seperators_description'), $mandatory=true, 'style="width: 10em;"');
 				
 		$MaxLoginLabel = $widgets->createLabel("MaximumLoginAttempts", getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_name'), true);
-		$MaxLoginField = $widgets->createField("MaximumLoginAttempts", 20, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true);
+		$MaxLoginField = $widgets->createField("MaximumLoginAttempts", 0, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true, 'text', 'style="width: 10em;"');
 		
 		
 		$LockOutTimeLabel = $widgets->createLabel("LockOutTime", getBadgerTranslation2('UserSettingsAdmin','lock_out_time_name'), true);
-		$LockOutTimeField = $widgets->createField("LockOutTime", 20, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true);
+		$LockOutTimeField = $widgets->createField("LockOutTime", 0, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true, 'text', 'style="width: 10em;"');
 		
 
 		$StartPageLabel = $widgets->createLabel("StartPageLabel", getBadgerTranslation2('UserSettingsAdmin','start_page_name'), true);
-		$StartPageField = $widgets->createField("StartPageField", 20, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true);
+		$StartPageField = $widgets->createField("StartPageField", 0, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true, 'text', 'style="width: 10em;"');
 		
 		$SessionTimeLabel = $widgets->createLabel("SessionTimeLabel", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
-		$SessionTimeField = $widgets->createField("SessionTimeField", 20, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true);
+		$SessionTimeField = $widgets->createField("SessionTimeField", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
 		
 // Print Form for change of password 
 		

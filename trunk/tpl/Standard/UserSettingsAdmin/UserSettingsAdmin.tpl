@@ -1,45 +1,45 @@
 <form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php">
-	<fieldset>
+	<fieldset style="width: 28em;">
 		<legend>$FsHeading</ledgend>
 		<br>
 			<table>
 			<tr>
 				<td>$TemplateLabel</td>
-				<td>$TemplateField</td>
+				<td style="text-align: right;">$TemplateField</td>
 			</tr>
 			<tr>
 				<td>$LanguageLabel</td>
-				<td>$LanguageField</td>
+				<td style="text-align: right;">$LanguageField</td>
 			<tr>
 				<td>$DateFormatLabel</td>
-				<td>$DateFormatField</td>
+				<td style="text-align: right;">$DateFormatField</td>
 			</tr>
 			<tr>
 				<td>$SeperatorsLabel</td>
-				<td>$SeperatorsField</td>
+				<td style="text-align: right;">$SeperatorsField</td>
 			</tr>
 			<tr>
 				<td>$MaxLoginLabel</td>
-				<td>$MaxLoginField</td>
+				<td style="text-align: right;">$MaxLoginField</td>
 			</tr>
 			<tr>
 				<td>$LockOutTimeLabel</td>
-				<td>$LockOutTimeField</td>
+				<td style="text-align: right;">$LockOutTimeField</td>
 			</tr>
 			</tr>
 			<tr>
 				<td>$StartPageLabel</td>
-				<td>$StartPageField</td>
+				<td style="text-align: right;">$StartPageField</td>
 			</tr>
 			</tr>
 			<tr>
 				<td>$SessionTimeLabel</td>
-				<td>$SessionTimeField</td>
+				<td style="text-align: right;">$SessionTimeField</td>
 			</tr>
 		</table>
 	</fieldset>
 		<br/>
-	<fieldset>
+	<fieldset style="width: 28em;">
 		<legend>$PWFormLabel</ledgend>
 		<br/>
 		<table>
@@ -56,12 +56,11 @@
 			</tr>
 		</table>
 	</fieldset>
-		<table>
+		<table style="clear: both;">
 			<tr>
 				<td></td>
 				<td>$btnSubmit</td>
 			</tr>
 		</table>
 </form>
-<br/>
 $Feedback
