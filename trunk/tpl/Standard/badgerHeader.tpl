@@ -13,7 +13,7 @@ $JSOnLoadEvents
 	<table><tr>
 		<td><img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" /></td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
-		<td>Open Source Finanzmanagement-Software für Privatanwender!</td>
+		<td><img src="{BADGER_ROOT}/tpl/Standard/badgerbanner.png" /></td>
 	</tr></table>
 </div>
 <div id="staticMenuBar"></div>
