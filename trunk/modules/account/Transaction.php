@@ -55,7 +55,7 @@ if (isset($_GET['action'])) {
 			//frontend form for edit or insert
 			if (isset($_GET['accountID'])) {
 				$accountID = $_GET['accountID'];
-				$redirectPageAfterSave = "AccountOverview.php?accountID=".$accounts;
+				$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
 			} else {
 				$accountID = "choose";
 			}
