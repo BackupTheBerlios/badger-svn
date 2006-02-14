@@ -22,20 +22,117 @@ $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addNavigationHead();
+$tpl->addJavaScript("js/prototype.js");
 echo $tpl->getHeader($pageHeading);
 
 echo $widgets->getNavigationBody();
 echo $widgets->addToolTipLayer();
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
+	$standardStartDate = new Date();
+	$standardStartDate->subtractSeconds(60*60*24*180);
+	$calculatePocketMoneyStartDateField = $widgets->addDateField("startDate", $standardStartDate->getFormatted());
+	#$startSpendingDate = new date ("2005-01-01");
+	#$spendingMoney = getSpendingMoney(1, $startSpendingDate);	
+	#echo $spendingMoney->getFormatted();
+	$writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", getBadgerTranslation2("forecast", "calculatedPocketMoneyButton"), "submit", "Widgets/accept.gif");
+	$calculatedPocketMoneyLabel = getBadgerTranslation2("forecast", "calculatedPocketMoneyLabel"). ":";
+	
+	$writeCalculatedToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "calculatedPocketMoneyToolTip"));
+if (isset ($_POST['writePocketMoney'])){
+	$legendSetting = getBadgerTranslation2("forecast", "legendSetting");
+	$legendGraphs = getBadgerTranslation2("forecast", "legendGraphs");
+	$endDateLabel =  getBadgerTranslation2("forecast", "endDateField"). ":";
+	$endDateField = $widgets->addDateField("endDate",$_POST["endDate"]);
+	$endDateToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "endDateToolTip"));
+	//get accounts from db & field to select the account for forecsatung
+		$am = new AccountManager($badgerDb);
+		$account = array();
+			    	while ($currentAccount = $am->getNextAccount()) {
+			    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
+		}
+	//
+	
+	#$calculatedPocketMoney = $spendingMoney->getFormatted();
+	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "submit", "Widgets/accept.gif");
+	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "$('pocketmoney1').value='$calculatedPocketMoney'", "Widgets/accept.gif");
+		
+	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);
+	$accountField = $widgets->createSelectField("selectedAccount", $account, $_POST["selectedAccount"], getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
+	//field to select saving target, default is 0
+	$savingTargetLabel =  $widgets->createLabel("savingTarget", getBadgerTranslation2("forecast", "savingTargetField").":", true);
+	$savingTargetField = $widgets->createField("savingTarget", 5, $_POST["savingTarget"], getBadgerTranslation2("forecast", "savingTargetToolTip"), true, "text", 'style="width: 10em;"');
+	//field to insert pocketmoney1
+	$pocketMoney1Label =  $widgets->createLabel("pocketmoney1", getBadgerTranslation2("forecast", "pocketMoney1Field").":", true);
+	
+	$startSpendingDate = new Date ($_POST["startDate"], true);
+	$spendingMoney = getSpendingMoney(1, $startSpendingDate);
+	
+	$calculatedPocketMoney = $spendingMoney->getFormatted();
+	$pocketMoney1Field = $widgets->createField("pocketmoney1", 5, $_POST["pocketmoney1"], getBadgerTranslation2("forecast", "pocketMoney1ToolTip"), true, "text", 'style="width: 10em;"');
+	//field to insert pocketmoney2
+	$pocketMoney2Label =  $widgets->createLabel("pocketmoney2", getBadgerTranslation2("forecast", "pocketMoney2Field").":", true);
+	$pocketMoney2Field = $widgets->createField("pocketmoney2", 5, $calculatedPocketMoney, getBadgerTranslation2("forecast", "pocketMoney2ToolTip"), true, "text", 'style="width: 10em;"');
+	//checkbox for lower limit graph
+	$lowerLimitLabel =  getBadgerTranslation2("forecast", "lowerLimitLabel").":";
+	if (isset ($_POST["lowerLimitBox"])){
+		$lowerLimitBox = "<input type=\"checkbox\" name=\"lowerLimitBox\" value=\"select\" checked=\"checked\"/>";
+	}else{
+		$lowerLimitBox = "<input type=\"checkbox\" name=\"lowerLimitBox\" value=\"select\" />";
+	}
+	$lowerLimitToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "lowerLimitToolTip"));
+	//checkbox for upper limit graph
+	$upperLimitLabel =  getBadgerTranslation2("forecast", "upperLimitLabel").":";
+	if (isset ($_POST["upperLimitBox"])){
+	$upperLimitBox = "<input type=\"checkbox\" name=\"upperLimitBox\" value=\"select\" checked=\"checked\"/>";
+	}else{
+		$upperLimitBox = "<input type=\"checkbox\" name=\"upperLimitBox\" value=\"select\" />";
+	}
+	$upperLimitToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "upperLimitToolTip"));
+	//checkbox for planned transactions graph
+	$plannedTransactionsLabel =  getBadgerTranslation2("forecast", "plannedTransactionsLabel").":";
+	if (isset ($_POST["plannedTransactionsBox"])){
+		$plannedTransactionsBox = "<input type=\"checkbox\" name=\"plannedTransactionsBox\" value=\"select\" checked=\"checked\"/>";
+	}else{
+		$plannedTransactionsBox = "<input type=\"checkbox\" name=\"plannedTransactionsBox\" value=\"select\" />";
+	}
+	$plannedTransactionsToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "plannedTransactionsToolTip"));
+	//checkbox for saving target graph
+	$savingTargetLabel1 =  getBadgerTranslation2("forecast", "savingTargetLabel").":";
+	if (isset ($_POST["savingTargetBox"])){
+		$savingTargetBox = "<input type=\"checkbox\" name=\"savingTargetBox\" value=\"select\" checked=\"checked\"/>";
+	}else{
+		$savingTargetBox = "<input type=\"checkbox\" name=\"savingTargetBox\" value=\"select\" />";
+	}
+	$savingTargetToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "showSavingTargetToolTip"));
+	//checkbox for pocket money1 graph
+	$pocketMoney1Label1 =  getBadgerTranslation2("forecast", "pocketMoney1Label").":";
+	if (isset ($_POST["pocketMoney1Box"])){
+		$pocketMoney1Box = "<input type=\"checkbox\" name=\"pocketMoney1Box\" value=\"select\" checked=\"checked\"/>";
+	}else{
+		$pocketMoney1Box = "<input type=\"checkbox\" name=\"pocketMoney1Box\" value=\"select\" />";
+	}
+	$pocketMoney1ToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "showPocketMoney1ToolTip"));
+	//checkbox for pocket money1 graph
+	$pocketMoney2Label1 =  getBadgerTranslation2("forecast", "pocketMoney2Label").":";
+	if (isset ($_POST["pocketMoney2Box"])){
+		$pocketMoney2Box = "<input type=\"checkbox\" name=\"pocketMoney2Box\" value=\"select\" checked=\"checked\"/>";
+	}else{	
+		$pocketMoney2Box = "<input type=\"checkbox\" name=\"pocketMoney2Box\" value=\"select\" />";
+	}
+	$pocketMoneyTool2Tip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "showPocketMoney2ToolTip"));
+	$sendButton = $widgets->createButton("sendData", getBadgerTranslation2("forecast", "sendData"), "submit", "Widgets/accept.gif");
+	eval("echo \"".$tpl->getTemplate("forecast/forecastSettings")."\";");
+}
 
-if (!isset($_POST['sendData'])){	
+if (!isset($_POST['writePocketMoney'])){	
+	if (!isset($_POST['sendData'])){	
 	//field for selecting end date of forecasting
 	$legendSetting = getBadgerTranslation2("forecast", "legendSetting");
 	$legendGraphs = getBadgerTranslation2("forecast", "legendGraphs");
 	$endDateLabel =  getBadgerTranslation2("forecast", "endDateField"). ":";
 	$standardEndDate = new Date();
-	$standardEndDate->addSeconds(60*60*24);
+	$standardEndDate->addSeconds(60*60*24*180);
 	$endDateField = $widgets->addDateField("endDate",$standardEndDate->getFormatted());
 	$endDateToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "endDateToolTip"));
 	//get accounts from db & field to select the account for forecsatung
@@ -45,9 +142,12 @@ if (!isset($_POST['sendData'])){
 			    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
 		}
 	//
-	$startSpendingDate = new date ("2005-12-12");
-	$spendingMoney = getSpendingMoney(1, $startSpendingDate);	
-	echo $spendingMoney->get();
+	
+	#$calculatedPocketMoney = $spendingMoney->getFormatted();
+	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "submit", "Widgets/accept.gif");
+	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "$('pocketmoney1').value='$calculatedPocketMoney'", "Widgets/accept.gif");
+	
+	
 		
 	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);
 	$accountField = $widgets->createSelectField("selectedAccount", $account, "", getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
@@ -87,8 +187,8 @@ if (!isset($_POST['sendData'])){
 	
 	$sendButton = $widgets->createButton("sendData", getBadgerTranslation2("forecast", "sendData"), "submit", "Widgets/accept.gif");
 	eval("echo \"".$tpl->getTemplate("forecast/forecastSettings")."\";");
+	}
 }
-
 
 if (isset($_POST['sendData'])){
 	# validate if date is in future
