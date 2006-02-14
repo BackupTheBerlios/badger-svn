@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form method="post" action="$FormAction?action=save">
+<form method="post" name="mainform" action="$FormAction?action=save">
 <fieldset style = "width: 20em; height: 9em">
 	<legend>$legend</legend>	
 	<table>

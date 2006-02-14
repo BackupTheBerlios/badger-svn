@@ -1,6 +1,6 @@
 <h1>$pageHeading</h1>
 
-<form method="post" action="$FormAction?action=save">
+<form method="post" name="mainform" action="$FormAction?action=save">
 <fieldset style = "width: 18em; height13em">
 	<legend>$legend</legend>
 		<table>
@@ -27,10 +27,6 @@
 		  <tr>
 		    <td>$currencyLabel </td>
 		    <td>$currencyField  </td>
-		  </tr>
-		  <tr>
-		    <td>$targetFutureCalcDateLabel </td>
-		    <td>$targetFutureCalcDateField  </td>
 		  </tr>
 		  <tr>
 		    <td>$backBtn </td>
