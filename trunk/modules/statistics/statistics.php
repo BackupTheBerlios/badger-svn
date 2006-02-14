@@ -271,13 +271,125 @@ function showTrendData() {
 	$numDates = count($totals);
 	
 	$chart = array ();
-	$chart['chart_type'] = 'line';
-	$chart['axis_category']['skip'] = $numDates / 16;
-	$chart['axis_category']['size'] = 14;
-	$chart['axis_category']['orientation'] = 'diagonal_up';
-	$chart['axis_value']['size'] = 14;
-	$chart['chart_pref']['point_shape'] = 'none';
-	$chart[ 'legend_rect' ] = array ( 'x'=>-100, 'y'=>-100, 'width'=>10, 'height'=>10, 'margin'=>10 ); 
+	//for documentation for the following code see: http://www.maani.us/charts/index.php?menu=Reference
+	$chart [ 'chart_type' ] = "line";
+	$chart [ 'axis_category' ] = array (   'skip'         =>  $numDates / 12,
+	                                       'font'         =>  "Arial", 
+	                                       'bold'         =>  false, 
+	                                       'size'         =>  10, 
+	                                       'color'        =>  "000000", 
+	                                       'alpha'        =>  100,
+	                                       'orientation'  =>  "horizontal"
+	                                   ); 
+	$chart [ 'axis_ticks' ] = array (   'value_ticks'      =>  true, 
+	                                    'category_ticks'   =>  true, 
+	                                    'position'         =>  "centered", 
+	                                    'major_thickness'  =>  2, 
+	                                    'major_color'      =>  "000000", 
+	                                    'minor_thickness'  =>  1, 
+	                                    'minor_color'      =>  "000000",
+	                                    'minor_count'      =>  4
+	                                ); 
+	
+	$chart [ 'axis_value' ] = array (   'min'           =>  0, //automatically adjusted  
+	                                    'max'           =>  0, //automatically adjusted
+	                                    'steps'         =>  10,  
+	                                    'prefix'        =>  "", 
+	                                    'suffix'        =>  "", 
+	                                    'decimals'      =>  0,
+	                                    'decimal_char'  =>  ".",
+	                                    'separator'     =>  "", 
+	                                    'show_min'      =>  true, 
+	                                    'font'          =>  "Arial", 
+	                                    'bold'          =>  false, 
+	                                    'size'          =>  10, 
+	                                    'color'         =>  "000000", 
+	                                    'alpha'         =>  75,
+	                                    'orientation'   =>  "horizontal"
+	                                   );
+	
+	$chart [ 'chart_border' ] = array (   'top_thickness'     =>  1,
+	                                      'bottom_thickness'  =>  1,
+	                                      'left_thickness'    =>  1,
+	                                      'right_thickness'   =>  1,
+	                                      'color'             =>  "000000"
+	                                   );
+	
+	$chart [ 'chart_pref' ] = array (   'line_thickness'  =>  1,  
+	                                    'point_shape'     =>  "none", 
+	                                    'fill_shape'      =>  false
+	                                  ); 
+	
+	$chart [ 'chart_grid_h' ] = array (   'thickness'  =>  1,
+	                                      'color'      =>  "000000",
+	                                      'alpha'      =>  15,
+	                                      'type'       =>  "solid"
+	                                   );
+	$chart [ 'chart_grid_v' ] = array (   'thickness'  =>  1,
+	                                      'color'      =>  "000000",
+	                                      'alpha'      =>  5,
+	                                      'type'       =>  "dashed"
+	                                   );
+	$chart [ 'chart_rect' ] = array ( 'x'=>50,
+	                                  'y'=>50,
+	                                  'width'=>700,
+	                                  'height'=>300,
+	                                  'positive_color'  =>  "ffffff",
+	                                  'negative_color'  =>  "000000",
+	                                  'positive_alpha'  =>  100,
+	                                  'negative_alpha'  =>  10
+	                                );
+	$chart [ 'chart_value' ] = array (  'prefix'         =>  "", 
+	                                    'suffix'         =>  "", 
+	                                    'decimals'       =>  0,
+	                                    'decimal_char'   =>  ".",  
+	                                    'separator'      =>  "",
+	                                    'position'       =>  "cursor",
+	                                    'hide_zero'      =>  true, 
+	                                    'as_percentage'  =>  false, 
+	                                    'font'           =>  "Arial", 
+	                                    'bold'           =>  false, 
+	                                    'size'           =>  10, 
+	                                    'color'          =>  "000000", 
+	                                    'alpha'          =>  90
+	                                  ); 
+	$chart [ 'chart_transition' ] = array( 'type'      =>  "none",
+	                                        'delay'     =>  1, 
+	                                        'duration'  =>  1, 
+	                                        'order'     =>  "all"                                 
+	                                      ); 
+	                               
+	$chart [ 'legend_rect' ] = array (   'x'               =>  50,
+	                                     'y'               =>  5, 
+	                                     'width'           =>  700, 
+	                                     'height'          =>  5, 
+	                                     'margin'          =>  5,
+	                                     'fill_color'      =>  "FFFFFF",
+	                                     'fill_alpha'      =>  100, 
+	                                     'line_color'      =>  "000000",
+	                                     'line_alpha'      =>  100, 
+	                                     'line_thickness'  =>  1
+	                                 ); 
+	$chart [ 'legend_label' ] = array (   'layout'  =>  "horizontal",
+	                                      'bullet'  =>  "circle",
+	                                      'font'    =>  "Arial", 
+	                                      'bold'    =>  false, 
+	                                      'size'    =>  11, 
+	                                      'color'   =>  "000000", 
+	                                      'alpha'   =>  90
+	                                  ); 
+	$chart [ 'legend_transition' ] = array ( 'type'      =>  "none",
+	                                         'delay'     =>  1, 
+	                                         'duration'  =>  1 
+	                                       ); 
+	$chart [ 'series_color' ] = array (
+		"FF0000",
+		"00FF00",
+		"0000FF",
+		"FF8000",
+		"404040",
+		"800040"
+	);                                       
 	
 	$chart['chart_data'] = array();
 	
@@ -399,7 +511,10 @@ function printCategoryPage() {
 
 function showCategoryData() {
 	global $badgerDb;
+	global $logger;
 	
+	$logger->log('showCategoryData: REQUEST_URI: ' . $_SERVER['REQUEST_URI']);
+		
 	if (!isset($_GET['accounts']) || !isset($_GET['startDate']) || !isset($_GET['endDate']) || !isset($_GET['type']) || !isset($_GET['summarize'])) {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
@@ -425,25 +540,108 @@ function showCategoryData() {
 	
 	$categories = gatherCategories($accounts, $startDate, $endDate, $type, $summarize);
 
+	$sum = new Amount();
+	foreach ($categories as $currentCategory) {
+		$sum->add($currentCategory['amount']);
+	}
+
 	$chart = array();
+	
+	//for documentation for the following code see: http://www.maani.us/charts/index.php?menu=Reference
 	$chart['chart_type'] = '3d pie';
-	//$chart['axis_category']['size'] = 14;
-	$chart['axis_value']['size'] = 14;
-	$chart['legend_label']['size'] = 14;
-	$chart['legend_label']['bold'] = false;
+	$chart [ 'axis_category' ] = array (   'skip'         =>  0,
+	                                       'font'         =>  "Arial", 
+	                                       'bold'         =>  false, 
+	                                       'size'         =>  10, 
+	                                       'color'        =>  "000000", 
+	                                       'alpha'        =>  100,
+	                                       'orientation'  =>  "horizontal"
+	                                   ); 
+	
+	$chart [ 'chart_rect' ] = array ( 'x'=>150,
+	                                  'y'=>50,
+	                                  'width'=>500,
+	                                  'height'=>250,
+	                                  'positive_color'  =>  "ffffff",
+	                                  'negative_color'  =>  "000000",
+	                                  'positive_alpha'  =>  0,
+	                                  'negative_alpha'  =>  0
+	                                );
+	$chart [ 'chart_value' ] = array (  'prefix'         =>  "", 
+	                                    'suffix'         =>  "", 
+	                                    'decimals'       =>  0,
+	                                    'decimal_char'   =>  ".",  
+	                                    'separator'      =>  "",
+	                                    'position'       =>  "outside",
+	                                    'hide_zero'      =>  true, 
+	                                    'as_percentage'  =>  false, 
+	                                    'font'           =>  "Arial", 
+	                                    'bold'           =>  false, 
+	                                    'size'           =>  10, 
+	                                    'color'          =>  "000000", 
+	                                    'alpha'          =>  90
+	                                  ); 
+	$chart [ 'chart_transition' ] = array( 'type'      =>  "none",
+	                                        'delay'     =>  1, 
+	                                        'duration'  =>  1, 
+	                                        'order'     =>  "all"                                 
+	                                      ); 
+	                               
+	$chart [ 'legend_rect' ] = array (   'x'               =>  700,
+	                                     'y'               =>  400, 
+	                                     'width'           =>  0, 
+	                                     'height'          =>  0, 
+	                                     'margin'          =>  5,
+	                                     'fill_color'      =>  "FFFFFF",
+	                                     'fill_alpha'      =>  100, 
+	                                     'line_color'      =>  "000000",
+	                                     'line_alpha'      =>  100, 
+	                                     'line_thickness'  =>  1
+	                                 ); 
+	$chart [ 'legend_label' ] = array (   'layout'  =>  "vertical",
+	                                      'bullet'  =>  "circle",
+	                                      'font'    =>  "Arial", 
+	                                      'bold'    =>  false, 
+	                                      'size'    =>  11, 
+	                                      'color'   =>  "000000", 
+	                                      'alpha'   =>  90
+	                                  ); 
+	$chart [ 'legend_transition' ] = array ( 'type'      =>  "none",
+	                                         'delay'     =>  1, 
+	                                         'duration'  =>  1 
+	                                       ); 
+	$chart [ 'series_color' ] = array (
+		'000070',
+		'FFFF99',
+		'007000',
+		'FFCC99',
+		'700070',
+		'CC99FF',
+		'660000',
+		'9999FF',
+		'006666',
+		'CCFF99',
+		'A35200',
+		'FFCA7A'
+	);                                       
 	
 	$chart['chart_data'] = array();
+	$chart['chart_value_text'] = array();
 	
 	$chart['chart_data'][0][0] = '';
 	$chart['chart_data'][1][0] = '';
+	$chart['chart_value_text'][0][0] = '';
+	$chart['chart_value_text'][1][0] = '';
 	
 	foreach($categories as $key => $val) {
 		$chart['chart_data'][0][] = $val['title'];
+		$chart['chart_value_text'][0][] = null;
 		if ($type == 'i') {
 			$chart['chart_data'][1][] = $val['amount']->get();
 		} else {
 			$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
 		}
+		$chart['chart_value_text'][1][] = $val['title'] . "\n" . $val['amount']->getFormatted() . "\n" . round($val['amount']->div($sum)->mul($type == 'i' ? 100 : -100)->get(), 0) . ' %'; 
 	}
 	
 	SendChartData($chart);

@@ -66,14 +66,14 @@ function submitSelect() {
 
 function writeFlash(url) {
 	var container = document.getElementById('flashContainer');
-	
-	var objectStart = "<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0' width='750' height='500'>";
+
+	var objectStart = "<object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0' width='800' height='400'>";
 	var objectEnd = "</object>";
 	var paramMovie = "<param name='movie' value='../../includes/charts/charts.swf?library_path=..%2F..%2Fincludes%2Fcharts%2Fcharts_library&php_source=" + url + "' />";
 	var paramQuality = "<param name='quality' value='high' />";
-	var paramBgcolor = "<param name='bgcolor' value='#99cc00' />";
+	var paramBgcolor = "<param name='bgcolor' value='#ECE9D8' />";
 	var paramWmode = "<param name='wmode' value='transparent' />";
-	var embed = "<embed src='../../includes/charts/charts.swf?library_path=..%2F..%2Fincludes%2Fcharts%2Fcharts_library&php_source=" + url + "' width='750' height='500' quality='high' pluginspage='http://www.macromedia.com/go/getflashplayer' type='application/x-shockwave-flash' bgcolor='#99cc00' wmode='transparent' />";
+	var embed = "<embed src='../../includes/charts/charts.swf?library_path=..%2F..%2Fincludes%2Fcharts%2Fcharts_library&php_source=" + url + "' width='800' height='400' quality='high' pluginspage='http://www.macromedia.com/go/getflashplayer' type='application/x-shockwave-flash' bgcolor='#ECE9D8' wmode='transparent' />";
 	
 	container.innerHTML = objectStart + paramMovie + paramQuality + paramBgcolor + paramWmode + embed + objectEnd;
 }
