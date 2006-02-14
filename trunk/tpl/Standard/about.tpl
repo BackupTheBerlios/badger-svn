@@ -35,7 +35,7 @@
 	<li>Clemens Volz</li>
 </ul>
 
-<h2>$contributes</h2>
+<h2>$contributors</h2>
 <ul>
 	<li>Norman Pausch</li>
 </ul>
