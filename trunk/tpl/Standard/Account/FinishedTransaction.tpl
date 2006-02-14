@@ -2,6 +2,10 @@
 <form method="post" name="mainform" action="$FormAction?action=save&accountID=$AccountID">
 <table>
   <tr>
+    <td>$AccountLabel</td>
+    <td>$hiddenAccID </td>
+  </tr>
+  <tr>
     <td>$titleLabel </td>
     <td>$titleField </td>
   </tr>
@@ -43,6 +47,5 @@
   </tr>
 </table>
 $hiddenID
-$hiddenAccID
 $hiddenType
 </form>
