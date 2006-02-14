@@ -21,10 +21,6 @@
 		    <td>$upperLimitField  </td>
 		  </tr>
 		  <tr>
-		    <td>$balanceLabel </td>
-		    <td>$balanceField  </td>
-		  </tr>
-		  <tr>
 		    <td>$currencyLabel </td>
 		    <td>$currencyField  </td>
 		  </tr>
