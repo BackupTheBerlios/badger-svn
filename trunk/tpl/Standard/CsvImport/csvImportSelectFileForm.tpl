@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form action="" method="post" enctype="multipart/form-data" name="Import" id="Import">
+<form action="" method="post" enctype="multipart/form-data" name="Import" id="Import" onSubmit="return validateCompleteForm(this, 'error');">
   <p>
     <table border="0" cellpadding="5" cellspacing="5"> 
             <tr> 
