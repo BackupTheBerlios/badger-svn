@@ -18,6 +18,7 @@ $redirectPageAfterSave = "AccountManagerOverview.php";
 $pageTitle = getBadgerTranslation2('accountAccount','pageTitleProp');
 
 $am = new AccountManager($badgerDb);
+$curMan = new CurrencyManager($badgerDb);
 
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
@@ -73,7 +74,7 @@ function printFrontend() {
 		$lowerLimitValue = is_null($tmp = $account->getLowerLimit()) ? '' : $tmp->getFormatted();
 		$upperLimitValue = is_null($tmp = $account->getUpperLimit()) ? '' : $tmp->getFormatted();
 		$balanceValue = is_null($tmp = $account->getBalance()) ? '' : $tmp->getFormatted();
-		$currencyValue = $account->getCurrency()->getSymbol();
+		$currencyValue = $account->getCurrency()->getId();
 		$targetFutureCalcDateValue = is_null($account->getTargetFutureCalcDate()) ? '' : $tmp->getFormatted();;
 	} else {
 		//new: empty values
@@ -100,18 +101,12 @@ function printFrontend() {
 	$lowerLimitField = $widgets->createField("lowerLimit", 20, $lowerLimitValue, "", false, "text", "class='inputNumber'");
 	$upperLimitLabel = $widgets->createLabel("upperLimit", getBadgerTranslation2('accountAccount', 'upperLimit'), false);
 	$upperLimitField = $widgets->createField("upperLimit", 20, $upperLimitValue, "", false, "text", "class='inputNumber'");
-	if($ID != "new") {
-		$balanceLabel = $widgets->createLabel("balance", getBadgerTranslation2('accountAccount', 'balance'), false);
-		$balanceField = $widgets->createField("balance", 20, $balanceValue, "", false, "text", "class='inputNumber'");
-	} else {
-		$balanceLabel = "";
-		$balanceField = "";
-	}
+
 	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), false);
-	$currencyField = $widgets->createField("currency", 20, $currencyValue, "", false, "text", "");
-	$targetFutureCalcDateLabel = $widgets->createLabel("targetFutureCalcDate", getBadgerTranslation2('accountAccount', 'targetFutureCalcDate'), false);
-	$targetFutureCalcDateField = $widgets->createField("targetFutureCalcDate", 20, $targetFutureCalcDateValue, "", false, "text", "");
 	
+	$currencies = getCurrencyArray('symbol');
+	
+	$currencyField = $widgets->createSelectField("currency", $currencies, $default=$currencyValue);
 	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
@@ -124,7 +119,8 @@ function printFrontend() {
 
 function updateRecord() {
 	global $redirectPageAfterSave;
-	global $am;
+	global $am; //Account Manager
+	global $curMan; //Currency Manager
 	
 	if (isset($_POST['hiddenID'])) {
 		switch ($_POST['hiddenID']) {
@@ -132,21 +128,44 @@ function updateRecord() {
 			//add new record
 			$ID = $am->addAccount(
 				$_POST['title'],
-				$_POST['currency'],
+				$curMan->getCurrencyById($_POST['currency']),
 				$_POST['description'],
-				$_POST['lowerLimit'],
-				$_POST['upperLimit']);
+				new Amount($_POST['lowerLimit'] , true),
+				new Amount($_POST['upperLimit'] , true));
 			break;
 		default:
 			//update record
 			$account = $am->getAccountById($_POST['hiddenID']);
 			$account->setTitle($_POST['title']);
-			//$account->setCurrency($_POST['currency']);
-			$account->setCurrency($_POST['currency']);
+			$account->setDescription($_POST['description']);
+			//print("<br/>".$curMan->getCurrencyById($_POST['currency'])->getLongName()."<br/>");
+			$account->setCurrency($curMan->getCurrencyById($_POST['currency']));
 			$account->setLowerLimit(new Amount($_POST['lowerLimit']));
 			$account->setUpperLimit(new Amount($_POST['upperLimit']));
 		}
 		//REDIRECT
 		header("Location: $redirectPageAfterSave");
 	}	
+}
+
+function getCurrencyArray($sortBy){
+	
+	global $badgerDb;
+	
+	$curMan = new CurrencyManager($badgerDb);
+	$order = array ( 
+	      array(
+	           'key' => $sortBy,
+	           'dir' => 'asc'
+	           )
+	 );
+      
+ 	$curMan->setOrder($order);
+	
+	$curs = array();
+	while ($cur = $curMan->getNextCurrency()) {
+		$curs[$cur->getId()] = $cur->getLongName();
+	};
+	
+	return $curs;
 }
