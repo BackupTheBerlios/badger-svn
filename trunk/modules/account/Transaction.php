@@ -17,7 +17,7 @@ require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 require_once BADGER_ROOT . '/modules/account/FinishedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
 
-$redirectPageAfterSave = "AccountOverview.php?accountID=".$_GET['accountID'];
+$redirectPageAfterSave = "";
 $pageTitle = getBadgerTranslation2('accountTransaction','pageTitle');; //I18N
 
 $am = new AccountManager($badgerDb);
@@ -55,24 +55,28 @@ if (isset($_GET['action'])) {
 			//frontend form for edit or insert
 			if (isset($_GET['accountID'])) {
 				$accountID = $_GET['accountID'];
-				if (isset($_GET['ID'])) {
-					$ID = $_GET['ID'];
-					if(substr($ID,0,1)=="p") {
-						$pos = strpos($ID,"_");				
-						$ID = substr($ID,1,$pos-1);
-						printFrontendPlanned($accountID, $ID);
-					} else {
-						printFrontendFinished($accountID, $ID);
-					}
+				$redirectPageAfterSave = "AccountOverview.php?accountID=".$accounts;
+			} else {
+				$accountID = "choose";
+			}
+			
+			if (isset($_GET['ID'])) {
+				$ID = $_GET['ID'];
+				if(substr($ID,0,1)=="p") {
+					$pos = strpos($ID,"_");				
+					$ID = substr($ID,1,$pos-1);
+					printFrontendPlanned($accountID, $ID);
 				} else {
-					switch($_GET['type']) {
-					case 'finished':
-						printFrontendFinished($accountID, "new");
-						break;
-					case 'planned':
-						printFrontendPlanned($accountID, "new");
-						break;
-					}
+					printFrontendFinished($accountID, $ID);
+				}
+			} else {
+				switch($_GET['type']) {
+				case 'finished':
+					printFrontendFinished($accountID, "new");
+					break;
+				case 'planned':
+					printFrontendPlanned($accountID, "new");
+					break;
 				}
 			}
 			break;
@@ -122,7 +126,13 @@ function printFrontendFinished($AccountID, $ID) {
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$transactionType = "finished";
-	$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
+	if($AccountID=="choose") {
+		$AccountLabel = "";
+		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 210px;'");
+	} else {
+		$AccountLabel = "";
+		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
+	}
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
@@ -149,8 +159,9 @@ function printFrontendFinished($AccountID, $ID) {
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
-	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
-
+	if($redirectPageAfterSave) {
+		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
+	} else { $backBtn=""; };
 	//add vars to template, print site
 	$pageHeading = $pageTitle;
 	eval("echo \"".$tpl->getTemplate("Account/FinishedTransaction")."\";");
@@ -201,7 +212,13 @@ function printFrontendPlanned($AccountID, $ID) {
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
-	$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
+	if($AccountID=="choose") {
+		$AccountLabel = "";
+		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 210px;'");
+	} else {
+		$AccountLabel = "";
+		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
+	}
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
@@ -232,8 +249,9 @@ function printFrontendPlanned($AccountID, $ID) {
 	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
-	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
-
+	if($redirectPageAfterSave) {
+		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
+	} else { $backBtn=""; };
 	//add vars to template, print site
 	$pageHeading = $pageTitle;
 	eval("echo \"".$tpl->getTemplate("Account/PlannedTransaction")."\";");
@@ -314,6 +332,23 @@ function updateRecord($accountID, $ID, $transactionType) {
 	//REDIRECT
 	header("Location: $redirectPageAfterSave");
 
+}
+function getAccountsSelectArray() {
+	global $badgerDb;
+	$am = new AccountManager($badgerDb);
+	$order = array ( 
+	array(
+       'key' => 'title',
+       'dir' => 'asc'
+       )
+ 	);
+	$am->setOrder($order);
+
+	$Accounts = array();
+	while ($account = $am->getNextAccount()) { 
+		$Accounts[$account->getId()] = $account->getTitle();
+	};
+	return $Accounts;
 }
 
 function getCategorySelectArray() {
