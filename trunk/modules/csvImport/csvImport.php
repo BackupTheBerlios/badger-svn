@@ -32,10 +32,10 @@ $am = new AccountManager($badgerDb);
 if (!isset($_POST['btnSubmit'])){
 	if (!isset($_POST['Upload'])){	
 		
-		$fileLabel =  $widgets->createLabel("file", getBadgerTranslation2("importCsv", "selectFile").":", true);
+		$fileLabel =  $widgets->createLabel("", getBadgerTranslation2("importCsv", "selectFile").":", true);
 		# widget for browse field has to be developed
 		//$fileField = $widgets->createField("file", 50, "", "description", true);
-		$fileField = "<input name=\"file\" type=\"file\" size=\"50\" />";
+		$fileField = "<input name=\"file\" type=\"file\" size=\"50\" required = \"1\" />";
 		
 		$selectParserLabel =  $widgets->createLabel("parserSelect", getBadgerTranslation2("importCsv", "selectParser").":", true);
     		//sql to get CSV Parsers
@@ -67,6 +67,10 @@ if (isset($_POST['Upload'])){
 	// for every file
 	foreach($_FILES as $file_name => $file_array) {
 		//if a file is chosen
+		if (isset($_POST["file"])){
+		 	echo $noFileSelected = "dummerspast";
+		 	#eval("echo \"".$tpl->getTemplate("CsvImport/csvImportWarning")."\";");
+		}
 		if (is_uploaded_file($file_array['tmp_name'])) {
 			//open file
 			$fp = fopen($file_array['tmp_name'], "r");
