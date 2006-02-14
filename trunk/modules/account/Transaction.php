@@ -102,7 +102,7 @@ function printFrontendFinished($AccountID, $ID) {
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
 		$outsideCapitalValue = ($transaction->getOutsideCapital()==true) ? 'checked' : '';
 		$transactionPartnerValue = $transaction->getTransactionPartner();
-		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp;
+		$categoryValue = is_null($tmp = $transaction->getCategory()) ? 'NULL' : $tmp->getId();
 		$exceptionalValue = ($transaction->getExceptional()==true) ? 'checked' : '';
 		$periodicalValue = ($transaction->getPeriodical()==true) ? 'checked' : '';
 	} else {
@@ -179,7 +179,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
 		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp->getFormatted();
 		$transactionPartnerValue = $transaction->getTransactionPartner();
-		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp;
+		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp->getId();
 		$repeatUnitValue = $transaction->getRepeatUnit();
     	$repeatFrequencyValue = $transaction->getRepeatFrequency();
 	} else {
