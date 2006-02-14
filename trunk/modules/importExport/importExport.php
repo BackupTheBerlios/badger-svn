@@ -97,6 +97,7 @@ function printAskInsert() {
 	$tpl->addJavaScript("js/acceptTerms.js");
 	$widgets->addNavigationHead();
 
+	$legend = getBadgerTranslation2('importExport','legend');
 	$askInsertTitle = getBadgerTranslation2('importExport', 'askInsertTitle');
 	echo $tpl->getHeader($askInsertTitle);
 
