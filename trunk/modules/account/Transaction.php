@@ -44,11 +44,15 @@ if (isset($_GET['action'])) {
 			break;
 		case 'save':
 			//add record, update record
-			$accountID = $_GET['accountID'];
+			if(isset($_POST['hiddenAccID'])) {
+				$accountID = $_POST['hiddenAccID'];
+			} else {
+				$accountID = $_GET['accountID'];;	
+			}
 			$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
 			
 			if (isset($_POST['hiddenID'])) {
-				updateRecord($_GET['accountID'], $_POST['hiddenID'], $_POST['hiddenType']);
+				updateRecord($accountID, $_POST['hiddenID'], $_POST['hiddenType']);
 			} else {
 				header("Location: $redirectPageAfterSave");
 			}
@@ -60,7 +64,11 @@ if (isset($_GET['action'])) {
 				$accountID = $_GET['accountID'];
 				$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
 			} else {
-				$accountID = "choose";
+				if(isset($_POST['hiddenAccID'])) {
+					$accountID = $_POST['hiddenAccID'];
+				} else {
+					$accountID = "choose";	
+				}
 			}
 			
 			if (isset($_GET['ID'])) {
