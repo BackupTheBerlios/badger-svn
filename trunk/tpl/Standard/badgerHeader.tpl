@@ -11,9 +11,8 @@ $JSOnLoadEvents
 <body style="background-image: url('{BADGER_ROOT}/tpl/Standard/back_verlauf_kreis.jpg');background-attachment: fixed;background-repeat: no-repeat;">
 <div id="header" valign="top">
 	<table cellpadding="0" cellspacing="0"><tr>
-		<!--<td><img src="{BADGER_ROOT}/tpl/Standard/badger-logo.gif" /></td>
-		<td>&nbsp;&nbsp;&nbsp;</td>-->
-		<td><a href="{BADGER_ROOT}/modules/welcome.php"><img src="{BADGER_ROOT}/tpl/Standard/banner.png" border=0/></a></td>
+		<td><a href="{BADGER_ROOT}/modules/welcome.php"><img src="{BADGER_ROOT}/tpl/Standard/banner_badger.png" border=0/></a></td>
+		<td><img src="{BADGER_ROOT}/tpl/Standard/banner_empty.png" /></td>
 	</tr></table>
 </div>
 <div id="staticMenuBar"></div>
