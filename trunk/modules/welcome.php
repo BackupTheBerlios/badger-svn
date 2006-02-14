@@ -22,10 +22,10 @@ echo $tpl->getHeader("Badger");
 echo $widgets->getNavigationBody();
 
 $Modul1 = "<a href='".BADGER_ROOT."/modules/statistics/statistics.php'>Statistiken</a>";
-$Modul2 = "<a href='".BADGER_ROOT."modules/importExport/importExport.php?mode=export'>Backup</a>";
-$Modul3 = "";
-$Modul4 = "";
-$Modul5 = "";
+$Modul2 = "<a href='".BADGER_ROOT."/modules/account/AccountManagerOverview.php'>Kontenübersicht</a>";
+$Modul3 = "<a href='".BADGER_ROOT."/modules/importExport/importExport.php?mode=export'>Backup</a>";
+$Modul4 = "<a href='".BADGER_ROOT."/core/UserSettingsAdmin/UserSettingsAdmin.php'>Benutzereinstellungen</a>";
+$Modul5 = "<a href='".BADGER_ROOT."/modules/account/CategoryManagerOverview.php'>Kategorienübersicht</a>";
 eval("echo \"".$tpl->getTemplate("badgerOverview")."\";");
 
 
