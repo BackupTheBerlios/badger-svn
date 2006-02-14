@@ -16,6 +16,7 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 
 $pageHeading = getBadgerTranslation2('csv', 'title');
+$legend = getBadgerTranslation2('csv','legend');
 
 //include widget functionalaty
 $widgets = new WidgetEngine($tpl); 
