@@ -1,4 +1,6 @@
 <h1>$askExportTitle</h1>
-<p>$askExportText</p>
-<p>$askExportButton</p>
-
+<fieldset>
+	<legend>$legend</legend>
+		<p>$askExportText</p>
+		<p>$askExportButton</p>
+</fieldset>
