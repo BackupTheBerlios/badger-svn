@@ -2,6 +2,9 @@ $noFutureDates
 $noLowerLimit
 $noUpperLimit
 $noGraphChosen
+
+<h1>$pageHeading</h1>
+
 <div class="flashContainer">
 $insertChart
 </div>
