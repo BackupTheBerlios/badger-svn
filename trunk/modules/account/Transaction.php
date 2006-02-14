@@ -44,6 +44,9 @@ if (isset($_GET['action'])) {
 			break;
 		case 'save':
 			//add record, update record
+			$accountID = $_GET['accountID'];
+			$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
+			
 			if (isset($_POST['hiddenID'])) {
 				updateRecord($_GET['accountID'], $_POST['hiddenID'], $_POST['hiddenType']);
 			} else {
