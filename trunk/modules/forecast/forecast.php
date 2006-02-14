@@ -44,6 +44,11 @@ if (!isset($_POST['sendData'])){
 			    	while ($currentAccount = $am->getNextAccount()) {
 			    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
 		}
+	//
+	$startSpendingDate = new date ("2005-12-12");
+	$spendingMoney = getSpendingMoney(1, $startSpendingDate);	
+	echo $spendingMoney->get();
+		
 	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);
 	$accountField = $widgets->createSelectField("selectedAccount", $account, "", getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
 	//field to select saving target, default is 0

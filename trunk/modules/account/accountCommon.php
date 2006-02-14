@@ -95,24 +95,30 @@ function getSpendingMoney($accountId, $startDate) {
 		),
 		array (
 			'key' => 'periodical',
-			'op' => 'ne',
+			'op' => 'eq',
 			'val' => false
 		),
 		array (
 			'key' => 'exceptional',
-			'op' => 'ne',
+			'op' => 'eq',
 			'val' => false
 		)
 	));
 	
-	$count = 0;
 	$sum = new Amount();
+	$realStartDate = false;
 	
 	while ($currentTransaction = $account->getNextFinishedTransaction()) {
+		if (!$realStartDate) {
+			$realStartDate = $currentTransaction->getValutaDate();
+		}
+
 		$sum->add($currentTransaction->getAmount());
-		$count++;
 	}
 	
+	$span = new Date_Span($realStartDate, new Date());
+	$count = $span->toDays();
+
 	if ($count > 0) {
 		$sum->div($count);
 	}

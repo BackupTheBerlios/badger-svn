@@ -1469,8 +1469,8 @@ class Account extends DataGridHandler {
 		}
 		
 		//echo "<pre>$sql</pre>";
-		//global $logger;
-		//$logger->log('Account Finished SQL: ' . $sql);
+		global $logger;
+		$logger->log('Account Finished SQL: ' . $sql);
 
 		$this->dbResultFinished =& $this->badgerDb->query($sql);
 		

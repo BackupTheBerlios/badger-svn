@@ -330,7 +330,7 @@ abstract class DataGridHandler {
 			
 			case 'boolean':
 			case 'bool':
-				return ($val ? 'true' : 'false');
+				return ($val ? 1 : 0);
 
 			case 'string':
 				return "'" . addslashes($val) . "'";
