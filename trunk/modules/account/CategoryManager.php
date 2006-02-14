@@ -70,11 +70,17 @@ function printFrontend() {
 		$category = $cm->getCategoryById($ID);
 		$titleValue = $category->getTitle();
 		$descriptionValue = $category->getDescription();
-		$outsideCapitalValue = $category->getOutsideCapital();
+		if($category->getOutsideCapital() == "1"){
+			$outsideCapitalValue = "checked";
+		}else{
+			$outsideCapitalValue = "";
+		};
 		if($category->getParent()) {
 			$parentValue = $category->getParent()->getTitle();
+			$parentId = $category->getParent()->getId();
 		} else {
 			$parentValue = "";
+			$parentId = "";
 		}
 	} else {
 		//new: empty values
@@ -83,10 +89,12 @@ function printFrontend() {
 		$descriptionValue = "";
 		$outsideCapitalValue = "";
 		$parentValue = "";
+		$parentId = "";
 	}
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
+	$pageHeading = $pageTitle;
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountCategory', 'title'), true);
 	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
@@ -96,14 +104,20 @@ function printFrontend() {
 	
 	$parentCats = array(""=>getBadgerTranslation2('CategoryManager','no_parent'));
 	while ($cat = $cm->getNextCategory()) {
-		if($cat->getParent() == null){
+		$cat->getParent();
+	}
+	$cm->resetCategories();
+	while ($cat = $cm->getNextCategory()) {
+		//echo "<pre>"; print_r($cm); echo "</pre>";
+		//print("<br/>" . $cat->getTitle() . "<br/>");
+		if(is_null($cat->getParent())){
 			$parentCats[$cat->getId()] = $cat->getTitle();
 		};
 	};
-	$parentField = $widgets->createSelectField("parent", $parentCats, $default="");
+	$parentField = $widgets->createSelectField("parent", $parentCats, $default=$parentId);
 	
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountCategory', 'outsideCapital'), false);
-	$outsideCapitalField = $widgets->createField("outsideCapital", 30, $outsideCapitalValue, "", false, "text", "");
+	$outsideCapitalField = $widgets->createField("outsideCapital", 30,"on", "", false, "checkbox", $outsideCapitalValue);
 	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
@@ -122,6 +136,15 @@ function updateRecord() {
 	case 'new':
 		//add new record
 		//check if $_POST['symbol'], $_POST['longName'] is set?????
+		
+		
+		
+		if(isset($_POST['outsideCapital']) && $_POST['outsideCapital'] == "on"){
+			$_POST['outsideCapital'] = 1;
+		}else{
+			$_POST['outsideCapital'] = 0;
+		};
+
 		$Cat = $cm->addCategory($_POST['title'], $_POST['description'], $_POST['outsideCapital']);
 		if(isset($_POST['parent']) && $_POST['parent'] != ""){
 			$Cat->setParent($cm->getCategoryById($_POST['parent']));
@@ -129,10 +152,23 @@ function updateRecord() {
 		break;
 	default:
 		//update record
-		//$currency = $cm->getCurrencyById($_POST['hiddenID']);
-		//$currency->setSymbol($_POST['symbol']);
-		//$currency->setLongName($_POST['longname']);
-		//$ID = $currency->getId();
+		$Cat = $cm->getCategoryById($_POST['hiddenID']);
+		$Cat->setTitle($_POST['title']);
+		$Cat->setDescription($_POST['description']);
+		
+		if(isset($_POST['outsideCapital']) && $_POST['outsideCapital'] == "on"){
+			$_POST['outsideCapital'] = 1;
+		}else{
+			$_POST['outsideCapital'] = 0;
+		};
+		$Cat->setOutsideCapital($_POST['outsideCapital']);
+		
+		if(isset($_POST['parent']) && $_POST['parent'] != ""){
+			$Cat->setParent($cm->getCategoryById($_POST['parent']));
+		};//elseif(isset($_POST['parent']) && $_POST['parent'] == ""){
+			//$Cat->setParent(null);
+		//};
+		
 	}
 	//REDIRECT
 	header("Location: $redirectPageAfterSave");
