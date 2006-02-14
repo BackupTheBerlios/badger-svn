@@ -28,12 +28,12 @@ if (isset($_GET['accountID'])) {
 }
 
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID";
-$dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colTitle'), getBadgerTranslation2('accountOverview', 'colType'),getBadgerTranslation2('accountOverview', 'colDescription'),getBadgerTranslation2('accountOverview', 'colValutaDate'),getBadgerTranslation2('accountOverview', 'colAmount'),getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
-$dataGrid->columnOrder = array("title","type","description","valutaDate","amount","categoryTitle");  
+$dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colTitle'), getBadgerTranslation2('accountOverview', 'colType'),getBadgerTranslation2('accountOverview', 'colValutaDate'),getBadgerTranslation2('accountOverview', 'colAmount'),getBadgerTranslation2('accountOverview', 'colSum'),getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
+$dataGrid->columnOrder = array("title","type","valutaDate","amount","sum","categoryTitle");  
 $dataGrid->initialSort = "title";
 $dataGrid->height = "350px";
-$dataGrid->headerSize = array(200,190,170,85,100,200);
-$dataGrid->cellAlign = array("left","left","left","left","right","left");
+$dataGrid->headerSize = array(200,190,80,120,120,200);
+$dataGrid->cellAlign = array("left","left","left","right","right","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "Transaction.php?action=delete&accountID=$accountID&ID=";
