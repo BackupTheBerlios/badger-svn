@@ -24,15 +24,20 @@
 
 <h2>$developerTeam</h2>
 <ul>
-	<li>Andreas Grimm</li>
-	<li>Clemens Volz</li>
-	<li>Holger Heinze</li>
 	<li>Michael Eberhardt</li>
-	<li>Niko Stotz</li>
-	<li>Philipp Hitschler</li>
 	<li>Sebastian Eggers</li>
-	<li>Sebastian Thoene</li>
+	<li>Andreas Grimm</li>
 	<li>Tom Grossestreuer</li>
+	<li>Holger Heinze</li>
+	<li>Philipp Hitschler</li>
+	<li>Sebastian Thoene</li>
+	<li>Niko Stotz</li>	
+	<li>Clemens Volz</li>
+</ul>
+
+<h2>$contributes</h2>
+<ul>
+	<li>Norman Pausch</li>
 </ul>
 
 <h2>$usedComponents</h2>
