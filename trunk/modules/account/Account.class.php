@@ -45,7 +45,8 @@ class Account extends DataGridHandler {
 			'outsideCapital',
 			'transactionPartner',
 			'categoryId',
-			'categoryTitle'
+			'categoryTitle',
+			'sum'
 		),
 		'planned' => array (
 			'plannedTransactionId',
@@ -375,7 +376,8 @@ class Account extends DataGridHandler {
 			'repeatUnit' => 'string',
 			'repeatFrequency' => 'integer',
 			'exceptional' => 'boolean',
-			'periodical' => 'boolean'
+			'periodical' => 'boolean',
+			'sum' => 'amount'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -413,7 +415,8 @@ class Account extends DataGridHandler {
 				'outsideCapital' => Account::TABLE_PLACEHOLDER . '.outside_capital',
 				'transactionPartner' => Account::TABLE_PLACEHOLDER . '.transaction_parter',
 				'categoryId' => Account::TABLE_PLACEHOLDER . '.category_id',
-				'categoryTitle' => 'c.title'
+				'categoryTitle' => 'c.title',
+				'sum' => Account::TABLE_PLACEHOLDER . '.__SUM__'
 			),
 			'planned' => array (
 				'plannedTransactionId' => 'pt.planned_transaction_id',
@@ -473,8 +476,12 @@ class Account extends DataGridHandler {
 		switch ($this->type) {
 			case 'transaction':
 				$this->fetchTransactions();
+
+				$sum = new Amount();
 		
 				foreach($this->finishedTransactions as $currentTransaction){
+					$sum->add($currentTransaction->getAmount());
+					
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
 						'type' => getBadgerTranslation2('Account', $currentTransaction->getType()), 
@@ -485,7 +492,8 @@ class Account extends DataGridHandler {
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
-						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : ''
+						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : '',
+						'sum' => $sum->getFormatted()
 					);
 				}
 				break;
@@ -1448,12 +1456,14 @@ class Account extends DataGridHandler {
 			WHERE account_id = " .  $this->id . "\n";
 		
 		$where = $this->getFilterSQL();
+		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
 		if($where) {
 			$sql .= " AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
+		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__ (asc|desc),*/', '', $order);
 		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order));
 
 		if (substr($order, -1, 1) === ',') {
@@ -1508,6 +1518,7 @@ class Account extends DataGridHandler {
 		$where = $this->getFilterSQL();
 		//echo $where = $where . "\n" . $where;
 		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
+		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
 		//echo $where;
 		if($where) {
@@ -1516,6 +1527,7 @@ class Account extends DataGridHandler {
 		
 		$order = $this->getOrderSQL();				
 		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order);
+		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__ (asc|desc),*/', '', $order);
 		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),*/', '', $order));
 		//global $logger;
 		
@@ -1670,6 +1682,10 @@ class Account extends DataGridHandler {
 				
 				case 'repeatFrequency':
 					$tmp = $a->getRepeatFrequency() - $b->getRepeatFrequency();
+					break;
+				
+				case 'sum':
+					$tmp = 0;
 					break;
 			}
 			
