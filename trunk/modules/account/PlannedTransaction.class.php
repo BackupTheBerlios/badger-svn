@@ -157,9 +157,7 @@ class PlannedTransaction {
     		$this->title = $data['title'];
     		$this->description = $data['description'];
     		$this->amount = new Amount($data['amount']);
-    		if (is_bool($data['outside_capital'])) {
-	    		$this->outsideCapital = $data['outside_capital'];
-    		}
+    		$this->outsideCapital = $data['outside_capital'];
     		$this->transactionPartner =  $data['transaction_partner'];
     		if ($data['category_id']) {
     			$this->category = $CategoryManager->getCategoryById($data['category_id']);
@@ -414,9 +412,15 @@ class PlannedTransaction {
  	public function setCategory($category) {
 		$this->category = $category;
 		
-		$sql = "UPDATE planned_transaction
-			SET category_id = " . $category->getId() . "
-			WHERE planned_transaction_id = " . $this->id;
+		if (is_null($category)) {
+			$catId = 'NULL';
+		} else {
+			$catId = $category->getId();
+		}
+		
+		$sql = "UPDATE finished_transaction
+			SET category_id = $catId
+			WHERE finished_transaction_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);
 		

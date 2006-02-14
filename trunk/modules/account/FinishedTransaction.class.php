@@ -162,9 +162,7 @@ class FinishedTransaction {
 			$this->title = $data['title'];
 			$this->description = $data['description'];
 			$this->amount = new Amount($data['amount']);
-			if (is_bool($data['outside_capital'])) {
-				$this->outsideCapital = $data['outside_capital'];
-			}
+			$this->outsideCapital = $data['outside_capital'];
 			$this->transactionPartner =  $data['transaction_partner'];
 			if ($data['category_id']) {
 				$cm = new CategoryManager($badgerDb);
@@ -173,12 +171,8 @@ class FinishedTransaction {
 			if ($data['valuta_date']) {
 				$this->valutaDate = new Date($data['valuta_date']);
 			}
-			if (is_bool($data['exceptional'])) {
-				$this->exceptional = $data['exceptional'];
-			}
-			if (is_bool($data['periodical'])) {
-				$this->periodical = $data['periodical'];
-			}
+			$this->exceptional = $data['exceptional'];
+			$this->periodical = $data['periodical'];
 			if ($data['planned_transaction_id']) {
 				$this->sourcePlannedTransaction = $account->getPlannedTransactionById($data['planned_transaction_id']);
 			}
@@ -399,8 +393,14 @@ class FinishedTransaction {
 	public function setCategory($category) {
 		$this->category = $category;
 		
+		if (is_null($category)) {
+			$catId = 'NULL';
+		} else {
+			$catId = $category->getId();
+		}
+		
 		$sql = "UPDATE finished_transaction
-			SET category_id = " . $category->getId() . "
+			SET category_id = $catId
 			WHERE finished_transaction_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);

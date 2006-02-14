@@ -231,11 +231,18 @@ class Category {
 	 */
  	public function setParent($parent) {
 		$this->parent = $parent;
-		$parent->addChild($this);
 		
-		$sql = "UPDATE category
-			SET parent_id = " . $parent->getId() . "
-			WHERE category_id = " . $this->id;
+		if (!is_null($parent)) {
+			$parent->addChild($this);
+			
+			$sql = "UPDATE category
+				SET parent_id = " . $parent->getId() . "
+				WHERE category_id = " . $this->id;
+		} else {
+			$sql = "UPDATE category
+				SET parent_id = NULL
+				WHERE category_id = " . $this->id;
+		}
 	
 		$dbResult =& $this->badgerDb->query($sql);
 		//echo $sql;
