@@ -19,6 +19,15 @@ $pageTitle = getBadgerTranslation2 ('accountCategory','pageTitle');
 
 $cm = new CategoryManager($badgerDb);
 
+$order = array (
+	array(
+		'key' => 'title',
+		'dir' => 'asc'
+		)
+);
+	
+$cm->setOrder($order);
+
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
 		case 'delete':
@@ -106,10 +115,10 @@ function printFrontend() {
 	while ($cat = $cm->getNextCategory()) {
 		$cat->getParent();
 	}
+	
 	$cm->resetCategories();
+	
 	while ($cat = $cm->getNextCategory()) {
-		//echo "<pre>"; print_r($cm); echo "</pre>";
-		//print("<br/>" . $cat->getTitle() . "<br/>");
 		if(is_null($cat->getParent())){
 			$parentCats[$cat->getId()] = $cat->getTitle();
 		};
