@@ -180,7 +180,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		$beginDateValue = is_null($tmp = $transaction->getBeginDate()) ? '' : $tmp->getFormatted();
 		$endDateValue = is_null($tmp = $transaction->getEndDate()) ? '' : $tmp->getFormatted();
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
-		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp->getFormatted();
+		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp;
 		$transactionPartnerValue = $transaction->getTransactionPartner();
 		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp->getId();
 		$repeatUnitValue = $transaction->getRepeatUnit();
