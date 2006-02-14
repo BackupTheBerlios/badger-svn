@@ -161,6 +161,7 @@ function printFrontendPlanned($AccountID, $ID) {
 	global $redirectPageAfterSave;
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
+	$widgets->addCalendarJS();
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
@@ -207,9 +208,11 @@ function printFrontendPlanned($AccountID, $ID) {
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
 	$beginDateLabel = $widgets->createLabel("beginDate", getBadgerTranslation2('accountTransaction', 'beginDate'), true);
-	$beginDateField = $widgets->createField("beginDate", 30, $beginDateValue, "", true, "text", "");
+	$beginDateField = $widgets->addDateField("beginDate", $beginDateValue);
+	//$beginDateField = $widgets->createField("beginDate", 30, $beginDateValue, "", true, "text", "");
 	$endDateLabel = $widgets->createLabel("endDate", getBadgerTranslation2('accountTransaction', 'endDate'), true);
-	$endDateField = $widgets->createField("endDate", 30, $endDateValue, "", true, "text", "");
+	$endDateField = $widgets->addDateField("endDate", $endDateValue);
+	//$endDateField = $widgets->createField("endDate", 30, $endDateValue, "", true, "text", "");
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
 	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), true);
@@ -260,7 +263,7 @@ function updateRecord($accountID, $ID, $transactionType) {
 					$_POST['description'], // = null,
 					$_POST['transactionPartner'], // = null,
 					$category, // = null,
-					($_POST['outsideCapital']=="on")?true:false); // = null
+					(isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false); // = null
 			break;
 		case 'finished':
 			$ID = $account->addFinishedTransaction(
@@ -270,9 +273,9 @@ function updateRecord($accountID, $ID, $transactionType) {
 				new Date($_POST['valutaDate'], true), // = null,
 				$_POST['transactionPartner'], // = null,
 				$category, // = null,
-				($_POST['outsideCapital']=="on")?true:false, // = null
-				($_POST['exceptional']=="on")?true:false, // = null,
-				($_POST['periodical']=="on")?true:false); //= null 
+				(isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false, // = null
+				(isset($_POST['exceptional']) && $_POST['exceptional']=="on")?true:false, // = null,
+				(isset($_POST['periodical']) && $_POST['periodical']=="on")?true:false); //= null 
 			break;
 		}
 		break;
@@ -300,12 +303,11 @@ function updateRecord($accountID, $ID, $transactionType) {
 			$transaction->setAmount(new Amount($_POST['amount'], true));
 			$transaction->setOutsideCapital((isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false);
 			$transaction->setTransactionPartner($_POST['transactionPartner']);
-			$transaction->setCategory($category); // ID
+			$transaction->setCategory($category);
 			$transaction->setExceptional((isset($_POST['exceptional']) && $_POST['exceptional']=="on")?true:false ); //checkbox
 			$transaction->setPeriodical((isset($_POST['periodical']) && $_POST['periodical']=="on")?true:false ); //checkbox
 			break;
 		}
-
 	}
 	//REDIRECT
 	header("Location: $redirectPageAfterSave");
