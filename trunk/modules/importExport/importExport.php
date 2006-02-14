@@ -51,6 +51,8 @@ function printAskExport() {
 	$widgets = new WidgetEngine($tpl); 
 	
 	$widgets->addNavigationHead();
+	
+	$legend = getBadgerTranslation2('askExport','legend');
 	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
 	echo $tpl->getHeader($askTitle);
 	
@@ -97,7 +99,7 @@ function printAskInsert() {
 	$tpl->addJavaScript("js/acceptTerms.js");
 	$widgets->addNavigationHead();
 
-	$legend = getBadgerTranslation2('importExport','legend');
+	$legend = getBadgerTranslation2('askInsert','legend');
 	$askInsertTitle = getBadgerTranslation2('importExport', 'askInsertTitle');
 	echo $tpl->getHeader($askInsertTitle);
 
