@@ -21,8 +21,8 @@ $widgets->addNavigationHead();
 echo $tpl->getHeader("Badger");
 echo $widgets->getNavigationBody();
 
-$Modul1 = "<b>Badger Root: ". BADGER_ROOT ."</b>";
-$Modul2 = "";
+$Modul1 = "<a href='".BADGER_ROOT."/modules/statistics/statistics.php'>Statistiken</a>";
+$Modul2 = "<a href='".BADGER_ROOT."modules/importExport/importExport.php?mode=export'>Backup</a>";
 $Modul3 = "";
 $Modul4 = "";
 $Modul5 = "";
