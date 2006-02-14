@@ -78,6 +78,7 @@ function printFrontend() {
 	}
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
+	$legend = getBadgerTranslation2('accountCurrency', 'legend');
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$pageHeading = $pageTitle;
 	//Fields & Labels
