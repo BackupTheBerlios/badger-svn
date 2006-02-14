@@ -130,14 +130,21 @@ function updateRecord() {
 		switch ($_POST['hiddenID']) {
 		case 'new':
 			//add new record
-			//check if $_POST['symbol'], $_POST['longName'] is set?????
-			//$ID = $am->addCurrency($_POST['symbol'], $_POST['longname']);
+			$ID = $am->addAccount(
+				$_POST['title'],
+				$_POST['currency'],
+				$_POST['description'],
+				$_POST['lowerLimit'],
+				$_POST['upperLimit']);
 			break;
 		default:
 			//update record
-			//$account = $am->getCurrencyById($_POST['hiddenID']);
-			//$account->setSymbol($_POST['symbol']);
-			//$account->setLongName($_POST['longname']);
+			$account = $am->getAccountById($_POST['hiddenID']);
+			$account->setTitle($_POST['title']);
+			//$account->setCurrency($_POST['currency']);
+			$account->setCurrency($_POST['currency']);
+			$account->setLowerLimit(new Amount($_POST['lowerLimit']));
+			$account->setUpperLimit(new Amount($_POST['upperLimit']));
 		}
 		//REDIRECT
 		header("Location: $redirectPageAfterSave");
