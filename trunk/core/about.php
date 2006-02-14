@@ -32,6 +32,7 @@ $releasedUnder = getBadgerTranslation2('about', 'published');
 $copyrightBy = getBadgerTranslation2('about', 'members');
 $developerTeam = getBadgerTranslation2('about', 'team');
 $usedComponents = getBadgerTranslation2('about', 'programms');
+$contributes = getBadgerTranslation2('about','contributes');
 $by = getBadgerTranslation2('about', 'by');
 
 $pageHeading = $pageHeading;
