@@ -334,3 +334,12 @@ function getCategorySelectArray() {
 	};
 	return $parentCats;
 }
+
+function getIntervalUnitsArray(){
+	$units = array(
+		'day'	=> getBadgerTranslation2('intervalUnits','day'), 
+		'week'	=> getBadgerTranslation2('intervalUnits','week'),
+		'month'	=> getBadgerTranslation2('intervalUnits','month'),
+		'year'	=> getBadgerTranslation2('intervalUnits','year')
+	);
+};
