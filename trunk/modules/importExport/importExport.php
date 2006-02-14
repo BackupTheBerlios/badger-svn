@@ -97,6 +97,7 @@ function printAskInsert() {
 	$widgets = new WidgetEngine($tpl); 
 	
 	$tpl->addJavaScript("js/acceptTerms.js");
+	$tpl->addJavaScript("js/prototype.js");
 	$widgets->addNavigationHead();
 
 	$legend = getBadgerTranslation2('askInsert','legend');
@@ -121,7 +122,7 @@ function printAskInsert() {
 	$askImportCurrentVersionInfo = getBadgerTranslation2('importExport', 'askImportCurrentVersionInfo');
 	$versionInfo = BADGER_VERSION;
 
-	$confirmUploadField = $widgets->createField('confirmUpload', null, 'yes', null, false, 'checkbox', 'onClick="agreesubmit(this)"');
+	$confirmUploadField = $widgets->createField('confirmUpload', null, 'yes', null, false, 'checkbox', 'onClick="agreesubmit()"');
 
 	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif", 'disabled="disabled"');	
 
