@@ -72,6 +72,7 @@ function parseToArray($fp, $accountId){
 						$transactionPartner = $transactionArray[4];
 					}				
 					//format amount to usersettings
+					$transactionArray[6] = str_replace(".","", $transactionArray[6]);
 					$transactionArray[6] = str_replace(",",".",$transactionArray[6]);
 					$amount1 = new Amount($transactionArray[6]);
 					/**
