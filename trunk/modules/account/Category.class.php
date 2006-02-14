@@ -274,7 +274,7 @@ class Category {
 			$row = false;
 			
 			while($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
-				$children[$row['category_id']] = $this->categoryManager->getCategoryByid($row['category_id']);
+				$this->children[$row['category_id']] = $this->categoryManager->getCategoryByid($row['category_id']);
 			}
 		}
 
