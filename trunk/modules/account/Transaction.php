@@ -85,6 +85,7 @@ function printFrontendFinished($AccountID, $ID) {
 	global $redirectPageAfterSave;
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
+	$widgets->addCalendarJS();
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
@@ -130,7 +131,8 @@ function printFrontendFinished($AccountID, $ID) {
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
 	$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), true);
-	$valutaDateField = $widgets->createField("valutaDate", 30, $valutaDateValue, "", true, "text", "");
+	$valutaDateField = $widgets->addDateField("valutaDate", $valutaDateValue);
+	//$valutaDateField = $widgets->createField("valutaDate", 30, $valutaDateValue, "", true, "text", "");
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
 	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), true);
@@ -139,7 +141,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", true, "checkbox", $outsideCapitalValue);
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true);
 	//$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false);
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 210px;'");
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), true);
 	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", true, "checkbox", $exceptionalValue);
 	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), true);
