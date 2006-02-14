@@ -51,12 +51,7 @@ if (isset ($_POST['writePocketMoney'])){
 			    	while ($currentAccount = $am->getNextAccount()) {
 			    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
 		}
-	//
 	
-	#$calculatedPocketMoney = $spendingMoney->getFormatted();
-	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "submit", "Widgets/accept.gif");
-	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "$('pocketmoney1').value='$calculatedPocketMoney'", "Widgets/accept.gif");
-		
 	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);
 	$accountField = $widgets->createSelectField("selectedAccount", $account, $_POST["selectedAccount"], getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
 	//field to select saving target, default is 0
@@ -67,7 +62,7 @@ if (isset ($_POST['writePocketMoney'])){
 	
 	$startSpendingDate = new Date ($_POST["startDate"], true);
 	$spendingMoney = getSpendingMoney(1, $startSpendingDate);
-	
+	$spendingMoney->mul(-1);
 	$calculatedPocketMoney = $spendingMoney->getFormatted();
 	$pocketMoney1Field = $widgets->createField("pocketmoney1", 5, $_POST["pocketmoney1"], getBadgerTranslation2("forecast", "pocketMoney1ToolTip"), true, "text", 'style="width: 10em;"');
 	//field to insert pocketmoney2
