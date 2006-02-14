@@ -127,8 +127,8 @@ function printFrontendFinished($AccountID, $ID) {
 	$FormAction = $_SERVER['PHP_SELF'];
 	$transactionType = "finished";
 	if($AccountID=="choose") {
-		$AccountLabel = "";
-		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 210px;'");
+		$AccountLabel = getBadgerTranslation2('accountTransaction', 'Account');
+		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 213px;'");
 	} else {
 		$AccountLabel = "";
 		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
@@ -149,9 +149,9 @@ function printFrontendFinished($AccountID, $ID) {
 	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", true, "text", "");
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), true);
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", true, "checkbox", $outsideCapitalValue);
-	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true);
+	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true, "style='width: 213px;'");
 	//$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 210px;'");
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), true);
 	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", true, "checkbox", $exceptionalValue);
 	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), true);
@@ -163,7 +163,7 @@ function printFrontendFinished($AccountID, $ID) {
 		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
 	} else { $backBtn=""; };
 	//add vars to template, print site
-	$pageHeading = $pageTitle;
+	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingAddTransactionFinished');
 	eval("echo \"".$tpl->getTemplate("Account/FinishedTransaction")."\";");
 }
 
@@ -214,7 +214,7 @@ function printFrontendPlanned($AccountID, $ID) {
 	$FormAction = $_SERVER['PHP_SELF'];
 	if($AccountID=="choose") {
 		$AccountLabel = "";
-		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 210px;'");
+		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 213px;'");
 	} else {
 		$AccountLabel = "";
 		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
@@ -241,9 +241,10 @@ function printFrontendPlanned($AccountID, $ID) {
 	
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true);
 	//$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false);
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
 	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatUnit'), true);
-	$repeatUnitField = $widgets->createField("repeatUnit", 30, $repeatUnitValue, "", true, "text", "");
+	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", false, "style='width: 213px;'");
+	//$repeatUnitField = $widgets->createField("repeatUnit", 30, $repeatUnitValue, "", true, "text", "");
 	$repeatFrequencyLabel = $widgets->createLabel("repeatFrequency", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
 	$repeatFrequencyField = $widgets->createField("repeatFrequency", 30, $repeatFrequencyValue, "", true, "text", "");
 	
@@ -253,7 +254,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
 	} else { $backBtn=""; };
 	//add vars to template, print site
-	$pageHeading = $pageTitle;
+	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingAddTransactionPlanned');
 	eval("echo \"".$tpl->getTemplate("Account/PlannedTransaction")."\";");
 }
 
@@ -377,4 +378,5 @@ function getIntervalUnitsArray(){
 		'month'	=> getBadgerTranslation2('intervalUnits','month'),
 		'year'	=> getBadgerTranslation2('intervalUnits','year')
 	);
+	return $units;
 };
