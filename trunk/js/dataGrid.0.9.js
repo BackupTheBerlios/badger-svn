@@ -32,24 +32,20 @@ function dgInit(originalRequest) {
 	//create new table body
 	dgTableDataBody = document.createElement("tbody");
 	dgData = $("dgTableData").appendChild(dgTableDataBody);
-	
+
 	var columns = new Array();
 	for (j=0; j<xmlColumns.length; j++) {
-		if(xmlColumns[j].textContent) {
-			columnName = xmlColumns[j].textContent; //FF
-		} else {
-			columnName = xmlColumns[j].text; //IE
-		};
+		if(xmlColumns[j].textContent) columnName = xmlColumns[j].textContent; //FF
+		if(xmlColumns[j].text) columnName = xmlColumns[j].text; //IE
+		if(xmlColumns[j].innerText) columnName = xmlColumns[j].innerText; //Opera
 		columns[columnName] = j; 
-	}	
+	}
 	
 	for (j=0; j<xmlRows.length; j++) {
 		xmlCells = xmlRows[j].getElementsByTagName("cell");
-		if(xmlCells[0].textContent) {
-			rowID = xmlCells[0].textContent; //FF
-		} else {
-			rowID = xmlCells[0].text; //IE
-		}
+		if(xmlCells[0].textContent) rowID = xmlCells[0].textContent; //FF
+		if(xmlCells[0].text) rowID = xmlCells[0].text; //IE
+		if(xmlCells[0].innerText) rowID = xmlCells[0].innerText; //Opera
 		
 		newRow = document.createElement("tr");
 		newRow.className = "dgRow";
@@ -75,11 +71,9 @@ function dgInit(originalRequest) {
 			cell.style.width = dgHeaderSize[i] + "px";
 			cell.align = dgCellAlign[i];
 			xmlElement = xmlCells[columns[dgColumnOrder[i]]];
-			if (xmlElement.textContent) {
-				cell.innerHTML = xmlElement.textContent + "&nbsp;"; // FF
-			} else {
-				cell.innerHTML = xmlElement.text + "&nbsp;"; //IE
-			}
+			if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent + "&nbsp;"; // FF
+			if (xmlElement.text) cell.innerHTML = xmlElement.text + "&nbsp;"; //IE
+			if (xmlElement.innerText) cell.innerHTML = xmlElement.innerText + "&nbsp;"; //Opera
 			newRow.appendChild(cell);
 		}		
 		//insert empty cell as last one (only display purposes)
@@ -91,7 +85,7 @@ function dgInit(originalRequest) {
 	//refresh JS-behaviours of the rows
 	Behaviour.apply();
 	//refresh row count
-	$("dgCount").innerHTML = xmlRows.length;
+	$("dgCount").innerHTML = xmlRows.length;	
 	messageLayer('hide');
 }
 
