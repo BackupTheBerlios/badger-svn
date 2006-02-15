@@ -1,6 +1,6 @@
 <h1>$pageHeading</h1>
 <form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection" onSubmit="return validateCompleteForm(this, 'error');">
-	<fieldset style = "width: 31em; height: 15em;">
+	<fieldset style = "width: 31em; height: 30em">
 		<legend>$legendSetting</ledgend>
 		<table>
 			<tr> 
@@ -27,17 +27,11 @@
 				<td><b>$calculatedPocketMoneyLabel </b></td>
 				<td>$calculatePocketMoneyStartDateField <br /> $writeCalcuatedPocketMoneyButton $writeCalculatedToolTip</td>
 			</tr>
-			<tr> 
-				<td></td>
-				<td></td>
-			</tr>
 		</table>
 	</fieldset>
-<br />
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 
-	<fieldset style = "width: 27em; height: 15em;">
-
-
+	<fieldset style = "width: 31em; height: 30em">
 		<legend>$legendGraphs</ledgend>
 		<table>
 			<tr> 
@@ -66,6 +60,6 @@
 			</tr>
 		</table>
 	</fieldset>
-
+<br />
 $sendButton <br />
 </form>
