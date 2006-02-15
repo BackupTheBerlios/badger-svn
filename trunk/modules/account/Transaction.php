@@ -16,6 +16,7 @@ require_once(BADGER_ROOT . '/modules/account/Account.class.php');
 require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 require_once BADGER_ROOT . '/modules/account/FinishedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $redirectPageAfterSave = "";
 $pageTitle = getBadgerTranslation2('accountTransaction','pageTitle');; //I18N
@@ -359,43 +360,6 @@ function getAccountsSelectArray() {
 		$Accounts[$account->getId()] = $account->getTitle();
 	};
 	return $Accounts;
-}
-
-function getCategorySelectArray() {
-	global $badgerDb;
-	$cm = new CategoryManager($badgerDb);
-	$order = array ( 
-	array(
-       'key' => 'title',
-       'dir' => 'asc'
-       )
- 	);
-	
-	$cm->setOrder($order);
-	
-	$parentCats = array();
- 	$parentCats['NULL'] = "";
-	
-	while ($cat = $cm->getNextCategory()) {
-		$cat->getParent();
-	}
-	
-	$cm->resetCategories();
-	
-	while ($cat = $cm->getNextCategory()) {
-		if(is_null($cat->getParent())){
-			$parentCats[$cat->getId()] = $cat->getTitle();
-			$children = $cat->getChildren();
-			//echo "<pre>"; print_r($children); echo "</pre>";
-			if($children){
-				foreach( $children as $key=>$value ){
-					$parentCats[$value->getId()] = " - " . $value->getTitle();
-				};
-			};
-		};
-	};
- 
-	return $parentCats;
 }
 
 function getIntervalUnitsArray(){

@@ -14,6 +14,7 @@ define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php');
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $pageHeading = getBadgerTranslation2('csv', 'title');
 $legend = getBadgerTranslation2('csv','legend');
@@ -144,7 +145,7 @@ if (isset($_POST['Upload'])){
    				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
    					
 					$tableSelectCheckbox = "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\" />";
-   						//get categories		
+   					/*	//get categories		
 						$cm = new CategoryManager($badgerDb);
 						$category = array();
 				    	$category[""]= "";
@@ -152,6 +153,9 @@ if (isset($_POST['Upload'])){
 				    		$category[$currentCategory->getId()] = $currentCategory->getTitle();	
 				    	}
 			    	$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, $category,"");
+					*/
+					
+					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(),"");
 						    	
 				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
 				    						    
@@ -229,8 +233,13 @@ if (isset($_POST['btnSubmit'])){
 			//create array with one transaction
 			$amount1 = new Amount($_POST['amount' . $selectedTransactionNumber],true);
 			$valutaDate1 = new Date ($_POST['valutaDate' . $selectedTransactionNumber], true);
+			$cm1 = new CategoryManager($badgerDb);
+			$transactionCategory = NULL;
+			if (!$_POST['categorySelect' . $selectedTransactionNumber] == NULL){
+				$transactionCategory = $cm1->getCategoryById($_POST['categorySelect' . $selectedTransactionNumber]);
+			}
 			$tableRowArray = array(
-				"categoryId" => $_POST['categorySelect' . $selectedTransactionNumber],
+				"categoryId" => $transactionCategory,
 				"account" => $_POST['account2Select' . $selectedTransactionNumber],
 				"title" => $_POST['title' . $selectedTransactionNumber], 
 				"description" => $_POST['description' . $selectedTransactionNumber],

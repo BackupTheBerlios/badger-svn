@@ -125,4 +125,42 @@ function getSpendingMoney($accountId, $startDate) {
 	
 	return $sum;
 }
+
+function getCategorySelectArray() {
+	global $badgerDb;
+	$cm = new CategoryManager($badgerDb);
+	$order = array ( 
+	array(
+       'key' => 'title',
+       'dir' => 'asc'
+       )
+ 	);
+	
+	$cm->setOrder($order);
+	
+	$parentCats = array();
+ 	$parentCats['NULL'] = "";
+	
+	while ($cat = $cm->getNextCategory()) {
+		$cat->getParent();
+	}
+	
+	$cm->resetCategories();
+	
+	while ($cat = $cm->getNextCategory()) {
+		if(is_null($cat->getParent())){
+			$parentCats[$cat->getId()] = $cat->getTitle();
+			$children = $cat->getChildren();
+			//echo "<pre>"; print_r($children); echo "</pre>";
+			if($children){
+				foreach( $children as $key=>$value ){
+					$parentCats[$value->getId()] = " - " . $value->getTitle();
+				};
+			};
+		};
+	};
+ 
+	return $parentCats;
+}
+
 ?>
