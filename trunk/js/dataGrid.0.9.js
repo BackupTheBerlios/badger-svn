@@ -13,11 +13,11 @@ function loadData(url) {
 	messageLayer('show', dgLoadingMessage);
 }
 function deleteData(url) {
+	alert(url);
 	var myAjax = new Ajax.Request(
 		url, {
-			method: 'post',
-			onFailure: alert("Error")
-		});
+			method: 'get'
+			});
 }
 
 function dgInit(originalRequest) {
@@ -33,7 +33,6 @@ function dgInit(originalRequest) {
 	//create new table body
 	dgTableDataBody = document.createElement("tbody");
 	dgData = $("dgTableData").appendChild(dgTableDataBody);
-	
 	
 	var columns = new Array();
 	for (j=0; j<xmlColumns.length; j++) {

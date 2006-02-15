@@ -36,9 +36,9 @@ public $height = "180px";
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		if($print){
-			$tpl->addCss("Widgets/dataGridPrint.css");
+			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css");
 		} else {
-			$tpl->addCss("Widgets/dataGrid.css");
+			$tpl->addCss("Widgets/dataGrid/dataGrid.css");
 		}
 	}
 	
