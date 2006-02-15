@@ -45,7 +45,7 @@ if (isset($_GET['part'])) {
 		
 		case 'js':
 			header('Content-Type: text/javascript');
-			echo $naviObj->getJS();
+			echo "function loadNavigation() {\n" . $naviObj->getJS() . "\n}";
 			break;
 	}
 }
