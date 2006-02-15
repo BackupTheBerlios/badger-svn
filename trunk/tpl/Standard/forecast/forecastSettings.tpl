@@ -34,27 +34,27 @@
 		<legend>$legendGraphs</legend>
 		<table>
 			<tr> 
-				<td><b>$lowerLimitLabel</b> </td>
+				<td>$lowerLimitLabel </td>
 				<td>$lowerLimitBox $lowerLimitToolTip </td>
 			</tr>
 			<tr> 
-			 	<td><b>$upperLimitLabel</b></td>
+			 	<td>$upperLimitLabel</td>
 			 	<td> $upperLimitBox $upperLimitToolTip </td>
 			<tr>
 			<tr> 
-				<td><b>$plannedTransactionsLabel</b></td>
+				<td>$plannedTransactionsLabel</td>
 				<td>$plannedTransactionsBox $plannedTransactionsToolTip</td>
 			</tr>
 			<tr> 
-				<td><b>$savingTargetLabel1</b> </td>
+				<td>$savingTargetLabel1</td>
 				<td> $savingTargetBox $savingTargetToolTip </td>
 			</tr>
 			<tr> 
-				<td><b>$pocketMoney1Label1</b> </td>
+				<td>$pocketMoney1Label1</td>
 				<td>$pocketMoney1Box $pocketMoney1ToolTip</td>
 			</tr>
 			<tr> 
-				<td><b>$pocketMoney2Label1</b> </td>
+				<td>$pocketMoney2Label1</td>
 				<td>$pocketMoney2Box $pocketMoneyTool2Tip</td>
 			</tr>
 		</table>
