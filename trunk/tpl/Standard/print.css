@@ -1,8 +1,5 @@
 #header {
-	display: none;
-}
-#header table {
-	display: none;
+	visibility: hidden;
 }
 #staticMenuBar {
 	display: none;
@@ -17,4 +14,7 @@
 #printMessage a {
 	color: red;
 	font-weight: bold;
+}
+button {
+	display: none;
 }
