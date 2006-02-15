@@ -27,6 +27,8 @@ class WidgetEngine {
 	private $tpl;
 	private $settings;
 	private $writtenHeader = false;
+	private $inputIds = array ();
+	private $labelIds = array ();
 	
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
@@ -102,10 +104,19 @@ class WidgetEngine {
 	}
 	
 	public function createLabel($field, $name, $mandatory=false) {
-		if($mandatory) {
-			return "<label for='$field' class='mandatory'>$name</label>";
+		if (!isset($this->labelIds[$field])) {
+			$this->labelIds[$field] = 0;
+			$id = $field;
 		} else {
-			return "<label for='$field'>$name</label>";
+			$id = $field . '_' . $this->labelIds[$field];
+			$this->labelIds[$field]++;
+		}
+
+
+		if($mandatory) {
+			return "<label for='$id' class='mandatory'>$name</label>";
+		} else {
+			return "<label for='$id'>$name</label>";
 		}
 	}
 	
@@ -132,7 +143,15 @@ class WidgetEngine {
 		//required
 		$mandatory = (($mandatory) ? "1" : "0");
 		
-		$output = "<input type='$type' id='$fieldname' name='$fieldname' size='$size' class='$class' value='$value' required='$mandatory' $valCondition />";
+		if (!isset($this->inputIds[$fieldname])) {
+			$this->inputIds[$fieldname] = 0;
+			$id = $fieldname;
+		} else {
+			$id = $fieldname . '_' . $this->inputIds[$fieldname];
+			$this->inputIds[$fieldname]++;
+		}
+		
+		$output = "<input type='$type' id='$id' name='$fieldname' size='$size' class='$class' value='$value' required='$mandatory' $valCondition />";
 		if($description) {
 			$helpImg = $this->addImage("Widgets/help.gif");
 			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
