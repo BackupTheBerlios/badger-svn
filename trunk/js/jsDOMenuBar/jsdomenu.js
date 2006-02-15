@@ -633,12 +633,16 @@ function showMenuItemIcon() { // Public method
   iconElm.className = arguments[0];
   this.insertBefore(iconElm, this.firstChild);
   var height;
+	//fix for misaligned Icons in IE
+/*
   if (ie) {
     height = getPropIntVal(iconElm, "height");
   }
+
   else {
+*/
     height = iconElm.offsetHeight;
-  }
+//  }
   iconElm.style.top = Math.floor((this.offsetHeight - height) / 2) + px;
   if (ie) {
     var left = getPropIntVal(iconElm, "left");
