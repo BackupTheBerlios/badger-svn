@@ -8,7 +8,7 @@ function openBadgerPrintView() {
 		winUrl = winUrl + "&print";
 	}
 	winName = "";
-	winpars = 'height=550,width=700,top=0,left=0,scrollbars=yes,resizable=no';
+	winpars = 'height=550,width=800,top=0,left=0,scrollbars=yes,resizable=no';
 	newWindow = window.open(winUrl, winName, winpars);
 	
 	newWindow.window.focus();
