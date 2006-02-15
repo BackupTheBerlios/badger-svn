@@ -385,10 +385,24 @@ function showTrendData() {
 	$chart [ 'series_color' ] = array (
 		"FF0000",
 		"00FF00",
-		"0000FF",
+		"0000FF", 
 		"FF8000",
 		"404040",
-		"800040"
+		"800040",
+/*
+		'000070',
+		'FFFF99',
+		'007000',
+		'FFCC99',
+		'700070',
+		'CC99FF',
+		'660000',
+		'9999FF',
+		'006666',
+		'CCFF99',
+		'A35200',
+		'FFCA7A'
+*/
 	);                                       
 	
 	$chart['chart_data'] = array();
@@ -641,7 +655,7 @@ function showCategoryData() {
 		} else {
 			$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
 		}
-		$chart['chart_value_text'][1][] = $val['title'] . "\n" . $val['amount']->getFormatted() . "\n" . round($val['amount']->div($sum)->mul($type == 'i' ? 100 : -100)->get(), 0) . ' %'; 
+		$chart['chart_value_text'][1][] = utf8_encode($val['title'] . "\n" . $val['amount']->getFormatted() . "\n" . round($val['amount']->div($sum)->mul($type == 'i' ? 100 : -100)->get(), 0) . ' %'); 
 	}
 	
 	SendChartData($chart);
@@ -654,7 +668,7 @@ function gatherCategories($accountIds, $startDate, $endDate, $type, $summarize) 
 
 	$categories = array(
 		'none' => array (
-			'title' => '(nicht zugeordnet)',
+			'title' => getBadgerTranslation2('statistics', 'noCategoryAssigned'),
 			'count' => 0,
 			'amount' => new Amount(0)
 		)
@@ -689,7 +703,7 @@ function gatherCategories($accountIds, $startDate, $endDate, $type, $summarize) 
 				}
 			}
 			
-			if ($category = $currentTransaction->getCategory()) {
+			if (!is_null($category = $currentTransaction->getCategory())) {
 				if ($summarize && $category->getParent()) {
 					$category = $category->getParent();
 				}
