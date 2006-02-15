@@ -36,7 +36,6 @@ public $height;
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		if($print){
-			echo '<div id="printMessage"><a href="javascript:window.print();">'.getBadgerTranslation2('dataGrid', 'PrintMessage').'</a></div>';
 			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css");
 		} else {
 			$tpl->addCss("Widgets/dataGrid/dataGrid.css");

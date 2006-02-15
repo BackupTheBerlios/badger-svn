@@ -10,11 +10,11 @@
 #printMessage {
 	text-align: center;
 	background-color: #000000;
-}
-#printMessage a {
-	color: red;
-	font-weight: bold;
+	height: 30px;
 }
 button {
 	display: none;
+}
+button.printButton {
+	display: inline;
 }

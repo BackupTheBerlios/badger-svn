@@ -56,7 +56,8 @@ class TemplateEngine {
 	 * @param string $pageTitle The name of the XHTML-Page
 	 * @return string XHMTL-Header mit CSS, JS ...
 	 */
-	public function getHeader($pageTitle) {		
+	public function getHeader($pageTitle) {
+		global $print;		
 		$template = "badgerHeader";
 		$JSOnLoadEvents = "";
 		
@@ -80,10 +81,16 @@ class TemplateEngine {
 	        $JSOnLoadEvents .= "\t}\n";
 	        $JSOnLoadEvents .= "\t</script>";
 		}
+		if($print) {
+			$printLayer = '<div id="printMessage"><button class="printButton" onclick="window.print();">'.getBadgerTranslation2('badger', 'PrintMessage').'</button></div>';
+		} else {
+			$printLayer = '';	
+		}
 		
 		// write complete header
 		$this->writtenHeader = true;
-		return eval("echo \"".$this->getTemplate($template)."\";");		
+		eval("echo \"".$this->getTemplate($template)."\";");
+		
 	}
 	
 	public function addCSS($cssFile) {
