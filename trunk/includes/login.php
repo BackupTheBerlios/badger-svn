@@ -64,7 +64,6 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		
 		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
-		echo $widgets->getNavigationBody();
 		echo $widgets->addToolTipLayer();
 
 		//end of Initialization
@@ -85,7 +84,6 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$widgets->addAutoCompleteJS();
 		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
-		echo $widgets->getNavigationBody();
 		echo $widgets->addToolTipLayer();
 		//end of Initialization
 		

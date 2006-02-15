@@ -36,7 +36,6 @@ $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Currency Manager");
-echo $widgets->getNavigationBody(); 
 
 echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");

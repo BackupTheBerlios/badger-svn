@@ -56,8 +56,6 @@ function printAskExport() {
 	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
 	echo $tpl->getHeader($askTitle);
 	
-	echo $widgets->getNavigationBody();
-
 	$askExportTitle = getBadgerTranslation2('importExport', 'askExportTitle');
 	$askExportText = getBadgerTranslation2('importExport', 'askExportText');
 	$askExportLink = BADGER_ROOT . '/modules/importExport/importExport.php?mode=dump';
@@ -76,8 +74,6 @@ function printAskImport(){
 
 	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
 	echo $tpl->getHeader($askTitle);
-	
-	echo $widgets->getNavigationBody();
 	
 	$askImportTitle = getBadgerTranslation2('importExport', 'askImportTitle');
 	$askImportInfo = getBadgerTranslation2('importExport', 'askImportInfo');
@@ -104,8 +100,6 @@ function printAskInsert() {
 	$askInsertTitle = getBadgerTranslation2('importExport', 'askInsertTitle');
 	echo $tpl->getHeader($askInsertTitle);
 
-	echo $widgets->getNavigationBody();
-	
 	$askInsertAction = BADGER_ROOT . '/modules/importExport/importExport.php?mode=insert';
 	$askImportWarning = getBadgerTranslation2('importExport', 'askImportWarning');
 
@@ -138,8 +132,6 @@ function printInsert() {
 
 	$insertTitle = getBadgerTranslation2('importExport', 'insertTitle'); 
 	echo $tpl->getHeader($insertTitle);
-
-	echo $widgets->getNavigationBody();
 	
 	if (!isset($_POST['confirmUpload']) || $_POST['confirmUpload'] !== 'yes') {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoInsert');

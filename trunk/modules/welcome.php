@@ -19,8 +19,6 @@ $widgets->addToolTipJS();
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Badger");
-echo $widgets->getNavigationBody();
-
 
 $Modul1 = "<a href='".BADGER_ROOT."/modules/account/AccountManagerOverview.php'>Kontenübersicht</a>";
 $Modul2 = "<a href='".BADGER_ROOT."/modules/account/CategoryManagerOverview.php'>Kategorienübersicht</a>";

@@ -24,7 +24,6 @@ $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addNavigationHead();
 echo $tpl->getHeader($pageHeading);
-echo $widgets->getNavigationBody(); 
 echo $widgets->addToolTipLayer();
 //create account manger object
 $am = new AccountManager($badgerDb);

@@ -70,7 +70,6 @@ function printFrontend() {
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
-	echo $widgets->getNavigationBody();	
 	echo $widgets->addToolTipLayer();
 	
 	if (isset($_GET['ID'])) {

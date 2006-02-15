@@ -26,7 +26,7 @@ require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 require_once BADGER_ROOT . '/core/navi/NavigationFromDB.class.php';
 require_once BADGER_ROOT . '/core/navi/StandardNavigation.class.php';
 
-$navi1 = NavigationFromDB::getNavigation();
+$navi1 = NavigationFromDB::getNavigation("../..");
 
 $naviObj = new StandardNavigation();
 

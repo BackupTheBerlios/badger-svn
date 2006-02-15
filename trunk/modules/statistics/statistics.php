@@ -79,7 +79,6 @@ function showSelectPage() {
 	$selectTitle = getBadgerTranslation2('statistics','pageTitle');
 	echo $tpl->getHeader($selectTitle);
 	
-	echo $widgets->getNavigationBody();
 	$widgets->addToolTipLayer();
 
 	$selectFormAction = BADGER_ROOT . '/modules/statistics/statistics.php';
@@ -163,8 +162,6 @@ function printTrendPage() {
 	$trendTitle = 'Trendanzeige'; 
 	echo $tpl->getHeader($trendTitle);
 
-	echo $widgets->getNavigationBody();
-	
 	if (!isset($_POST['accounts']) || !isset($_POST['startDate']) || !isset($_POST['endDate'])) {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
@@ -439,8 +436,6 @@ function printCategoryPage() {
 
 	$categoryTitle = 'Kategorieanzeige'; 
 	echo $tpl->getHeader($categoryTitle);
-
-	echo $widgets->getNavigationBody();
 	
 	if (!isset($_POST['accounts']) || !isset($_POST['startDate']) || !isset($_POST['endDate']) || !isset($_POST['type']) || !isset($_POST['summarize'])) {
 		throw new BadgerException('statistics', 'missingParameter');

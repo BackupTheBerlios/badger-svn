@@ -25,7 +25,6 @@ $widgets->addNavigationHead();
 $tpl->addJavaScript("js/prototype.js");
 echo $tpl->getHeader($pageHeading);
 
-echo $widgets->getNavigationBody();
 echo $widgets->addToolTipLayer();
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");

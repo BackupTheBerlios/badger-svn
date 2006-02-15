@@ -19,7 +19,6 @@ $widgets->addCalendarJS();
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Charts");
-echo $widgets->getNavigationBody();
 
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");

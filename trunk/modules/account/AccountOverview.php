@@ -43,7 +43,6 @@ $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader($pageTitle);
-echo $widgets->getNavigationBody(); 
 
 echo "<h1>$pageTitle</h1>";
 

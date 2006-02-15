@@ -19,7 +19,6 @@ $widgets->addCalendarJS();
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Seitenname");
-echo $widgets->getNavigationBody(); 
 ?>
 <script>
 /***************************************************************

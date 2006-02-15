@@ -104,7 +104,6 @@ function printFrontendFinished($AccountID, $ID) {
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
-	echo $widgets->getNavigationBody();	
 	echo $widgets->addToolTipLayer();
 	
 	if($ID!="new") {
@@ -189,7 +188,6 @@ function printFrontendPlanned($AccountID, $ID) {
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
-	echo $widgets->getNavigationBody();	
 	echo $widgets->addToolTipLayer();
 	
 	$transactionType = "planned";
