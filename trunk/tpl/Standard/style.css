@@ -44,12 +44,25 @@ h3 {
 	font-size: 8pt;
 }
 
-/* sperber: CSV-Report */
-#scroll {
+/* BEGIN CSV-Report */
+#CSVscroll {
 	height: 390px;
 	width: 100%;
 	overflow: scroll;
 }
+#CSVscroll table {
+	border: 1px solid #ececec;
+}
+
+#CSVscroll table th {
+	background-color: #000000;
+	color: #ffffff;
+}
+#CSVscroll table td {
+	border-right: 1px solid #d4d4d4;
+	border-bottom: 1px solid #d4d4d4;
+}
+/* END CSV-Report */
 
 blockquote {
 	font-family: monospace;

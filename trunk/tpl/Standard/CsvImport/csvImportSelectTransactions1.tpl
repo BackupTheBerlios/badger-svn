@@ -1,7 +1,7 @@
 <h1>$pageHeading</h1>
 <form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection">
- 	<div id="scroll">	
-		<table border = "1" cellpadding="2" cellspacing="0">
+ 	<div id="CSVscroll">	
+		<table cellpadding="2" cellspacing="0">
 			<tr>
 			<th>$tableHeadSelect $HeadSelectToolTip</th>
 			<th>$tableHeadCategory<br />$HeadCategoryToolTip</th>
