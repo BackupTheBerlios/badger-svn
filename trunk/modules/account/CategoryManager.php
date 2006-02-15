@@ -24,8 +24,7 @@ $order = array (
 		'key' => 'title',
 		'dir' => 'asc'
 		)
-);
-	
+);	
 $cm->setOrder($order);
 
 if (isset($_GET['action'])) {

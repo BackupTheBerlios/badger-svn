@@ -67,8 +67,8 @@ function showSelectPage() {
 	$dataGrid->headerName = array(getBadgerTranslation2('statistics','accColTitle'), getBadgerTranslation2('statistics','accColBalance'), getBadgerTranslation2('statistics','accColCurrency'));
 	$dataGrid->columnOrder = array("title", "balance", 'currency');  
 	$dataGrid->initialSort = "title";
-	$dataGrid->headerSize = array(180, 100, 100);
-	$dataGrid->cellAlign = array("left", 'right', 'right');
+	$dataGrid->headerSize = array(160, 100, 75);
+	$dataGrid->cellAlign = array("left", 'right', 'left');
 	$dataGrid->width = '30em';
 	$dataGrid->height = '7em';
 	$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
