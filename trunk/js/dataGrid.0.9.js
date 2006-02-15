@@ -101,7 +101,6 @@ function deactivateRow(objRow) {
 	if (objRow.className == "dgRowActive") objRow.className = "dgRow";
 	if (objRow.className == "dgRowSelectedActive") objRow.className = "dgRowSelected";
 }
-
 function selectRow(objRow) {
 	if (objRow.className == "dgRow") objRow.className = "dgRowSelected";
 	if (objRow.className == "dgRowActive") objRow.className = "dgRowSelectedActive";
@@ -140,7 +139,7 @@ var behaviour =  {
 			}
 		}
 		element.ondblclick = function(){
-			dgEdit(this.id)
+			dgEdit(this.id);
 		}
 	},
 	'td.dgColumn' : function(element){
@@ -219,10 +218,17 @@ function dgKeyProcess(event) {
 		}
 	}
 	if (event.keyCode == Event.KEY_RETURN) {
-		dgEdit(objRowActive.id);
+		dgEdit();
 	}
 	if (event.keyCode == Event.KEY_DELETE) {
 		dgDelete();
+	}
+	if (event.keyCode == 32) {
+		if(objRowActive.className=="dgRowSelected" || objRowActive.className=="dgRowSelectedActive") {
+			deselectRow(objRowActive);
+		} else {
+			selectRow(objRowActive);
+		}	
 	}
 }
 
