@@ -24,7 +24,7 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManag
 $dataGrid->headerName = array("Symbol","LongName");
 $dataGrid->columnOrder = array("symbol","longName");
 $dataGrid->initialSort = "symbol";  
-$dataGrid->width = "410px";
+//$dataGrid->width = "410px";
 $dataGrid->headerSize = array(200,200);
 $dataGrid->cellAlign = array("left","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
