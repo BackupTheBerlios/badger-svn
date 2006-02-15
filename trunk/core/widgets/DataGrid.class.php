@@ -28,14 +28,15 @@ public $newAction;
 public $cellAlign;
 public $rowCounterName;
 public $initialSort;
-public $width = "99.9%";
-public $height = "180px";
+public $width;
+public $height;
 
 	public function __construct($tpl) {
 		global $print;
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		if($print){
+			echo '<div id="printMessage"><a href="javascript:window.print();">'.getBadgerTranslation2('dataGrid', 'PrintMessage').'</a></div>';
 			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css");
 		} else {
 			$tpl->addCss("Widgets/dataGrid/dataGrid.css");
@@ -44,7 +45,10 @@ public $height = "180px";
 	
 	public function writeDataGrid() {
 		//toDo: Use templateEngine
-		$output = '<form id="dgForm"><div id="dataGrid" style="width:'.$this->width.';">
+		if($this->width) $this->width = ' style="width:'.$this->width.';" '; 
+		if($this->height) $this->height = ' style="height:'.$this->height.';" '; 
+		
+		$output = '<form id="dgForm"><div id="dataGrid" '.$this->width.'>
 					<table id="dgTableHead" cellpadding="2" cellspacing="0">
 						<tr>
 							<td style="width: 25px"><input id="dgSelector" type="checkbox" /></td>';
@@ -57,7 +61,7 @@ public $height = "180px";
 						</tr>
 					</table>';
 					
-		$output .= '<div id="dgDivScroll" style="height:'.$this->height.';">
+		$output .= '<div id="dgDivScroll" '.$this->height.'>
 					<table id="dgTableData" cellpadding="2" cellspacing="0">
 						<tbody></tbody>
 					</table>
