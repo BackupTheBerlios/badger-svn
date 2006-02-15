@@ -13,7 +13,6 @@ function loadData(url) {
 	messageLayer('show', dgLoadingMessage);
 }
 function deleteData(url) {
-	alert(url);
 	var myAjax = new Ajax.Request(
 		url, {
 			method: 'get'
