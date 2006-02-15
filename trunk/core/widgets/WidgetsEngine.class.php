@@ -206,16 +206,10 @@ class WidgetEngine {
 		} else {
 			throw new badgerException('widgetsEngine', 'HeaderIsAlreadyWritten', 'Function: addNavigationHead()'); 
 		}
+		$this->tpl->addOnLoadEvent("loadNavigation()");
 		
 	}
 	function getNavigationBody() {
-		$tplNavigationBody = "";
-		//Navigation Body
-		if ($this->tpl->isHeaderWritten()) {
-			eval("\$tplNavigationBody = \"".$this->tpl->getTemplate("Navigation/body")."\";");
-			return $tplNavigationBody;
-		} else {
-			throw new badgerException('widgetsEngine', 'HeaderIsNotWritten', 'Function: getNavigationBody()'); 
-		}		
+		//unused		
 	}
 }
