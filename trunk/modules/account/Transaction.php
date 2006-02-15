@@ -30,17 +30,24 @@ if (isset($_GET['action'])) {
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID']) || isset($_GET['accountID'])) {
-				$IDs = explode(",",$_GET['ID']);				
+				$IDs = explode(",",$_GET['ID']); 				
 				//check if we can delete this item (or is the currency used)
+				$debug ="";
+				$acc = $am->getAccountById($_GET['accountID']);
 				foreach($IDs as $ID){
-					$acc = $am->getAccountById($_GET['accountID']);
-					$acc->deleteFinishedTransaction($ID);
-					$acc->deletePlannedTransaction($ID);
+					if(substr($ID,0,1)=="p") {
+						$pos = strpos($ID,"_");				
+						$ID = substr($ID,1,$pos-1);
+						$acc->deletePlannedTransaction($ID);
+					} else {
+						$acc->deleteFinishedTransaction($ID);
+					}
 				}
 				//dg should show this message!!!! ToDo
-				echo "deletion was successful!";
+				echo $debug;
+				//echo "deletion was successful!";
 			} else {
-				echo "no ID/accIDwas transmitted!";	
+				echo "no ID/accID was transmitted!";	
 			}			
 			break;
 		case 'save':
@@ -65,11 +72,7 @@ if (isset($_GET['action'])) {
 				$accountID = $_GET['accountID'];
 				$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
 			} else {
-				if(isset($_POST['hiddenAccID'])) {
-					$accountID = $_POST['hiddenAccID'];
-				} else {
-					$accountID = "choose";	
-				}
+				$accountID = "choose";	
 			}
 			
 			if (isset($_GET['ID'])) {
