@@ -1,4 +1,16 @@
 <?php
+/*
+* ____          _____   _____ ______ _____  
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+*| |_) | /  \  | |  | | |  __| |__  | |__) |
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
+*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|____/_/    \_\_____/ \_____|______|_|  \_\
+* Open Source Financial Management
+* Visit http://badger.berlios.org 
+*
+**/
+//this file includes the settings for the forecast chart and calculates the data
 define("BADGER_ROOT", "../..");
 //include charts.php to access the SendChartData function
 require_once(BADGER_ROOT . "/includes/fileHeaderBackEnd.inc.php");

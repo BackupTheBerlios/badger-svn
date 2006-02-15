@@ -16,28 +16,23 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $pageHeading = getBadgerTranslation2('forecast','title');
-
-
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 $widgets->addNavigationHead();
 $tpl->addJavaScript("js/prototype.js");
 echo $tpl->getHeader($pageHeading);
-
 echo $widgets->addToolTipLayer();
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
-	$standardStartDate = new Date();
-	$standardStartDate->subtractSeconds(60*60*24*180);
-	$calculatePocketMoneyStartDateField = $widgets->addDateField("startDate", $standardStartDate->getFormatted());
-	#$startSpendingDate = new date ("2005-01-01");
-	#$spendingMoney = getSpendingMoney(1, $startSpendingDate);	
-	#echo $spendingMoney->getFormatted();
-	$writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", getBadgerTranslation2("forecast", "calculatedPocketMoneyButton"), "submit", "Widgets/accept.gif");
-	$calculatedPocketMoneyLabel = getBadgerTranslation2("forecast", "calculatedPocketMoneyLabel"). ":";
-	
-	$writeCalculatedToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "calculatedPocketMoneyToolTip"));
+//help funktions for automatical calculation of pocket money from the finished transactions
+$standardStartDate = new Date();
+$standardStartDate->subtractSeconds(60*60*24*180);
+$calculatePocketMoneyStartDateField = $widgets->addDateField("startDate", $standardStartDate->getFormatted());
+$writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", getBadgerTranslation2("forecast", "calculatedPocketMoneyButton"), "submit", "Widgets/accept.gif");
+$calculatedPocketMoneyLabel = getBadgerTranslation2("forecast", "calculatedPocketMoneyLabel"). ":";
+$writeCalculatedToolTip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "calculatedPocketMoneyToolTip"));
+//the button to calculate the pocket money from finished transactions was pressed, show the settings formula with the inputs made & the new pocket money 2
 if (isset ($_POST['writePocketMoney'])){
 	$legendSetting = getBadgerTranslation2("forecast", "legendSetting");
 	$legendGraphs = getBadgerTranslation2("forecast", "legendGraphs");
@@ -115,10 +110,12 @@ if (isset ($_POST['writePocketMoney'])){
 		$pocketMoney2Box = "<input type=\"checkbox\" name=\"pocketMoney2Box\" value=\"select\" />";
 	}
 	$pocketMoneyTool2Tip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "showPocketMoney2ToolTip"));
+	//Create Chart Button
+	$tooLongTimeSpanWarning = getBadgerTranslation2("forecast", "performanceWarning");
 	$sendButton = $widgets->createButton("sendData", getBadgerTranslation2("forecast", "sendData"), "submit", "Widgets/accept.gif");
 	eval("echo \"".$tpl->getTemplate("forecast/forecastSettings")."\";");
 }
-
+//Settings formular
 if (!isset($_POST['writePocketMoney'])){	
 	if (!isset($_POST['sendData'])){	
 	//field for selecting end date of forecasting
@@ -135,14 +132,7 @@ if (!isset($_POST['writePocketMoney'])){
 			    	while ($currentAccount = $am->getNextAccount()) {
 			    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
 		}
-	//
-	
-	#$calculatedPocketMoney = $spendingMoney->getFormatted();
-	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "submit", "Widgets/accept.gif");
-	#echo $writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", "internatiowrite", "$('pocketmoney1').value='$calculatedPocketMoney'", "Widgets/accept.gif");
-	
-	
-		
+	//Drop down to select account		
 	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);
 	$accountField = $widgets->createSelectField("selectedAccount", $account, "", getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
 	//field to select saving target, default is 0
@@ -178,12 +168,13 @@ if (!isset($_POST['writePocketMoney'])){
 	$pocketMoney2Label1 =  getBadgerTranslation2("forecast", "pocketMoney2Label").":";
 	$pocketMoney2Box = "<input type=\"checkbox\" name=\"pocketMoney2Box\" value=\"select\" />";
 	$pocketMoneyTool2Tip = $widgets->addToolTipLink("", getBadgerTranslation2("forecast", "showPocketMoney2ToolTip"));
-	
+	//Create Chart Button
+	$tooLongTimeSpanWarning = getBadgerTranslation2("forecast", "performanceWarning");
 	$sendButton = $widgets->createButton("sendData", getBadgerTranslation2("forecast", "sendData"), "submit", "Widgets/accept.gif");
 	eval("echo \"".$tpl->getTemplate("forecast/forecastSettings")."\";");
 	}
 }
-
+//show chart
 if (isset($_POST['sendData'])){
 	# validate if date is in future
 	$selectedDate = new Date($_POST["endDate"], true);
@@ -193,6 +184,7 @@ if (isset($_POST['sendData'])){
 	$noUpperLimit = NULL;
 	$noGraphChosen = NULL;
 	$insertChart = NULL;
+	//to avoid a date in the past or the same date as today
 	if ($today->compare($today, $selectedDate)!=1){
 		$selectedSavingTarget = new Amount ($_POST["savingTarget"], true);
 		$savingTarget = $selectedSavingTarget->get();	
@@ -214,6 +206,7 @@ if (isset($_POST['sendData'])){
 			
 		$am1 = new AccountManager($badgerDb);
 		$currentAccount1 = $am1->getAccountById($account);
+		//if no graph was chosen
 		if (!isset ($_POST["lowerLimitBox"]) && !isset ($_POST["upperLimitBox"])&& !isset ($_POST["plannedTransactionsBox"]) && !isset ($_POST["savingTargetBox"]) && !isset ($_POST["pocketMoney1Box"]) &&!isset ($_POST["pocketMoney2Box"])){
 			$noGraphChosen = getBadgerTranslation2("forecast", "noGraphchosen");
 		} else {
@@ -257,7 +250,7 @@ if (isset($_POST['sendData'])){
 			}else {
 				$showPocketMoney2 = 0;
 			}
-			
+			//create the chart
 			$insertChart = InsertChart ( BADGER_ROOT . "/includes/charts/charts.swf", BADGER_ROOT . "/includes/charts/charts_library", BADGER_ROOT . "/modules/forecast/forecastChart.php?endDate=$endDate&account=$account&savingTarget=$savingTarget&pocketMoney1=$pocketMoney1&pocketMoney2=$pocketMoney2&showLowerLimit=$showLowerLimit&showUpperLimit=$showUpperLimit&showPlannedTransactions=$showPlannedTransactions&showSavingTarget=$showSavingTarget&showPocketMoney1=$showPocketMoney1&showPocketMoney2=$showPocketMoney2", 800, 400, "ECE9D8", true);
 			
 			$am = new AccountManager($badgerDb);

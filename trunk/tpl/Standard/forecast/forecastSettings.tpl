@@ -60,5 +60,6 @@
 		</table>
 	</fieldset>
 <br />
+$tooLongTimeSpanWarning <br />
 $sendButton <br />
 </form>
