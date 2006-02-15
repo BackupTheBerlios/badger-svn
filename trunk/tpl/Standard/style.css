@@ -64,6 +64,7 @@ h3 {
 }
 /* END CSV-Report */
 
+/* about badger */
 blockquote {
 	font-family: monospace;
 	border: 1px dashed grey;
@@ -73,6 +74,7 @@ blockquote {
 	width: 90%;	
 }
 
+/* statistics, forecasts */
 .flashContainer {
 	background-color: #ECE9D8;
 	float: left;
