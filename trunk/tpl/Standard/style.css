@@ -19,10 +19,11 @@ h2 {
 	font-family: Arial, Verdana;
 	font-size: 11pt;
 }
-h2 {
+h3 {
 	font-family: Arial, Verdana;
 	font-size: 10pt;
 }
+
 #header {
 	background-color: #FFFFFF;
 	height: 43px;
@@ -80,6 +81,9 @@ label.mandatory {
 }
 legend {
 	font-weight: bold;
+}
+fieldset {
+	-moz-border-radius: 8px;	
 }
 
 input, textarea {
