@@ -7,3 +7,14 @@
 #staticMenuBar {
 	display: none;
 }
+#footer {
+	display: none;
+}
+#printMessage {
+	text-align: center;
+	background-color: #000000;
+}
+#printMessage a {
+	color: #ffffff;
+	font-weight: bold;
+}
