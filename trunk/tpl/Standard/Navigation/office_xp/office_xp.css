@@ -100,7 +100,7 @@ Menu bar related selectors
 
 .jsdomenubardragdiv {
 	cursor: move;
-	display: inline;
+	display: none;
 	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
 	font-size: 12px;
 	padding-bottom: 2px;

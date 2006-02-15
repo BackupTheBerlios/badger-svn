@@ -1,1 +1,0 @@
-<script type="text/javascript" src="{BADGER_ROOT}/core/navi/getStandardNavigation.php?part=js&badger_root={BADGER_ROOT}"></script>
