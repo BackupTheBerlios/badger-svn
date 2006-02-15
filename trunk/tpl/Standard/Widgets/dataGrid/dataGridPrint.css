@@ -6,7 +6,6 @@
 
 #dataGrid {
 	border: 1px solid #ececec;
-	/*width: 99.9%;*/
 	background-color: #ffffff;
 }
 #dgTableHead {
@@ -24,13 +23,11 @@
     height: 22px;
     line-height: 12px;
 }
-
 #dgDivScroll {
 	width: 100%;
 }
 #dgTableFoot {
-	width: 100%;
-	background-color: #ececec;
+	display: none;
 }
 #dgTableData {
 	table-layout: fixed;
