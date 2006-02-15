@@ -132,7 +132,7 @@ class StandardNavigation implements Navigation {
 		$structure =& $this->parseIconIds(StandardNavigation::iconName, $this->structure);
 		
 		//absolute / fixed / static
-		$result = 'menuBar = new jsDOMenuBar("static", "staticMenuBar");
+		$result = 'menuBar = new jsDOMenuBar("static", "staticMenuBar", false);
 			menuBar.setActivateMode("click");
 		';
 		
