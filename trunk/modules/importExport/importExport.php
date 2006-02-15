@@ -66,27 +66,6 @@ function printAskExport() {
 	eval(' echo "' . $tpl->getTemplate('importExport/ask') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
-function printAskImport(){
-	global $tpl;
-	$widgets = new WidgetEngine($tpl); 
-	
-	$widgets->addNavigationHead();
-
-	$askTitle = getBadgerTranslation2('importExport', 'askTitle');
-	echo $tpl->getHeader($askTitle);
-	
-	$askImportTitle = getBadgerTranslation2('importExport', 'askImportTitle');
-	$askImportInfo = getBadgerTranslation2('importExport', 'askImportInfo');
-	$askImportWarning = getBadgerTranslation2('importExport', 'askImportWarning');
-	$askImportVersionInfo = getBadgerTranslation2('importExport', 'askImportVersionInfo');
-	$askImportCurrentVersionInfo = getBadgerTranslation2('importExport', 'askImportCurrentVersionInfo');
-	$badgerVersion = 'BADGER finance Version ' . BADGER_VERSION;
-	$askImportLink = BADGER_ROOT . '/modules/importExport/importExport.php?mode=askInsert';
-	$askImportAction = getBadgerTranslation2('importExport', 'askImportAction');
-	
-	eval(' echo "' . $tpl->getTemplate('importExport/askImport') . '";');
-	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');		
-}
 
 function printAskInsert() {
 	global $tpl;
@@ -103,12 +82,6 @@ function printAskInsert() {
 	$askInsertAction = BADGER_ROOT . '/modules/importExport/importExport.php?mode=insert';
 	$askImportWarning = getBadgerTranslation2('importExport', 'askImportWarning');
 
-	$askImportNoOption = $widgets->createField('confirmUpload', null, 'no', '', false, 'radio');
-	$askImportNoOptionLabel = $widgets->createLabel('confirmUpload', getBadgerTranslation2('importExport', 'askImportNo'));
-
-	$askImportYesOption = $widgets->createField('confirmUpload', null, 'yes', '', false, 'radio');
-	$askImportYesOptionLabel = $widgets->createLabel('confirmUpload', getBadgerTranslation2('importExport', 'askImportYes'));
-
 	$askImportFileUpload = $widgets->createField('sqlDump', null, null, '', true, 'file');
 	$askImportFileUploadLabel = $widgets->createLabel('sqlDump', getBadgerTranslation2('importExport', 'askImportFile'));
 
@@ -117,6 +90,7 @@ function printAskInsert() {
 	$versionInfo = BADGER_VERSION;
 
 	$confirmUploadField = $widgets->createField('confirmUpload', null, 'yes', null, false, 'checkbox', 'onClick="agreesubmit()"');
+	$confirmUploadLabel = $widgets->createLabel('confirmUpload', getBadgerTranslation2('importExport', 'askImportYes'));
 
 	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif", 'disabled="disabled"');	
 

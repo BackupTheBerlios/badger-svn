@@ -7,13 +7,12 @@
 	<p>$askImportVersionInfo<br />$askImportCurrentVersionInfo $versionInfo</p>
 	<p>
 		$confirmUploadField
-		<b>$askImportYesOptionLabel</b>
+		<b>$confirmUploadLabel</b>
 	</p>
 	<p>$askImportSubmit</p>
 </form>
 
 <script>
-//change two names below to your form's names
 document.forms.agreeform.confirmUpload.checked=false
 </script>
 
