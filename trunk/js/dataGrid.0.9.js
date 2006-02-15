@@ -1,5 +1,4 @@
 var objRowActive;
-var mouseEventsDisabled;
 var mouseEventsDisabled = false;
 var urlParameter = new Object;
 
@@ -27,9 +26,14 @@ function dgInit(originalRequest) {
 	xmlColumns = xmlDoc.getElementsByTagName("column");
 	xmlRows = xmlDoc.getElementsByTagName("row");
 	
-	var dgData = $("dgTableData").getElementsByTagName("tbody")[0];
-	dgRows = dgData.getElementsByTagName("tr");
-	if (dgRows.length>0) {emptyDataGrid()};
+	//delete old table body if exists
+	if($("dgTableData").getElementsByTagName("tbody")[0]) {
+		Element.remove($("dgTableData").getElementsByTagName("tbody")[0])	
+	}
+	//create new table body
+	dgTableDataBody = document.createElement("tbody");
+	dgData = $("dgTableData").appendChild(dgTableDataBody);
+	
 	
 	var columns = new Array();
 	for (j=0; j<xmlColumns.length; j++) {
@@ -76,7 +80,7 @@ function dgInit(originalRequest) {
 			if (xmlElement.textContent) {
 				cell.innerHTML = xmlElement.textContent + "&nbsp;"; // FF
 			} else {
-				cell.innerHTML = xmlElement.text + "&nbsp;";; //IE
+				cell.innerHTML = xmlElement.text + "&nbsp;"; //IE
 			}
 			newRow.appendChild(cell);
 		}		
@@ -281,21 +285,6 @@ function dgGetAllIds() {
 		}
 	}
 	return allIDs;
-}
-
-//delete all rows form the grid
-function emptyDataGrid() {
-	dgDataGrid = $("dgTableData");
-	dgRows = dgDataGrid.getElementsByTagName("tr");
-
-	toBeDeleted = new Array();
-	for (id=0; id<dgRows.length; id++) {
-		toBeDeleted[id] = dgRows[id].id;
-	}
-	for (id=0; id<toBeDeleted.length; id++) {
-		//dgDataGrid.removeChild($(toBeDeleted[id]));
-		Element.remove($(toBeDeleted[id]));
-	}
 }
 
 //change sort order and hide/show sort images
