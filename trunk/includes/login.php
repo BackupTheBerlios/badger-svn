@@ -59,9 +59,6 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$tpl->addCSS("style.css");
 		$widgets = new WidgetEngine($tpl); 
 		$widgets->addToolTipJS();
-		$widgets->addCalendarJS();
-		$widgets->addAutoCompleteJS();
-		
 		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
 		echo $widgets->addToolTipLayer();
@@ -80,8 +77,6 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$tpl->addCSS("style.css");
 		$widgets = new WidgetEngine($tpl); 
 		$widgets->addToolTipJS();
-		$widgets->addCalendarJS();
-		$widgets->addAutoCompleteJS();
 		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
 		echo $widgets->addToolTipLayer();
@@ -184,8 +179,6 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 	$tpl->addCSS("style.css");
 	$widgets = new WidgetEngine($tpl); 
 	$widgets->addToolTipJS();
-	$widgets->addCalendarJS();
-	$widgets->addAutoCompleteJS();
 	echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
 	echo $widgets->addToolTipLayer();
 	
@@ -222,10 +215,10 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 if($passwordcorrect == false)
 	{	
 		// Initialization
-		$widgets = new WidgetEngine($tpl); 
-		$widgets->addToolTipJS();
-		$widgets->addCalendarJS();
-		$widgets->addAutoCompleteJS();
+		$widgets = new WidgetEngine($tpl);
+		$tpl->addOnLoadEvent("Form.focusFirstElement('loginForm')");
+		$widgets->addToolTipJS(); 
+		$tpl->addJavaScript("js/prototype.js");
 		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
 		echo $widgets->addToolTipLayer();
 		// End of Initialization
