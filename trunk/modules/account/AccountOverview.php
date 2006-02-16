@@ -36,8 +36,8 @@ $dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colTitle
 $dataGrid->columnOrder = array("title","type","valutaDate","amount","sum","categoryTitle");  
 $dataGrid->initialSort = "title";
 $dataGrid->height = "350px";
-$dataGrid->headerSize = array(210,180,80,120,120,200);
-$dataGrid->cellAlign = array("left","left","left","right","right","left");
+$dataGrid->headerSize = array(210,30,80,120,120,200);
+$dataGrid->cellAlign = array("left","center","left","right","right","left");
 $dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 $dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "Transaction.php?action=delete&accountID=$accountID&ID=";
@@ -50,8 +50,10 @@ echo $tpl->getHeader($pageTitle);
 
 echo "<h1>$pageTitle</h1>";
 
-echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/planned_transactions.gif");
-echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/finished_transaction.gif");
+echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/planned_transaction_new.gif");
+echo ' ';
+echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/finished_transaction_new.gif");
+echo ' ';
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 
 echo $dataGrid->writeDataGrid();

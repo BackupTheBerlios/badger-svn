@@ -489,7 +489,7 @@ class Account extends DataGridHandler {
 					
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
-						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transactions.gif' : 'Account/planned_transactions.gif'), 
+						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction_new.gif' : 'Account/planned_transaction_new.gif'), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
