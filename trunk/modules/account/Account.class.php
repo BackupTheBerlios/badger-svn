@@ -471,6 +471,11 @@ class Account extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
+		global $badgerDb;
+		$us = new UserSettings($badgerDb);
+		$tpl = new TemplateEngine($us, BADGER_ROOT);
+		$widgets = new WidgetEngine($tpl);
+		
 		$result = array();
 
 		switch ($this->type) {
@@ -484,7 +489,7 @@ class Account extends DataGridHandler {
 					
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
-						'type' => getBadgerTranslation2('Account', $currentTransaction->getType()), 
+						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transactions.gif' : 'Account/planned_transactions.gif'), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
