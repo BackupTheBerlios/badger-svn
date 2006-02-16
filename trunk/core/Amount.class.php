@@ -33,7 +33,7 @@ class Amount {
 	 * @param $formatted boolean true if the $amount string is formatted according to UserSettings
 	 */
 	public function Amount($amount = 0, $formatted = false) {
-		bcscale(2);
+		bcscale(5);
 		
 		$this->set($amount, $formatted);
 	}

@@ -33,18 +33,10 @@ switch ($mode) {
 		showSelectPage();
 		break;
 
-	case 'trendPage':
-		printTrendPage();
-		break;
-	
 	case 'trendData':
 		showTrendData();
 		break;
 
-	case 'categoryPage':
-		printCategoryPage();
-		break;
-	
 	case 'categoryData':
 		showCategoryData();
 		break;
@@ -148,66 +140,6 @@ function showSelectPage() {
 	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
 
 	eval('echo "' . $tpl->getTemplate('statistics/select') . '";');
-	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
-}
-
-function printTrendPage() {
-	global $tpl;
-	global $badgerDb;
-	
-	$widgets = new WidgetEngine($tpl); 
-	
-	$widgets->addNavigationHead();
-
-	$trendTitle = 'Trendanzeige'; 
-	echo $tpl->getHeader($trendTitle);
-
-	if (!isset($_POST['accounts']) || !isset($_POST['startDate']) || !isset($_POST['endDate'])) {
-		throw new BadgerException('statistics', 'missingParameter');
-	}
-	
-	$accountIds = explode(';', $_POST['accounts']);
-	$accountIdsClean = '';
-	$first = true;
-	foreach($accountIds as $key => $val) {
-		settype($accountIds[$key], 'integer');
-		
-		if (!$first) {
-			$accountIdsClean .= ';';
-		} else {
-			$first = false;
-		}
-		$accountIdsClean .= $accountIds[$key];
-	}
-	
-	$startDate = new Date($_POST['startDate'], true);
-	$endDate = new Date($_POST['endDate'], true);
-	
-	$accountManager = new AccountManager($badgerDb);
-	
-	$accountList = '';
-	
-	foreach($accountIds as $currentAccountId) {
-		$currentAccount = $accountManager->getAccountById($currentAccountId);
-		
-		$accountTitle = $currentAccount->getTitle();
-		eval('$accountList .= "' . $tpl->getTemplate('statistics/trendAccountLine') . '";');
-	}	
-	
-	$startDateFormatted = $startDate->getFormatted();
-	$endDateFormatted = $endDate->getFormatted();
-
-	$trendChart = InsertChart(
-		BADGER_ROOT . "/includes/charts/charts.swf",
-		BADGER_ROOT . "/includes/charts/charts_library",
-		BADGER_ROOT . "/modules/statistics/statistics.php?mode=trendData&accounts=$accountIdsClean&startDate=" . $startDate->getDate() . '&endDate=' . $endDate->getDate(),
-		750,
-		500,
-		'99cc00',
-		true
-	);
-
-	eval('echo "' . $tpl->getTemplate('statistics/trend') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
@@ -408,7 +340,7 @@ function showTrendData() {
 	if (count($accounts) > 1) {
 		$chart['chart_data'][1][0] = 'Gesamt';
 	} else {
-		$chart['chart_data'][1][0] = $accounts[0][0];
+		$chart['chart_data'][1][0] = utf8_encode($accounts[0][0]);
 	}
 	
 	foreach($totals as $key => $val) {
@@ -424,98 +356,6 @@ function showTrendData() {
 	}
 	
 	SendChartData($chart);
-}
-
-function printCategoryPage() {
-	global $tpl;
-	global $badgerDb;
-	
-	$widgets = new WidgetEngine($tpl); 
-	
-	$widgets->addNavigationHead();
-
-	$categoryTitle = 'Kategorieanzeige'; 
-	echo $tpl->getHeader($categoryTitle);
-	
-	if (!isset($_POST['accounts']) || !isset($_POST['startDate']) || !isset($_POST['endDate']) || !isset($_POST['type']) || !isset($_POST['summarize'])) {
-		throw new BadgerException('statistics', 'missingParameter');
-	}
-	
-	$accountIds = explode(';', $_POST['accounts']);
-	$accountIdsClean = '';
-	$first = true;
-	foreach($accountIds as $key => $val) {
-		settype($accountIds[$key], 'integer');
-		
-		if (!$first) {
-			$accountIdsClean .= ';';
-		} else {
-			$first = false;
-		}
-		$accountIdsClean .= $accountIds[$key];
-	}
-	
-	$startDate = new Date($_POST['startDate'], true);
-	$endDate = new Date($_POST['endDate'], true);
-	
-	$type = $_POST['type'];
-	if ($type !== 'o') {
-		$type = 'i';
-		$typeText = 'Einnahmen';
-	} else {
-		$typeText = 'Ausgaben';
-	}
-	
-	$summarize = $_POST['summarize'];
-	if ($summarize !== 't') {
-		$summarize = 'f';
-		$summarizeText = 'Unterkategorien werden eigenständig aufgeführt.';
-	} else {
-		$summarizeText = 'Unterkategorien werden unter den Hauptkategorien zusammengefasst.';
-	}
-
-	$accountManager = new AccountManager($badgerDb);
-	
-	$accountList = '';
-	
-	foreach($accountIds as $currentAccountId) {
-		$currentAccount = $accountManager->getAccountById($currentAccountId);
-		
-		$accountTitle = $currentAccount->getTitle();
-		eval('$accountList .= "' . $tpl->getTemplate('statistics/categoryAccountLine') . '";');
-	}	
-	
-	$startDateFormatted = $startDate->getFormatted();
-	$endDateFormatted = $endDate->getFormatted();
-
-	$categoryChart = InsertChart(
-		BADGER_ROOT . "/includes/charts/charts.swf",
-		BADGER_ROOT . "/includes/charts/charts_library",
-		BADGER_ROOT . "/modules/statistics/statistics.php?mode=categoryData&accounts=$accountIdsClean&startDate=" . $startDate->getDate() . '&endDate=' . $endDate->getDate() . '&type=' . $type . '&summarize=' . $summarize,
-		750,
-		500,
-		'99cc00',
-		true
-	);
-
-	$categories = gatherCategories($accountIds, $startDate, $endDate, $type, $summarize == 't');
-	
-	$categoryHead = 'Kategorie';
-	$countHead = 'Anzahl';
-	$amountHead = 'Summe';
-	
-	$categoryTableBody = '';
-
-	foreach ($categories as $currentCategory) {
-		$categoryTitle = $currentCategory['title'];
-		$categoryCount = $currentCategory['count'];
-		$categoryAmount = $currentCategory['amount']->getFormatted();
-		
-		eval('$categoryTableBody .= "' . $tpl->getTemplate('statistics/categoryCategoryTableRow') . '";');
-	}
-	
-	eval('echo "' . $tpl->getTemplate('statistics/category') . '";');
-	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
 function showCategoryData() {
@@ -643,14 +483,14 @@ function showCategoryData() {
 	$chart['chart_value_text'][1][0] = '';
 	
 	foreach($categories as $key => $val) {
-		$chart['chart_data'][0][] = $val['title'];
+		$chart['chart_data'][0][] = utf8_encode($val['title']);
 		$chart['chart_value_text'][0][] = null;
 		if ($type == 'i') {
 			$chart['chart_data'][1][] = $val['amount']->get();
 		} else {
 			$chart['chart_data'][1][] = $val['amount']->mul(-1)->get();
 		}
-		$chart['chart_value_text'][1][] = utf8_encode($val['title'] . "\n" . $val['amount']->getFormatted() . "\n" . round($val['amount']->div($sum)->mul($type == 'i' ? 100 : -100)->get(), 0) . ' %'); 
+		$chart['chart_value_text'][1][] = utf8_encode($val['title'] . "\n" . $val['amount']->getFormatted() . "\n" . round($val['amount']->div($sum)->mul($type == 'i' ? 100 : -100)->get(), 2) . ' %'); 
 	}
 	
 	SendChartData($chart);
