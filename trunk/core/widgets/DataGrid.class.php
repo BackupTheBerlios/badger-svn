@@ -12,25 +12,100 @@
 **/
 /**
  * DataGrid Class
- * 
+ * - add DataGrid to the doc
+ * - add all necessary javascript variables to the doc
+ *  
  * @author Sepp
  */
 class DataGrid {
-private $tpl;
-private $LoadingMessage;
-public $headerName = array();
-public $columnOrder = array();
-public $headerSize = array();
-public $deleteMsg;
-public $deleteAction;
-public $editAction;
-public $newAction;
-public $cellAlign;
-public $rowCounterName;
-public $initialSort;
-public $width;
-public $height;
+	/**
+	 * TemplateEngine Object
+	 * @var object
+	 */
+	private $tpl;
+	
+	/**
+	 * Loading Message in the footer of the dataGrid table
+	 * @var string
+	 */
+	private $LoadingMessage;
+	
+	/**
+	 * Name of the dataGrid columns
+	 * @var array
+	 */
+	public $headerName = array();
 
+	/**
+	 * column order (column name must be in the xml!)
+	 * @var array
+	 */
+	public $columnOrder = array();
+	
+	/**
+	 * size of the columns in px
+	 * @var array
+	 */
+	public $headerSize = array();
+	
+	/**
+	 * align of the cells (left, right)
+	 * @var array
+	 */
+	public $cellAlign = array();
+	
+	/**
+	 * text of the javascript alert hint, when deleting
+	 * @var string
+	 */
+	public $deleteMsg;
+	
+	/**
+	 * php-page called for deletion
+	 * @var string
+	 */
+	public $deleteAction;
+
+	/**
+	 * php-page called for editing
+	 * @var string
+	 */
+	public $editAction;
+	
+	/**
+	 * php-page called for insertion
+	 * @var string
+	 */
+	public $newAction;
+	
+	/**
+	 * text after the number of rows
+	 * @var string
+	 */
+	public $rowCounterName;
+	
+	/**
+	 * initial sort column name
+	 * @var string
+	 */	
+	public $initialSort;
+	
+	/**
+	 * width of the datagrid (e.g. 100px, 20em, 100%)
+	 * @var string
+	 */	
+	public $width;
+	
+	/**
+	 * height of the datagrid (e.g. 100px, 20em, 100%)
+	 * @var string
+	 */	
+	public $height;
+
+	/**
+	 * function function __construct($tpl)
+	 * @param object template engine
+	 */
 	public function __construct($tpl) {
 		global $print;
 		$this->tpl = $tpl;
@@ -42,8 +117,11 @@ public $height;
 		}
 	}
 	
+	/**
+	 * function writeDataGrid ()
+	 * @return string complete dataGrid skeleton (without rows)
+	 */
 	public function writeDataGrid() {
-		//toDo: Use templateEngine
 		if($this->width) $this->width = ' style="width:'.$this->width.';" '; 
 		if($this->height) $this->height = ' style="height:'.$this->height.';" '; 
 		
@@ -74,6 +152,9 @@ public $height;
 		return $output;		
 	}
 	
+	/**
+	 * function initDataGridJS ()
+	 */
 	public function initDataGridJS() {
 		$this->tpl->addJavaScript("js/dataGrid.0.9.js");
 		$this->tpl->addOnLoadEvent('dgHeaderName = new Array("'.implode('","',$this->headerName).'");');
@@ -90,8 +171,7 @@ public $height;
 		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'");');
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
-		$this->tpl->addOnLoadEvent('Behaviour.apply();');
-		
+		$this->tpl->addOnLoadEvent('Behaviour.apply();');		
 	}
 }
 ?>

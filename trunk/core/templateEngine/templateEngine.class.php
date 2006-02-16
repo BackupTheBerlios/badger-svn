@@ -25,16 +25,30 @@ class TemplateEngine {
 	private $jsOnLoadEvents = array();
 	private $writtenHeader = false;
 
+	/**
+	 * function __construct($settings, $badgerRoot)
+	 * @param object $settings
+	 * @param string $badgerRoot (e.g. "../..")
+	 */
 	function __construct($settings, $badgerRoot) {
 		$this->settings = $settings;
 		$this->theme = $this->settings->getProperty("badgerTemplate");
 		$this->badgerRoot = $badgerRoot;		
 	}	
 	
+	/**
+	 * function getSettingsObj ()
+	 * @return object user settings object
+	 */
 	function getSettingsObj() {
 		return $this->settings;
 	}
 	
+	/**
+	 * function getTemplate ($template)
+	 * @param string $template name of the Template (/tpl/ThemeName/ + $template + .tpl )
+	 * @return string content of the template
+	 */
 	public function getTemplate($template) {	
 		if(!isset($templatecache[$template])) {
 			$filename = $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl';
@@ -54,19 +68,18 @@ class TemplateEngine {
 	/**
 	 * function getHeader ($pageTitle)
 	 * @param string $pageTitle The name of the XHTML-Page
-	 * @return string XHMTL-Header mit CSS, JS ...
 	 */
 	public function getHeader($pageTitle) {
-		global $print;		
+		global $print;
+		// standard badger header -> /tpl/ThemeName/badgerHeader.tpl
 		$template = "badgerHeader";
 		$JSOnLoadEvents = "";
 		
-		// create Page Title
+		// create Page Title; add Bagder site name for the DB
 		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
 		
-		// write XHTML-Header
-		// leider kann ich das nicht in das template kopieren, da es probleme mit den ? gibt
-		echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>";
+		// write XHTML Processing Instruction
+		echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 		
 		// transfer additionalHeaderTags (JS, CSS) to $var ($var must be in template)
 		$additionalHeaderTags = $this->additionalHeaderTags;
@@ -81,6 +94,8 @@ class TemplateEngine {
 	        $JSOnLoadEvents .= "\t}\n";
 	        $JSOnLoadEvents .= "\t</script>";
 		}
+		
+		// add button for printing
 		if($print) {
 			$printLayer = '<div id="printMessage"><button class="printButton" onclick="window.print();">'.getBadgerTranslation2('badger', 'PrintMessage').'</button></div>';
 		} else {
@@ -90,28 +105,76 @@ class TemplateEngine {
 		// write complete header
 		$this->writtenHeader = true;
 		eval("echo \"".$this->getTemplate($template)."\";");
-		
 	}
 	
+	/**
+	 * function addCSS($cssFile)
+	 * @param string $cssFile file name of the CSS-Page
+	 */
 	public function addCSS($cssFile) {
-		$this->additionalHeaderTags = $this->additionalHeaderTags."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+		if (!$this->writtenHeader) {
+			$this->additionalHeaderTags = $this->additionalHeaderTags."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+		} else {
+			throw new badgerException('templateEngine', 'HeaderIsAlreadyWritten', 'Function: addCSS()'); 
+		}
 	}
+
+	/**
+	 * function addJavaScript($JSFile)
+	 * @param string $JSFile file name of the JS-Page (e.g. "js/prototype.js")
+	 */
 	public function addJavaScript($JSFile) {
-		$this->additionalHeaderTags = $this->additionalHeaderTags."\t<script type=\"text/javascript\" src=\"".$this->badgerRoot."/".$JSFile."\"></script>\n";
+		if (!$this->writtenHeader) {
+			$this->additionalHeaderTags = $this->additionalHeaderTags."\t<script type=\"text/javascript\" src=\"".$this->badgerRoot."/".$JSFile."\"></script>\n";
+		} else {
+			throw new badgerException('templateEngine', 'HeaderIsAlreadyWritten', 'Function: addJavaScript()'); 
+		}
 	}
+	
+	/**
+	 * function addHeaderTag($HeaderTag)
+	 * @param string $HeaderTag complete header tag (e.g. "<script>...</script>")
+	 */
 	public function addHeaderTag($HeaderTag) {
-		$this->additionalHeaderTags = $this->additionalHeaderTags."\t".$HeaderTag."\n";
-	}	
+		if (!$this->writtenHeader) {
+			$this->additionalHeaderTags = $this->additionalHeaderTags."\t".$HeaderTag."\n";
+		} else {
+			throw new badgerException('templateEngine', 'HeaderIsAlreadyWritten', 'Function: addHeaderTag()'); 
+		}		
+	}
+	
+	/**
+	 * function addOnLoadEvent($eventFunction)
+	 * @param string $eventFunction entry for the onLoadEvent of the body (e.g. "initCalendar();")
+	 */
 	public function addOnLoadEvent($eventFunction) {
-		$this->jsOnLoadEvents[] = "$eventFunction";
+		if (!$this->writtenHeader) {
+			$this->jsOnLoadEvents[] = "$eventFunction";
+		} else {
+			throw new badgerException('templateEngine', 'HeaderIsAlreadyWritten', 'Function: addOnLoadEvent()'); 
+		}
 	}
 		
+	/**
+	 * function getThemeName()
+	 * @return string current theme name (e.g. "Standard")
+	 */
 	public function getThemeName() {
 		return $this->theme;
 	}
+	
+	/**
+	 * function getBadgerRoot()
+	 * @return string Badger Root (e.g. "../..")
+	 */
 	public function getBadgerRoot() {
 		return $this->badgerRoot;
 	}
+	
+	/**
+	 * function isHeaderWritten()
+	 * @return boolean true if the function getHeader is called previously
+	 */
 	public function isHeaderWritten() {
 		return $this->writtenHeader;
 	}

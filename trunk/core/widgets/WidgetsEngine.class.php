@@ -14,9 +14,14 @@
  * Widget-Engine Class
  * Insert
  * 	- ToolTip
- *  - Calendar
- *  - AutoComlepte aka Suggest
- * 
+ *  - Fields (text, hidden, password, ..)
+ *  - Calendar field
+ *  - Select field
+ *  - Buttons
+ *  - Images
+ *  - Navigation head
+ *  - AutoComlepte field aka Suggest
+ *  
  * @author Sepp, Tom
  */
 class WidgetEngine {
@@ -197,19 +202,13 @@ class WidgetEngine {
 		}
 		return $selectField;
 	}
+	
 	function addNavigationHead() {
 		$tplNavigationHead = "";
 		//Navigation Head
-		if (!$this->tpl->isHeaderWritten()) {
-			eval("\$tplNavigationHead = \"".$this->tpl->getTemplate("Navigation/header")."\";");
-			$this->tpl->addHeaderTag($tplNavigationHead);
-		} else {
-			throw new badgerException('widgetsEngine', 'HeaderIsAlreadyWritten', 'Function: addNavigationHead()'); 
-		}
-		$this->tpl->addOnLoadEvent("loadNavigation()");
-		
+		eval("\$tplNavigationHead = \"".$this->tpl->getTemplate("Navigation/header")."\";");
+		$this->tpl->addHeaderTag($tplNavigationHead);
+		$this->tpl->addOnLoadEvent("loadNavigation()");		
 	}
-	function getNavigationBody() {
-		//unused		
-	}
+
 }
