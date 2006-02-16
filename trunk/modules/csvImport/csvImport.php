@@ -120,27 +120,27 @@ if (isset($_POST['Upload'])){
 	 		//show content of the array, using the template engine
 	 		if ($transactionNumber > 0){  		
    				$tableHeadSelect = $widgets->createLabel("", getBadgerTranslation2("importCsv", "select"), true);
-   				$HeadSelectToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "selectToolTip"));
+   				$HeadSelectToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "selectToolTip"));
    				$tableHeadCategory = $widgets->createLabel("", getBadgerTranslation2("importCsv", "category"), true);
-				$HeadCategoryToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "categoryToolTip"));
+				$HeadCategoryToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "categoryToolTip"));
 				$tableHeadValutaDate = $widgets->createLabel("", getBadgerTranslation2("importCsv", "valutaDate"), true);
-   				$HeadValueDateToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "valuedateToolTip"));
+   				$HeadValueDateToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "valuedateToolTip"));
    				$tableHeadTitle = $widgets->createLabel("", getBadgerTranslation2("importCsv", "title"), true);
-   				$HeadTitleToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "titleToolTip"));
+   				$HeadTitleToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "titleToolTip"));
    				$tableHeadAmount = $widgets->createLabel("", getBadgerTranslation2("importCsv", "amount"), true);
-   				$HeadAmountToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "amountToolTip"));
+   				$HeadAmountToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "amountToolTip"));
    				$tableHeadTransactionPartner = $widgets->createLabel("", getBadgerTranslation2("importCsv", "transactionPartner"), true);
-   				$HeadTransactionPartnerToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "transactionPartnerToolTip"));
+   				$HeadTransactionPartnerToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "transactionPartnerToolTip"));
    				$tableHeadDescription = $widgets->createLabel("", getBadgerTranslation2("importCsv", "description"), true);
-   				$HeadDescriptionToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "descriptionToolTip"));
+   				$HeadDescriptionToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "descriptionToolTip"));
    				$tableHeadPeriodical = $widgets->createLabel("", getBadgerTranslation2("importCsv", "periodical"), true);
-   				$HeadPeriodicalToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "periodicalToolTip"));
+   				$HeadPeriodicalToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "periodicalToolTip"));
    				$tableHeadExceptional = $widgets->createLabel("", getBadgerTranslation2("importCsv", "Exceptional"), true);
-   				$HeadExceptionalToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "ExceptionalToolTip"));
+   				$HeadExceptionalToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "ExceptionalToolTip"));
    				$tableHeadOutside = $widgets->createLabel("", getBadgerTranslation2("importCsv", "outsideCapital"), true);
-   				$HeadOutsideToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
+   				$HeadOutsideToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
    				$tableHeadAccount = $widgets->createLabel("", getBadgerTranslation2("importCsv", "account"), true);
-				$HeadAccountToolTip =  $widgets->addToolTipLink("", getBadgerTranslation2("importCsv", "accountToolTip"));
+				$HeadAccountToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "accountToolTip"));
 				
    				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
    					

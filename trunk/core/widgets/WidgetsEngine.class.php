@@ -83,9 +83,24 @@ class WidgetEngine {
 			}
 		} else {
 			throw new badgerException('widgetsEngine', 'ToolTipJSNotAdded'); 
-		}
-		
+		}		
 	}
+
+	public function addToolTip($text, $imageSrc="Widgets/help.gif") {
+		if($this->ToolTipJSAdded) {
+			if ($this->ToolTipLayerAdded) {
+				$mouseEvents = "onmouseover=\"return overlib('$text', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\"";
+				
+				//return image with tooltip
+				return $this->addImage($imageSrc, $mouseEvents);
+			} else 	{
+				throw new badgerException('widgetsEngine', 'ToolTipLayerNotAdded');
+			}
+		} else {
+			throw new badgerException('widgetsEngine', 'ToolTipJSNotAdded'); 
+		}		
+	}
+	
 	public function addDateField($fieldname, $startdate="") {
 		$format = $this->settings->getProperty("badgerDateFormat");
 		if($startdate=="") {$startdate=$this->getFormatedDateToday($format);}
@@ -158,8 +173,7 @@ class WidgetEngine {
 		
 		$output = "<input type='$type' id='$id' name='$fieldname' size='$size' class='$class' value='$value' required='$mandatory' $valCondition />";
 		if($description) {
-			$helpImg = $this->addImage("Widgets/help.gif");
-			$output .= "&nbsp;" . $this->addToolTipLink("javascript:void(0)", $description, $helpImg);
+			$output .= "&nbsp;" . $this->addToolTip($description);
 		}
 		return $output;
 	}
@@ -181,8 +195,8 @@ class WidgetEngine {
 		return $output;
 	}
 	
-	public function addImage($file) {
-		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' border='0'/>";
+	public function addImage($file, $addAttributes="") {
+		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' border='0' $addAttributes />";
 	}
 	
 	public function createSelectField($name, $options, $default="", $description="", $mandatory=false, $selectAdditional="") {	
@@ -197,8 +211,7 @@ class WidgetEngine {
 		}
 		$selectField .= "</select>\n";
 		if($description) {
-			$helpImg = $this->addImage("Widgets/help.gif");
-			$selectField .= $this->addToolTipLink("", $description, $helpImg);
+			$selectField .= $this->addToolTip($description);
 		}
 		return $selectField;
 	}

@@ -42,9 +42,7 @@ function _jsVal_Language() {
 		//echo $widgets->addAutoCompleteField("Suggest");
 		//echo "<br />";
 		echo $widgets->addToolTipLayer();
-		echo $widgets->addToolTipLink("javascript:void(0);", "Description - this is ...", "ToolTip Test");
-		echo "<br />";
-		echo $widgets->addToolTipLink("", "ToolTip");
+		echo $widgets->addToolTip("Description - this is ...");
 		echo "<br />";
 		echo $widgets->createLabel("fieldname", "name:", true);
 		echo "&nbsp;";
