@@ -13,6 +13,7 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
+require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 
 $pageTitle = getBadgerTranslation2 ('accountOverview','pageTitle');
 
@@ -26,6 +27,9 @@ if (isset($_GET['accountID'])) {
 } else {
 	throw new badgerException('accountOverview', 'noAccountID', '');
 }
+$am = new AccountManager($badgerDb);
+$account = $am->getAccountById($accountID);
+$pageTitle .= ": ".$account->getTitle();
 
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID";
 $dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colTitle'), getBadgerTranslation2('accountOverview', 'colType'),getBadgerTranslation2('accountOverview', 'colValutaDate'),getBadgerTranslation2('accountOverview', 'colAmount'),getBadgerTranslation2('accountOverview', 'colSum'),getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
