@@ -1,4 +1,5 @@
 var objRowActive;
+var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
 var urlParameter = new Object;
 
@@ -84,8 +85,16 @@ function dgInit(originalRequest) {
 	}
 	//refresh JS-behaviours of the rows
 	Behaviour.apply();
+	
+	//activate previous selected rows (after resorting)
+	for (i=0; i<arrSelectedRows.length; i++) {
+		if($(arrSelectedRows[i])) {
+			selectRow($(arrSelectedRows[i]));
+		}
+	}
+	
 	//refresh row count
-	$("dgCount").innerHTML = xmlRows.length;	
+	$("dgCount").innerHTML = xmlRows.length;
 	messageLayer('hide');
 }
 
@@ -145,6 +154,7 @@ var behaviour =  {
 	'td.dgColumn' : function(element){
 		element.onclick = function(){
 			id = this.id.replace("dgColumn","");
+			arrSelectedRows = dgGetAllIds();
 			addNewSortOrder(id);
 			loadData(dgSourceXML + serializeParameter());
 		}
