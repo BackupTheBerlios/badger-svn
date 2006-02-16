@@ -20,13 +20,9 @@ require_once(BADGER_ROOT . "/includes/includes.php");
 require_once(BADGER_ROOT . "/core/UserSettings.class.php");
 $us = new UserSettings($badgerDb);
 $tpl = new TemplateEngine($us, BADGER_ROOT);
-$tpl->addCSS("style.css");
+$tpl->addCSS("style.css", "print, screen");
+$tpl->addCSS("print.css", "print");
 $tpl->addJavaScript("js/badgerCommon.js");
 $tpl->addJavaScript("js/jsval.js");
-$print = false;
-if (isset($_GET['print'])) {
-	$tpl->addCSS("print.css");
-	$print = true;
-}
 require(BADGER_ROOT . "/includes/login.php");
 ?>

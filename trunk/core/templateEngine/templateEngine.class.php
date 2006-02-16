@@ -111,9 +111,10 @@ class TemplateEngine {
 	 * function addCSS($cssFile)
 	 * @param string $cssFile file name of the CSS-Page
 	 */
-	public function addCSS($cssFile) {
+	public function addCSS($cssFile, $cssMedia="") {
 		if (!$this->writtenHeader) {
-			$this->additionalHeaderTags = $this->additionalHeaderTags."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+			if($cssMedia!="") $cssMedia = "media=\"$cssMedia\"";
+			$this->additionalHeaderTags = $this->additionalHeaderTags."\t<link href=\"".$this->badgerRoot.'/tpl/'.$this->theme."/".$cssFile."\" rel=\"stylesheet\" $cssMedia type=\"text/css\" />\n";
 		} else {
 			throw new badgerException('templateEngine', 'HeaderIsAlreadyWritten', 'Function: addCSS()'); 
 		}

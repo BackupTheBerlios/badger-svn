@@ -111,9 +111,9 @@ class DataGrid {
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		if($print){
-			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css");
+			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
 		} else {
-			$tpl->addCss("Widgets/dataGrid/dataGrid.css");
+			$tpl->addCss("Widgets/dataGrid/dataGrid.css", "screen");
 		}
 	}
 	
