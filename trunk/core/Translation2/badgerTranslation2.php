@@ -27,5 +27,4 @@ function getBadgerTranslation2 ($page, $id, $lang = NULL){
 	};
 	return $tr->get($id, $page, $usedLanguage);
 }
-
 ?>

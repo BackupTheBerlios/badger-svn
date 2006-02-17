@@ -186,6 +186,7 @@ function getDbDump() {
 		'i18n',
 		'langs',
 		'navi',
+		'naviIds_seq',
 		'plannedTransactionIds_seq',
 		'planned_transaction',
 		'session_global',

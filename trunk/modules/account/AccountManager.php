@@ -13,6 +13,8 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
+require_once BADGER_ROOT . '/core/navi/naviTools.php';
+require_once BADGER_ROOT . '/core/Translation2/translationTools.php';
 
 $redirectPageAfterSave = "AccountManagerOverview.php";
 $pageTitle = getBadgerTranslation2('accountAccount','pageTitleProp');
@@ -30,6 +32,7 @@ if (isset($_GET['action'])) {
 				//check if we can delete this item (or is the currency used)
 				foreach($IDs as $ID){
 					$am->deleteAccount($ID);
+					deleteFromNavi($us->getProperty("accountNaviId_$ID"));
 				}
 				//dg should show this message!!!! ToDo
 				echo "deletion was successful!";
@@ -121,6 +124,7 @@ function updateRecord() {
 	global $redirectPageAfterSave;
 	global $am; //Account Manager
 	global $curMan; //Currency Manager
+	global $us;
 	
 	if (isset($_POST['hiddenID'])) {
 		switch ($_POST['hiddenID']) {
@@ -132,7 +136,20 @@ function updateRecord() {
 				$_POST['description'],
 				new Amount($_POST['lowerLimit'] , true),
 				new Amount($_POST['upperLimit'] , true));
+			
+			$naviId = addToNavi(
+				$us->getProperty('accountNaviParent'),
+				$us->getProperty('accountNaviNextPosition'),
+				'item',
+				'Account' . $ID->getId(),
+				'account.gif',
+				'{BADGER_ROOT}/modules/account/AccountOverview.php?accountID=' . $ID->getId()
+			);
+			$us->setProperty('accountNaviId_' . $ID->getId(), $naviId);
+			$us->setProperty('accountNaviNextPosition', $us->getProperty('accountNaviNextPosition') + 1);
+			addTranslation('Navigation', 'Account' . $ID->getId(), $_POST['title'], $_POST['title']);
 			break;
+			
 		default:
 			//update record
 			$account = $am->getAccountById($_POST['hiddenID']);
@@ -142,6 +159,8 @@ function updateRecord() {
 			$account->setCurrency($curMan->getCurrencyById($_POST['currency']));
 			$account->setLowerLimit(new Amount($_POST['lowerLimit']));
 			$account->setUpperLimit(new Amount($_POST['upperLimit']));
+
+			modifyTranslation('Navigation', 'Account' . $account->getId(), $_POST['title'], $_POST['title']);
 		}
 		//REDIRECT
 		header("Location: $redirectPageAfterSave");
@@ -168,4 +187,14 @@ function getCurrencyArray($sortBy){
 	};
 	
 	return $curs;
+}
+
+function removeAccountFromNavi($id) {
+	global $us;
+	
+	
+	$sql = "DELETE FROM navi
+		WHERE navi_id = $naviId";
+	
+	
 }
