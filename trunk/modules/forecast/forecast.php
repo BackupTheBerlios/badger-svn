@@ -25,15 +25,16 @@ echo $tpl->getHeader($pageHeading);
 echo $widgets->addToolTipLayer();
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
-//help funktions for automatical calculation of pocket money from the finished transactions
-$standardStartDate = new Date();
-$standardStartDate->subtractSeconds(60*60*24*180);
-$calculatePocketMoneyStartDateField = $widgets->addDateField("startDate", $standardStartDate->getFormatted());
-$writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", getBadgerTranslation2("forecast", "calculatedPocketMoneyButton"), "submit", "Widgets/accept.gif");
-$calculatedPocketMoneyLabel = getBadgerTranslation2("forecast", "calculatedPocketMoneyLabel"). ":";
-$writeCalculatedToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "calculatedPocketMoneyToolTip"));
 //the button to calculate the pocket money from finished transactions was pressed, show the settings formula with the inputs made & the new pocket money 2
 if (isset ($_POST['writePocketMoney'])){
+	//help funktions for automatical calculation of pocket money from the finished transactions
+	$standardStartDate = new Date();
+	$standardStartDate->subtractSeconds(60*60*24*180);
+	$calculatePocketMoneyStartDateField = $widgets->addDateField("startDate", $_POST["startDate"]);
+	$writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", getBadgerTranslation2("forecast", "calculatedPocketMoneyButton"), "submit", "Widgets/accept.gif");
+	$calculatedPocketMoneyLabel = getBadgerTranslation2("forecast", "calculatedPocketMoneyLabel"). ":";
+	$writeCalculatedToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "calculatedPocketMoneyToolTip"));
+	//field for selecting end date of forecasting
 	$legendSetting = getBadgerTranslation2("forecast", "legendSetting");
 	$legendGraphs = getBadgerTranslation2("forecast", "legendGraphs");
 	$endDateLabel =  getBadgerTranslation2("forecast", "endDateField"). ":";
@@ -54,7 +55,7 @@ if (isset ($_POST['writePocketMoney'])){
 	//field to insert pocketmoney1
 	$pocketMoney1Label =  $widgets->createLabel("pocketmoney1", getBadgerTranslation2("forecast", "pocketMoney1Field").":", true);
 	
-	$startSpendingDate = new Date ($_POST["startDate"], true);
+	$startSpendingDate = new Date ($_POST["startDate"],true);
 	$spendingMoney = getSpendingMoney(1, $startSpendingDate);
 	$spendingMoney->mul(-1);
 	$calculatedPocketMoney = $spendingMoney->getFormatted();
@@ -118,6 +119,14 @@ if (isset ($_POST['writePocketMoney'])){
 //Settings formular
 if (!isset($_POST['writePocketMoney'])){	
 	if (!isset($_POST['sendData'])){	
+	//help funktions for automatical calculation of pocket money from the finished transactions
+	$standardStartDate = new Date();
+	$standardStartDate->subtractSeconds(60*60*24*180);
+	$calculatePocketMoneyStartDateField = $widgets->addDateField("startDate", $standardStartDate->getFormatted());
+	$writeCalcuatedPocketMoneyButton = $widgets->createButton("writePocketMoney", getBadgerTranslation2("forecast", "calculatedPocketMoneyButton"), "submit", "Widgets/accept.gif");
+	$calculatedPocketMoneyLabel = getBadgerTranslation2("forecast", "calculatedPocketMoneyLabel"). ":";
+	$writeCalculatedToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "calculatedPocketMoneyToolTip"));
+	
 	//field for selecting end date of forecasting
 	$legendSetting = getBadgerTranslation2("forecast", "legendSetting");
 	$legendGraphs = getBadgerTranslation2("forecast", "legendGraphs");
