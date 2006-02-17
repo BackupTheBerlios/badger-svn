@@ -95,13 +95,6 @@ class TemplateEngine {
 	        $JSOnLoadEvents .= "\t</script>";
 		}
 		
-		// add button for printing
-		if($print) {
-			$printLayer = '<div id="printMessage"><button class="printButton" onclick="window.print();">'.getBadgerTranslation2('badger', 'PrintMessage').'</button></div>';
-		} else {
-			$printLayer = '';	
-		}
-		
 		// write complete header
 		$this->writtenHeader = true;
 		eval("echo \"".$this->getTemplate($template)."\";");
