@@ -17,11 +17,11 @@
 			</tr>
 			<tr> 
 				<td>$pocketMoney1Label </td>
-				<td> $pocketMoney1Field </td>
+				<td> $pocketMoney1Field</td>
 			</tr>
 			<tr> 
 				<td>$pocketMoney2Label </td>
-				<td>$pocketMoney2Field </td>
+				<td>$pocketMoney2Field</td>
 			</tr>
 			<tr> 
 				<td><b>$calculatedPocketMoneyLabel </b></td>
