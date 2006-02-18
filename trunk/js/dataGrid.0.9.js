@@ -1,30 +1,61 @@
+/*
+* ____          _____   _____ ______ _____  
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+*| |_) | /  \  | |  | | |  __| |__  | |__) |
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
+*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|____/_/    \_\_____/ \_____|______|_|  \_\
+* Open Source Financial Management
+* Visit http://badger.berlios.org 
+*
+**/
+/*
+* dataGrid.js
+*
+**/
+
 var objRowActive;
+var strSortingColumnActive;
 var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
-var urlParameter = new Object;
+var objURLParameter = new Object;
 
-// send a request to the server, define callback-function
-// ToDo: if existing, cancel old request
-function loadData(url) {
+// retrieve data from server, define callback-function
+function loadData(strUrl) {
 	var myAjax = new Ajax.Request(
-		url, {
+		strUrl, {
 			method: 'post',
-			onComplete: dgInit
+			onComplete: dgInsertData,
+			onFailure: dgError
 		}); 
-	messageLayer('show', dgLoadingMessage);
+	messageLayer('show', '<span class="dgMessageHint"> '+dgLoadingMessage+' </span>');
 }
-function deleteData(url) {
+
+// delete data
+function deleteData(strUrl) {
 	var myAjax = new Ajax.Request(
-		url, {
-			method: 'get'
+		strUrl, {
+			method: 'get',
+			onComplete: dgDeleteResponse,
+			onFailure: dgError
 			});
 }
 
-function dgInit(originalRequest) {
-	xmlDoc = originalRequest.responseXML;
-	//alert(xmlHttp.responseText);
-	xmlColumns = xmlDoc.getElementsByTagName("column");
-	xmlRows = xmlDoc.getElementsByTagName("row");
+//displays the message from backend-object
+function dgDeleteResponse(objXHR) {
+	messageLayer('show', '<span class="dgMessageError">'+objXHR.responseText+'</span>');
+}
+
+//XHR Error
+function dgError() {
+	messageLayer('show', '<span class="dgMessageError">XHR Error</span>');
+}
+
+function dgInsertData(objXHR) {
+	objXmlDoc = objXHR.responseXML;
+	//alert(objXHR.responseText);
+	xmlColumns = objXmlDoc.getElementsByTagName("column");
+	xmlRows = objXmlDoc.getElementsByTagName("row");
 	
 	//delete old table body if exists
 	if($("dgTableData").getElementsByTagName("tbody")[0]) {
@@ -34,25 +65,30 @@ function dgInit(originalRequest) {
 	dgTableDataBody = document.createElement("tbody");
 	dgData = $("dgTableData").appendChild(dgTableDataBody);
 
-	var columns = new Array();
-	for (j=0; j<xmlColumns.length; j++) {
-		if(xmlColumns[j].textContent) columnName = xmlColumns[j].textContent; //FF
-		if(xmlColumns[j].text) columnName = xmlColumns[j].text; //IE
-		if(xmlColumns[j].innerText) columnName = xmlColumns[j].innerText; //Opera
-		columns[columnName] = j; 
+	//column assignment
+	//e.g. columnPosition['title'] is the first column in the xml-file;
+	var columnPosition = new Array();
+	for (intPosition=0; intPosition<xmlColumns.length; intPosition++) {
+		if(xmlColumns[intPosition].textContent) columnName = xmlColumns[intPosition].textContent; //FF
+		if(xmlColumns[intPosition].text) columnName = xmlColumns[intPosition].text; //IE
+		if(xmlColumns[intPosition].innerText) columnName = xmlColumns[intPosition].innerText; //Opera
+		columnPosition[columnName] = intPosition;		
 	}
 	
 	for (j=0; j<xmlRows.length; j++) {
 		xmlCells = xmlRows[j].getElementsByTagName("cell");
+		
+		//first cell of a row, is always a unique ID
 		if(xmlCells[0].textContent) rowID = xmlCells[0].textContent; //FF
 		if(xmlCells[0].text) rowID = xmlCells[0].text; //IE
 		if(xmlCells[0].innerText) rowID = xmlCells[0].innerText; //Opera
 		
+		//define a new row
 		newRow = document.createElement("tr");
 		newRow.className = "dgRow";
 		newRow.id=rowID;
 		
-		//add checkbox to first cell
+		//add checkbox as the first cell
 		checkTD = document.createElement("td");
 		checkTD.style.width = "25px";
 		checkBox = document.createElement("input");
@@ -65,13 +101,13 @@ function dgInit(originalRequest) {
 		
 		//insert cell values
 		// dgColumnOrder[0] -> 'balance' : name of the column
-		// columns['balance'] -> '1' : first column
+		// columnPosition['balance'] -> '1' : first column
 		// cells[1].text{Content} -> '899.23' : value
 		for (i=0; i<dgColumnOrder.length; i++) {
 			cell = document.createElement("td");
 			cell.style.width = dgHeaderSize[i] + "px";
 			cell.align = dgCellAlign[i];
-			xmlElement = xmlCells[columns[dgColumnOrder[i]]];
+			xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
 			if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent + "&nbsp;"; // FF
 			if (xmlElement.text) cell.innerHTML = xmlElement.text + "&nbsp;"; //IE
 			if (xmlElement.innerText) cell.innerHTML = xmlElement.innerText + "&nbsp;"; //Opera
@@ -85,7 +121,7 @@ function dgInit(originalRequest) {
 	}
 	//refresh JS-behaviours of the rows
 	Behaviour.apply();
-	
+
 	//activate previous selected rows (after resorting)
 	for (i=0; i<arrSelectedRows.length; i++) {
 		if($(arrSelectedRows[i])) {
@@ -123,12 +159,14 @@ function deselectRow(objRow) {
 	$("check"+objRow.id).focus();
 }
 
+//
 function enableMouseEvents() {
 	mouseEventsDisabled = false;
 }
 
-//Mouse-Events of the Rows
+//Mouse-Events
 var behaviour =  {
+	//Mouse-Events of the rows (selecting, activating)
 	'tr.dgRow' : function(element){
 		element.onmouseover = function(){
 			if (!mouseEventsDisabled) {
@@ -151,6 +189,7 @@ var behaviour =  {
 			dgEdit(this.id);
 		}
 	},
+	//Mouse-Events of the columns (sorting)
 	'td.dgColumn' : function(element){
 		element.onclick = function(){
 			id = this.id.replace("dgColumn","");
@@ -159,6 +198,7 @@ var behaviour =  {
 			loadData(dgSourceXML + serializeParameter());
 		}
 	},
+	// checkbox in the dataGrid-Header, for (de-)selecting all
 	'#dgSelector' : function(element){
 		element.onclick = function(){
 			checkbox = Form.getInputs("dgForm","checkbox");
@@ -186,7 +226,7 @@ var behaviour =  {
 function dgKeyProcess(event) {
 	if (!event) event=window.event;
 	
-	//alert(event.keyCode);
+	//KEY_DOWN
 	if (event.keyCode == Event.KEY_DOWN) {
 		Event.stop(event);
 		
@@ -208,6 +248,7 @@ function dgKeyProcess(event) {
 		}
 		
 	}
+	//KEY_UP
 	if (event.keyCode == Event.KEY_UP) {
 		Event.stop(event);
 		
@@ -227,12 +268,15 @@ function dgKeyProcess(event) {
 			}
 		}
 	}
+	//KEY_RETURN
 	if (event.keyCode == Event.KEY_RETURN) {
 		dgEdit();
 	}
+	//KEY_DELETE
 	if (event.keyCode == Event.KEY_DELETE) {
 		dgDelete();
 	}
+	//KEY_SPACE (only for opera)
 	if (event.keyCode == 32) {
 		if(objRowActive.className=="dgRowSelected" || objRowActive.className=="dgRowSelectedActive") {
 			deselectRow(objRowActive);
@@ -277,13 +321,14 @@ function dgNew(addParam) {
 	}
 }
 
-// edit record with ID in a special page
+// call site to  edit record with ID in a special page
 function dgEdit(id) {
 	if(dgEditAction) {
 		document.location.href = dgEditAction + id;
 	}
 }
 
+// get all ids from selected rows -> array
 function dgGetAllIds() {
 	checkbox = Form.getInputs("dgForm","checkbox");
 	allIDs = new Array;
@@ -296,28 +341,27 @@ function dgGetAllIds() {
 }
 
 //change sort order and hide/show sort images
-var activeColumn;
-function addNewSortOrder(column) {
-	if(activeColumn) changeColumnSortImage(activeColumn, "empty");
-	if(column==urlParameter["ok0"]) {
+function addNewSortOrder(strColumn) {
+	if(strSortingColumnActive) changeColumnSortImage(strSortingColumnActive, "empty");
+	if(strColumn==objURLParameter["ok0"]) {
 		//click on the same column:  asc -> desc, desc -> asc
-		if (urlParameter["od0"]=="a") {
-			urlParameter["od0"]="d";
-			changeColumnSortImage(column, "desc");
+		if (objURLParameter["od0"]=="a") {
+			objURLParameter["od0"]="d";
+			changeColumnSortImage(strColumn, "desc");
 		} else {
-			urlParameter["od0"]="a";
-			changeColumnSortImage(column, "asc");
+			objURLParameter["od0"]="a";
+			changeColumnSortImage(strColumn, "asc");
 		}
 	} else {
-		urlParameter["ok2"] = urlParameter["ok1"];
-		urlParameter["od2"] = urlParameter["od1"];
-		urlParameter["ok1"] = urlParameter["ok0"];
-		urlParameter["od1"] = urlParameter["od0"];
-		urlParameter["ok0"] = column;
-		urlParameter["od0"] = "a";
-		changeColumnSortImage(column, "asc");
+		objURLParameter["ok2"] = objURLParameter["ok1"];
+		objURLParameter["od2"] = objURLParameter["od1"];
+		objURLParameter["ok1"] = objURLParameter["ok0"];
+		objURLParameter["od1"] = objURLParameter["od0"];
+		objURLParameter["ok0"] = strColumn;
+		objURLParameter["od0"] = "a";
+		changeColumnSortImage(strColumn, "asc");
 	}
-	activeColumn = column;
+	strSortingColumnActive = strColumn;
 }
 
 //change the image for sorting direction
@@ -337,14 +381,16 @@ function changeColumnSortImage(id, newstatus) {
 
 //convert array to string
 function serializeParameter() {
-	var urlParameterString ="";
-	for (var parameter in urlParameter)
-		if(parameter!="extend" && urlParameter[parameter]!=undefined) { 
-	    	urlParameterString = urlParameterString+"&"+parameter+"="+urlParameter[parameter];
+	var strURLParameter = "";
+	
+	for (var parameter in objURLParameter)
+		if(parameter!="extend" && objURLParameter[parameter]!=undefined) { 
+	    	strURLParameter = strURLParameter + "&" + parameter + "=" + objURLParameter[parameter];
 	    }
-	return urlParameterString;
+	return strURLParameter;
 }
 
+//display a message in the dataGrid footer
 function messageLayer(action, message) {
 	switch(action) {
 		case 'show':
@@ -358,8 +404,3 @@ function messageLayer(action, message) {
 			break;
 	}
 }
-
-
-// add event to the document
-Event.observe(document, 'keypress', dgKeyProcess, false)
-

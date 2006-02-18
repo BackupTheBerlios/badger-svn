@@ -171,7 +171,9 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'");');
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
-		$this->tpl->addOnLoadEvent('Behaviour.apply();');		
+		$this->tpl->addOnLoadEvent('Behaviour.apply();');
+		$this->tpl->addOnLoadEvent('Event.observe(document.getElementById("dataGrid"), \'keypress\', dgKeyProcess, false)');
+		
 	}
 }
 ?>

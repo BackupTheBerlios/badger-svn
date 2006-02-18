@@ -25,13 +25,14 @@ if (isset($_GET['action'])) {
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
-				$IDs = explode(",",$_GET['ID']);				
-				//check if we can delete this item (or is the currency used)
+				$IDs = explode(",",$_GET['ID']);
+						
+				//check if we can delete this item
 				foreach($IDs as $ID){
 					$cm->deleteCurrency($ID);
 				}
-				//dg should show this message!!!! ToDo
-				echo "deletion was successful!";
+
+				echo "";
 			} else {
 				echo "no ID was transmitted!";	
 			}			

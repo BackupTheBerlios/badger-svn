@@ -24,6 +24,39 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 //header('Cache-Control: public');
 //header('Expires: ' . date('r', time() + 24 * 60 * 60));
 ?> 
+//	written	by Tan Ling Wee
+//	last updated 28 July 2003
+//	email :	info@sparrowscripts.com
+//	modified by ALQUANTO 30 July 2003 - german language included.
+//									  - modified languageLogic with the ISO-2letter-strings
+//									  - changes in in showCalendar: defaultLanguage is already set...
+//									  - js and html corrected... more xhtml-compliant... simplier css
+//	email: popcalendar@alquanto.de
+//
+//	modified by PinoToy 25 July 2003  - new logic for multiple languages (English, Spanish and ready for more).
+//									  - changes in popUpMonth & popDownMonth methods for hidding	popup.
+//									  - changes in popDownYear & popDownYear methods for hidding	popup.
+//									  - new logic for disabling dates in	the past.
+//									  - new method showCalendar, dynamic	configuration of language, enabling	past & position.
+//									  - changes in the styles.
+//	email  : pinotoy@yahoo.com
+//
+//	modified by Eni Kao 24 August 2005
+//		- Optimized multiple language support with more than one calendar in different languages (as toy.html)
+//		- Added support for Opera, Konqueror and Firefox in non-Quicks mode
+//		- Fully compatible to XHTML 1.0 Transitional
+//		- Changed depricated font, bgcolor etc. to CSS attributes
+//		- Added messages as tooltips (and a new one for the close button)
+//		- Made ESC work in every browser
+//		- Changed german umlauts to HTML entities for better support of international character sets
+//		- TODO: Do this with spanish special characters
+//		- Perhaps I missed something?
+//	email: popcalendar@enikao.net
+//
+//  modified by sepp (badger-TEAM)
+//  - language support disabled -> generated dynamically by php from a DB
+//  - some onLoad-bugs fixed
+
 	var enablePast = 0;		// 0 - disabled ; 1 - enabled
 	var fixedX = -1;		// x position (-1 if to appear below control)
 	var fixedY = -1;		// y position (-1 if to appear below control)

@@ -30,9 +30,9 @@ if (isset($_GET['action'])) {
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID']) || isset($_GET['accountID'])) {
-				$IDs = explode(",",$_GET['ID']); 				
-				//check if we can delete this item (or is the currency used)
-				$debug ="";
+				$IDs = explode(",",$_GET['ID']); 	
+							
+				//check if we can delete this item
 				$acc = $am->getAccountById($_GET['accountID']);
 				foreach($IDs as $ID){
 					if(substr($ID,0,1)=="p") {
@@ -43,9 +43,7 @@ if (isset($_GET['action'])) {
 						$acc->deleteFinishedTransaction($ID);
 					}
 				}
-				//dg should show this message!!!! ToDo
-				echo $debug;
-				//echo "deletion was successful!";
+				echo "";
 			} else {
 				echo "no ID/accID was transmitted!";	
 			}			
