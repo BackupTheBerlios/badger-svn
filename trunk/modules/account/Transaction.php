@@ -170,12 +170,12 @@ function printFrontendFinished($AccountID, $ID) {
 	$periodicalField = $widgets->createField("periodical", 30, "on", "", true, "checkbox", $periodicalValue);
 
 	//Buttons
-	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
+	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	if($redirectPageAfterSave) {
 		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
 	} else { $backBtn=""; };
 	//add vars to template, print site
-	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingAddTransactionFinished');
+	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingTransactionFinished');
 	eval("echo \"".$tpl->getTemplate("Account/FinishedTransaction")."\";");
 }
 
@@ -260,12 +260,12 @@ function printFrontendPlanned($AccountID, $ID) {
 	$repeatFrequencyField = $widgets->createField("repeatFrequency", 30, $repeatFrequencyValue, "", true, "text", "");
 	
 	//Buttons
-	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
+	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	if($redirectPageAfterSave) {
 		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
 	} else { $backBtn=""; };
 	//add vars to template, print site
-	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingAddTransactionPlanned');
+	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingTransactionPlanned');
 	eval("echo \"".$tpl->getTemplate("Account/PlannedTransaction")."\";");
 }
 

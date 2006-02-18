@@ -88,7 +88,13 @@ class DataGrid {
 	 * initial sort column name
 	 * @var string
 	 */	
-	public $initialSort;
+	public $initialSortColumn;
+	
+	/**
+	 * initial sort direction
+	 * @var string
+	 */	
+	public $initialSortDirection;
 	
 	/**
 	 * width of the datagrid (e.g. 100px, 20em, 100%)
@@ -110,6 +116,9 @@ class DataGrid {
 		global $print;
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
+		$this->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
+		$this->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
+		
 		if($print){
 			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
 		} else {
@@ -168,7 +177,7 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
 		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
 		$this->tpl->addOnLoadEvent('dgLoadingMessage = "'.$this->LoadingMessage.'";');
-		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'");');
+		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'", "'.$this->initialSortDirection.'");');
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');

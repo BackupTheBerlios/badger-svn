@@ -97,22 +97,22 @@ function printFrontend() {
 	$pageHeading = $pageTitle;
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountAccount', 'title'), true);
-	$titleField = $widgets->createField("title", 20, $titleValue, "", true, "text", "");
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountAccount', 'description'), false);
-	$descriptionField = $widgets->createField("description", 20, $descriptionValue, "", false, "text", "");
+	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
 	$lowerLimitLabel = $widgets->createLabel("lowerLimit", getBadgerTranslation2('accountAccount', 'lowerLimit'), false);
-	$lowerLimitField = $widgets->createField("lowerLimit", 20, $lowerLimitValue, "", false, "text", "class='inputNumber'");
+	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "class='inputNumber'");
 	$upperLimitLabel = $widgets->createLabel("upperLimit", getBadgerTranslation2('accountAccount', 'upperLimit'), false);
-	$upperLimitField = $widgets->createField("upperLimit", 20, $upperLimitValue, "", false, "text", "class='inputNumber'");
+	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", false, "text", "class='inputNumber'");
 
-	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), false);
+	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), true);
 	
 	$currencies = getCurrencyArray('symbol');
 	
-	$currencyField = $widgets->createSelectField("currency", $currencies, $default=$currencyValue);
+	$currencyField = $widgets->createSelectField("currency", $currencies, $default=$currencyValue, "", false, "style='width: 213px;'");
 	
 	//Buttons
-	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif");
+	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
 
 	//add vars to template, print site

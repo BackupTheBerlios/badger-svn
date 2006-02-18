@@ -25,11 +25,10 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManage
 $dataGrid->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'), getBadgerTranslation2('accountAccount', 'colBalance'),getBadgerTranslation2('accountAccount', 'colCurrency'));
 $dataGrid->columnOrder = array("title","balance","currency");  
 $dataGrid->initialSort = "title";
+$dataGrid->initialSortDirection = "asc";
 $dataGrid->headerSize = array(200,150,100);
 $dataGrid->cellAlign = array("left","right","left");
 $dataGrid->height = "350px";
-$dataGrid->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
-$dataGrid->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 $dataGrid->deleteAction = "AccountManager.php?action=delete&ID=";
 $dataGrid->editAction = "AccountManager.php?action=edit&ID=";
 $dataGrid->newAction = "AccountManager.php?action=new";
