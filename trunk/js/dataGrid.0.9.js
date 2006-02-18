@@ -11,7 +11,11 @@
 **/
 /*
 * dataGrid.js
-*
+ * 
+ * @author Sepp
+ * @author togro82
+ * @version $LastChangedRevision$
+ *
 **/
 
 var objRowActive;
@@ -22,6 +26,7 @@ var objURLParameter = new Object;
 
 // retrieve data from server, define callback-function
 function loadData(strUrl) {
+	arrSelectedRows = dgGetAllIds();
 	var myAjax = new Ajax.Request(
 		strUrl, {
 			method: 'post',
@@ -193,7 +198,6 @@ var behaviour =  {
 	'td.dgColumn' : function(element){
 		element.onclick = function(){
 			id = this.id.replace("dgColumn","");
-			arrSelectedRows = dgGetAllIds();
 			addNewSortOrder(id);
 			loadData(dgSourceXML + serializeParameter());
 		}
@@ -289,7 +293,7 @@ function dgKeyProcess(event) {
 // delete all selected rows
 //  - delete row in GUI
 //  - send a background delete request to the server
-function dgDelete() {
+function dgDelete(bolRefreshDataGrid) {
 	if(dgDeleteAction) {
 		dgData = $("dgTableData");	
 		checkbox = Form.getInputs("dgForm","checkbox");
@@ -302,12 +306,18 @@ function dgDelete() {
 		if (choise) {
 			//background delete -> ToDo: check result of deletion
 			deleteData(dgDeleteAction + allSelectedIds);
-			//delete rows from dataGrid
-			for (i=0; i<allSelectedIds.length; i++) {
-				Element.remove($(allSelectedIds[i]));
-				dgCount = $("dgCount").innerHTML;
-				dgCount--;
-				$("dgCount").innerHTML = dgCount;
+			
+			if(bolRefreshDataGrid) {
+				//refresh complete dataGrid
+				loadData(dgSourceXML + serializeParameter());
+			} else {
+				//delete rows from dataGrid
+				for (i=0; i<allSelectedIds.length; i++) {
+					Element.remove($(allSelectedIds[i]));
+					dgCount = $("dgCount").innerHTML;
+					dgCount--;
+					$("dgCount").innerHTML = dgCount;
+				}
 			}
 		} //if (choise)
 	}
@@ -341,7 +351,7 @@ function dgGetAllIds() {
 }
 
 //change sort order and hide/show sort images
-function addNewSortOrder(strColumn) {
+function addNewSortOrder(strColumn, strDirection) {
 	if(strSortingColumnActive) changeColumnSortImage(strSortingColumnActive, "empty");
 	if(strColumn==objURLParameter["ok0"]) {
 		//click on the same column:  asc -> desc, desc -> asc
@@ -358,8 +368,13 @@ function addNewSortOrder(strColumn) {
 		objURLParameter["ok1"] = objURLParameter["ok0"];
 		objURLParameter["od1"] = objURLParameter["od0"];
 		objURLParameter["ok0"] = strColumn;
-		objURLParameter["od0"] = "a";
-		changeColumnSortImage(strColumn, "asc");
+		if(strDirection!="desc") {
+			objURLParameter["od0"] = "a";
+			changeColumnSortImage(strColumn, "asc");
+		} else {
+			objURLParameter["od0"] = "d";
+			changeColumnSortImage(strColumn, "desc");
+		}
 	}
 	strSortingColumnActive = strColumn;
 }

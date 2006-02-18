@@ -53,7 +53,7 @@ echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTran
 echo ' ';
 echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/finished_transaction_new.gif");
 echo ' ';
-echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete(true)", "Widgets/table_delete.gif");
 
 echo $dataGrid->writeDataGrid();
 

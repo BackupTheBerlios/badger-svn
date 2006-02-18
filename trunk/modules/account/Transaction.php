@@ -18,7 +18,7 @@ require_once BADGER_ROOT . '/modules/account/FinishedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
-$redirectPageAfterSave = "";
+$redirectPage = "";
 $pageTitle = getBadgerTranslation2('accountTransaction','pageTitle');; //I18N
 
 $am = new AccountManager($badgerDb);
@@ -27,66 +27,51 @@ $catm = new CategoryManager($badgerDb);
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
 		case 'delete':
-			//background delete
-			//called by dataGrid
-			if (isset($_GET['ID']) || isset($_GET['accountID'])) {
-				$IDs = explode(",",$_GET['ID']); 	
-							
-				//check if we can delete this item
-				$acc = $am->getAccountById($_GET['accountID']);
-				foreach($IDs as $ID){
-					if(substr($ID,0,1)=="p") {
-						$pos = strpos($ID,"_");				
-						$ID = substr($ID,1,$pos-1);
-						$acc->deletePlannedTransaction($ID);
-					} else {
-						$acc->deleteFinishedTransaction($ID);
-					}
-				}
-				echo "";
-			} else {
-				echo "no ID/accID was transmitted!";	
-			}			
+			deleteRecord();		
 			break;
-		case 'save':
-			//add record, update record
-			if(isset($_POST['hiddenAccID'])) {
-				$accountID = $_POST['hiddenAccID'];
-			} else {
-				$accountID = $_GET['accountID'];;	
-			}
-			$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
 			
+		case 'save':
+			$accountID = $_POST['hiddenAccID'];
 			if (isset($_POST['hiddenID'])) {
-				updateRecord($accountID, $_POST['hiddenID'], $_POST['hiddenType']);
-			} else {
-				header("Location: $redirectPageAfterSave");
+				//add record, update record
+				updateRecord($accountID, $_POST['hiddenID'], $_POST['hiddenType']);							
+				$redirectPage = "AccountOverview.php?accountID=".$accountID;
+				header("Location: $redirectPage");
 			}
-			break;		
+			break;
+
 		case 'new':
 		case 'edit':
 			//frontend form for edit or insert
+			
 			if (isset($_GET['accountID'])) {
+				// account was selected previously
 				$accountID = $_GET['accountID'];
-				$redirectPageAfterSave = "AccountOverview.php?accountID=".$accountID;
+				$redirectPage = "AccountOverview.php?accountID=".$accountID;
 			} else {
+				// no account was selected previously
+				// -> user has to choose one
 				$accountID = "choose";	
 			}
 			
 			if (isset($_GET['ID'])) {
 				$ID = $_GET['ID'];
-				if(substr($ID,0,1)=="p") {
-					$pos = strpos($ID,"_");				
-					$ID = substr($ID,1,$pos-1);
+				
+				//check if ID is from planned or finished transaction
+				if(substr($ID, 0, 1) == "p") {
+					$pos = strpos($ID, "_");				
+					$ID = substr($ID, 1, $pos - 1);
 					printFrontendPlanned($accountID, $ID);
 				} else {
 					printFrontendFinished($accountID, $ID);
 				}
 			} else {
+				
 				switch($_GET['type']) {
 				case 'finished':
 					printFrontendFinished($accountID, "new");
 					break;
+				
 				case 'planned':
 					printFrontendPlanned($accountID, "new");
 					break;
@@ -95,11 +80,38 @@ if (isset($_GET['action'])) {
 			break;
 	}	
 }
+
+//background delete
+//called by dataGrid
+function deleteRecord() {
+	global $am;
+	
+	if (isset($_GET['ID']) || isset($_GET['accountID'])) {
+		$IDs = explode(",",$_GET['ID']); 	
+					
+		//check if we can delete this item
+		$acc = $am->getAccountById($_GET['accountID']);
+		foreach($IDs as $ID){
+			if(substr($ID,0,1)=="p") {
+				$pos = strpos($ID,"_");				
+				$ID = substr($ID,1,$pos-1);
+				$acc->deletePlannedTransaction($ID);
+			} else {
+				$acc->deleteFinishedTransaction($ID);
+			}
+		}
+		echo "";
+	} else {
+		echo "no ID/accID was transmitted!";	
+	}	
+	
+}
+
 function printFrontendFinished($AccountID, $ID) {
 	global $pageTitle;
 	global $tpl;
 	global $am;
-	global $redirectPageAfterSave;
+	global $redirectPage;
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
@@ -150,29 +162,35 @@ function printFrontendFinished($AccountID, $ID) {
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
 	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
-	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
-	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
+	
+	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), false);
+	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	
 	$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), true);
 	$valutaDateField = $widgets->addDateField("valutaDate", $valutaDateValue);
-	//$valutaDateField = $widgets->createField("valutaDate", 30, $valutaDateValue, "", true, "text", "");
+	
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
 	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
-	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), true);
-	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", true, "text", "");
-	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), true);
-	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", true, "checkbox", $outsideCapitalValue);
-	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true, "style='width: 213px;'");
-	//$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
+	
+	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
+	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false);
+	
+	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), false);
+	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", false, "checkbox", $outsideCapitalValue);
+	
+	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false, "style='width: 213px;'");
 	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
-	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), true);
-	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", true, "checkbox", $exceptionalValue);
-	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), true);
-	$periodicalField = $widgets->createField("periodical", 30, "on", "", true, "checkbox", $periodicalValue);
+	
+	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), false);
+	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", false, "checkbox", $exceptionalValue);
+	
+	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), false);
+	$periodicalField = $widgets->createField("periodical", 30, "on", "", false, "checkbox", $periodicalValue);
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
-	if($redirectPageAfterSave) {
-		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
+	if($redirectPage) {
+		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPage';return false;", "Widgets/back.gif");
 	} else { $backBtn=""; };
 	//add vars to template, print site
 	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingTransactionFinished');
@@ -183,7 +201,7 @@ function printFrontendPlanned($AccountID, $ID) {
 	global $pageTitle;
 	global $tpl;
 	global $am;
-	global $redirectPageAfterSave;
+	global $redirectPage;
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
@@ -218,7 +236,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		$transactionPartnerValue = "";		
 		$categoryValue = "";
 		$repeatUnitValue = "";
-    	$repeatFrequencyValue = "";
+    	$repeatFrequencyValue = "1";
 	}
 
 	//set vars with values
@@ -232,45 +250,51 @@ function printFrontendPlanned($AccountID, $ID) {
 	}
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
+	
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
 	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");	
-	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), true);
-	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", true, "text", "");
+	
+	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), false);
+	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	
 	$beginDateLabel = $widgets->createLabel("beginDate", getBadgerTranslation2('accountTransaction', 'beginDate'), true);
 	$beginDateField = $widgets->addDateField("beginDate", $beginDateValue);
-	//$beginDateField = $widgets->createField("beginDate", 30, $beginDateValue, "", true, "text", "");
+	
 	$endDateLabel = $widgets->createLabel("endDate", getBadgerTranslation2('accountTransaction', 'endDate'), true);
 	$endDateField = $widgets->addDateField("endDate", $endDateValue);
-	//$endDateField = $widgets->createField("endDate", 30, $endDateValue, "", true, "text", "");
+
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
 	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
-	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), true);
-	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", true, "text", "");
-	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), true);
-	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", true, "checkbox", $outsideCapitalValue);
+
+	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
+	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false, "text", "");
+
+	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), false);
+	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", false, "checkbox", $outsideCapitalValue);
 	
-	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), true);
-	//$categoryField = $widgets->createField("category", 30, $categoryValue, "", true, "text", "");
+	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
 	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
+	
 	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatUnit'), true);
-	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", false, "style='width: 213px;'");
-	//$repeatUnitField = $widgets->createField("repeatUnit", 30, $repeatUnitValue, "", true, "text", "");
+	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", true, "style='width: 213px;'");
+
 	$repeatFrequencyLabel = $widgets->createLabel("repeatFrequency", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
 	$repeatFrequencyField = $widgets->createField("repeatFrequency", 30, $repeatFrequencyValue, "", true, "text", "");
 	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
-	if($redirectPageAfterSave) {
-		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
+	if($redirectPage) {
+		$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPage';return false;", "Widgets/back.gif");
 	} else { $backBtn=""; };
+	
 	//add vars to template, print site
 	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingTransactionPlanned');
 	eval("echo \"".$tpl->getTemplate("Account/PlannedTransaction")."\";");
 }
 
 function updateRecord($accountID, $ID, $transactionType) {
-	global $redirectPageAfterSave;
+	global $redirectPage;
 	global $am;
 	global $catm;
 	
@@ -342,9 +366,10 @@ function updateRecord($accountID, $ID, $transactionType) {
 		}
 	}
 	//REDIRECT
-	header("Location: $redirectPageAfterSave");
+	header("Location: $redirectPage");
 
 }
+
 function getAccountsSelectArray() {
 	global $badgerDb;
 	$am = new AccountManager($badgerDb);
