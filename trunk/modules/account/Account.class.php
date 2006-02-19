@@ -489,7 +489,7 @@ class Account extends DataGridHandler {
 					
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
-						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction_new.gif' : 'Account/planned_transaction_new.gif'), 
+						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction_new.gif' : 'Account/planned_transaction_new.gif', 'title="' . getBadgerTranslation2('Account', $currentTransaction->getType()) . '"'), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
@@ -1130,7 +1130,10 @@ class Account extends DataGridHandler {
 			$dayOfMonth = $date->getDay();
 			//echo 'date: ' . $date->getDate() . "\n";
 			//While we have not reached targetFutureCalcDate
-			while($this->targetFutureCalcDate->after($date)){
+			while(
+				$this->targetFutureCalcDate->after($date)
+				&& !$date->after(is_null($tmp = $currentTransaction->getEndDate()) ? new Date('9999-12-31') : $tmp)
+			){
 				//echo 'date: ' . print_r($date) . "\n";
 				$inRange = true;
 				//Check if there is one or more valutaDate filter and apply them
