@@ -29,10 +29,12 @@ $releasedUnder = getBadgerTranslation2('about', 'published');
 $copyrightBy = getBadgerTranslation2('about', 'members');
 $developerTeam = getBadgerTranslation2('about', 'team');
 $usedComponents = getBadgerTranslation2('about', 'programms');
-$contributors = getBadgerTranslation2('about','contributes');
+$contributors = getBadgerTranslation2('about','contributors');
 $by = getBadgerTranslation2('about', 'by');
 
 $pageHeading = $pageHeading;
 eval('echo "' . $tpl->getTemplate('about') . '";');
 eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
+
+require_once BADGER_ROOT . '/includes/fileFooter.php';
 ?>
