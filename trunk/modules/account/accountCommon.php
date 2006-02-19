@@ -196,6 +196,10 @@ function transferFormerFinishedTransactions($account) {
 	}
 
 	$us->setProperty('Account_' . $account->getId() . '_LastTransferFormerFinishedTransactions', $now);
+	
+	if (!$lastInsertDate->before($now)) {
+		return;
+	}
 
 	while ($currentTransaction = $account->getNextPlannedTransaction()) { 
 		$date = new Date($currentTransaction->getBeginDate());
