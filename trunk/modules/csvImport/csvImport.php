@@ -154,7 +154,6 @@ if (isset($_POST['Upload'])){
 				    	}
 			    	$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, $category,"");
 					*/
-					
 					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(),"");
 						    	
 				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
@@ -235,9 +234,14 @@ if (isset($_POST['btnSubmit'])){
 			$valutaDate1 = new Date ($_POST['valutaDate' . $selectedTransactionNumber], true);
 			$cm1 = new CategoryManager($badgerDb);
 			$transactionCategory = NULL;
+			echo $_POST['categorySelect' . $selectedTransactionNumber];
 			if (!$_POST['categorySelect' . $selectedTransactionNumber] == NULL){
-				$transactionCategory = $cm1->getCategoryById($_POST['categorySelect' . $selectedTransactionNumber]);
+				if ($_POST['categorySelect' . $selectedTransactionNumber] != "NULL"){
+					$transactionCategory = $cm1->getCategoryById($_POST['categorySelect' . $selectedTransactionNumber]);
+					echo $transactionCategory;
+				}
 			}
+			echo $transactionCategory;
 			$tableRowArray = array(
 				"categoryId" => $transactionCategory,
 				"account" => $_POST['account2Select' . $selectedTransactionNumber],
