@@ -166,18 +166,32 @@ class CategoryManager extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		while($this->fetchNextCategory());
+		while ($this->fetchNextCategory());
+		
+		$this->sortCategories();
 		
 		$result = array();
 		
 		foreach($this->categories as $currentCategory){
+			$parent = $currentCategory->getParent();
+			
+			if (is_null($parent)) {
+				$title = '';
+				$parentId = '';
+				$parentTitle = $currentCategory->getTitle();
+			} else {
+				$title = $currentCategory->getTitle();
+				$parentId = $parent->getId();
+				$parentTitle = $parent->getTitle();
+			}
+			
 			$result[] = array (
 				'categoryId' => $currentCategory->getId(),
-				'title' => $currentCategory->getTitle(),
+				'title' => $title,
 				'description' => $currentCategory->getDescription(),
-				'outsideCapital' => is_null($tmp = $currentCategory->getOutsideCapital()) ? '' : $tmp,
-				'parentId' => is_null($tmp = $currentCategory->getParent()) ? '' : $tmp->getId(),
-				'parentTitle' => is_null($tmp = $currentCategory->getParent()) ? '' : $tmp->getTitle()
+				'outsideCapital' => $currentCategory->getOutsideCapital(),
+				'parentId' => $parentId,
+				'parentTitle' => $parentTitle
 			);
 		}
 		
@@ -245,8 +259,16 @@ class CategoryManager extends DataGridHandler {
 	 * @return mixed The next Category object or false if we are at the end of the list.
 	 */
 	public function getNextCategory() {
-		if (!$this->allDataFetched) {
-			$this->fetchNextCategory();
+		static $fistRun = true;
+		
+		if ($firstRun) {
+			while (!$this->allDataFetched) {
+				$this->fetchNextCategory();
+			}
+			
+			$this->sortCategories();
+			
+			$firstRun = false;
 		}
 
 		return nextByKey($this->categories, $this->currentCategory);
@@ -386,6 +408,85 @@ class CategoryManager extends DataGridHandler {
 			$this->allDataFetched = true;
 			return false;    	
 		}
+	}
+	
+	function compareCategories($aa, $bb) {
+		$tmp = 0;
+
+		$default = 0;
+		
+		for ($run = 0; isset($this->order[$run]); $run++) {
+			if ($this->order[$run]['dir'] == 'asc') {
+				$a = $aa;
+				$b = $bb;
+				$default = -1;
+			} else {
+				$a = $bb;
+				$b = $aa;
+				$default = 1;
+			}
+			
+			switch ($this->order[$run]['key']) {
+				case 'categoryId':
+					$tmp = $a->getId() - $b->getId();
+					break;
+				
+				case 'title':
+//					echo 'a: ' . print_r(is_null($a->getParent()), true);
+//					echo ' b: ' . print_r(is_null($b->getParent()), true);
+					if (is_null($a->getParent()) && is_null($b->getParent())) {
+						$tmp = 0;
+					} else if ($a->getParent() && is_null($b->getParent())) {
+						$tmp = 1;
+					} else if (is_null($a->getParent()) && $b->getParent()) {
+						$tmp = -1;
+					} else {
+						$tmp = strncasecmp($a->getTitle(), $b->getTitle(), 9999);
+					}
+//					echo '<br />';
+					break;
+
+				case 'description':
+					$tmp = strncasecmp($a->getDescription(), $b->getDescription(), 9999);
+					break;
+					
+				case 'outsideCapital':
+					$tmp = $a->getOutsideCapital() - $b->getOutsideCapital();
+					break;
+				
+				case 'parentId':
+					if ($a->getParent() && $b->getParent()) {
+						$tmp = $a->getParent()->getId() - $b->getParent()->getId();
+					} else if ($a->getParent() && !$b->getParent()) {
+						$tmp = -1;
+					} else if (!$a->getParent() && $b->getParent()) {
+						$tmp = 1;
+					}
+					break;
+
+				case 'parentTitle':				
+					if ($a->getParent() && $b->getParent()) {
+						$tmp = strncasecmp($a->getParent()->getTitle() . $a->getTitle(), $b->getParent()->getTitle() . $b->getTitle(), 9999);
+					} else if ($a->getParent() && !$b->getParent()) {
+						$tmp = strncasecmp($a->getParent()->getTitle() . $a->getTitle(), $b->getTitle(), 9999);
+					} else if (!$a->getParent() && $b->getParent()) {
+						$tmp = strncasecmp($a->getTitle(), $b->getParent()->getTitle() . $b->getTitle(), 9999);
+					} else if (!$a->getParent() && !$b->getParent()) {
+						$tmp = strncasecmp($a->getTitle(), $b->getTitle(), 9999);
+					}
+					break;
+			}
+			
+			if ($tmp != 0) {
+				return $tmp;
+			}
+		}
+
+	return $default;
+	}
+	
+	private function sortCategories() {
+		uasort($this->categories, array('CategoryManager', 'compareCategories'));
 	}
 }
 ?>
