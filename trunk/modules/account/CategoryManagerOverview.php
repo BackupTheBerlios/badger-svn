@@ -26,8 +26,8 @@ $dataGrid->headerName = array(getBadgerTranslation2('accountCategory', 'colparen
 $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapital");
 $dataGrid->initialSort = "parentTitle";
 $dataGrid->initialSortDirection = "asc";
-$dataGrid->headerSize = array(200,200,300,120);
-$dataGrid->cellAlign = array("left","left","left","right");
+$dataGrid->headerSize = array(200,200,300,100);
+$dataGrid->cellAlign = array("left","left","left","center");
 $dataGrid->height = "350px";
 $dataGrid->deleteAction = "CategoryManager.php?action=delete&ID=";
 $dataGrid->editAction = "CategoryManager.php?action=edit&ID=";

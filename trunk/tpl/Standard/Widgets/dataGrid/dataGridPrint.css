@@ -3,6 +3,15 @@
 	font-weight: bold;
 	color: red;
 }
+.dgMessageOK {
+	background-color: black;
+}
+.dgMessageError {
+	background-color: red;
+}
+.dgMessageHint {
+	background-color: green;
+}
 
 #dataGrid {
 	border: 1px solid #ececec;
@@ -22,6 +31,8 @@
     margin: 0px;
     height: 22px;
     line-height: 12px;
+    border-right: 1px solid #ECE9D8;
+    border-bottom: 1px solid #ECE9D8;
 }
 #dgDivScroll {
 	width: 100%;
