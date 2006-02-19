@@ -1,6 +1,9 @@
 <h1>$pageHeading</h1>
 <form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection" onSubmit="return validateCompleteForm(this, 'error');">
-	<fieldset style="width: 31em">
+	<table>
+	<tr>
+	<td>
+	<fieldset style="width: 31em; height: 15em">
 		<legend>$legendSetting</legend>
 		<table>
 			<tr> 
@@ -29,8 +32,9 @@
 			</tr>
 		</table>
 	</fieldset>
-<br /><br />
-	<fieldset style="width: 31em">
+	</td>
+	<td>
+	<fieldset style="height: 15em">
 		<legend>$legendGraphs</legend>
 		<table>
 			<tr> 
@@ -59,7 +63,15 @@
 			</tr>
 		</table>
 	</fieldset>
-<br />
-$tooLongTimeSpanWarning <br />
+	</td>
+	</tr>
+	<tr>
+	<td>
+	<fieldset style="width: 31em">
+		$tooLongTimeSpanWarning
+	</fieldset>
+	</td>
+	</tr>
+	</table>
 $sendButton <br />
 </form>
