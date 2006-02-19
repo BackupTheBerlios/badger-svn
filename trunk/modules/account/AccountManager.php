@@ -157,8 +157,8 @@ function updateRecord() {
 			$account->setDescription($_POST['description']);
 			//print("<br/>".$curMan->getCurrencyById($_POST['currency'])->getLongName()."<br/>");
 			$account->setCurrency($curMan->getCurrencyById($_POST['currency']));
-			$account->setLowerLimit(new Amount($_POST['lowerLimit']));
-			$account->setUpperLimit(new Amount($_POST['upperLimit']));
+			$account->setLowerLimit(new Amount( $_POST['lowerLimit'], true));
+			$account->setUpperLimit(new Amount( $_POST['upperLimit'], true));
 
 			modifyTranslation('Navigation', 'Account' . $account->getId(), $_POST['title'], $_POST['title']);
 		}
