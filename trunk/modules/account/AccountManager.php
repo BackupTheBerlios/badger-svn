@@ -188,13 +188,3 @@ function getCurrencyArray($sortBy){
 	
 	return $curs;
 }
-
-function removeAccountFromNavi($id) {
-	global $us;
-	
-	
-	$sql = "DELETE FROM navi
-		WHERE navi_id = $naviId";
-	
-	
-}

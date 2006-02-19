@@ -212,6 +212,10 @@ if (isset($_POST['sendData'])){
 		$balancedEndDate1 = NULL;
 		$balancedEndDateLabel1 = NULL;
 		$printedPocketMoney1EndValue = NULL;
+
+		$amTransfer = new AccountManager($badgerDb);
+		$accountTransfer = $amTransfer->getAccountById($account);
+		transferFormerFinishedTransactions($accountTransfer);
 			
 		$am1 = new AccountManager($badgerDb);
 		$currentAccount1 = $am1->getAccountById($account);

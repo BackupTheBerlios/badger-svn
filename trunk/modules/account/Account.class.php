@@ -1116,25 +1116,14 @@ class Account extends DataGridHandler {
 		$now->setMinute(0);
 		$now->setSecond(0);
 		
-		//header('content-type: text/plain');
-		
-		//echo "<pre>"; print_r($this->plannedTransactions); echo "</pre>";
-		
 		foreach($this->plannedTransactions as $currentTransaction){ 
-			//echo 'begin_date: ' . $currentTransaction['begin_date'] . "\n";
 			$date = new Date($currentTransaction->getBeginDate());
-//			$date->setHour(0);
-//			$date->setMinute(0);
-//			$date->setSecond(0);
-			//echo 'date: ' . $date->getDate() . "\n";
 			$dayOfMonth = $date->getDay();
-			//echo 'date: ' . $date->getDate() . "\n";
 			//While we have not reached targetFutureCalcDate
 			while(
 				$this->targetFutureCalcDate->after($date)
 				&& !$date->after(is_null($tmp = $currentTransaction->getEndDate()) ? new Date('9999-12-31') : $tmp)
 			){
-				//echo 'date: ' . print_r($date) . "\n";
 				$inRange = true;
 				//Check if there is one or more valutaDate filter and apply them
 				foreach ($this->filter as $currentFilter) {
@@ -1231,7 +1220,6 @@ class Account extends DataGridHandler {
 					
 					case 'year':
 						$newYear = $date->getYear() + $currentTransaction->getRepeatFrequency();
-						//echo "Year: " . $date->getYear() . " repeatFrequency: " . $currentTransaction->getRepeatFrequency() . " newYear: $newYear\n";
 						if (
 							$dayOfMonth == 29
 							&& $date->getMonth() == 2
@@ -1519,9 +1507,9 @@ class Account extends DataGridHandler {
 				pt.repeat_frequency, pt.category_id
 			FROM planned_transaction pt
 				LEFT OUTER JOIN category c ON pt.category_id = c.category_id
-			WHERE pt.account_id = " .  $this->id . "
-				AND pt.begin_date <= '". $this->targetFutureCalcDate->getDate() . "'
-				AND pt.end_date > NOW()\n"; 	
+			WHERE pt.account_id = " .  $this->id . " ";
+//				AND pt.begin_date <= '". $this->targetFutureCalcDate->getDate() . "'
+//				AND pt.end_date > NOW()\n"; 	
 
 		$where = $this->getFilterSQL();
 		//echo $where = $where . "\n" . $where;

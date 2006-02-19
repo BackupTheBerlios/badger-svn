@@ -18,6 +18,8 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/includes/charts/charts.php';
 require_once BADGER_ROOT . '/core/Date/Span.php';
 require_once BADGER_ROOT . '/core/widgets/DataGrid.class.php';
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
+
 
 if (isset($_GET['mode'])) {
 	$mode = $_GET['mode'];
@@ -45,7 +47,10 @@ switch ($mode) {
 function showSelectPage() {
 	global $tpl;
 	global $us;
+	global $badgerDb;
 	
+	handleOldFinishedTransactions(new AccountManager($badgerDb));
+
 	$widgets = new WidgetEngine($tpl); 
 
 	$widgets->addCalendarJS();
