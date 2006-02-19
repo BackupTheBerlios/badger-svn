@@ -177,14 +177,17 @@ input.inputNumberMinus {
 .USAHeading {
 	font-weight: bold;
 }
+.USAError {
+	color: red;
+}
 /* USER SETTINGS ADMIN END*/
 
 /* FORM VALIDATION  BEGIN */
 input.error, select.error {
-	padding-right: 16px;
 	border: 1px solid red;
 	background-color: #FFFCE2;
 	/*
+	padding-right: 16px;
 	background-image: url(images/warning_obj.gif);
 	background-position: right;
 	background-repeat: no-repeat; -> unused*/

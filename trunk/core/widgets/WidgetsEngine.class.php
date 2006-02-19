@@ -38,6 +38,14 @@ class WidgetEngine {
 	public function __construct($tpl) {
 		$this->tpl = $tpl;
 		$this->settings = $this->tpl->getSettingsObj();
+
+/*	
+function _jsVal_Language() {
+    this.err_form = "Please enter/select values for the following fields:\n\n";
+    this.err_select = "Please select a valid \"%FIELDNAME%\"";
+    this.err_enter = "Please enter a valid \"%FIELDNAME%\"";
+};
+*/
 	}
 	
 	private function getFormatedDateToday($format) {
@@ -179,7 +187,8 @@ class WidgetEngine {
 	}
 	
 	public function createButton($name, $text, $action, $img="", $addTags=""){
-		if ($action=="submit") $action = "this.form.submit()";
+		//if ($action=="submit") $action = "this.form.submit()";
+		if ($action=="submit") $action = "validateStandard(this, 'error')";
 		if ($action=="") $action = "void(0);return false;"; 
 		$output = "<button $addTags name='$name' id='$name' onclick=\"javascript:".$action."\">\n";
 		$output .= "<table cellspacing='0' cellpadding='0'>\n";

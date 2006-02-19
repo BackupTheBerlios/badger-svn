@@ -1,9 +1,8 @@
 <h1>$pageHeading</h1>
-<form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php">
-	<fieldset style="width: 28em; height: 17em">
+<form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php" onSubmit="return validateStandard(this, 'error');">
+	<fieldset style="width: 30em;">
 		<legend>$FsHeading</legend>
-		<br>
-			<table>
+		<table>
 			<tr>
 				<td>$TemplateLabel</td>
 				<td style="text-align: right;">$TemplateField</td>
@@ -27,11 +26,9 @@
 				<td>$LockOutTimeLabel</td>
 				<td style="text-align: right;">$LockOutTimeField</td>
 			</tr>
-			</tr>
 			<tr>
 				<td>$StartPageLabel</td>
 				<td style="text-align: right;">$StartPageField</td>
-			</tr>
 			</tr>
 			<tr>
 				<td>$SessionTimeLabel</td>
@@ -39,10 +36,9 @@
 			</tr>
 		</table>
 	</fieldset>
-		<br/>
-	<fieldset style="width: 28em; height: 7em">
+	<br/>
+	<fieldset style="width: 30em;">
 		<legend>$PWFormLabel</legend>
-		<br/>
 		<table>
 			<tr>
 				<td>$OldPwLabel</td>
@@ -57,11 +53,11 @@
 			</tr>
 		</table>
 	</fieldset>
-		<table style="clear: both;">
-			<tr>
-				<td></td>
-				<td>$btnSubmit</td>
-			</tr>
-		</table>
+	<table style="clear: both;">
+		<tr>
+			<td style="width: 17em;"></td>
+			<td>$btnSubmit</td>
+		</tr>
+	</table>
 </form>
 $Feedback

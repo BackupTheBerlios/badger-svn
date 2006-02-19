@@ -104,13 +104,15 @@ function printFrontend() {
 	$legend = getBadgerTranslation2('accountCategory', 'legend');
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$pageHeading = $pageTitle;
+	
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountCategory', 'title'), true);
 	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
+	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountCategory', 'description'), false);
 	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
-	$parentLabel = $widgets->createLabel("parent", getBadgerTranslation2('accountCategory', 'parent'), false);
 	
+	$parentLabel = $widgets->createLabel("parent", getBadgerTranslation2('accountCategory', 'parent'), false);
 	$parentCats = array(""=>getBadgerTranslation2('CategoryManager','no_parent'));
 	while ($cat = $cm->getNextCategory()) {
 		$cat->getParent();

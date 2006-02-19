@@ -19,10 +19,8 @@ $pageHeading = getBadgerTranslation2('UserSettingsAdmin', 'title');
 $tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
-$widgets->addCalendarJS();
-$widgets->addAutoCompleteJS();
 $widgets->addNavigationHead();
-echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
+echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name'));
 echo $widgets->addToolTipLayer();
 
 //$us->setProperty('badgerPassword',md5("badger"));
@@ -49,9 +47,7 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 	)
 	{
 		$change_password = false;
-	}
-		else
-		{
+	} else {
 		$change_password = true;
 		
 		$validation_change_password = true;
@@ -114,138 +110,137 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		};
 	};
 	
-}else{
+} else {
 	$change_password = false;
 };
 
 // Print form for change of User Settings.
 
-		$USFormLabel = getBadgerTranslation2('UserSettingsAdmin','user_settings_heading');
-		$FsHeading = getBadgerTranslation2('UserSettingsAdmin', 'fs_heading');
-		//$templates = array();
-		
-		$templatesString = "\$templates = array(";
-		$first = true;
-		
-		if($handle = opendir(BADGER_ROOT . '/tpl')){
-			while($file = readdir($handle)) {
-				if($file != "." && $file != ".." && $file != ".svn") {
-					if($first == true) {
-						$templatesString .= "\"" . $file . "\"" . "=>" . "\"" . $file . "\"";
-						$first = false;
-						}
-					else {
-						$templatesString .= ",\"" . $file . "\"" . "=>" . "\"". $file . "\"";
-					};
-				};
+$USFormLabel = getBadgerTranslation2('UserSettingsAdmin','user_settings_heading');
+$FsHeading = getBadgerTranslation2('UserSettingsAdmin', 'fs_heading');
+//$templates = array();
+
+$templatesString = "\$templates = array(";
+$first = true;
+
+//directory listing of the /tpl/ - folder
+if($handle = opendir(BADGER_ROOT . '/tpl')){
+	while($file = readdir($handle)) {
+		if($file != "." && $file != ".." && $file != ".svn") {
+			if($first == true) {
+				$templatesString .= "\"" . $file . "\"" . "=>" . "\"" . $file . "\"";
+				$first = false;
+				}
+			else {
+				$templatesString .= ",\"" . $file . "\"" . "=>" . "\"". $file . "\"";
 			};
 		};
-		
-		$templatesString .= ");";
-		
-		eval ($templatesString);
-		
-		
-		$TemplateLabel = $widgets->createLabel("Template", getBadgerTranslation2('UserSettingsAdmin','template_name'), true);
-		$TemplateField = $widgets->createSelectField("Template", $templates, $default=$us->getProperty('badgerTemplate'), $description=getBadgerTranslation2('UserSettingsAdmin','template_description'), true, 'style="width: 10em;"');
-		
-		$langs = $tr->getLangs();
-		$LanguageLabel = $widgets->createLabel("Language", getBadgerTranslation2('UserSettingsAdmin','language_name'), true);
+	};
+};
 
-		$LanguageField = $widgets->createSelectField("Language", $langs, $default=$us->getProperty('badgerLanguage'), $description=getBadgerTranslation2('UserSettingsAdmin','language_description'), $mandatory=true, 'style="width: 10em;"');
-		
-		$date_formats = array(
-			"dd.mm.yyyy" => getBadgerTranslation2('DateFormats','dd.mm.yyyy'),
-			"dd/mm/yyyy" => getBadgerTranslation2('DateFormats','dd/mm/yyyy'),
-			"dd-mm-yyyy" => getBadgerTranslation2('DateFormats','dd-mm-yyyy'),
-			"yyyy-mm-dd" => getBadgerTranslation2('DateFormats','yyyy-mm-dd'),
-			"yyyy/mm/dd" => getBadgerTranslation2('DateFormats','yyyy/mm/dd')
-		);
-		
-		$DateFormatLabel = $widgets->createLabel("DateFormat", getBadgerTranslation2('UserSettingsAdmin','date_format_name'), true);
-		$DateFormatField = $widgets->createSelectField("DateFormat", $date_formats, $default=$us->getProperty('badgerDateFormat'), $description=getBadgerTranslation2('UserSettingsAdmin','date_format_description'), $mandatory=true, 'style="width: 10em;"');
-		
-		$seperators = array(
-			".," => "12.345,67",
-			",." => "12,345.67"
-		);
-		
-		if($us->getProperty('badgerDecimalSeparator') == ","){
-			$seperators_default = ".,";
-		}else{
-			$seperators_default = ",.";
-		};
-		
-		$SeperatorsLabel = $widgets->createLabel("Seperators", getBadgerTranslation2('UserSettingsAdmin','seperators_name'), true);
-		$SeperatorsField = $widgets->createSelectField("Seperators", $seperators, $default=$seperators_default, $description=getBadgerTranslation2('UserSettingsAdmin','seperators_description'), $mandatory=true, 'style="width: 10em;"');
-				
-		$MaxLoginLabel = $widgets->createLabel("MaximumLoginAttempts", getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_name'), true);
-		$MaxLoginField = $widgets->createField("MaximumLoginAttempts", 0, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true, 'text', 'style="width: 10em;"');
-		
-		
-		$LockOutTimeLabel = $widgets->createLabel("LockOutTime", getBadgerTranslation2('UserSettingsAdmin','lock_out_time_name'), true);
-		$LockOutTimeField = $widgets->createField("LockOutTime", 0, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true, 'text', 'style="width: 10em;"');
-		
+$templatesString .= ");";
 
-		$StartPageLabel = $widgets->createLabel("StartPageLabel", getBadgerTranslation2('UserSettingsAdmin','start_page_name'), true);
-		$StartPageField = $widgets->createField("StartPageField", 0, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true, 'text', 'style="width: 10em;"');
+eval ($templatesString);
+
+
+$TemplateLabel = $widgets->createLabel("Template", getBadgerTranslation2('UserSettingsAdmin','template_name'), true);
+$TemplateField = $widgets->createSelectField("Template", $templates, $default=$us->getProperty('badgerTemplate'), $description=getBadgerTranslation2('UserSettingsAdmin','template_description'), true, 'style="width: 10em;"');
+
+$langs = $tr->getLangs();
+$LanguageLabel = $widgets->createLabel("Language", getBadgerTranslation2('UserSettingsAdmin','language_name'), true);
+
+$LanguageField = $widgets->createSelectField("Language", $langs, $default=$us->getProperty('badgerLanguage'), $description=getBadgerTranslation2('UserSettingsAdmin','language_description'), $mandatory=true, 'style="width: 10em;"');
+
+$date_formats = array(
+	"dd.mm.yyyy" => getBadgerTranslation2('DateFormats','dd.mm.yyyy'),
+	"dd/mm/yyyy" => getBadgerTranslation2('DateFormats','dd/mm/yyyy'),
+	"dd-mm-yyyy" => getBadgerTranslation2('DateFormats','dd-mm-yyyy'),
+	"yyyy-mm-dd" => getBadgerTranslation2('DateFormats','yyyy-mm-dd'),
+	"yyyy/mm/dd" => getBadgerTranslation2('DateFormats','yyyy/mm/dd')
+);
+
+$DateFormatLabel = $widgets->createLabel("DateFormat", getBadgerTranslation2('UserSettingsAdmin','date_format_name'), true);
+$DateFormatField = $widgets->createSelectField("DateFormat", $date_formats, $default=$us->getProperty('badgerDateFormat'), $description=getBadgerTranslation2('UserSettingsAdmin','date_format_description'), $mandatory=true, 'style="width: 10em;"');
+
+$seperators = array(
+	".," => "12.345,67",
+	",." => "12,345.67"
+);
+
+if($us->getProperty('badgerDecimalSeparator') == ","){
+	$seperators_default = ".,";
+}else{
+	$seperators_default = ",.";
+};
+
+$SeperatorsLabel = $widgets->createLabel("Seperators", getBadgerTranslation2('UserSettingsAdmin','seperators_name'), true);
+$SeperatorsField = $widgets->createSelectField("Seperators", $seperators, $default=$seperators_default, $description=getBadgerTranslation2('UserSettingsAdmin','seperators_description'), $mandatory=true, 'style="width: 10em;"');
 		
-		$SessionTimeLabel = $widgets->createLabel("SessionTimeLabel", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
-		$SessionTimeField = $widgets->createField("SessionTimeField", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
-		
+$MaxLoginLabel = $widgets->createLabel("MaximumLoginAttempts", getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_name'), true);
+$MaxLoginField = $widgets->createField("MaximumLoginAttempts", 0, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true, 'text', 'style="width: 10em;"');
+
+
+$LockOutTimeLabel = $widgets->createLabel("LockOutTime", getBadgerTranslation2('UserSettingsAdmin','lock_out_time_name'), true);
+$LockOutTimeField = $widgets->createField("LockOutTime", 0, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true, 'text', 'style="width: 10em;"');
+
+
+$StartPageLabel = $widgets->createLabel("StartPageLabel", getBadgerTranslation2('UserSettingsAdmin','start_page_name'), true);
+$StartPageField = $widgets->createField("StartPageField", 0, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true, 'text', 'style="width: 10em;"');
+
+$SessionTimeLabel = $widgets->createLabel("SessionTimeLabel", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
+$SessionTimeField = $widgets->createField("SessionTimeField", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
+
 // Print Form for change of password 
-		
-		$PWFormLabel = getBadgerTranslation2('UserSettingsAdmin','change_password_heading');
-		
-		$OldPwLabel = $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), true);
-		$OldPwField = $widgets->createField("OldPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), true, 'password');
-		
-		$NewPwLabel = $widgets->createLabel("NewPassword", getBadgerTranslation2('UserSettingsAdmin','new_password_name'), true);
-		$NewPwField = $widgets->createField("NewPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), true, 'password');
-		
-		$ConfPwLabel = $widgets->createLabel("NewPasswordConfirm", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_name'), true);
-		$ConfPwField = $widgets->createField("NewPasswordConfirm", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), true, 'password');
-		
-		$btnSubmit = $widgets->createButton("SubmitUserSettings", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
-		
-		// Begin of Feedback
-		
-		$Feedback = "<br/>";
-		
-		if((
-				isset($validation_user_settings) && $validation_user_settings == true
-				&&
-				$change_password == true
-				&&
-				isset($validation_change_password )	&&	$validation_change_password == true
-			)||(
-				isset($validation_user_settings) && $validation_user_settings == true
-				&&
-				$change_password == false
-			)
-		){
-			if($change_password == true){
-				$Feedback .= getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
-			};
-		$Feedback .= getBadgerTranslation2('UserSettingsAdmin','user_settings_change_commited')."<br/><br/>";
-		};
-		
-		if($change_password == true && isset($validation_change_password ) && $validation_change_password != true){
-			$Feedback .= $validation_change_password_errors;
-		};
-		
-		// If Validation for User Settings had returned
-		// a bad result, print the error messages
-		if(isset($validation_user_settings) && $validation_user_settings != true){
-			$Feedback .= "<div class=\"USAError\">".$validation_user_settings_errors."</div><br/><br/>";
-		};
-		
-		// End of Feedback
-		
-		eval("echo \"".$tpl->getTemplate("UserSettingsAdmin/UserSettingsAdmin")."\";");
+
+$PWFormLabel = getBadgerTranslation2('UserSettingsAdmin','change_password_heading');
+
+$OldPwLabel = $widgets->createLabel("OldPassword", getBadgerTranslation2('UserSettingsAdmin','old_password_name'), false);
+$OldPwField = $widgets->createField("OldPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','old_password_description'), false, 'password');
+
+$NewPwLabel = $widgets->createLabel("NewPassword", getBadgerTranslation2('UserSettingsAdmin','new_password_name'), false);
+$NewPwField = $widgets->createField("NewPassword", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_description'), false, 'password');
+
+$ConfPwLabel = $widgets->createLabel("NewPasswordConfirm", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_name'), false);
+$ConfPwField = $widgets->createField("NewPasswordConfirm", 20, "", getBadgerTranslation2('UserSettingsAdmin','new_password_confirm_description'), false, 'password');
+
+$btnSubmit = $widgets->createButton("SubmitUserSettings", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/accept.gif", "accesskey='s'");
+
+// Begin of Feedback
+
+$Feedback = "<br/>";
+
+if((
+		isset($validation_user_settings) && $validation_user_settings == true
+		&&
+		$change_password == true
+		&&
+		isset($validation_change_password )	&&	$validation_change_password == true
+	)||(
+		isset($validation_user_settings) && $validation_user_settings == true
+		&&
+		$change_password == false
+	)
+){
+	if($change_password == true){
+		$Feedback .= getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
+	};
+$Feedback .= getBadgerTranslation2('UserSettingsAdmin','user_settings_change_commited')."<br/><br/>";
+};
+
+if($change_password == true && isset($validation_change_password ) && $validation_change_password != true){
+	$Feedback .= $validation_change_password_errors;
+};
+
+// If Validation for User Settings had returned
+// a bad result, print the error messages
+if(isset($validation_user_settings) && $validation_user_settings != true){
+	$Feedback .= "<div class=\"USAError\">".$validation_user_settings_errors."</div><br/><br/>";
+};
+
+// End of Feedback
+
+eval("echo \"".$tpl->getTemplate("UserSettingsAdmin/UserSettingsAdmin")."\";");
 //--
-
-
 
 
 //--

@@ -1,6 +1,6 @@
 <h1>$pageHeading</h1>
-<form method="post" name="mainform" action="$FormAction?action=save">
-<fieldset style = "width: 20em; height: 9em">
+<form method="post" name="mainform" action="$FormAction?action=save" onSubmit="return validateCompleteForm(this, 'error');">
+<fieldset style = "width: 20em;">
 	<legend>$legend</legend>	
 	<table>
 	  <tr>

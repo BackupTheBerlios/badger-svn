@@ -81,11 +81,14 @@ function printFrontend() {
 	$legend = getBadgerTranslation2('accountCurrency', 'legend');
 	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
 	$pageHeading = $pageTitle;
+	
 	//Fields & Labels
 	$symbolLabel = $widgets->createLabel("symbol", getBadgerTranslation2('accountCurrency', 'symbol'), true);
 	$symbolField = $widgets->createField("symbol", 20, $symbolValue, "", true, "text", "maxlength='3'");
-	$longnameLabel = $widgets->createLabel("longname", getBadgerTranslation2('accountCurrency', 'longname'), true);
-	$longnameField = $widgets->createField("longname", 20, $langnameValue, "", true, "text", "");
+	
+	$longnameLabel = $widgets->createLabel("longname", getBadgerTranslation2('accountCurrency', 'longname'), false);
+	$longnameField = $widgets->createField("longname", 20, $langnameValue, "", false, "text", "");
+	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	$backBtn = $widgets->createButton("back", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");

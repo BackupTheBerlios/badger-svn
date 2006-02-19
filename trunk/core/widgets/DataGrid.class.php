@@ -181,7 +181,7 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
-		$this->tpl->addOnLoadEvent('Event.observe(document.getElementById("dataGrid"), \'keypress\', dgKeyProcess, false)');
+		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false)');
 		
 	}
 }
