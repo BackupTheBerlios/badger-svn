@@ -54,9 +54,9 @@ echo $tpl->getHeader($pageTitle);
 
 echo "<h1>$pageTitle</h1>";
 
-echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/planned_transaction_new.gif");
+echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/finished_transaction_new.gif");
 echo ' ';
-echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/finished_transaction_new.gif");
+echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/planned_transaction_new.gif");
 echo ' ';
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete(true)", "Widgets/table_delete.gif");
 
