@@ -90,16 +90,16 @@ function showSelectPage() {
 	$toText = getBadgerTranslation2('statistics','to');
 	
 	$trendRadio = $widgets->createField('mode', null, 'trendPage', '', false, 'radio', 'checked="checked"');
-	$trendLabel = $widgets->createLabel('mode', 'Trend');
+	$trendLabel = $widgets->createLabel('mode', getBadgerTranslation2('statistics', 'trend'));
 	
 	$categoryRadio = $widgets->createField('mode', null, 'categoryPage', '', false, 'radio');
-	$categoryLabel = $widgets->createLabel('mode', 'Kategorien');
+	$categoryLabel = $widgets->createLabel('mode', getBadgerTranslation2('statistics', 'categories'));
 
 	$accountSelect = $dataGrid->writeDataGrid();
 	$accountField = $widgets->createField('accounts', null, null, '', false, 'hidden');
 
 	$monthArray = array (
-		'fullYear' => 'Ganzes Jahr',
+		'fullYear' => getBadgerTranslation2('statistics', 'fullYear'),
 		'1' => getBadgerTranslation2('statistics','jan'),
 		'2' => getBadgerTranslation2('statistics','feb'),
 		'3' => getBadgerTranslation2('statistics','mar'),

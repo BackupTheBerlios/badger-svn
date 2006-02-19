@@ -71,6 +71,8 @@ class CategoryManager extends DataGridHandler {
 	 */
 	private $currentCategory = null;
 	
+	private $fistRunNextCategory = true;
+	
 	/**
 	 * Creates an CategoryManager.
 	 * 
@@ -259,16 +261,14 @@ class CategoryManager extends DataGridHandler {
 	 * @return mixed The next Category object or false if we are at the end of the list.
 	 */
 	public function getNextCategory() {
-		static $fistRun = true;
-		
-		if ($firstRun) {
+		if ($this->fistRunNextCategory) {
 			while (!$this->allDataFetched) {
 				$this->fetchNextCategory();
 			}
 			
 			$this->sortCategories();
 			
-			$firstRun = false;
+			$this->fistRunNextCategory = false;
 		}
 
 		return nextByKey($this->categories, $this->currentCategory);

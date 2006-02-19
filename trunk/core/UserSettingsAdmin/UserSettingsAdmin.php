@@ -20,7 +20,7 @@ $tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addNavigationHead();
-echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name'));
+echo $tpl->getHeader($pageHeading);
 echo $widgets->addToolTipLayer();
 
 //$us->setProperty('badgerPassword',md5("badger"));
