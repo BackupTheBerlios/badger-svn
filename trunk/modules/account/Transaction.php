@@ -183,9 +183,11 @@ function printFrontendFinished($AccountID, $ID) {
 	
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), false);
 	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", false, "checkbox", $exceptionalValue);
+	$exceptionalToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "ExceptionalToolTip"));
 	
 	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), false);
 	$periodicalField = $widgets->createField("periodical", 30, "on", "", false, "checkbox", $periodicalValue);
+	$periodicalToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "periodicalToolTip"));
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");

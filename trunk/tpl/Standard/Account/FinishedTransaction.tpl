@@ -35,11 +35,11 @@
   </tr>
   <tr>
     <td>$exceptionalLabel </td>
-    <td>$exceptionalField  </td>
+    <td>$exceptionalField $exceptionalToolTip </td>
   </tr>
   <tr>
     <td>$periodicalLabel </td>
-    <td>$periodicalField  </td>
+    <td>$periodicalField  $periodicalToolTip</td>
   </tr>
   <tr>
     <td>$backBtn </td>
