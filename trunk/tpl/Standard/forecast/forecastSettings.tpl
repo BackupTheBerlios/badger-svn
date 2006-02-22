@@ -2,8 +2,8 @@
 <form action="" method="post" enctype="multipart/form-data" name="mainform" id="Selection" onSubmit="return validateCompleteForm(this, 'error');">
 	<table>
 	<tr>
-	<td>
-	<fieldset style="width: 31em; height: 15em">
+	<td  valign="top">
+	<fieldset style="width: 31em; height: 15em;">
 		<legend>$legendSetting</legend>
 		<table>
 			<tr> 
@@ -33,8 +33,8 @@
 		</table>
 	</fieldset>
 	</td>
-	<td>
-	<fieldset style="height: 15em">
+	<td valign="top">
+	<fieldset style="width: 20em; height: 15em;">
 		<legend>$legendGraphs</legend>
 		<table>
 			<tr> 
@@ -66,11 +66,11 @@
 	</td>
 	</tr>
 	<tr>
-	<td>
-	<fieldset style="width: 31em">
-		$tooLongTimeSpanWarning
-	</fieldset>
-	</td>
+		<td colspan="2">
+			<fieldset style="width: 54em">
+				$tooLongTimeSpanWarning
+			</fieldset>
+		</td>
 	</tr>
 	</table>
 $sendButton <br />
