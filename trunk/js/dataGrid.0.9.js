@@ -76,7 +76,7 @@ function dgInsertData(objXHR) {
 	for (intPosition=0; intPosition<xmlColumns.length; intPosition++) {
 		if(xmlColumns[intPosition].textContent) columnName = xmlColumns[intPosition].textContent; //FF
 		if(xmlColumns[intPosition].text) columnName = xmlColumns[intPosition].text; //IE
-		if(xmlColumns[intPosition].innerText) columnName = xmlColumns[intPosition].innerText; //Opera
+		if(xmlColumns[intPosition].innerHTML) columnName = xmlColumns[intPosition].innerHTML; //Opera
 		columnPosition[columnName] = intPosition;		
 	}
 	
@@ -86,7 +86,7 @@ function dgInsertData(objXHR) {
 		//first cell of a row, is always a unique ID
 		if(xmlCells[0].textContent) rowID = xmlCells[0].textContent; //FF
 		if(xmlCells[0].text) rowID = xmlCells[0].text; //IE
-		if(xmlCells[0].innerText) rowID = xmlCells[0].innerText; //Opera
+		if(xmlCells[0].innerHTML) rowID = xmlCells[0].innerHTML; //Opera
 		
 		//define a new row
 		newRow = document.createElement("tr");
@@ -115,7 +115,18 @@ function dgInsertData(objXHR) {
 			xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
 			if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent + "&nbsp;"; // FF
 			if (xmlElement.text) cell.innerHTML = xmlElement.text + "&nbsp;"; //IE
-			if (xmlElement.innerText) cell.innerHTML = xmlElement.innerText + "&nbsp;"; //Opera
+			if (xmlElement.innerHTML) { //Opera
+				//Incredibly ugly hack to show images in Opera
+				text = xmlElement.innerHTML;
+
+				if (text.substr(0, 7) == "&lt;img" && text.substr(text.length - 4, 4) == "&gt;")  {
+			 		text = "<" + text.substr(4, text.length - 8) + ">";
+					//Why do we have to call replace twice?
+			 		text = text.replace('&quot;', '\"').replace('&quot;', '\"');
+			 	}
+			 	
+			 	cell.innerHTML = text;
+			}
 			newRow.appendChild(cell);
 		}		
 		//insert empty cell as last one (only display purposes)

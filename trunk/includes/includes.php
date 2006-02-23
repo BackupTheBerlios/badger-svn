@@ -21,7 +21,7 @@
 /**
  * The current Version of BADGER
  */
-define('BADGER_VERSION', '0.1');
+define('BADGER_VERSION', '1.0 alpha');
 
 /**
  * Common functions
