@@ -23,7 +23,7 @@
   </tr>
   <tr>
     <td>$outsideCapitalLabel </td>
-    <td>$outsideCapitalField  </td>
+    <td>$outsideCapitalField  $outsideToolTip</td>
   </tr>
   <tr>
     <td>$transactionPartnerLabel </td>
