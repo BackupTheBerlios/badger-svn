@@ -35,7 +35,7 @@ if (isset($_GET['action'])) {
 			if (isset($_POST['hiddenID'])) {
 				//add record, update record
 				updateRecord($accountID, $_POST['hiddenID'], $_POST['hiddenType']);							
-				$redirectPage = "AccountOverview.php?accountID=".$accountID;
+				$redirectPage = getRedirectPage($accountID);
 				header("Location: $redirectPage");
 			}
 			break;
@@ -47,7 +47,7 @@ if (isset($_GET['action'])) {
 			if (isset($_GET['accountID'])) {
 				// account was selected previously
 				$accountID = $_GET['accountID'];
-				$redirectPage = "AccountOverview.php?accountID=".$accountID;
+				$redirectPage = getRedirectPage($accountID);
 			} else {
 				// no account was selected previously
 				// -> user has to choose one
@@ -400,3 +400,13 @@ function getIntervalUnitsArray(){
 	);
 	return $units;
 };
+
+function getRedirectPage($accountId) {
+	if (isset($_GET['backTo'])) {
+		if ($_GET['backTo'] === 'planned') {
+			return 'AccountOverviewPlanned.php?accountID=' . $accountId;
+		}
+	}
+	
+	return 'AccountOverview.php?accountID=' . $accountId;
+}

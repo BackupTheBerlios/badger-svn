@@ -528,7 +528,7 @@ class Account extends DataGridHandler {
 		
 				foreach($this->plannedTransactions as $currentTransaction){
 					$result[] = array (
-						'plannedTransactionId' => $currentTransaction->getId(),
+						'plannedTransactionId' => 'p' . $currentTransaction->getId() . '_X',
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'amount' => $currentTransaction->getAmount()->getFormatted(),
