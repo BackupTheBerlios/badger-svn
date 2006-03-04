@@ -1,2 +1,0 @@
-Great PDF generator taken from http://www.tufat.com/script19.htm
-License under GPL
