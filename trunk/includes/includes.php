@@ -84,11 +84,6 @@ require_once BADGER_ROOT.'/core/Translation2/Translation2.php';
 require_once BADGER_ROOT.'/core/Translation2/badgerTranslation2.php';
 
 /**
- * makes pdf generator libs available
- */
-require_once BADGER_ROOT.'/includes/generatePdf.php';
-
-/**
  * makes template engine available
  */
 require_once BADGER_ROOT.'/core/templateEngine/templateEngine.class.php';
