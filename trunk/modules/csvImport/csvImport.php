@@ -69,7 +69,6 @@ if (isset($_POST['Upload'])){
 	foreach($_FILES as $file_name => $file_array) {
 		//if a file is chosen
 		if (isset($_POST["file"])){
-		 	echo $noFileSelected = "dummerspast";
 		 	#eval("echo \"".$tpl->getTemplate("CsvImport/csvImportWarning")."\";");
 		}
 		if (is_uploaded_file($file_array['tmp_name'])) {
@@ -145,15 +144,7 @@ if (isset($_POST['Upload'])){
    				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
    					
 					$tableSelectCheckbox = "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\" />";
-   					/*	//get categories		
-						$cm = new CategoryManager($badgerDb);
-						$category = array();
-				    	$category[""]= "";
-				    	while ($currentCategory = $cm->getNextCategory()) {
-				    		$category[$currentCategory->getId()] = $currentCategory->getTitle();	
-				    	}
-			    	$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, $category,"");
-					*/
+
 					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(),"");
 						    	
 				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());

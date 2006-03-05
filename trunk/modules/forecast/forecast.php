@@ -155,27 +155,27 @@ if (!isset($_POST['writePocketMoney'])){
 	$pocketMoney2Field = $widgets->createField("pocketmoney2", 5, 0, getBadgerTranslation2("forecast", "pocketMoney2ToolTip"), true, "text", 'style="width: 10em;"');
 	//checkbox for lower limit graph
 	$lowerLimitLabel =  getBadgerTranslation2("forecast", "lowerLimitLabel").":";
-	$lowerLimitBox = "<input type=\"checkbox\" name=\"lowerLimitBox\" value=\"select\" />";
+	$lowerLimitBox = "<input type=\"checkbox\" name=\"lowerLimitBox\" value=\"select\" checked=\"checked\"/>";
 	$lowerLimitToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "lowerLimitToolTip"));
 	//checkbox for upper limit graph
 	$upperLimitLabel =  getBadgerTranslation2("forecast", "upperLimitLabel").":";
-	$upperLimitBox = "<input type=\"checkbox\" name=\"upperLimitBox\" value=\"select\" />";
+	$upperLimitBox = "<input type=\"checkbox\" name=\"upperLimitBox\" value=\"select\" checked=\"checked\"/>";
 	$upperLimitToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "upperLimitToolTip"));
 	//checkbox for planned transactions graph
 	$plannedTransactionsLabel =  getBadgerTranslation2("forecast", "plannedTransactionsLabel").":";
-	$plannedTransactionsBox = "<input type=\"checkbox\" name=\"plannedTransactionsBox\" value=\"select\" />";
+	$plannedTransactionsBox = "<input type=\"checkbox\" name=\"plannedTransactionsBox\" value=\"select\" checked=\"checked\"/>";
 	$plannedTransactionsToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "plannedTransactionsToolTip"));
 	//checkbox for saving target graph
 	$savingTargetLabel1 =  getBadgerTranslation2("forecast", "savingTargetLabel").":";
-	$savingTargetBox = "<input type=\"checkbox\" name=\"savingTargetBox\" value=\"select\" />";
+	$savingTargetBox = "<input type=\"checkbox\" name=\"savingTargetBox\" value=\"select\" checked=\"checked\"/>";
 	$savingTargetToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "showSavingTargetToolTip"));
 	//checkbox for pocket money1 graph
 	$pocketMoney1Label1 =  getBadgerTranslation2("forecast", "pocketMoney1Label").":";
-	$pocketMoney1Box = "<input type=\"checkbox\" name=\"pocketMoney1Box\" value=\"select\" />";
+	$pocketMoney1Box = "<input type=\"checkbox\" name=\"pocketMoney1Box\" value=\"select\" checked=\"checked\"/>";
 	$pocketMoney1ToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "showPocketMoney1ToolTip"));
 	//checkbox for pocket money1 graph
 	$pocketMoney2Label1 =  getBadgerTranslation2("forecast", "pocketMoney2Label").":";
-	$pocketMoney2Box = "<input type=\"checkbox\" name=\"pocketMoney2Box\" value=\"select\" />";
+	$pocketMoney2Box = "<input type=\"checkbox\" name=\"pocketMoney2Box\" value=\"select\" checked=\"checked\"/>";
 	$pocketMoneyTool2Tip = $widgets->addToolTip(getBadgerTranslation2("forecast", "showPocketMoney2ToolTip"));
 	//Create Chart Button
 	$tooLongTimeSpanWarning = getBadgerTranslation2("forecast", "performanceWarning");
@@ -308,14 +308,14 @@ if (isset($_POST['sendData'])){
 				$day++;
 			} //foreach($totals as $key => $val) {
 			if ($pocketMoney1EndValue){
-				$balancedEndDateLabel1 = getBadgerTranslation2("forecast", "printedPocketMoney1Label").":";
+				$balancedEndDateLabel1 = getBadgerTranslation2("forecast", "printedPocketMoney1Label"). ": " . $pocketMoney1 . ")".":";
 				$printedPocketMoney1EndValue = new Amount ($pocketMoney1EndValue);
 				$balancedEndDate1 = $printedPocketMoney1EndValue->getFormatted() ."<br />";
 			}
 			if ($pocketMoney2EndValue){
-				$balancedEndDateLabel2 = getBadgerTranslation2("forecast", "printedPocketMoney2Label").":";
+				$balancedEndDateLabel2 = getBadgerTranslation2("forecast", "printedPocketMoney2Label"). ": " . $pocketMoney2 . ")".":";
 				$printedPocketMoney2EndValue = new Amount ($pocketMoney2EndValue);
-				$balancedEndDate2 = $printedPocketMoney2EndValue->getFormatted() . "<br />";
+				$balancedEndDate2 = $printedPocketMoney2EndValue->getFormatted() .  "<br />";
 			}
 		}
 	} else { //if ($today->compare($today, $selectedDate)!=1){
