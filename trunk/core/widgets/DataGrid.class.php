@@ -55,10 +55,16 @@ class DataGrid {
 	public $cellAlign = array();
 	
 	/**
-	 * text of the javascript alert hint, when deleting
+	 * text of the javascript alert, confirm deleting
 	 * @var string
 	 */
 	public $deleteMsg;
+
+	/**
+	 * text of the javascript alert when the user want to edit a row without selecting one before
+	 * @var string
+	 */	
+	public $noRowSelectedMsg;
 	
 	/**
 	 * php-page called for deletion
@@ -118,6 +124,7 @@ class DataGrid {
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		$this->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 		$this->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
+		$this->noRowSelectedMsg = getBadgerTranslation2('dataGrid', 'NoRowSelectedMsg');
 		
 		if($print){
 			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
@@ -170,6 +177,7 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('dgColumnOrder = new Array("'.implode('","',$this->columnOrder).'");');
 		$this->tpl->addOnLoadEvent('dgHeaderSize = new Array('.implode(',',$this->headerSize).');');
 		$this->tpl->addOnLoadEvent('dgCellAlign = new Array("'.implode('","',$this->cellAlign).'");');
+		$this->tpl->addOnLoadEvent('dgNoRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');

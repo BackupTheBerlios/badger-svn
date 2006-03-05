@@ -345,7 +345,12 @@ function dgNew(addParam) {
 // call site to  edit record with ID in a special page
 function dgEdit(id) {
 	if(dgEditAction) {
-		document.location.href = dgEditAction + id;
+		if(!id) id = dgGetFirstId(); //if called by button, get first ID
+		if(id) {
+			document.location.href = dgEditAction + id;
+		} else {
+			alert (dgNoRowSelectedMsg);
+		}
 	}
 }
 
@@ -360,6 +365,17 @@ function dgGetAllIds() {
 	}
 	return allIDs;
 }
+// get all ids from selected rows -> array
+function dgGetFirstId() {
+	checkbox = Form.getInputs("dgForm","checkbox");
+
+	for (i=0; i<checkbox.length; i++) {
+		if(checkbox[i].id.indexOf("check") != -1 ) {
+			if ($F(checkbox[i]) == "on") return checkbox[i].parentNode.parentNode.id;
+		}
+	}
+}
+
 
 //change sort order and hide/show sort images
 function addNewSortOrder(strColumn, strDirection) {
