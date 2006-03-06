@@ -143,7 +143,7 @@ if (!isset($_POST['writePocketMoney'])){
 		}
 	//Drop down to select account		
 	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);
-	$accountField = $widgets->createSelectField("selectedAccount", $account, "", getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
+	$accountField = $widgets->createSelectField("selectedAccount", $account, $us->getProperty('forecastStandardAccount'), getBadgerTranslation2("forecast", "accountToolTip"), true, 'style="width: 10em;"');
 	//field to select saving target, default is 0
 	$savingTargetLabel =  $widgets->createLabel("savingTarget", getBadgerTranslation2("forecast", "savingTargetField").":", true);
 	$savingTargetField = $widgets->createField("savingTarget", 5, 0, getBadgerTranslation2("forecast", "savingTargetToolTip"), true, "text", 'style="width: 10em;"');
@@ -199,6 +199,9 @@ if (isset($_POST['sendData'])){
 		$savingTarget = $selectedSavingTarget->get();	
 		$endDate = $selectedDate->getDate();
 		$account = ($_POST["selectedAccount"]);
+		//save selected account as standard account
+		$us->setProperty('forecastStandardAccount',$account);
+		
 		$selectedPocketMoney1 = new Amount ($_POST["pocketmoney1"], true);
 		$pocketMoney1 = $selectedPocketMoney1->get();		
 		$selectedPocketMoney2 = new Amount ($_POST["pocketmoney2"], true);
