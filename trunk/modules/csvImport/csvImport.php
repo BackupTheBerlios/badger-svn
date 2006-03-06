@@ -28,7 +28,9 @@ echo $tpl->getHeader($pageHeading);
 echo $widgets->addToolTipLayer();
 //create account manger object
 $am = new AccountManager($badgerDb);
-
+$us->setProperty("csvImportStandardParser", "");
+$us->setProperty("csvImportStandardAccount", "");
+$us->setProperty("forecastStandardAccount", "");
 //if no Upload yet, show form
 if (!isset($_POST['btnSubmit'])){
 	if (!isset($_POST['Upload'])){	
@@ -46,7 +48,7 @@ if (!isset($_POST['btnSubmit'])){
 	      	while ($res->fetchInto ($row)){ 
 	      		$parser[$row[2]] = $row[1];
 	      	}
-      	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, "", getBadgerTranslation2("importCsv", "toolTipParserSelect"));
+      	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, $us->getProperty("csvImportStandardParser"), getBadgerTranslation2("importCsv", "toolTipParserSelect"));
 		
 		$accountSelectLabel =  $widgets->createLabel("accountSelect", getBadgerTranslation2("importCsv", "targetAccount").":", true);					      	
 		
@@ -56,7 +58,7 @@ if (!isset($_POST['btnSubmit'])){
 	    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
 	    	}
       	
-	    $accountSelectFile = $widgets->createSelectField("accountSelect", $account, "", getBadgerTranslation2("importCsv", "toolTopAccountSelect"));  
+	    $accountSelectFile = $widgets->createSelectField("accountSelect", $account, $us->getProperty("csvImportStandardAccount"), getBadgerTranslation2("importCsv", "toolTopAccountSelect"));  
 
 		$uploadButton = $widgets->createButton("Upload", getBadgerTranslation2("importCsv", "upload"), "submit", "Widgets/table_save.gif");
 		//use tempate engine
@@ -76,10 +78,15 @@ if (isset($_POST['Upload'])){
 			$fp = fopen($file_array['tmp_name'], "r");
 	 		//open selected parser
 	 		require_once(BADGER_ROOT . "/modules/csvImport/parser/" . $_POST["parserSelect"]);
+	 		//save last used parser
+	 		$us->setProperty("csvImportStandardParser", $_POST["parserSelect"]);
 	 		$accountId = $_POST["accountSelect"];
+	 		//save last used account
+	 		$us->setProperty("csvImportStandardAccount", $accountId);
+	 		
 	 		//call to parse function
 	 		$foundTransactions = parseToArray($fp, $accountId);
-	 	//delete existing transactions, criteria are accountid, date & amount
+	 		//delete existing transactions, criteria are accountid, date & amount
 	 		$LookupTransactionNumber = count($foundTransactions);
 	 		$filteredTransactions = 0;
 	 		$importedTransactionNumber = 0;
