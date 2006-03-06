@@ -60,7 +60,7 @@ echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTrans
 echo ' ';
 echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
 echo ' ';
-echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete(true)", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete('refreshDataGrid')", "Widgets/table_delete.gif");
 
 echo $dataGrid->writeDataGrid();
 

@@ -64,6 +64,8 @@ echo "<h1>$pageTitle</h1>";
 
 echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/planned_transaction_new.gif");
 echo ' ';
+echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
+echo ' ';
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete(true)", "Widgets/table_delete.gif");
 
 echo $dataGrid->writeDataGrid();
