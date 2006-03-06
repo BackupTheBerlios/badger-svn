@@ -304,34 +304,36 @@ function dgKeyProcess(event) {
 // delete all selected rows
 //  - delete row in GUI
 //  - send a background delete request to the server
-function dgDelete(bolRefreshDataGrid) {
+function dgDelete(strRefreshType) {
 	if(dgDeleteAction) {
 		dgData = $("dgTableData");	
 		checkbox = Form.getInputs("dgForm","checkbox");
 		
-		allSelectedIds = dgGetAllIds();
-		//count selected checkboxes
+		allSelectedIds = dgGetAllIds();	// get selected row ids
 		
 		//asks use, if he is sure
 		choise = confirm(dgDeleteMsg +"("+allSelectedIds.length+")");
 		if (choise) {
-			//background delete -> ToDo: check result of deletion
+			// delete data in background
 			deleteData(dgDeleteAction + allSelectedIds);
 			
-			if(bolRefreshDataGrid) {
-				//refresh complete dataGrid
+			switch (strRefreshType) {
+			case 'refreshDataGrid': //refresh complete dataGrid				
 				loadData(dgSourceXML + serializeParameter());
-			} else {
-				//delete rows from dataGrid
+				break;
+			case 'refreshPage': //refresh complete page	
+				location.href = location.href;
+				break;
+			default: // no refresh, delete rows in frontend			    
 				for (i=0; i<allSelectedIds.length; i++) {
 					Element.remove($(allSelectedIds[i]));
 					dgCount = $("dgCount").innerHTML;
 					dgCount--;
 					$("dgCount").innerHTML = dgCount;
 				}
-			}
+			} //switch
 		} //if (choise)
-	}
+	} //if (dgDeleteAction)
 }
 
 // call site to add a new record
