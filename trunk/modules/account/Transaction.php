@@ -279,11 +279,11 @@ function printFrontendPlanned($AccountID, $ID) {
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
 	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
 	
-	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatUnit'), true);
-	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", true, "style='width: 213px;'");
+	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
+	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", true, "style='width: 104px;'");
 
-	$repeatFrequencyLabel = $widgets->createLabel("repeatFrequency", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
-	$repeatFrequencyField = $widgets->createField("repeatFrequency", 30, $repeatFrequencyValue, "", true, "text", "");
+	$everyLabel = getBadgerTranslation2('intervalUnits', 'every');
+	$repeatFrequencyField = $widgets->createField("repeatFrequency", 1, $repeatFrequencyValue, "", true, "text", "");
 	
 	//Buttons
 	$submitBtn = $widgets->createButton("submit", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");

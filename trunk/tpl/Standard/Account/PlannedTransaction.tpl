@@ -39,11 +39,7 @@
   </tr>
   <tr>
     <td>$repeatUnitLabel </td>
-    <td>$repeatUnitField  </td>
-  </tr>
-  <tr>
-    <td>$repeatFrequencyLabel </td>
-    <td>$repeatFrequencyField  </td>
+    <td>$everyLabel $repeatFrequencyField. $repeatUnitField  </td>
   </tr>
   <tr>
     <td>$backBtn </td>
