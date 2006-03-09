@@ -115,7 +115,8 @@ function printFrontendFinished($AccountID, $ID) {
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
-
+	$widgets->addJSValMessages();
+	
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
 	echo $widgets->addToolTipLayer();
@@ -208,6 +209,7 @@ function printFrontendPlanned($AccountID, $ID) {
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
+	$widgets->addJSValMessages();
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);

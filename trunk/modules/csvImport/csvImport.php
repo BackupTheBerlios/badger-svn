@@ -23,9 +23,12 @@ $legend = getBadgerTranslation2('csv','legend');
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
+$widgets->addJSValMessages();
+
 $widgets->addNavigationHead();
 echo $tpl->getHeader($pageHeading);
 echo $widgets->addToolTipLayer();
+
 //create account manger object
 $am = new AccountManager($badgerDb);
 $us->setProperty("csvImportStandardParser", "");

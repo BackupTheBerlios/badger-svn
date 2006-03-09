@@ -233,4 +233,13 @@ function _jsVal_Language() {
 		$this->tpl->addOnLoadEvent("loadNavigation()");		
 	}
 
+	function addJSValMessages() {
+		$this->tpl->addHeaderTag("<script type=\"text/javascript\">");
+		$this->tpl->addHeaderTag("function _jsVal_Language() {");
+    	$this->tpl->addHeaderTag("	this.err_form = '" . getBadgerTranslation2('jsVal', 'err_form') . "';");
+    	$this->tpl->addHeaderTag("	this.err_select = '" . getBadgerTranslation2('jsVal', 'err_select') . "';");
+    	$this->tpl->addHeaderTag("	this.err_enter = '" . getBadgerTranslation2('jsVal', 'err_enter') . "';");
+		$this->tpl->addHeaderTag("}");
+		$this->tpl->addHeaderTag("</script>");
+	}	
 }

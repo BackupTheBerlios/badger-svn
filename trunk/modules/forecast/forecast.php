@@ -19,10 +19,13 @@ $pageHeading = getBadgerTranslation2('forecast','title');
 $widgets = new WidgetEngine($tpl); 
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
-$widgets->addNavigationHead();
+$widgets->addJSValMessages();
 $tpl->addJavaScript("js/prototype.js");
+
+$widgets->addNavigationHead();
 echo $tpl->getHeader($pageHeading);
 echo $widgets->addToolTipLayer();
+
 //include charts.php to access the InsertChart function
 require_once(BADGER_ROOT . "/includes/charts/charts.php");
 //the button to calculate the pocket money from finished transactions was pressed, show the settings formula with the inputs made & the new pocket money 2
@@ -43,8 +46,8 @@ if (isset ($_POST['writePocketMoney'])){
 	//get accounts from db & field to select the account for forecsatung
 		$am = new AccountManager($badgerDb);
 		$account = array();
-			    	while ($currentAccount = $am->getNextAccount()) {
-			    		$account[$currentAccount->getId()] = $currentAccount->getTitle();	
+			while ($currentAccount = $am->getNextAccount()) {
+				$account[$currentAccount->getId()] = $currentAccount->getTitle();	
 		}
 	
 	$accountLabel =  $widgets->createLabel("selectedAccount", getBadgerTranslation2("forecast", "accountField").":", true);

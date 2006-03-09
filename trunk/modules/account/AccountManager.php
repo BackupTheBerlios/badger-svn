@@ -63,6 +63,8 @@ function printFrontend() {
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	
+	$widgets->addJSValMessages();
+	
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
 	
