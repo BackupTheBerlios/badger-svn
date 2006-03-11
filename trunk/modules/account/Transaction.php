@@ -314,18 +314,24 @@ function updateRecord($accountID, $ID, $transactionType) {
 		//add new record
 		switch ($transactionType) {
 		case 'planned':
-			$ID = $account->addPlannedTransaction(
+			$tmp = trim($_POST['endDate']);
+			$endDate = empty($tmp) ? null : new Date($tmp, true);
+		
+			$newPlannedTransaction = $account->addPlannedTransaction(
 					$_POST['title'],
 					new Amount($_POST['amount'], true),
 					$_POST['repeatUnit'],
 					$_POST['repeatFrequency'],
 					new Date($_POST['beginDate'], true),
-					new Date($_POST['endDate'], true), //= null,
+					$endDate, //= null,
 					$_POST['description'], // = null,
 					$_POST['transactionPartner'], // = null,
 					$category, // = null,
 					(isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false); // = null
+
+			transferFinishedTransactions($account, $newPlannedTransaction);
 			break;
+			
 		case 'finished':
 			$ID = $account->addFinishedTransaction(
 				new Amount($_POST['amount'], true),
@@ -411,4 +417,69 @@ function getRedirectPage($accountId) {
 	}
 	
 	return 'AccountOverview.php?accountID=' . $accountId;
+}
+
+function transferFinishedTransactions ($account, $plannedTransaction) {
+	$now = new Date();
+
+	$date = new Date($plannedTransaction->getBeginDate());
+	$dayOfMonth = $date->getDay();
+	
+	//While we are before now and the end date of this transaction
+	while(
+		!$date->after($now)
+		&& !$date->after(is_null($tmp = $plannedTransaction->getEndDate()) ? new Date('9999-12-31') : $tmp)
+	){
+
+		$account->addFinishedTransaction(
+			$plannedTransaction->getAmount(),
+			$plannedTransaction->getTitle(),
+			$plannedTransaction->getDescription(),
+			new Date($date),
+			$plannedTransaction->getTransactionPartner(),
+			$plannedTransaction->getCategory(),
+			$plannedTransaction->getOutsideCapital(),
+			false,
+			true
+		);
+
+		//do the date calculation
+		switch ($plannedTransaction->getRepeatUnit()){
+			case 'day': 
+				$date->addSeconds($plannedTransaction->getRepeatFrequency() * 24 * 60 * 60);
+				break;
+				
+			case 'week':
+				$date->addSeconds($plannedTransaction->getRepeatFrequency() * 7 * 24 * 60 * 60);
+				break;
+				
+			case 'month':
+				//Set the month
+				$date = new Date(Date_Calc::endOfMonthBySpan($plannedTransaction->getRepeatFrequency(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+				//And count back as far as the last valid day of this month
+				while($date->getDay() > $dayOfMonth){
+					$date->subtractSeconds(24 * 60 * 60);
+				}
+				break; 
+			
+			case 'year':
+				$newYear = $date->getYear() + $plannedTransaction->getRepeatFrequency();
+				if (
+					$dayOfMonth == 29
+					&& $date->getMonth() == 2
+					&& !Date_Calc::isLeapYear($newYear)
+				) {
+					$date->setDay(28);
+				} else {
+					$date->setDay($dayOfMonth);
+				}
+				
+				$date->setYear($newYear);
+				break;
+			
+			default:
+				throw new BadgerException('Account', 'IllegalRepeatUnit', $plannedTransaction->getRepeatUnit());
+				exit;
+		}
+	}
 }
