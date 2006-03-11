@@ -229,8 +229,8 @@ function dateCompare(d1Str, d2Str) {
 	var d2 = d2Str.split("-");
 	
 	for (i = 0; i < 3; i++) {
-		d1[i] = parseInt(d1[i]);
-		d2[i] = parseInt(d2[i]);
+		d1[i] = parseInt(d1[i], 10);
+		d2[i] = parseInt(d2[i], 10);
 	}
 	
 	if (d1[0] < d2[0]) {
