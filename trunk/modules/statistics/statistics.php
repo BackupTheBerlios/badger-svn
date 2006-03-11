@@ -70,6 +70,16 @@ function showSelectPage() {
 	$dataGrid->width = '30em';
 	$dataGrid->height = '7em';
 	$dataGrid->initDataGridJS();
+	
+	try {
+		$preselectedAccounts = $us->getProperty('statisticsPreselectedAccounts');
+		foreach ($preselectedAccounts as $currentPreselectedAccount) {
+			$tpl->addOnLoadEvent("dgPreselectId('$currentPreselectedAccount');");
+		}
+	} catch (BadgerException $ex) {}
+	
+	$tpl->addOnLoadEvent("Behaviour.register(statisticsBehaviour);");
+	$tpl->addOnLoadEvent("Behaviour.apply();");
 
 	$widgets->addNavigationHead();
 

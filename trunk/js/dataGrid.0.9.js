@@ -9,8 +9,8 @@
 * Visit http://badger.berlios.org 
 *
 **/
-/*
-* dataGrid.js
+/**
+ * dataGrid.js
  * 
  * @author Sepp
  * @author togro82
@@ -447,4 +447,9 @@ function messageLayer(action, message) {
 			divMessage.style.display = "none";
 			break;
 	}
+}
+
+//preselect an entry
+function dgPreselectId(id) {
+	arrSelectedRows.push(id);
 }
