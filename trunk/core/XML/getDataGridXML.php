@@ -148,6 +148,12 @@ $dgx = new DataGridXML($columns, $rows);
 
 header('Content-Type: text/xml');
 
+if (ini_get('zlib.output_compression') == false) {
+	if (function_exists('ob_gzhandler')) {
+		ob_start('ob_gzhandler');
+	}
+}
+
 echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
 
 //construct XML
