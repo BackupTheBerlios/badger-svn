@@ -91,10 +91,22 @@ function deleteRecord() {
 					
 		//check if we can delete this item
 		$acc = $am->getAccountById($_GET['accountID']);
+		
+		$processedPlannedTransactions = array();
+		
 		foreach($IDs as $ID){
 			if(substr($ID,0,1)=="p") {
 				$pos = strpos($ID,"_");				
 				$ID = substr($ID,1,$pos-1);
+
+				//Prevent try to delete one plannedTransaction several times if it was expanded to
+				//more than one occurence
+				if (array_key_exists($ID, $processedPlannedTransactions)) {
+					continue;
+				} else {
+					$processedPlannedTransactions[$ID] = true;
+				}
+
 				$acc->deletePlannedTransaction($ID);
 			} else {
 				$acc->deleteFinishedTransaction($ID);
