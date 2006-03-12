@@ -209,6 +209,8 @@ class AccountManager extends DataGridHandler {
 	 * @return object The Account object identified by $accountId. 
 	 */
 	public function getAccountById($accountId){
+		settype($accountId, 'integer');
+
 		if ($this->dataFetched){
 			if (isset($this->accounts[$accountId])) {
 				return $this->accounts[$accountId];
@@ -259,6 +261,8 @@ class AccountManager extends DataGridHandler {
 	 * @throws BadgerException UnknownAccountId If $accountId is not in the Database
 	 */
 	public function deleteAccount($accountId){
+		settype($accountId, 'integer');
+
 		if(isset($this->accounts[$accountId])){
 			unset($this->accounts[$accountId]);
 		}

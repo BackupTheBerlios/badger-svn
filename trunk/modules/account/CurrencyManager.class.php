@@ -189,6 +189,8 @@ class CurrencyManager extends DataGridHandler {
 	 * @return object The Currency object identified by $currencyId. 
 	 */
 	public function getCurrencyById($currencyId) {
+		settype($currencyId, 'integer');
+
 		if ($this->dataFetched){
 			if(isset($this->currencies[$currencyId])) {
 				return $this->currencies[$currencyId];
@@ -248,6 +250,8 @@ class CurrencyManager extends DataGridHandler {
 	 * @throws BadgerException UnknownCurrencyId If $currencyId is not in the Database
 	 */
 	public function deleteCurrency($currencyId){
+		settype($currencyId, 'integer');
+
 		if(isset($this->currencies[$currencyId])){
 			unset($this->currencies[$currencyId]);
 		}

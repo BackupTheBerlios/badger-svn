@@ -217,6 +217,8 @@ class CategoryManager extends DataGridHandler {
 	 * @return object The Category object identified by $categoryId. 
 	 */
 	public function getCategoryById($categoryId) {
+		settype($categoryId, 'integer');
+
 		if ($this->dataFetched){
 			if(isset($this->categories[$categoryId])) {
 				return $this->categories[$categoryId];
@@ -282,6 +284,8 @@ class CategoryManager extends DataGridHandler {
 	 * @throws BadgerException UnknownCategoryId If $categoryId is not in the Database
 	 */
 	public function deleteCategory($categoryId){
+		settype($categoryId, 'integer');
+
 		if(isset($this->categories[$categoryId])){
 			unset($this->categories[$categoryId]);
 		}

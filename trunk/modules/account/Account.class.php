@@ -556,6 +556,8 @@ class Account extends DataGridHandler {
 	 * @return object FinishedTransaction object of the finished transaction identified by $finishedTransactionId.
 	 */
 	public function getFinishedTransactionById($finishedTransactionId){
+		settype($finishedTransactionId, 'integer');
+
 		if ($this->finishedDataFetched) {
 			if (isset($this->finishedTransactions[$finishedTransactionId])) {
 				return $this->finishedTransactions[$finishedTransactionId];
@@ -604,6 +606,8 @@ class Account extends DataGridHandler {
 	 * @throws BadgerException If $finishedTransactionId is unknown to the DB.
 	 */
 	public function deleteFinishedTransaction($finishedTransactionId){
+		settype($finishedTransactionId, 'integer');
+
 		if(isset($this->finishedTransactions[$finishedTransactionId])){
 			unset($this->finishedTransactions[$finishedTransactionId]);
 		}
@@ -745,6 +749,8 @@ class Account extends DataGridHandler {
 	 * @return object PlannedTransaction object of the planned transaction identified by $plannedTransactionId.
 	 */
 	public function getPlannedTransactionById($plannedTransactionId){
+		settype($plannedTransactionId, 'integer');
+
 		if ($this->plannedDataFetched) {
 			if (isset($this->plannedTransactions[$plannedTransactionId])) {
 				return $this->plannedTransactions[$plannedTransactionId];
@@ -793,6 +799,8 @@ class Account extends DataGridHandler {
 	 * @throws BadgerException If $plannedTransactionId is unknown to the DB.
 	 */
 	public function deletePlannedTransaction($plannedTransactionId){
+		settype($plannedTransactionId, 'integer');
+
 		if(isset($this->plannedTransactions[$plannedTransactionId])){
 			unset($this->plannedTransactions[$plannedTransactionId]);
 		}
