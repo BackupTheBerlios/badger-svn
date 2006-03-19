@@ -23,6 +23,7 @@ var strSortingColumnActive;
 var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
 var objURLParameter = new Object;
+var strRefreshType;
 
 // retrieve data from server, define callback-function
 function loadData(strUrl) {
@@ -48,7 +49,29 @@ function deleteData(strUrl) {
 
 //displays the message from backend-object
 function dgDeleteResponse(objXHR) {
-	messageLayer('show', '<span class="dgMessageError">'+objXHR.responseText+'</span>');
+	if (objXHR.responseText=="") {
+		switch (strRefreshType) {
+		case 'refreshDataGrid': 
+			//refresh complete dataGrid				
+			loadData(dgSourceXML + serializeParameter());
+			break;
+		case 'refreshPage': 
+			//refresh complete page	
+			window.setTimeout("refreshPage()", 10);
+			break;
+		default: 
+			// no refresh, delete rows in frontend
+			allSelectedIds = dgGetAllIds();		    
+			for (i=0; i<allSelectedIds.length; i++) {
+				Element.remove($(allSelectedIds[i]));
+				dgCount = $("dgCount").innerHTML;
+				dgCount--;
+				$("dgCount").innerHTML = dgCount;
+			}
+		} //switch	
+	} else {
+		messageLayer('show', '<span class="dgMessageError">'+objXHR.responseText+'</span>');
+	}
 }
 
 //XHR Error
@@ -180,6 +203,11 @@ function enableMouseEvents() {
 	mouseEventsDisabled = false;
 }
 
+function refreshPage () {
+	location.href = location.href;
+}
+
+
 //Mouse-Events
 var behaviour =  {
 	//Mouse-Events of the rows (selecting, activating)
@@ -304,8 +332,10 @@ function dgKeyProcess(event) {
 // delete all selected rows
 //  - delete row in GUI
 //  - send a background delete request to the server
-function dgDelete(strRefreshType) {
+function dgDelete(strRefresh) {
 	if(dgDeleteAction) {
+		strRefreshType = strRefresh; //set to global
+		
 		dgData = $("dgTableData");	
 		checkbox = Form.getInputs("dgForm","checkbox");
 		
@@ -315,23 +345,7 @@ function dgDelete(strRefreshType) {
 		choise = confirm(dgDeleteMsg +"("+allSelectedIds.length+")");
 		if (choise) {
 			// delete data in background
-			deleteData(dgDeleteAction + allSelectedIds);
-			
-			switch (strRefreshType) {
-			case 'refreshDataGrid': //refresh complete dataGrid				
-				loadData(dgSourceXML + serializeParameter());
-				break;
-			case 'refreshPage': //refresh complete page	
-				location.href = location.href;
-				break;
-			default: // no refresh, delete rows in frontend			    
-				for (i=0; i<allSelectedIds.length; i++) {
-					Element.remove($(allSelectedIds[i]));
-					dgCount = $("dgCount").innerHTML;
-					dgCount--;
-					$("dgCount").innerHTML = dgCount;
-				}
-			} //switch
+			deleteData(dgDeleteAction + allSelectedIds);			
 		} //if (choise)
 	} //if (dgDeleteAction)
 }
