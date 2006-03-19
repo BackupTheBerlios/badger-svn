@@ -140,11 +140,10 @@ function _jsVal_Language() {
 			$this->labelIds[$field]++;
 		}
 
-
-		if($mandatory) {
-			return "<label for='$id' class='mandatory'>$name</label>";
+		if( $mandatory ) {
+			return "<label for='$id' id='label$id' class='mandatory'>$name</label>";
 		} else {
-			return "<label for='$id'>$name</label>";
+			return "<label for='$id' id='label$id'>$name</label>";
 		}
 	}
 	
