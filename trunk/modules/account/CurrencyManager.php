@@ -13,11 +13,13 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/CurrencyManager.class.php');
+require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 
 $redirectPageAfterSave = "CurrencyManagerOverview.php";
 $pageTitle = getBadgerTranslation2('accountCurrency','pageTitle');
 
 $cm = new CurrencyManager($badgerDb);
+$am = new AccountManager($badgerDb);
 
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) {
@@ -27,12 +29,22 @@ if (isset($_GET['action'])) {
 			if (isset($_GET['ID'])) {
 				$IDs = explode(",",$_GET['ID']);
 						
-				//check if we can delete this item
 				foreach($IDs as $ID){
-					$cm->deleteCurrency($ID);
+					//check if we can delete this item
+					$currencyCanBeDeleted = true;
+					while( $account = $am->getNextAccount() ) {
+						if ($account->getCurrency()->getId() == $ID) {
+							$currencyCanBeDeleted = false;
+						}
+					}					
+					if ($currencyCanBeDeleted) {
+						//delete currency
+						$cm->deleteCurrency($ID);
+					} else {
+						//error message
+						echo getBadgerTranslation2('accountCurrency','currencyIsStillUsed');
+					}
 				}
-
-				echo "";
 			} else {
 				echo "no ID was transmitted!";	
 			}			
