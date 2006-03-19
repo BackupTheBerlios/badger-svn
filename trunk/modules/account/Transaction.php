@@ -19,7 +19,7 @@ require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $redirectPage = "";
-$pageTitle = getBadgerTranslation2('accountTransaction','pageTitle');; //I18N
+$pageTitle = getBadgerTranslation2('accountTransaction','pageTitle');
 
 $am = new AccountManager($badgerDb);
 $catm = new CategoryManager($badgerDb);
