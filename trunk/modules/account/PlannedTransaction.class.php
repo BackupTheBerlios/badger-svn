@@ -499,6 +499,16 @@ class PlannedTransaction {
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
 	}
+    
+    public static function sanitizeId($id) {
+    	if ($id{0} === 'p') {
+    		$parts = explode('_', $id);
+    		
+    		return (int) substr($parts[0], 1);
+    	} else {
+    		return (int) $id;
+    	}
+    }
 	
 	/**
 	 * Returns the type.

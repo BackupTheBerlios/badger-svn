@@ -749,7 +749,7 @@ class Account extends DataGridHandler {
 	 * @return object PlannedTransaction object of the planned transaction identified by $plannedTransactionId.
 	 */
 	public function getPlannedTransactionById($plannedTransactionId){
-		settype($plannedTransactionId, 'integer');
+		$plannedTransactionId = PlannedTransaction::sanitizeId($plannedTransactionId);
 
 		if ($this->plannedDataFetched) {
 			if (isset($this->plannedTransactions[$plannedTransactionId])) {
@@ -799,7 +799,7 @@ class Account extends DataGridHandler {
 	 * @throws BadgerException If $plannedTransactionId is unknown to the DB.
 	 */
 	public function deletePlannedTransaction($plannedTransactionId){
-		settype($plannedTransactionId, 'integer');
+		$plannedTransactionId = PlannedTransaction::sanitizeId($plannedTransactionId);
 
 		if(isset($this->plannedTransactions[$plannedTransactionId])){
 			unset($this->plannedTransactions[$plannedTransactionId]);
@@ -926,6 +926,37 @@ class Account extends DataGridHandler {
 		);
 
     	return $this->plannedTransactions[$plannedTransactionId];	
+	}
+	
+	public function deleteAllTransactions() {
+		$this->deleteAllFinishedTransactions();
+		$this->deleteAllPlannedTransactions();
+	}
+	
+	public function deleteAllFinishedTransactions() {
+		$this->finishedTransactions = array();
+
+		$sql= "DELETE FROM finished_transaction
+				WHERE account_id = " . $this->id;
+				
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+	}
+
+	public function deleteAllPlannedTransactions() {
+		$this->plannedTransactions = array();
+
+		$sql= "DELETE FROM planned_transaction
+				WHERE account_id = " . $this->id;
+				
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
 	}
 
 	/**
