@@ -418,9 +418,9 @@ class PlannedTransaction {
 			$catId = $category->getId();
 		}
 		
-		$sql = "UPDATE finished_transaction
+		$sql = "UPDATE planned_transaction
 			SET category_id = $catId
-			WHERE finished_transaction_id = " . $this->id;
+			WHERE planned_transaction_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);
 		
