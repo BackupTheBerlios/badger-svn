@@ -26,7 +26,8 @@ $tpl->addJavaScript("js/prototype.js");
 $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
 $dataGrid->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'), getBadgerTranslation2('accountAccount', 'colBalance'),getBadgerTranslation2('accountAccount', 'colCurrency'));
-$dataGrid->columnOrder = array("title","balance","currency");  
+$dataGrid->columnOrder = array("title","balance","currency"); 
+//$dataGrid->deleteMsg = getBadgerTranslation2('accountAccount', 'deleteMsg'); //Hinweis, dass er auch alle Transactionen löschen wird
 $dataGrid->initialSort = "title";
 $dataGrid->initialSortDirection = "asc";
 $dataGrid->headerSize = array(200,150,100);
