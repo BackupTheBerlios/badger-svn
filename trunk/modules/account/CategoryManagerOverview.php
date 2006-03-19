@@ -24,6 +24,7 @@ $dataGrid = new DataGrid($tpl);
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CategoryManager";
 $dataGrid->headerName = array(getBadgerTranslation2('accountCategory', 'colparentTitle'),getBadgerTranslation2('accountCategory', 'colTitle'),getBadgerTranslation2('accountCategory', 'colDescription'),getBadgerTranslation2('accountCategory', 'colOutsideCapital'));
 $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapital");
+$dataGrid->deleteMsg = getBadgerTranslation2('accountCategory', 'deleteMsg');
 $dataGrid->initialSort = "parentTitle";
 $dataGrid->initialSortDirection = "asc";
 $dataGrid->headerSize = array(200,200,300,100);
