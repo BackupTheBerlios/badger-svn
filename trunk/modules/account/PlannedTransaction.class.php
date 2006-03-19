@@ -117,6 +117,15 @@ class PlannedTransaction {
 	private $repeatFrequency;
 	
 	/**
+	 * The type of this transaction.
+	 * 
+	 * 'FinishedTransaction' or 'PlannedTransaction' (a expanded one)
+	 * 
+	 * @var string
+	 */
+	private $type;
+	
+	/**
 	 * Creates a Planned Transaction.
 	 * 
 	 * @param $badgerDb object The DB object.
@@ -145,7 +154,8 @@ class PlannedTransaction {
     	$description = null,
     	$transactionPartner = null,
     	$category = null,
-    	$outsideCapital = null
+    	$outsideCapital = null,
+    	$type = 'PlannedTransaction'
     ) {
     	$CategoryManager = new CategoryManager($badgerDb);
     	
@@ -168,6 +178,7 @@ class PlannedTransaction {
     		}
     		$this->repeatUnit = $data['repeat_unit'];
     		$this->repeatFrequency = $data['repeat_frequency'];
+    		$this->type = 'PlannedTransaction';
     	} else {
     		$this->id = $data;
     		$this->title = $title;
@@ -180,6 +191,7 @@ class PlannedTransaction {
     		$this->endDate = $endDate;
     		$this->repeatUnit = $repeatUnit;
     		$this->repeatFrequency = $repeatFrequency;
+    		$this->type = $type;
     	}
     }
     
@@ -486,6 +498,15 @@ class PlannedTransaction {
 			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 		}
+	}
+	
+	/**
+	 * Returns the type.
+	 * 
+	 * @return string The type of this transaction.
+	 */
+	public function getType() {
+		return $this->type;
 	}
 }
 ?>
