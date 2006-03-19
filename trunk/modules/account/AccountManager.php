@@ -29,13 +29,22 @@ if (isset($_GET['action'])) {
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
 				$IDs = explode(",",$_GET['ID']);
-						
+					
+				echo "<br>";
 				//check if we can delete this item
 				foreach($IDs as $ID){
-					$am->deleteAccount($ID);
+					$am = new AccountManager($badgerDb); //workaround, because of twice calling 'getAccountById'
+					$acc = $am->getAccountById( $ID );
+
+					//delete all transactions in this account
+					$acc->deleteAllTransactions();
+
+					//delete account
+					$am->deleteAccount($ID);					
+
+					//delete entry in navigation
 					deleteFromNavi($us->getProperty("accountNaviId_$ID"));
 				}
-				echo "";
 			} else {
 				echo "no ID was transmitted!";	
 			}
