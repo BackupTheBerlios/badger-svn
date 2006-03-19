@@ -357,9 +357,20 @@ Field.prototype._ValidateGroup = function(arrFields){
 };
 
 function _handleError (field, strErrorMessage) {
-   var obj = field.element;
-   strNewMessage = strErrorMessage + ( (field.realname)? field.realname : ((obj.id) ? obj.id : obj.name) ) + "\n";
-   return strNewMessage;
+	var obj = field.element;
+	var objLabel;
+   
+	//added by sepp
+	//get the value of label for this field I18N
+	objLabel = document.getElementById("label" + obj.id);
+	if(objLabel.textContent) strFieldName = objLabel.textContent; //FF
+	if(objLabel.text) strFieldName = objLabel.text; //IE
+	if(objLabel.innerText) strFieldName = objLabel.innerText; //Opera
+	
+	strFieldErrorMsg = ( (field.realname)? field.realname : ((strFieldName) ? strFieldName : ((obj.id) ? obj.id : obj.name)));
+      
+	strNewMessage = strErrorMessage + strFieldErrorMsg + "\n";
+	return strNewMessage;
 };
 
 function _throwError(field){
