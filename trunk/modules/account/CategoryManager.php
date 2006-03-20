@@ -40,6 +40,7 @@ if (isset($_GET['action'])) {
 				//for all categories which should be deleted
 				foreach($IDs as $ID){
 					//for all accounts:
+					$am = new AccountManager($badgerDb);
 					while( $account = $am->getNextAccount() ) {					
 						//set filter: get all transaction with this category
 			 			$filter = array (
@@ -61,7 +62,7 @@ if (isset($_GET['action'])) {
 					} //accounts
 					
 					//delete category
-					//$cm->deleteCategory($ID);
+					$cm->deleteCategory($ID);
 				}
 
 				echo "";
