@@ -13,11 +13,13 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/CategoryManager.class.php');
+require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 
 $redirectPageAfterSave = "CategoryManagerOverview.php";
 $pageTitle = getBadgerTranslation2 ('accountCategory','pageTitle');
 
 $cm = new CategoryManager($badgerDb);
+$am = new AccountManager($badgerDb);
 
 $order = array (
 	array(
@@ -35,9 +37,27 @@ if (isset($_GET['action'])) {
 			if (isset($_GET['ID'])) {
 				$IDs = explode(",",$_GET['ID']);
 							
-				//check if we can delete this item
+				//for all categories which should be deleted
 				foreach($IDs as $ID){
-					$cm->deleteCategory($ID);
+					//for all accounts:
+					while( $account = $am->getNextAccount() ) {					
+						//set filter: get all transaction with this category
+			 			$account->setFilter(array (
+							array (
+								'key' => 'categoryId',
+								'op' => 'eq',
+								'val' => $ID
+							)
+						));
+						//flush category
+						while($ta = $account->getNextTransaction() ) {
+							echo $ta->getId();
+							$ta->setCategory(NULL);
+						} //transactions
+					} //accounts
+					
+					//delete category
+					//$cm->deleteCategory($ID);
 				}
 
 				echo "";
