@@ -42,16 +42,20 @@ if (isset($_GET['action'])) {
 					//for all accounts:
 					while( $account = $am->getNextAccount() ) {					
 						//set filter: get all transaction with this category
-			 			$account->setFilter(array (
+			 			$filter = array (
 							array (
 								'key' => 'categoryId',
 								'op' => 'eq',
 								'val' => $ID
 							)
-						));
+						);
+						$account->setFilter($filter);
+						$account2 = clone $account;
 						//flush category
-						while($ta = $account->getNextTransaction() ) {
-							echo $ta->getId();
+						while($ta = $account->getNextFinishedTransaction() ) {
+							$ta->setCategory(NULL);
+						} //transactions
+						while($ta = $account2->getNextPlannedTransaction() ) {
 							$ta->setCategory(NULL);
 						} //transactions
 					} //accounts
