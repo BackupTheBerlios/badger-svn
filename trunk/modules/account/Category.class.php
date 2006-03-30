@@ -262,7 +262,7 @@ class Category {
 		if (!is_array($this->children)) {
 			$sql = "SELECT category_id
 				FROM category
-				WHERE parent_id = " . $this->id;
+				WHERE parent_id = " . $this->id . " ORDER BY title ASC";
 	
 			$dbResult =& $this->badgerDb->query($sql);
 			
