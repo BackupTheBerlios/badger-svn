@@ -18,4 +18,6 @@ ini_set('include_path', '.' . PATH_SEPARATOR . BADGER_ROOT . '/core');
 
 require_once(BADGER_ROOT . "/includes/includes.php");
 
+require(BADGER_ROOT . "/includes/login_backend.php");
+
 ?>
