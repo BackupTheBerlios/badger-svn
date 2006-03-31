@@ -5,34 +5,38 @@
 		<table>
 			<tr>
 				<td>$TemplateLabel</td>
-				<td style="text-align: right;">$TemplateField</td>
+				<td style="text-align: right; white-space: nowrap;">$TemplateField</td>
 			</tr>
 			<tr>
 				<td>$LanguageLabel</td>
-				<td style="text-align: right;">$LanguageField</td>
+				<td style="text-align: right; white-space: nowrap;">$LanguageField</td>
 			<tr>
 				<td>$DateFormatLabel</td>
-				<td style="text-align: right;">$DateFormatField</td>
+				<td style="text-align: right; white-space: nowrap;">$DateFormatField</td>
 			</tr>
 			<tr>
 				<td>$SeperatorsLabel</td>
-				<td style="text-align: right;">$SeperatorsField</td>
+				<td style="text-align: right; white-space: nowrap;">$SeperatorsField</td>
 			</tr>
 			<tr>
 				<td>$MaxLoginLabel</td>
-				<td style="text-align: right;">$MaxLoginField</td>
+				<td style="text-align: right; white-space: nowrap;">$MaxLoginField</td>
 			</tr>
 			<tr>
 				<td>$LockOutTimeLabel</td>
-				<td style="text-align: right;">$LockOutTimeField</td>
+				<td style="text-align: right; white-space: nowrap;">$LockOutTimeField</td>
 			</tr>
 			<tr>
 				<td>$StartPageLabel</td>
-				<td style="text-align: right;">$StartPageField</td>
+				<td style="text-align: right; white-space: nowrap;">$StartPageField</td>
 			</tr>
 			<tr>
 				<td>$SessionTimeLabel</td>
-				<td style="text-align: right;">$SessionTimeField</td>
+				<td style="text-align: right; white-space: nowrap;">$SessionTimeField</td>
+			</tr>
+			<tr>
+				<td>$autoExpandPlannedTransactionsLabel</td>
+				<td style="text-align: right; white-space: nowrap;">$autoExpandPlannedTransactionsField</td>
 			</tr>
 		</table>
 	</fieldset>

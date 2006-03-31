@@ -174,6 +174,10 @@ function handleOldFinishedTransactions($accountManager) {
 function transferFormerFinishedTransactions($account) {
 	global $us;
 	
+	if ($us->getProperty('autoExpandPlannedTransactions') == false) {
+		return;
+	}
+
 	$now = new Date();
 	$now->setHour(0);
 	$now->setMinute(0);

@@ -105,6 +105,12 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		if($change_password == true){
 			$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
 		};
+		
+		if (isset($_POST['autoExpandPlannedTransactionsField']) && $_POST['autoExpandPlannedTransactionsField']) {
+			$us->setProperty('autoExpandPlannedTransactions', true);
+		} else {
+			$us->setProperty('autoExpandPlannedTransactions', false);
+		}
 	};
 	
 } else {
@@ -191,6 +197,9 @@ $StartPageField = $widgets->createField("StartPageField", 0, $us->getProperty('b
 
 $SessionTimeLabel = $widgets->createLabel("SessionTimeLabel", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
 $SessionTimeField = $widgets->createField("SessionTimeField", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
+
+$autoExpandPlannedTransactionsLabel = $widgets->createLabel('autoExpandPlannedTransactionsLabel', getBadgerTranslation2('UserSettingsAdmin', 'autoExpandPlannedTransactionsName'), true);
+$autoExpandPlannedTransactionsField = $widgets->createField('autoExpandPlannedTransactionsField', 0, 1, getBadgerTranslation2('UserSettingsAdmin','autoExpandPlannedTransactionsDescription'), true, 'checkbox', $us->getProperty('autoExpandPlannedTransactions') ? 'checked="checked"' : '');
 
 // Print Form for change of password 
 
