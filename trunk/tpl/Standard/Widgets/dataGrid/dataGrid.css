@@ -75,4 +75,8 @@ tr.dgRowActive {
 	background-color: #FFFF00;
 	width: 100%;
 }
-	
+
+fieldset.dataGridLegend {
+	margin-top: 1em;
+	width: 40em;
+}

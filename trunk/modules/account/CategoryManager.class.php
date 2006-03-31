@@ -168,6 +168,14 @@ class CategoryManager extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
+		global $badgerDb;
+
+		$us = new UserSettings($badgerDb);
+		$tpl = new TemplateEngine($us, BADGER_ROOT);
+		$widgets = new WidgetEngine($tpl);
+		
+		$currentLanguage = $us->getProperty('badgerLanguage');
+
 		while ($this->fetchNextCategory());
 		
 		$this->sortCategories();
@@ -187,11 +195,19 @@ class CategoryManager extends DataGridHandler {
 				$parentTitle = $parent->getTitle();
 			}
 			
+			if ($currentCategory->getOutsideCapital()) {
+				$image = "Account/$currentLanguage/outside_capital.png";
+				$tooltip = 'title="' . getBadgerTranslation2('CategoryManager', 'outsideCapital') . '"';
+			} else {
+				$image = "Account/$currentLanguage/own_capital.png";
+				$tooltip = 'title="' . getBadgerTranslation2('CategoryManager', 'ownCapital') . '"';
+			}
+			
 			$result[] = array (
 				'categoryId' => $currentCategory->getId(),
 				'title' => $title,
 				'description' => $currentCategory->getDescription(),
-				'outsideCapital' => $currentCategory->getOutsideCapital(),
+				'outsideCapital' => $widgets->addImage($image, $tooltip),
 				'parentId' => $parentId,
 				'parentTitle' => $parentTitle
 			);

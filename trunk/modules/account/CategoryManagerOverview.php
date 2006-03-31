@@ -48,6 +48,18 @@ echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'dele
 		
 echo $dataGrid->writeDataGrid();
 
+$legend = getBadgerTranslation2('dataGrid', 'legend');
+
+$currentLanguage = $us->getProperty('badgerLanguage');
+
+$ownCapitalText = getBadgerTranslation2('CategoryManager', 'ownCapital');
+$ownCapitalImage = $widgets->addImage("Account/$currentLanguage/own_capital.png", 'title="' . $ownCapitalText . '"');
+
+$outsideCapitalText = getBadgerTranslation2('CategoryManager', 'outsideCapital');
+$outsideCapitalImage = $widgets->addImage("Account/$currentLanguage/outside_capital.png", 'title="' . $outsideCapitalText . '"');
+
+eval('echo "' . $tpl->getTemplate('Account/CategoryManagerOverview') . '";');
+
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");

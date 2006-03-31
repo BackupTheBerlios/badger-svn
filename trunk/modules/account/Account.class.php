@@ -472,9 +472,12 @@ class Account extends DataGridHandler {
 	 */
 	public function getAll() {
 		global $badgerDb;
+
 		$us = new UserSettings($badgerDb);
 		$tpl = new TemplateEngine($us, BADGER_ROOT);
 		$widgets = new WidgetEngine($tpl);
+		
+		$currentLanguage = $us->getProperty('badgerLanguage');
 		
 		$result = array();
 
@@ -489,7 +492,7 @@ class Account extends DataGridHandler {
 					
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
-						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction_new.gif' : 'Account/planned_transaction_new.gif', 'title="' . getBadgerTranslation2('Account', $currentTransaction->getType()) . '"'), 
+						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png', 'title="' . getBadgerTranslation2('Account', $currentTransaction->getType()) . '"'), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',

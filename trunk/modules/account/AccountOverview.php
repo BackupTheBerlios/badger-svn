@@ -64,6 +64,16 @@ echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'dele
 
 echo $dataGrid->writeDataGrid();
 
+$legend = getBadgerTranslation2('dataGrid', 'legend');
+
+$finishedTransactionText = getBadgerTranslation2('Account', 'finishedTransaction');
+$finishedTransactionImage = $widgets->addImage('Account/finished_transaction.png', 'title="' . $finishedTransactionText . '"');
+
+$plannedTransactionText = getBadgerTranslation2('Account', 'plannedTransaction');
+$plannedTransactionImage = $widgets->addImage('Account/planned_transaction.png', 'title="' . $plannedTransactionText . '"');
+
+eval('echo "' . $tpl->getTemplate('Account/AccountOverview') . '";');
+
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
