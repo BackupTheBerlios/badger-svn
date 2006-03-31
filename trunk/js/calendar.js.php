@@ -210,7 +210,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 			yearConstructed = false;
 
 			if (showToday == 1) {
-				document.getElementById('lblToday').innerHTML =	'<span style="color:#99cc00">' + todayString + ' <a onmousemove="window.status=\''+gotoString+'\'" onmouseout="window.status=\'\'" title="'+gotoString+'" style="'+styleAnchor+'" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">'+dayName[(today.getDay()-startAt==-1)?6:(today.getDay()-startAt)]+', ' + dateNow + ' ' + monthName[monthNow].substring(0,3) + ' ' + yearNow + '</a></span>';
+				document.getElementById('lblToday').innerHTML =	'<span style="color:#99cc00">' + todayString + ' <a onmousemove="window.status=\''+gotoString+'\'" onmouseout="window.status=\'\'" title="'+gotoString+'" style="'+styleAnchor+'" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">'+dayName[(today.getDay()-startAt==-1)?6:(today.getDay()-startAt)]+', ' + dateNow + ' ' + monthName[monthNow] + ' ' + yearNow + '</a></span>';
 			}
 
 			bPageLoaded=true;
