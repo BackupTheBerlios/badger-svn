@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form method="post" name="mainform" action="$FormAction?action=save&accountID=$AccountID" onSubmit="return validateCompleteForm(this, 'error');">
+<form method="post" name="mainform" action="$FormAction?action=save&accountID=$AccountID">
 <table>
   <tr>
     <td>$AccountLabel</td>
