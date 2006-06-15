@@ -7,7 +7,7 @@
 *| |_) / ____ \| |__| | |__| | |____| | \ \ 
 *|____/_/    \_\_____/ \_____|______|_|  \_\
 * Open Source Finance Management
-* Visit http://badger.berlios.org 
+* Visit http://www.badger-finance.org 
 *
 * Parse .csv files from Sparkasse Rhein-Neckar-Nord (Germany). Tested with files from 30.01.2006
 * It should work with files from every Sparkasse in Germany, but it was not tested with others

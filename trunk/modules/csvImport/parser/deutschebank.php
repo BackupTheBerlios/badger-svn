@@ -7,7 +7,7 @@
 *| |_) / ____ \| |__| | |__| | |____| | \ \ 
 *|____/_/    \_\_____/ \_____|______|_|  \_\
 * Open Source Finance Management
-* Visit http://badger.berlios.org 
+* Visit http://www.badger-finance.org 
 *
 * Parse .csv files from Deutsche Bank (Germany). Tested with files from 30.01.2006
 **/

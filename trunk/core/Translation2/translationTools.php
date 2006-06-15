@@ -7,7 +7,7 @@
 *| |_) / ____ \| |__| | |__| | |____| | \ \ 
 *|____/_/    \_\_____/ \_____|______|_|  \_\
 * Open Source Finance Management
-* Visit http://badger.berlios.org 
+* Visit http://www.badger-finance.org 
 *
 **/
 require_once BADGER_ROOT . '/core/Translation2/Admin.php';
