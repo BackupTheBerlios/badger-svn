@@ -28,6 +28,7 @@ $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManage
 $dataGrid->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'), getBadgerTranslation2('accountAccount', 'colBalance'),getBadgerTranslation2('accountAccount', 'colCurrency'));
 $dataGrid->columnOrder = array("title","balance","currency"); 
 $dataGrid->deleteMsg = getBadgerTranslation2('accountAccount', 'deleteMsg');
+$dataGrid->deleteRefreshType = "refreshPage";
 $dataGrid->initialSort = "title";
 $dataGrid->initialSortDirection = "asc";
 $dataGrid->headerSize = array(200,150,100);
@@ -47,7 +48,7 @@ echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), 
 echo ' ';
 echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
 echo ' ';
-echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete('refreshPage')", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 		
 echo $dataGrid->writeDataGrid();
 

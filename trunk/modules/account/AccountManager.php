@@ -29,8 +29,7 @@ if (isset($_GET['action'])) {
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
 				$IDs = explode(",",$_GET['ID']);
-					
-				echo "<br>";
+				
 				//check if we can delete this item
 				foreach($IDs as $ID){
 					$am = new AccountManager($badgerDb); //workaround, because of twice calling 'getAccountById'

@@ -44,6 +44,7 @@ $dataGrid->initialSortDirection = "asc";
 $dataGrid->height = "350px";
 $dataGrid->headerSize = array(120,210,39,80,120,200);
 $dataGrid->cellAlign = array("left","left","center","right","right","left");
+$dataGrid->deleteRefreshType = "refreshDataGrid";
 $dataGrid->deleteAction = "Transaction.php?action=delete&accountID=$accountID&ID=";
 $dataGrid->editAction = "Transaction.php?action=edit&accountID=$accountID&ID=";
 $dataGrid->newAction = "Transaction.php?action=new&accountID=$accountID";
@@ -60,7 +61,7 @@ echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTrans
 echo ' ';
 echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
 echo ' ';
-echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete('refreshDataGrid')", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
 
 echo $dataGrid->writeDataGrid();
 

@@ -65,13 +65,19 @@ class DataGrid {
 	 * @var string
 	 */	
 	public $noRowSelectedMsg;
-	
+
+	/**
+	 * refresh type after deletion of one record in data grid
+	 * @var string
+	 */
+	public $deleteRefreshType;
+		
 	/**
 	 * php-page called for deletion
 	 * @var string
 	 */
 	public $deleteAction;
-
+	
 	/**
 	 * php-page called for editing
 	 * @var string
@@ -179,6 +185,7 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('dgCellAlign = new Array("'.implode('","',$this->cellAlign).'");');
 		$this->tpl->addOnLoadEvent('dgNoRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
+		$this->tpl->addOnLoadEvent('dgDeleteRefreshType = "'. $this->deleteRefreshType .'";');
 		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
 		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
 		$this->tpl->addOnLoadEvent('dgNewAction = "'. $this->newAction .'";');
@@ -189,7 +196,7 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
-		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false)');
+		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false);');
 		
 	}
 }

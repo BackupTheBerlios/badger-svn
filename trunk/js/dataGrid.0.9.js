@@ -23,7 +23,6 @@ var strSortingColumnActive;
 var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
 var objURLParameter = new Object;
-var strRefreshType;
 
 // retrieve data from server, define callback-function
 function loadData(strUrl) {
@@ -49,8 +48,10 @@ function deleteData(strUrl) {
 
 //displays the message from backend-object
 function dgDeleteResponse(objXHR) {
+
 	if (objXHR.responseText=="") {
-		switch (strRefreshType) {
+		
+		switch (dgDeleteRefreshType) {
 		case 'refreshDataGrid': 
 			//refresh complete dataGrid				
 			loadData(dgSourceXML + serializeParameter());
@@ -332,10 +333,8 @@ function dgKeyProcess(event) {
 // delete all selected rows
 //  - delete row in GUI
 //  - send a background delete request to the server
-function dgDelete(strRefresh) {
-	if(dgDeleteAction) {
-		strRefreshType = strRefresh; //set to global
-		
+function dgDelete() {
+	if(dgDeleteAction) {		
 		dgData = $("dgTableData");	
 		checkbox = Form.getInputs("dgForm","checkbox");
 		
