@@ -67,6 +67,8 @@ echo ' ';
 echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
 echo ' ';
 echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
+echo ' ';
+echo $widgets->createButton("btnShowTransactions", getBadgerTranslation2('accountOverviewPlanned', 'showTrans'),  "location.href = location.href.replace(/AccountOverviewPlanned\.php/, 'AccountOverview.php');", "Account/finished_transaction.png");
 
 echo $dataGrid->writeDataGrid();
 
