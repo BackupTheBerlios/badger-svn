@@ -59,6 +59,8 @@ function showSelectPage() {
 	$tpl->addJavaScript("js/prototype.js");
 	$tpl->addJavaScript("js/statistics.js");
 	
+	$tpl->addHeaderTag('<script type="text/javascript">var badgerHelpChapter = "Statistiken";</script>');
+		
 	$dataGrid = new DataGrid($tpl);
 	$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
 	$dataGrid->headerName = array(getBadgerTranslation2('statistics','accColTitle'), getBadgerTranslation2('statistics','accColBalance'), getBadgerTranslation2('statistics','accColCurrency'));

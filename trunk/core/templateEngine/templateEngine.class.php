@@ -70,7 +70,7 @@ class TemplateEngine {
 	 * @param string $pageTitle The name of the XHTML-Page
 	 */
 	public function getHeader($pageTitle) {
-		global $print;
+		global $print, $us;
 		// standard badger header -> /tpl/ThemeName/badgerHeader.tpl
 		$template = "badgerHeader";
 		$JSOnLoadEvents = "";
@@ -83,6 +83,10 @@ class TemplateEngine {
 		
 		// transfer additionalHeaderTags (JS, CSS) to $var ($var must be in template)
 		$additionalHeaderTags = $this->additionalHeaderTags;
+		
+		//add help functionality
+		$additionalHeaderTags .= '<script type="text/javascript">var badgerHelpLang = "' . $us->getProperty('badgerLanguage') . '"; var badgerHelpRoot = "' . $this->badgerRoot . '/modules/help";</script>' . "\n";
+		$additionalHeaderTags .= '<script type="text/javascript" src="' . $this->badgerRoot . '/js/help.js' . '"></script>' . "\n";
 		
 		// create onload-Event
 		if($this->jsOnLoadEvents) {
