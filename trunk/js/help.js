@@ -4,5 +4,6 @@ function showBadgerHelp() {
 		chapter = badgerHelpChapter;
 	} catch(ex) {}
 
-	window.open(badgerHelpRoot + "/help_" + badgerHelpLang + ".html#" + chapter, "badgerHelp");
+	var helpWindow = window.open(badgerHelpRoot + "/help_" + badgerHelpLang + ".html#" + chapter, "badgerHelp");
+	helpWindow.focus();
 }
