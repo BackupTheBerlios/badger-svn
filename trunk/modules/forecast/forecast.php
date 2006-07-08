@@ -59,7 +59,7 @@ if (isset ($_POST['writePocketMoney'])){
 	$pocketMoney1Label =  $widgets->createLabel("pocketmoney1", getBadgerTranslation2("forecast", "pocketMoney1Field").":", true);
 	
 	$startSpendingDate = new Date ($_POST["startDate"],true);
-	$spendingMoney = getSpendingMoney(1, $startSpendingDate);
+	$spendingMoney = getSpendingMoney($_POST["selectedAccount"], $startSpendingDate);
 	$spendingMoney->mul(-1);
 	$calculatedPocketMoney = $spendingMoney->getFormatted();
 	$pocketMoney1Field = $widgets->createField("pocketmoney1", 5, $_POST["pocketmoney1"], getBadgerTranslation2("forecast", "pocketMoney1ToolTip"), true, "text", 'style="width: 10em;"');
