@@ -66,11 +66,17 @@ function parseToArray($fp, $accountId){
                     $transactionArray[3] = str_replace("\"","",$transactionArray[3]);
                     $transactionArray[3] = str_replace("\\","",$transactionArray[3]);                    
                     //if transactionArray[6]is a negative amount (expenditure), the transaction partner is the receiver, ele the sender is the transaction partner
-                    if (strstr($transactionArray[6], "-")){
+                    $kind = array (
+                    	"Auszahlung",
+                    	"Dauerauftrag",
+                    	"Überweisung"
+                    );
+                    
+                    if (in_array($transactionArray[2], $kind)){
                         $transactionPartner = $transactionArray[5];
                     } else {
                         $transactionPartner = $transactionArray[4];
-                    }                
+                    }               
                     //format amount to usersettings
                     $transactionArray[6] = str_replace(".","", $transactionArray[6]);
                     $transactionArray[6] = str_replace(",",".",$transactionArray[6]);
