@@ -57,15 +57,17 @@ if (isset ($_POST['writePocketMoney'])){
 	$savingTargetField = $widgets->createField("savingTarget", 5, $_POST["savingTarget"], getBadgerTranslation2("forecast", "savingTargetToolTip"), true, "text", 'style="width: 10em;"');
 	//field to insert pocketmoney1
 	$pocketMoney1Label =  $widgets->createLabel("pocketmoney1", getBadgerTranslation2("forecast", "pocketMoney1Field").":", true);
-	
+		
 	$startSpendingDate = new Date ($_POST["startDate"],true);
 	$spendingMoney = getSpendingMoney($_POST["selectedAccount"], $startSpendingDate);
 	$spendingMoney->mul(-1);
 	$calculatedPocketMoney = $spendingMoney->getFormatted();
+
 	$pocketMoney1Field = $widgets->createField("pocketmoney1", 5, $_POST["pocketmoney1"], getBadgerTranslation2("forecast", "pocketMoney1ToolTip"), true, "text", 'style="width: 10em;"');
 	//field to insert pocketmoney2
 	$pocketMoney2Label =  $widgets->createLabel("pocketmoney2", getBadgerTranslation2("forecast", "pocketMoney2Field").":", true);
 	$pocketMoney2Field = $widgets->createField("pocketmoney2", 5, $calculatedPocketMoney, getBadgerTranslation2("forecast", "pocketMoney2ToolTip"), true, "text", 'style="width: 10em;"');
+	
 	//checkbox for lower limit graph
 	$lowerLimitLabel =  getBadgerTranslation2("forecast", "lowerLimitLabel").":";
 	if (isset ($_POST["lowerLimitBox"])){

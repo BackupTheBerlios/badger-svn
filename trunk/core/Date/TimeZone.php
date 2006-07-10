@@ -31,6 +31,9 @@
  * @link       http://pear.php.net/package/Date
  */
 
+//Hack for unset timezones
+date_default_timezone_set(date_default_timezone_get());
+
 /**
  * TimeZone representation class, along with time zone information data
  *
