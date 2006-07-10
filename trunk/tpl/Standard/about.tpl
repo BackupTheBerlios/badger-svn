@@ -44,14 +44,15 @@
 <ul>
 	<li><a href="http://ripcord.co.nz/behaviour/" target="_blank">Behaviour</a> $by Ben Nolan</li>
 	<li><a href="http://eclipse.org/" target="_blank">Eclipse</a></li>
+	<li><a href="http://eclipsensis.sourceforge.net/" target="_blank">EclipseNSIS</a> $by Sunil Kamath</li>
 	<li><a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">FamFamFam Silk Icons</a> $by Mark James</li>
 	<li><a href="http://www.freebasic.net/target="_blank">FreeBasic</a></li>	
 	<li><a href="http://ssteiner.freebasic.de/index.php?s=fbdl" target="_blank">FreeBasic Addon</a> $by Sebastian Steiner</li>	
-	<li><a href="http://www.disoriented.com/FreeExtractor/" target="_blank">FreeExtractor</a> $by Andrew Fawcett</li>	
 	<li><a href="http://www.tufat.com/s_html2ps_html2pdf.htm" target="_blank">HTML2PS/PDF</a> $by Darren</li>
 	<li><a href="http://jsval.fantastic-bits.de/" target="_blank">JS Validate</a> $by Karl Seguin, Timo Haberkern</li>
 	<li><a href="http://www.tohzhiqiang.per.sg/projects/jsdomenubar/" target="_blank">jsDOMenuBar</a> $by Toh Zhiqiang</li>
 	<li><a href="http://www.mysql.com/" target="_blank">MySQL</a></li>
+	<li><a href="http://nsis.sourceforge.net/Main_Page/" target="_blank">NSIS</a>	
 	<li><a href="http://www.bosrup.com/web/overlib/" target="_blank">overLIB</a> $by Erik Bosrup</li>
 	<li><a href="http://pear.php.net/package/Date" target="_blank">PEAR Date</a> $by Baba Buehler, Pierre-Alain Joye</li>
 	<li><a href="http://pear.php.net/package/DB" target="_blank">PEAR DB</a> $by Stig Bakken, Tomas V.V.Cox, Daniel Convissor</li>
