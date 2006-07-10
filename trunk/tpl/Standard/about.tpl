@@ -2,7 +2,7 @@
 
 <h2>$badgerImage BADGER finance Version $version $from $date</h2>
 
-<p><a href="http://badger.berlios.de/" target="_blank">http://badger.berlios.de/</a></p>
+<p><a href="http://badger-finance.org/" target="_blank">http://badger-finance.org/</a></p>
 <p>$releasedUnder <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public Licence</a></p>
 <blockquote cite="http://www.gnu.org/licenses/gpl.html">
 	<p>This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@
 	<li><a href="http://jsval.fantastic-bits.de/" target="_blank">JS Validate</a> $by Karl Seguin, Timo Haberkern</li>
 	<li><a href="http://www.tohzhiqiang.per.sg/projects/jsdomenubar/" target="_blank">jsDOMenuBar</a> $by Toh Zhiqiang</li>
 	<li><a href="http://www.mysql.com/" target="_blank">MySQL</a></li>
-	<li><a href="http://nsis.sourceforge.net/Main_Page/" target="_blank">NSIS</a>	
+	<li><a href="http://nsis.sourceforge.net/" target="_blank">Nullsoft Scriptable Install System</a></li>
 	<li><a href="http://www.bosrup.com/web/overlib/" target="_blank">overLIB</a> $by Erik Bosrup</li>
 	<li><a href="http://pear.php.net/package/Date" target="_blank">PEAR Date</a> $by Baba Buehler, Pierre-Alain Joye</li>
 	<li><a href="http://pear.php.net/package/DB" target="_blank">PEAR DB</a> $by Stig Bakken, Tomas V.V.Cox, Daniel Convissor</li>
@@ -68,9 +68,4 @@
 	<li><a href="http://subversion.tigris.org/" target="_blank">Subversion</a></li>
 	<li><a href="http://sourceforge.net/projects/suggest" target="_blank">Suggest Framework</a> $by Matthew Ratzloff</li>
 	<li><a href="http://www.apachefriends.org" target="_blank">XAMPP lite</a></li>	
-
-
-
-
-
 </ul>
