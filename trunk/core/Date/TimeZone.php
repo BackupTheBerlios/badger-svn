@@ -32,7 +32,12 @@
  */
 
 //Hack for unset timezones
-date_default_timezone_set(date_default_timezone_get());
+if (
+	function_exists('date_default_timezone_set')
+	&& function_exists('date_default_timezone_get')
+) {
+	date_default_timezone_set(date_default_timezone_get());
+}
 
 /**
  * TimeZone representation class, along with time zone information data
