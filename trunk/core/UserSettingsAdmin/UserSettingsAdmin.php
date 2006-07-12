@@ -16,7 +16,8 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 // Initialization
 
 $tpl->addCSS("style.css");
-$widgets = new WidgetEngine($tpl); 
+$widgets = new WidgetEngine($tpl);
+$widgets->addJSValMessages(); 
 $widgets->addToolTipJS();
 $widgets->addNavigationHead();
 

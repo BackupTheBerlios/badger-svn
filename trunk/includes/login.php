@@ -58,6 +58,7 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		// Initialization
 		$tpl->addCSS("style.css");
 		$widgets = new WidgetEngine($tpl); 
+		$widgets->addJSValMessages();
 		$widgets->addToolTipJS();
 		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
