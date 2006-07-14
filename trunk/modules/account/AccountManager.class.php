@@ -354,18 +354,23 @@ class AccountManager extends DataGridHandler {
 			return;
 		}
 		
+		//Add condition to limit balance to transactions in the past and today
+		$today = new Date();
+
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
 				a.upper_limit, a.currency_id, SUM(ft.amount) balance
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
+			WHERE ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL
 			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
 				a.upper_limit, a.currency_id \n";
 		
 		$where = $this->getFilterSQL();
+		
 		if($where) {
 			$sql .= "HAVING $where\n ";
-		} 
+		}
 		
 		$order = $this->getOrderSQL();				
 		if($order) {
