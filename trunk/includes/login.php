@@ -49,34 +49,26 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		$validation_change_password = false;
 		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_standard_password')."<br>";
 	};
-	
-	if($validation_change_password == true){
-		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
-	};
-	
-	if(isset($validation_change_password ) && $validation_change_password == true){
-		// Initialization
-		$tpl->addCSS("style.css");
-		$widgets = new WidgetEngine($tpl); 
-		$widgets->addJSValMessages();
-		$widgets->addToolTipJS();
-		$widgets->addNavigationHead();
-		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
-		echo $widgets->addToolTipLayer();
-
-		//end of Initialization
 		
+	if(isset($validation_change_password ) && $validation_change_password == true){
+		//new password is valid
+		
+		//change pw in usersettings
 		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
-		$MandatoryCommitedFsHeading = getBadgerTranslation2('UserSettingsAdmin','mandatory_commited_fs_heading');
-		$MandatoryCommited = getBadgerTranslation2('UserSettingsAdmin','password_change_commited')."<br/>";
-		$MandatoryCommitedLink = "<a href\"".$_SERVER['PHP_SELF']."\">".getBadgerTranslation2('UserSettingsAdmin','linktext_after_successful_mandatory_change')."</a>";
-		eval("echo \"".$tpl->getTemplate("Login/mandatoryCommited")."\";");
+		
+		//set new valid session, with new password
+		set_session_var('password',md5($_POST['NewPassword']));
+		
+		//redirect 
+		header('Location: '.$_SERVER['PHP_SELF']);
+		
 	};
 	
 	if(isset($validation_change_password ) && $validation_change_password != true){
 		// Initialization
 		$tpl->addCSS("style.css");
 		$widgets = new WidgetEngine($tpl); 
+		$widgets->addJSValMessages();
 		$widgets->addToolTipJS();
 		$widgets->addNavigationHead();
 		echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
@@ -99,26 +91,21 @@ if(isset($_GET['logout']) && $_GET['logout']==true){
 //Retrieve md5´ed password from user settings
 $readoutpassword = $us->getProperty('badgerPassword');
 $passwordcorrect = false;
-if (isset($_session['password']) && $readoutpassword == $_session['password'])
-	{
-		$passwordcorrect = true;
-	}
-	elseif(isset($_POST['password']) && md5($_POST['password']) == $readoutpassword )
-		{
-			$passwordcorrect = true;
-			//create session variable
-			set_session_var('password',md5($_POST['password']));
-		};
-
-// Check how many times the user tried to log in, stop working after x times
-
-if(isset($_session['number_of_login_attempts']) )
-{
-	$attempts = $_session['number_of_login_attempts'];
-}else{
-	$attempts = 0;
+if (isset($_session['password']) && $readoutpassword == $_session['password']) {
+	$passwordcorrect = true;
+}
+elseif(isset($_POST['password']) && md5($_POST['password']) == $readoutpassword ) 		{
+	$passwordcorrect = true;
+	//create session variable
+	set_session_var('password',md5($_POST['password']));
 };
 
+// Check how many times the user tried to log in, stop working after x times
+if(isset($_session['number_of_login_attempts']) ) {
+	$attempts = $_session['number_of_login_attempts'];
+} else {
+	$attempts = 0;
+};
 
 
 if($attempts >= $us->getProperty('badgerMaxLoginAttempts') ){
@@ -141,8 +128,7 @@ if( $locked_out_since != 0){
 	if($locked_out_since - time() + $us->getProperty('badgerLockOutTime') <= 0){
 		set_session_var('locked_out_since','0');
 		set_session_var('number_of_login_attempts','0');
-	}
-	else{
+	} else {
 		// if user locked himself out
 		// because of too many login attempts
 		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
@@ -160,7 +146,7 @@ if( $locked_out_since != 0){
 				$signature = $signature . $key . "=" . $value;
 				};
 			};
-		}else{
+		} else {
 			$signature = "";
 		};
 		set_session_var('number_of_login_attempts','0');
@@ -179,6 +165,7 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 
 	$tpl->addCSS("style.css");
 	$widgets = new WidgetEngine($tpl); 
+	$widgets->addJSValMessages();
 	$widgets->addToolTipJS();
 	echo $tpl->getHeader(getBadgerTranslation2('UserSettingsAdmin','site_name')); //write header */
 	echo $widgets->addToolTipLayer();
@@ -213,110 +200,109 @@ isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badger
 };
 
 
-if($passwordcorrect == false)
-	{	
-		// Initialization
-		$widgets = new WidgetEngine($tpl);
-		$tpl->addOnLoadEvent("Form.focusFirstElement('loginForm')");
-		$widgets->addToolTipJS(); 
-		$tpl->addJavaScript("js/prototype.js");
-		echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
-		echo $widgets->addToolTipLayer();
-		// End of Initialization
+if($passwordcorrect == false) {	
+	// Initialization
+	$widgets = new WidgetEngine($tpl);
+	$tpl->addOnLoadEvent("Form.focusFirstElement('loginForm')");
+	$widgets->addJSValMessages();
+	$widgets->addToolTipJS(); 
+	$tpl->addJavaScript("js/prototype.js");
+	echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
+	echo $widgets->addToolTipLayer();
+	// End of Initialization
 		
-		$FsHeading = getBadgerTranslation2('badger_login', 'fs_heading'); 
+	$FsHeading = getBadgerTranslation2('badger_login', 'fs_heading'); 
+	
+	set_session_var('number_of_login_attempts',$attempts + 1);
+	$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
 		
-		set_session_var('number_of_login_attempts',$attempts + 1);
-		$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
-		
-		if(isset($_GET['logout']) && $_GET['logout'] == "true"){
-			$Action = BADGER_ROOT . "/";
-			$Action .= $us->getProperty('badgerStartPage');
-		}else{
-			$Action = $_SERVER['PHP_SELF'];
-		};
-		
-		$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
-		
-		//--
-		
-		$get_vars = "";
-		$isfirst = true;
-		
-		foreach( $_GET as $key=>$value ){
-			if($key != "logout"){
-				
-				if($key != "password" && $key != "logout") {
-					if ($isfirst == true){
-						$get_vars .= "?";
-						$isfirst = false;
-					}else{
-						$get_vars .= "&";
-					};
-				$get_vars .= $key . "=" . $value;
-				};
-			};
-		};
-		
-		unset($isfirst);
-		
-		$Action .= $get_vars;
-		
-		eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
-		
-		foreach( $_POST as $key=>$value ){
-			if($key != "password" && $key != "logout") {
-				$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
-				//eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
-				eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
-			};
-		};
-		
-		//--
-		
-		//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
-		$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','login_button'), "submit", "Widgets/accept.gif");
-		
-		$Feedback = "";
-		
-		if(isset($_POST['password']) && $_POST['password'] == ""){
-			//print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");
-			$Feedback .= getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />";
-		}elseif(isset($_POST['password'])){
-			//print(getBadgerTranslation2('badger_login', 'wrong_password')."<br /><br />");
-			$Feedback .= getBadgerTranslation2('badger_login', 'wrong_password')."<br /><br />";
-		};
-		
-		if(isset($_GET['send_password']) && $_GET['send_password'] == "true"){
-			//print(getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>");
-			$Feedback .= getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>";
-			//print("<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>");
-			$Feedback .= "<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>";
-		};
-		
-		if(isset($_GET['send_password']) && $_GET['send_password'] == "truetrue"){
-			//send an E-Mail with a new password to the email adress read from the user settings object
-			$newpassword = rand ( 0 , 16000 );
-			$newpassword = md5($newpassword);
-			$newpassword = substr ( $newpassword, 0, 12 );
-			if(mail ( $us->getProperty('badgerPassword'), getBadgerTranslation2('badger_login', 'password_sent_mail_subject'), getBadgerTranslation2('badger_login', 'password_sent_mail_part_1').$newpassword.getBadgerTranslation2('badger_login', 'password_sent_mail_part_2'), 'From: forgottenpassword@donotreply.com') ){
-				//print(getBadgerTranslation2('badger_login', 'sent_password')."<br /><br />");
-				$Feedback .= getBadgerTranslation2('badger_login', 'sent_password')."<br /><br />";
-			} else {
-				//print(getBadgerTranslation2('badger_login', 'sent_password_failed')."<br/>");
-				$Feedback .= getBadgerTranslation2('badger_login', 'sent_password_failed')."<br/>";
-			};
-		};
-		if(isset($_GET['logout']) && $_GET['logout']==true){
-			//echo getBadgerTranslation2('badger_login', 'you_are_logout');
-			$Feedback .= getBadgerTranslation2('badger_login', 'you_are_logout');
-		};
-		
-		eval("echo \"".$tpl->getTemplate("Login/login2")."\";");
-		exit();		
-	}
-	else{
-		set_session_var('number_of_login_attempts', 0);
+	if(isset($_GET['logout']) && $_GET['logout'] == "true"){
+		$Action = BADGER_ROOT . "/";
+		$Action .= $us->getProperty('badgerStartPage');
+	}else{
+		$Action = $_SERVER['PHP_SELF'];
 	};
+	
+	$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
+		
+	//--
+		
+	$get_vars = "";
+	$isfirst = true;
+		
+	foreach( $_GET as $key=>$value ){
+		if($key != "logout"){
+			
+			if($key != "password" && $key != "logout") {
+				if ($isfirst == true){
+					$get_vars .= "?";
+					$isfirst = false;
+				}else{
+					$get_vars .= "&";
+				};
+			$get_vars .= $key . "=" . $value;
+			};
+		};
+	};
+	
+	unset($isfirst);
+		
+	$Action .= $get_vars;
+		
+	eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
+		
+	foreach( $_POST as $key=>$value ){
+		if($key != "password" && $key != "logout") {
+			$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
+			//eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+			eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
+		};
+	};
+		
+	//--
+		
+	//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
+	$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','login_button'), "submit", "Widgets/accept.gif");
+		
+	$Feedback = "";
+		
+	if(isset($_POST['password']) && $_POST['password'] == ""){
+		//print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");
+		$Feedback .= getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />";
+	}elseif(isset($_POST['password'])){
+		//print(getBadgerTranslation2('badger_login', 'wrong_password')."<br /><br />");
+		$Feedback .= getBadgerTranslation2('badger_login', 'wrong_password')."<br /><br />";
+	};
+	
+	if(isset($_GET['send_password']) && $_GET['send_password'] == "true"){
+		//print(getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>");
+		$Feedback .= getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>";
+		//print("<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>");
+		$Feedback .= "<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>";
+	};
+		
+	if(isset($_GET['send_password']) && $_GET['send_password'] == "truetrue"){
+		//send an E-Mail with a new password to the email adress read from the user settings object
+		$newpassword = rand ( 0 , 16000 );
+		$newpassword = md5($newpassword);
+		$newpassword = substr ( $newpassword, 0, 12 );
+		if(mail ( $us->getProperty('badgerPassword'), getBadgerTranslation2('badger_login', 'password_sent_mail_subject'), getBadgerTranslation2('badger_login', 'password_sent_mail_part_1').$newpassword.getBadgerTranslation2('badger_login', 'password_sent_mail_part_2'), 'From: forgottenpassword@donotreply.com') ){
+			//print(getBadgerTranslation2('badger_login', 'sent_password')."<br /><br />");
+			$Feedback .= getBadgerTranslation2('badger_login', 'sent_password')."<br /><br />";
+		} else {
+			//print(getBadgerTranslation2('badger_login', 'sent_password_failed')."<br/>");
+			$Feedback .= getBadgerTranslation2('badger_login', 'sent_password_failed')."<br/>";
+		};
+	};
+	if(isset($_GET['logout']) && $_GET['logout']==true){
+		//echo getBadgerTranslation2('badger_login', 'you_are_logout');
+		$Feedback .= getBadgerTranslation2('badger_login', 'you_are_logout');
+	};
+	
+	eval("echo \"".$tpl->getTemplate("Login/login2")."\";");
+	exit();		
+} else{
+	set_session_var('number_of_login_attempts', 0);
+};
 
 ?>
