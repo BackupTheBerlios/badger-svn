@@ -63,20 +63,20 @@ CREATE TABLE IF NOT EXISTS `account_property` (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `accountids_seq`
+-- Table structure for table `accountIds_seq`
 -- 
 
-DROP TABLE IF EXISTS `accountids_seq`;
-CREATE TABLE IF NOT EXISTS `accountids_seq` (
+DROP TABLE IF EXISTS `accountIds_seq`;
+CREATE TABLE IF NOT EXISTS `accountIds_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 -- 
--- Dumping data for table `accountids_seq`
+-- Dumping data for table `accountIds_seq`
 -- 
 
-INSERT INTO `accountids_seq` VALUES (5);
+INSERT INTO `accountIds_seq` VALUES (5);
 
 -- --------------------------------------------------------
 
@@ -122,20 +122,20 @@ INSERT INTO `category` VALUES (19, NULL, 'Gesundheit', NULL, 0);
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `categoryids_seq`
+-- Table structure for table `categoryIds_seq`
 -- 
 
-DROP TABLE IF EXISTS `categoryids_seq`;
-CREATE TABLE IF NOT EXISTS `categoryids_seq` (
+DROP TABLE IF EXISTS `categoryIds_seq`;
+CREATE TABLE IF NOT EXISTS `categoryIds_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 -- 
--- Dumping data for table `categoryids_seq`
+-- Dumping data for table `categoryIds_seq`
 -- 
 
-INSERT INTO `categoryids_seq` VALUES (20);
+INSERT INTO `categoryIds_seq` VALUES (20);
 
 -- --------------------------------------------------------
 
@@ -184,20 +184,20 @@ INSERT INTO `currency` VALUES (2, 'Dollar', 'USD');
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `currencyids_seq`
+-- Table structure for table `currencyIds_seq`
 -- 
 
-DROP TABLE IF EXISTS `currencyids_seq`;
-CREATE TABLE IF NOT EXISTS `currencyids_seq` (
+DROP TABLE IF EXISTS `currencyIds_seq`;
+CREATE TABLE IF NOT EXISTS `currencyIds_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 -- 
--- Dumping data for table `currencyids_seq`
+-- Dumping data for table `currencyIds_seq`
 -- 
 
-INSERT INTO `currencyids_seq` VALUES (3);
+INSERT INTO `currencyIds_seq` VALUES (3);
 
 -- --------------------------------------------------------
 
@@ -344,20 +344,20 @@ INSERT INTO `finished_transaction` VALUES (90, 12, 1, 'Gummibärchen', NULL, '200
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `finishedtransactionids_seq`
+-- Table structure for table `finishedTransactionIds_seq`
 -- 
 
-DROP TABLE IF EXISTS `finishedtransactionids_seq`;
-CREATE TABLE IF NOT EXISTS `finishedtransactionids_seq` (
+DROP TABLE IF EXISTS `finishedTransactionIds_seq`;
+CREATE TABLE IF NOT EXISTS `finishedTransactionIds_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=92 ;
 
 -- 
--- Dumping data for table `finishedtransactionids_seq`
+-- Dumping data for table `finishedTransactionIds_seq`
 -- 
 
-INSERT INTO `finishedtransactionids_seq` VALUES (91);
+INSERT INTO `finishedTransactionIds_seq` VALUES (91);
 
 -- --------------------------------------------------------
 
@@ -891,20 +891,20 @@ INSERT INTO `navi` VALUES (52, 44, 1, 'i', 'NewTransactionFinished', NULL, 'fini
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `naviids_seq`
+-- Table structure for table `naviIds_seq`
 -- 
 
-DROP TABLE IF EXISTS `naviids_seq`;
-CREATE TABLE IF NOT EXISTS `naviids_seq` (
+DROP TABLE IF EXISTS `naviIds_seq`;
+CREATE TABLE IF NOT EXISTS `naviIds_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 -- 
--- Dumping data for table `naviids_seq`
+-- Dumping data for table `naviIds_seq`
 -- 
 
-INSERT INTO `naviids_seq` VALUES (55);
+INSERT INTO `naviIds_seq` VALUES (55);
 
 -- --------------------------------------------------------
 
@@ -941,20 +941,20 @@ INSERT INTO `planned_transaction` VALUES (5, 4, 1, 'Gehalt', 'Mein Gehalt', 1357
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `plannedtransactionids_seq`
+-- Table structure for table `plannedTransactionIds_seq`
 -- 
 
-DROP TABLE IF EXISTS `plannedtransactionids_seq`;
-CREATE TABLE IF NOT EXISTS `plannedtransactionids_seq` (
+DROP TABLE IF EXISTS `plannedTransactionIds_seq`;
+CREATE TABLE IF NOT EXISTS `plannedTransactionIds_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 -- 
--- Dumping data for table `plannedtransactionids_seq`
+-- Dumping data for table `plannedTransactionIds_seq`
 -- 
 
-INSERT INTO `plannedtransactionids_seq` VALUES (7);
+INSERT INTO `plannedTransactionIds_seq` VALUES (7);
 
 -- --------------------------------------------------------
 
