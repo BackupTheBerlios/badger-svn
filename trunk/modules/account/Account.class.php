@@ -1154,9 +1154,9 @@ class Account extends DataGridHandler {
 	 */
 	public function expandPlannedTransactions(){
 		$now = new Date();
-		$now->setHour(0);
-		$now->setMinute(0);
-		$now->setSecond(0);
+		$now->setHour(23);
+		$now->setMinute(59);
+		$now->setSecond(59);
 		
 		foreach($this->plannedTransactions as $currentTransaction){ 
 			$date = new Date($currentTransaction->getBeginDate());
