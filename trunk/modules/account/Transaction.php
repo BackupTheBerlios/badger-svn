@@ -366,7 +366,7 @@ function updateRecord($accountID, $ID, $transactionType) {
 			$transaction->setTitle($_POST['title']);
 			$transaction->setDescription($_POST['description']);
 			$transaction->setBeginDate(new Date($_POST['beginDate'], true));
-			$transaction->setEndDate(new Date($_POST['endDate'], true));
+			$transaction->setEndDate(($tmp = $_POST['endDate']) ? new Date($tmp, true) : null);
 			$transaction->setAmount(new Amount($_POST['amount'], true));
 			$transaction->setOutsideCapital((isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false);
 			$transaction->setTransactionPartner($_POST['transactionPartner']);

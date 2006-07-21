@@ -308,8 +308,14 @@ class PlannedTransaction {
  	public function setEndDate($endDate) {
 		$this->endDate = $endDate;
 		
+		if (!is_null($endDate)) {
+			$dateVal = "'" . $endDate->getDate() . "'";
+		} else {
+			$dateVal = 'NULL';
+		}
+
 		$sql = "UPDATE planned_transaction
-			SET end_date = '" . $endDate->getDate() . "'
+			SET end_date = $dateVal
 			WHERE planned_transaction_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);

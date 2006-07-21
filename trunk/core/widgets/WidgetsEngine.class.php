@@ -109,13 +109,16 @@ function _jsVal_Language() {
 		}		
 	}
 	
-	public function addDateField($fieldname, $startdate="") {
+	public function addDateField($fieldname, $startdate = null) {
 		$format = $this->settings->getProperty("badgerDateFormat");
-		if($startdate=="") {$startdate=$this->getFormatedDateToday($format);}
+		if(is_null($startdate)) {
+			$startdate = $this->getFormatedDateToday($format);				
+		}
 		
 		$strDateField = ""; 
+
 		if($this->CalendarJSAdded) {
-			$strDateField = "<input type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
+			$strDateField = "<input autocomplete=\"off\" type=\"text\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
 			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->tpl->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
 			return $strDateField;
 		} else {
