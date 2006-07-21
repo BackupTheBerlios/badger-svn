@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form method="post" name="mainform" action="$FormAction?action=save&accountID=$AccountID">
+<form method="post" name="mainform" action="$FormAction?action=save&amp;accountID=$AccountID&amp;backTo=$backTo">
 <table>
   <tr>
     <td>$AccountLabel</td>

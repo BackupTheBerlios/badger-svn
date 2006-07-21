@@ -162,6 +162,7 @@ function printFrontendFinished($AccountID, $ID) {
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
+	
 	$transactionType = "finished";
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
@@ -258,6 +259,13 @@ function printFrontendPlanned($AccountID, $ID) {
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
+
+	if (isset($_GET['backTo'])) {
+		$backTo = $_GET['backTo'];
+	} else {
+		$backTo = '';
+	}
+	
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
 		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 213px;'");
