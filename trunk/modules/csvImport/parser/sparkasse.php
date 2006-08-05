@@ -72,6 +72,7 @@ function parseToArray($fp, $accountId){
 					$transactionArray[5] = str_replace("\\","",$transactionArray[5]);
 					//remove \" from the amount
 					$transactionArray[8] = str_replace("\"","",$transactionArray[8]); 
+					$transactionArray[8] = str_replace(".","",$transactionArray[8]);
 					$transactionArray[8] = str_replace(",",".",$transactionArray[8]);		
 					//format amount to usersettings
 					$amount1 = new Amount($transactionArray[8]);

@@ -70,6 +70,7 @@ function parseToArray($fp, $accountId){
 						$amount = $transactionArray[3];
 					}				
 					//format amount to usersettings
+					$amount = str_replace(".","",$amount);
 					$amount = str_replace(",",".",$amount);
 					
 					$amount1 = new Amount($amount);
