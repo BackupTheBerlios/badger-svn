@@ -78,6 +78,9 @@ class TemplateEngine {
 		// create Page Title; add Bagder site name for the DB
 		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
 		
+		// create start page link
+		$startPageLink = '/' . $us->getProperty('badgerStartPage');
+		
 		// write XHTML Processing Instruction
 		echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 		
