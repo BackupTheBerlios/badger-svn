@@ -17,7 +17,6 @@ require_once BADGER_ROOT . '/core/navi/naviTools.php';
 require_once BADGER_ROOT . '/core/Translation2/translationTools.php';
 
 $redirectPageAfterSave = "AccountManagerOverview.php";
-$pageTitle = getBadgerTranslation2('accountAccount','pageTitleProp');
 
 $am = new AccountManager($badgerDb);
 $curMan = new CurrencyManager($badgerDb);
@@ -74,6 +73,11 @@ function printFrontend() {
 	$widgets->addJSValMessages();
 	
 	$widgets->addNavigationHead();
+	if (isset($_GET['ID'])) {
+		$pageTitle = getBadgerTranslation2('accountAccount', 'pageTitleProp');
+	} else {
+		$pageTitle = getBadgerTranslation2('accountAccount', 'pageTitlePropNew');
+	}
 	echo $tpl->getHeader($pageTitle);
 	
 	echo $widgets->addToolTipLayer();
