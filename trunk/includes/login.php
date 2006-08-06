@@ -160,7 +160,9 @@ if( $locked_out_since != 0){
 //if so, ask user to change his password
 
 if (
-isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badgerPassword') && md5($_POST['password']) == '7e59cb5b2f52c763bc846471fe5942e4' || (isset($_session['password']) && $_session['password'] == $us->getProperty('badgerPassword')	&& $_session['password'] == '7e59cb5b2f52c763bc846471fe5942e4')){
+	isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badgerPassword') && md5($_POST['password']) == '7e59cb5b2f52c763bc846471fe5942e4'
+	|| (isset($_session['password']) && $_session['password'] == $us->getProperty('badgerPassword') && $_session['password'] == '7e59cb5b2f52c763bc846471fe5942e4')
+) {
 	// Initialization
 
 	$tpl->addCSS("style.css");
@@ -225,46 +227,52 @@ if($passwordcorrect == false) {
 	
 	$PasswordInput = $widgets->createField("password", 50, "", "", true, 'password');
 		
+	$Feedback = "";
+		
 	//--
 		
-	$get_vars = "";
-	$isfirst = true;
-		
-	foreach( $_GET as $key=>$value ){
-		if($key != "logout"){
+	if (isset($GLOBALS['sessionTimeout']) && $GLOBALS['sessionTimeout'] === true) {
+		$get_vars = "";
+		$isfirst = true;
 			
-			if($key != "password" && $key != "logout") {
-				if ($isfirst == true){
-					$get_vars .= "?";
-					$isfirst = false;
-				}else{
-					$get_vars .= "&";
+		foreach( $_GET as $key=>$value ){
+			if($key != "logout"){
+				
+				if($key != "password" && $key != "logout") {
+					if ($isfirst == true){
+						$get_vars .= "?";
+						$isfirst = false;
+					}else{
+						$get_vars .= "&";
+					};
+				$get_vars .= $key . "=" . $value;
 				};
-			$get_vars .= $key . "=" . $value;
 			};
 		};
-	};
-	
-	unset($isfirst);
 		
-	$Action .= $get_vars;
-		
-	eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
-		
-	foreach( $_POST as $key=>$value ){
-		if($key != "password" && $key != "logout") {
-			$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
-			//eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
-			eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
+		unset($isfirst);
+			
+		$Action .= $get_vars;
+			
+		eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
+
+		foreach( $_POST as $key=>$value ){
+			if($key != "password" && $key != "logout") {
+				$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
+				//eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
+				eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
+			};
 		};
-	};
 		
+		$Feedback = getBadgerTranslation2('badger_login', 'sessionTimeout') . '<br />';
+	} else {
+		eval("echo \"".$tpl->getTemplate("Login/login1")."\";");
+	}
+			
 	//--
 		
 	//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 	$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','login_button'), "submit", "Widgets/accept.gif");
-		
-	$Feedback = "";
 		
 	if(isset($_POST['password']) && $_POST['password'] == ""){
 		//print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");

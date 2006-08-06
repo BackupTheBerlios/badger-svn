@@ -49,7 +49,9 @@ $_db_table_config = "session_master";	// name of the table that will contain ses
 // Modified by BADGER
 
 //$_session_timeout = 1800;
-$session_timeout = $us->getProperty('badgerSessionTime');
+$_session_timeout = $us->getProperty('badgerSessionTime');
+
+$GLOBALS['sessionTimeout'] = false;
 
 /*
 	this variable is used to generate a more secure sid, because this
@@ -75,28 +77,36 @@ function new_session(){
 	global $_db_table,$_db_table_config,$_session_timeout,$secure_key;
 	list($m,$s) = explode(" ",microtime());
 	$sess = md5(rand(0,1000).substr($m,2).$secure_key);
-	if($_session_timeout != 0){
+	/*if($_session_timeout != 0){
 		setcookie('badger_sess', $sess, time()+($_session_timeout*60), '/');
-	}else{
+	}else*/{
 		setcookie('badger_sess',$sess, 0, '/');
 	}
-	$sql = "insert into $_db_table_config(sid,start,ip) values('$sess',NOW(),'".$_SERVER['REMOTE_ADDR']."')";
+	$sql = "insert into $_db_table_config(sid,start,last,ip) values('$sess',NOW(),NOW(),'".$_SERVER['REMOTE_ADDR']."')";
 	$res = query($sql);
 	return $sess;
 }
 
 function update_session(){
-	global $_db_table_config, $badgerDb;
+	global $_db_table_config, $badgerDb, $_session_timeout, $logger;
 	$sess = $_COOKIE['badger_sess'];
-	$sql = "select logout from $_db_table_config where sid = '$sess'";
+	$sql = "select logout, UNIX_TIMESTAMP(last) last from $_db_table_config where sid = '$sess'";
 	$res = query($sql);
 	
 	//modified by badger
 	//$row = mysql_fetch_array($res);
 	
-	$res->fetchInto ($row,DB_FETCHMODE_ASSOC);
+	$row = array();
 	
-	if($row['logout']!=1){
+	$res->fetchInto ($row, DB_FETCHMODE_ASSOC);
+	
+	$logger->log('SESSION MANAGEMENT: last: ' . $row['last'] . ' time: ' . time() . ' diff: ' . (time() - $row['last']));
+
+	if (($row['last'] + $_session_timeout * 60) < time()) {
+		$GLOBALS['sessionTimeout'] = true;
+
+		return new_session();
+	} else if ($row['logout']!=1){
 		$sql = "update $_db_table_config set last = NOW() where sid = '$sess'";
 		query($sql);
 		if($badgerDb->affectedRows() < 0){
@@ -104,7 +114,7 @@ function update_session(){
 		}else{
 			return $sess;
 		}
-	}else{
+	} else {
 		return new_session();
 	}
 }
@@ -130,6 +140,8 @@ function get_session_vars(){
 	$_session = Array();
 	$sql = "select variable, value from $_db_table where sid = '$sess'";
 	$res = query($sql);
+	$row = array();
+
 	while($res->fetchInto ($row,DB_FETCHMODE_ASSOC)){
 		$_session[$row['variable']]=$row['value'];
 	}
@@ -157,6 +169,8 @@ function get_session_length(){
 	global $sess,$_db_table_config;
 	$sql = "select NOW()-start from $_db_table_config where sid = '$sess'";
 	$res = query($sql);
+	$row = array();
+	
 	$res->fetchInto($row,DB_FETCHMODE_ASSOC);
 	
 	return $row['NOW()-start'];
