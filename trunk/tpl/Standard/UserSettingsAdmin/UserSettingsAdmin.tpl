@@ -35,6 +35,10 @@
 				<td style="text-align: right; white-space: nowrap;">$SessionTimeField</td>
 			</tr>
 			<tr>
+				<td>$futureCalcSpanLabel</td>
+				<td style="text-align: right; white-space: nowrap;">$futureCalcSpanField</td>
+			</tr>
+			<tr>
 				<td>$autoExpandPlannedTransactionsLabel</td>
 				<td style="text-align: right; white-space: nowrap;">$autoExpandPlannedTransactionsField</td>
 			</tr>

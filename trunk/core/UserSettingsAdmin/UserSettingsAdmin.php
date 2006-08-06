@@ -107,6 +107,11 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 			$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
 		};
 		
+
+		if (isset($_POST['futureCalcSpan']) && is_numeric($_POST['futureCalcSpan'])) {
+			$us->setProperty('amountFutureCalcSpan', $_POST['futureCalcSpan']);
+		}
+
 		if (isset($_POST['autoExpandPlannedTransactions']) && $_POST['autoExpandPlannedTransactions']) {
 			$us->setProperty('autoExpandPlannedTransactions', true);
 		} else {
@@ -198,6 +203,15 @@ $StartPageField = $widgets->createField("StartPage", 0, $us->getProperty('badger
 
 $SessionTimeLabel = $widgets->createLabel("SessionTime", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
 $SessionTimeField = $widgets->createField("SessionTime", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
+
+try {
+	$preCalc = $us->getProperty('amountFutureCalcSpan');
+} catch (BadgerException $ex) {
+	$preCalc = 12;
+}
+
+$futureCalcSpanLabel = $widgets->createLabel('futureCalcSpan', getBadgerTranslation2('UserSettingsAdmin', 'futureCalcSpanLabel'), true);
+$futureCalcSpanField = $widgets->createField('futureCalcSpan', 0, $preCalc, getBadgerTranslation2('UserSettingsAdmin', 'futureCalcSpanDescription'), true, 'text', 'style="width: 10em;"');
 
 $autoExpandPlannedTransactionsLabel = $widgets->createLabel("autoExpandPlannedTransactions", getBadgerTranslation2('UserSettingsAdmin', 'autoExpandPlannedTransactionsName'), true);
 $autoExpandPlannedTransactionsField = $widgets->createField("autoExpandPlannedTransactions", 0, 1, getBadgerTranslation2('UserSettingsAdmin','autoExpandPlannedTransactionsDescription'), false, 'checkbox', $us->getProperty('autoExpandPlannedTransactions') ? 'checked="checked"' : '');

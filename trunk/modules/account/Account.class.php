@@ -260,11 +260,21 @@ class Account extends DataGridHandler {
 		$upperLimit = null,
 		$currency = null
 	) {
+		global $us;
+		
 		$this->badgerDb = $badgerDb;
 		
 		$this->targetFutureCalcDate = new Date();
-		//Standard: One Year
-		$this->targetFutureCalcDate->addSeconds(1 * 365 * 24 * 60 * 60);
+		try {
+			$preCalc = $us->getProperty('amountFutureCalcSpan');
+			//Convert Months to seconds
+			$preCalc *= 30 * 24 * 60 * 60;
+		} catch (BadgerException $ex) {
+			//Default: One Year
+			$preCalc = 1 * 365 * 24 * 60 * 60;
+		}
+		$this->targetFutureCalcDate->addSeconds($preCalc);			
+		
 		$this->type = 'transaction';
 
 		if (!is_string($accountManager)) {
