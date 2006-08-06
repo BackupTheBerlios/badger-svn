@@ -355,7 +355,7 @@ function showTrendData() {
 	
 	$chart['chart_data'][0][0] = '';
 	if (count($accounts) > 1) {
-		$chart['chart_data'][1][0] = 'Gesamt';
+		$chart['chart_data'][1][0] = getBadgerTranslation2('statistics','trendTotal');
 	} else {
 		$chart['chart_data'][1][0] = utf8_encode($accounts[0][0]);
 	}
