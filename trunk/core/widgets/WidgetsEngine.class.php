@@ -150,7 +150,7 @@ function _jsVal_Language() {
 		}
 	}
 	
-	public function createField($fieldname, $size, $value="", $description="", $mandatory=false, $type="text", $valCondition=""){
+	public function createField($fieldname, $size, $value="", $description="", $required=false, $type="text", $valCondition=""){
 		// 'required' and 'regexp' are no XHTML attributes to input field
 		// -> we've to add an extended namespace
 		
@@ -171,7 +171,7 @@ function _jsVal_Language() {
 		//    minvalue="10" maxvalue="90" regexp="money"
 
 		//required
-		$mandatory = (($mandatory) ? "1" : "0");
+		if ($required) $required = "required='required'";
 		
 		if (!isset($this->inputIds[$fieldname])) {
 			$this->inputIds[$fieldname] = 0;
@@ -181,7 +181,7 @@ function _jsVal_Language() {
 			$this->inputIds[$fieldname]++;
 		}
 		
-		$output = "<input type='$type' id='$id' name='$fieldname' size='$size' class='$class' value='$value' required='$mandatory' $valCondition />";
+		$output = "<input type='$type' id='$id' name='$fieldname' size='$size' class='$class' value='$value' $required $valCondition />";
 		if($description) {
 			$output .= "&nbsp;" . $this->addToolTip($description);
 		}

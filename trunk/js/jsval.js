@@ -120,7 +120,7 @@ function Field(element, form){
    this.element = element;
    this.exclude = element.exclude || element.getAttribute('exclude');
    this.err = element.err || element.getAttribute('err');
-   this.required = _parseBoolean(element.required || element.getAttribute('required'));
+   this.required = _isRequired(element);
    this.realname = element.realname || element.getAttribute('realname');
    this.elements = new Array();
    
@@ -311,9 +311,7 @@ Field.prototype._ValidateText = function(arrFields){
 	   	  	return true;
 	   	  };
 	   };
-	   
-	   
-	   
+	   	   
 	   //check equality
 	   if (this.equals){
 	   	   for (var i = 0; i < arrFields.length; ++i){
@@ -367,6 +365,9 @@ function _handleError (field, strErrorMessage) {
 	if(objLabel.text) strFieldName = objLabel.text; //IE
 	if(objLabel.innerText) strFieldName = objLabel.innerText; //Opera
 	
+	//replace colon of label
+	strFieldName = strFieldName.replace( ":", "" );
+	
 	strFieldErrorMsg = ( (field.realname)? field.realname : ((strFieldName) ? strFieldName : ((obj.id) ? obj.id : obj.name)));
       
 	strNewMessage = strErrorMessage + strFieldErrorMsg + "\n";
@@ -410,6 +411,13 @@ function _getError(field, str){
 
 function _parseBoolean(value){
    return !(!value || value == 0 || value == "0" || value == "false");
+};
+
+function _isRequired(element){
+	//check if required attribute is present
+	if(element.required) return true;
+	if(element.getAttribute('required')) return true;
+	return false;
 };
 
 function _checkRegExp(regx, value){
