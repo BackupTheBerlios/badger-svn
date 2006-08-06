@@ -142,7 +142,7 @@ function updateDateRange() {
 		return;
 	}
 	
-	var format ="dd.mm.yyyy";
+	var format = $F("dateFormat");
 	
 	var startDateObj = document.getElementsByName("startDate")[0];
 
@@ -170,6 +170,22 @@ function updateDateRange() {
 		endDay = getLastDay(month, year);
 		endMonth = (month < 10 ? "0" : "") + month;
 		endYear = year;
+	}
+	
+	var now = new Date();
+	var nowStr = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+	var endStr = endYear + "-" + endMonth + "-" + endDay;
+	if (dateCompare(endStr, nowStr) > 0) {
+		endMonth = now.getMonth() + 1;
+		endMonth = endMonth.toString();
+		if (endMonth.length == 1) {
+			endMonth = "0" + endMonth;
+		}
+		endDay = now.getDate();
+		endDay = endDay.toString();
+		if (endDay.length == 1) {
+			endDay = "0" + endDay;
+		}
 	}
 	
 	var endFormat = format;
