@@ -11,6 +11,8 @@
 *
 * Parse .csv files from Deutsche Bank (Germany). Tested with files from 30.01.2006
 **/
+// The next line determines the displayed name of this parser.
+// BADGER_REAL_PARSER_NAME Deutsche Bank
 /**
  * transform csv to array
  * 

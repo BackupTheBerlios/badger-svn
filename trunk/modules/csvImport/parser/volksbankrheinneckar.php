@@ -12,6 +12,8 @@
 * Parse .csv files from Volksbank (Rhein Neckar Area) (Germany). Tested with files from 22.07.2006
 * It should work with files from every Volksbank in Germany, but it was not tested with others
 **/
+// The next line determines the displayed name of this parser.
+// BADGER_REAL_PARSER_NAME Voksbank Rhein-Neckar
 /**
  * transform csv to array
  * 

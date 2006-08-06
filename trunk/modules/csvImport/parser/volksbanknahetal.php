@@ -11,6 +11,8 @@
 *
 * Parse .csv files from Volksbank Nahetal & Volksbank Rheinböllen (Germany). Tested with files from 27.07.2006
 **/
+// The next line determines the displayed name of this parser.
+// BADGER_REAL_PARSER_NAME Volksbank Nahetal / Rheinböllen
 /**
  * transform csv to array
  *

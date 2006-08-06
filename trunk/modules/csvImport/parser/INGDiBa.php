@@ -11,6 +11,8 @@
 *
 * Parse .csv files from INGDiBa (Germany)for an "Extra Konto" Tested with files from 18.05.2006
 **/
+// The next line determines the displayed name of this parser.
+// BADGER_REAL_PARSER_NAME ING DiBa (Extra Konto)
 /**
  * transform csv to array
  *

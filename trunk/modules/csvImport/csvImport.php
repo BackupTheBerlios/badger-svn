@@ -44,6 +44,7 @@ if (!isset($_POST['btnSubmit'])){
 		$fileField = "<input name=\"file\" type=\"file\" size=\"50\" required = \"1\" />";
 		
 		$selectParserLabel =  $widgets->createLabel("parserSelect", getBadgerTranslation2("importCsv", "selectParser").":", true);
+/*
     		//sql to get CSV Parsers
 	    	$sql = "SELECT * FROM csv_parser";
 	      	$parser = array();
@@ -51,6 +52,9 @@ if (!isset($_POST['btnSubmit'])){
 	      	while ($res->fetchInto ($row)){ 
 	      		$parser[$row[2]] = $row[1];
 	      	}
+*/	      	
+		$parser = getParsers();
+
       	$selectParserFile = $widgets->createSelectField("parserSelect", $parser, $us->getProperty("csvImportStandardParser"), getBadgerTranslation2("importCsv", "toolTipParserSelect"));
 		
 		$accountSelectLabel =  $widgets->createLabel("accountSelect", getBadgerTranslation2("importCsv", "targetAccount").":", true);					      	
@@ -289,4 +293,30 @@ if (isset($_POST['btnSubmit'])){
 } 		
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
+
+function getParsers() {
+	$baseDir = BADGER_ROOT . '/modules/csvImport/parser/';
+
+	$parsers = array();
+
+	$parserDir = dir($baseDir);
+	while (false !== ($parserFileName = $parserDir->read())) {
+		if (is_file($baseDir . $parserFileName)) {
+			$parserFile = fopen($baseDir . $parserFileName, "r");
+			while (!feof($parserFile)) {
+				$line = fgets($parserFile);
+				if (preg_match('/[\s]*\/\/[\s]*BADGER_REAL_PARSER_NAME[\s]+([^\n]+)/', $line, $match)) {
+					$parsers[$parserFileName] = $match[1];
+					break;
+				}
+			}
+			fclose($parserFile);
+		}
+	}
+	$parserDir->close();
+	
+	asort($parsers);
+
+	return $parsers;
+}
 ?>

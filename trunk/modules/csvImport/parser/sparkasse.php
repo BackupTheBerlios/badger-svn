@@ -12,6 +12,8 @@
 * Parse .csv files from Sparkasse Rhein-Neckar-Nord (Germany). Tested with files from 30.01.2006
 * It should work with files from every Sparkasse in Germany, but it was not tested with others
 **/
+// The next line determines the displayed name of this parser.
+// BADGER_REAL_PARSER_NAME Sparkasse
 /**
  * transform csv to array
  * 
