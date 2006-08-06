@@ -93,8 +93,8 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		$us->setProperty('badgerDateFormat',$_POST['DateFormat']);
 		$us->setProperty('badgerMaxLoginAttempts',$_POST['MaximumLoginAttempts']);
 		$us->setProperty('badgerLockOutTime',$_POST['LockOutTime']);
-		$us->setProperty('badgerStartPage', $_POST['StartPageField']);
-		$us->setProperty('badgerSessionTime', $_POST['SessionTimeField']);
+		$us->setProperty('badgerStartPage', $_POST['StartPage']);
+		$us->setProperty('badgerSessionTime', $_POST['SessionTime']);
 
 		if($_POST['Seperators'] == ".,"){
 			$us->setProperty('badgerDecimalSeparator',",");
@@ -107,7 +107,7 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 			$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
 		};
 		
-		if (isset($_POST['autoExpandPlannedTransactionsField']) && $_POST['autoExpandPlannedTransactionsField']) {
+		if (isset($_POST['autoExpandPlannedTransactions']) && $_POST['autoExpandPlannedTransactions']) {
 			$us->setProperty('autoExpandPlannedTransactions', true);
 		} else {
 			$us->setProperty('autoExpandPlannedTransactions', false);
@@ -193,14 +193,14 @@ $LockOutTimeLabel = $widgets->createLabel("LockOutTime", getBadgerTranslation2('
 $LockOutTimeField = $widgets->createField("LockOutTime", 0, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true, 'text', 'style="width: 10em;"');
 
 
-$StartPageLabel = $widgets->createLabel("StartPageLabel", getBadgerTranslation2('UserSettingsAdmin','start_page_name'), true);
-$StartPageField = $widgets->createField("StartPageField", 0, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true, 'text', 'style="width: 10em;"');
+$StartPageLabel = $widgets->createLabel("StartPage", getBadgerTranslation2('UserSettingsAdmin','start_page_name'), true);
+$StartPageField = $widgets->createField("StartPage", 0, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true, 'text', 'style="width: 10em;"');
 
-$SessionTimeLabel = $widgets->createLabel("SessionTimeLabel", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
-$SessionTimeField = $widgets->createField("SessionTimeField", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
+$SessionTimeLabel = $widgets->createLabel("SessionTime", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
+$SessionTimeField = $widgets->createField("SessionTime", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
 
-$autoExpandPlannedTransactionsLabel = $widgets->createLabel('autoExpandPlannedTransactionsLabel', getBadgerTranslation2('UserSettingsAdmin', 'autoExpandPlannedTransactionsName'), true);
-$autoExpandPlannedTransactionsField = $widgets->createField('autoExpandPlannedTransactionsField', 0, 1, getBadgerTranslation2('UserSettingsAdmin','autoExpandPlannedTransactionsDescription'), true, 'checkbox', $us->getProperty('autoExpandPlannedTransactions') ? 'checked="checked"' : '');
+$autoExpandPlannedTransactionsLabel = $widgets->createLabel("autoExpandPlannedTransactions", getBadgerTranslation2('UserSettingsAdmin', 'autoExpandPlannedTransactionsName'), true);
+$autoExpandPlannedTransactionsField = $widgets->createField("autoExpandPlannedTransactions", 0, 1, getBadgerTranslation2('UserSettingsAdmin','autoExpandPlannedTransactionsDescription'), false, 'checkbox', $us->getProperty('autoExpandPlannedTransactions') ? 'checked="checked"' : '');
 
 // Print Form for change of password 
 
