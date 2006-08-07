@@ -9,11 +9,11 @@
 * Open Source Financial Management
 * Visit http://badger.berlios.org 
 *
-* Parse .csv files from Bank of America.
-* Thanks to washdc for providing example data.
+* Parse .csv files from Community America Credit Union.
+* Thanks to Cameron Nordholm for providing example data.
 **/
 // The next line determines the displayed name of this parser.
-// BADGER_REAL_PARSER_NAME Bank of America
+// BADGER_REAL_PARSER_NAME Community America Credit Union
 /**
  * transform csv to array
  * 
