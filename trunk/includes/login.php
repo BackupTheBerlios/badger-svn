@@ -23,6 +23,8 @@
 
 //$us->setProperty('badgerPassword',md5("badger"));
 
+require_once BADGER_ROOT . '/core/urlTools.php';
+
 if(isset($_POST['SubmitMandatoryChangePassword'])){
 	// Validate submitted values
 	// Is yet to be implemented
@@ -344,74 +346,4 @@ if($passwordcorrect == false) {
 } else{
 	set_session_var('number_of_login_attempts', 0);
 };
-
-function getCurrentURL() {
-	$result = array();
-	
-	if (!isset($_SERVER['HTTPS'])) {
-		$result['scheme'] = 'http';
-	} else {
-		$result['scheme'] = 'https';
-	}
-	
-	$result['host'] = $_SERVER['HTTP_HOST'];
-	
-	$result['port'] = $_SERVER['SERVER_PORT'];
-	
-	if (isset($_SERVER['PHP_AUTH_USER'])) {
-		$result['user'] = $_SERVER['PHP_AUTH_USER'];
-	}
-	
-	if (isset($_SERVER['PHP_AUTH_PW'])) {
-		$result['pass'] = $_SERVER['PHP_AUTH_PW'];
-	}
-	
-	$parsed = parse_url($_SERVER['REQUEST_URI']);
-	
-	$result['path'] = $parsed['path'];
-	
-	if (isset($parsed['query'])) {
-		$result['query'] = $parsed['query'];		
-	}
-	
-	return $result;
-}
-
-function buildURL($urlParts, $includeUser = false) {
-	$result = $urlParts['scheme'];
-	$result .= '://';
-	if ($includeUser) {
-		if (isset($urlParts['user'])) {
-			$result .= $urlParts['user'];
-			if (isset($urlParts['pass'])) {
-				$result .= ':';
-				$result .= $urlParts['pass'];
-			}
-		}
-	}
-	$result .= $urlParts['host'];
-	$result .= ':';
-	$result .= $urlParts['port'];
-	$result .= '/';
-	$result .= htmlpath($urlParts['path']);
-	if (isset($urlParts['query'])) {
-		$result .= '?';
-		$result .= $urlParts['query'];
-	}
-	if (isset($urlParts['fragment'])) {
-		$result .= '#';
-		$result .= $urlParts['fragment'];
-	}
-	
-	return $result;
-}
-
-function htmlpath($relativePath) {
-	$realpath = realpath($relativePath);
-	$realpath = str_replace(DIRECTORY_SEPARATOR, '/', $realpath);
-	$docroot = $_SERVER['DOCUMENT_ROOT'];
-	$htmlpath = str_replace($docroot, '', $realpath);
-
-	return $htmlpath;
-}
 ?>

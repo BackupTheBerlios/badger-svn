@@ -13,8 +13,7 @@
 define ('BADGER_ROOT', '../..');
 
 require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
-
-define ('BADGER_VERSION_TAG', '-- BADGER_VERSION = ' . BADGER_VERSION);
+require_once BADGER_ROOT . '/modules/importExport/exportLogic.php';
 
 if (isset($_GET['mode'])) {
 	$mode = $_GET['mode'];
@@ -154,106 +153,5 @@ function applySqlDump() {
 	}
 }
 		
-
-function sendSqlDump() {
-	$result =  BADGER_VERSION_TAG . "\n";
-	
-	$result .= getDbDump();
-	
-	$now = new Date();
-	
-	header ('Content-Type: text/sql');
-	header('Content-Disposition: attachment; filename="BADGER-' . BADGER_VERSION . '-DatabaseBackup-' . $now->getDate() . '.sql"');
-	header('Content-Length: ' . strlen($result));
-	
-	echo $result;
-} 
-
-function getDbDump() {
-	$result = ''; 
-	$tableList = array (
-		'account',
-		'accountIds_seq',
-		'account_property',
-		'category',
-		'categoryIds_seq',
-		'csv_parser',
-		'currency',
-		'currencyIds_seq',
-		'datagrid_handler',
-		'finishedTransactionIds_seq',
-		'finished_transaction',
-		'i18n',
-		'langs',
-		'navi',
-		'naviIds_seq',
-		'plannedTransactionIds_seq',
-		'planned_transaction',
-		'session_global',
-		'session_master',
-		'user_settings'
-	);
-
-	foreach ($tableList as $currentTable) {
-		$result .= makeEmptyStatement($currentTable);
-	}
-	
-	foreach ($tableList as $currentTable) {
-		$result .= dumpTable($currentTable);
-	}
-	
-	return $result;
-}
-
-function makeEmptyStatement($tableName) {
-	return "DELETE FROM $tableName;\n";
-}
-
-function dumpTable($tableName) {
-	global $badgerDb;
-
-	$sql = "SELECT * FROM $tableName";
-	
-	$dbResult =& $badgerDb->query($sql);
-	
-	if (PEAR::isError($dbResult)) {
-		throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage() . ' ' . $sql);
-	}
-	
-	$row = false;
-	$result = '';
-	
-	while ($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
-		$result .= "INSERT INTO $tableName (";
-	
-		$columns = array_keys($row);
-		$first = true;
-		foreach ($columns as $currentColumn) {
-			if (!$first) {
-				$result .= ', ';
-			} else {
-				$first = false;
-			}
-			$result .= $currentColumn;
-		}
-		
-		$result .= ') VALUES (';
-		
-		$first = true;
-		foreach ($row as $currentValue) {
-			if (!$first) {
-				$result .= ', ';
-			} else {
-				$first = false;
-			}
-			$result .= $badgerDb->quoteSmart($currentValue);
-		}
-		
-		$result .= ");\n";
-	}
-	
-	return $result;
-}
-
 require_once BADGER_ROOT . '/includes/fileFooter.php';
 ?>	

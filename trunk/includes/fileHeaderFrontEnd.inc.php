@@ -24,4 +24,5 @@ $tpl->addCSS("style.css", "print, screen");
 $tpl->addCSS("print.css", "print");
 $tpl->addJavaScript("js/jsval.js");
 require(BADGER_ROOT . "/includes/login.php");
+require BADGER_ROOT . '/core/update/checkUpdate.php';
 ?>
