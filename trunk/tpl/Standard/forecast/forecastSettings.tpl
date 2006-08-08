@@ -3,7 +3,7 @@
 	<table>
 	<tr>
 	<td  valign="top">
-	<fieldset style="width: 31em; height: 15em;">
+	<fieldset style="width: 32em; height: 15em;">
 		<legend>$legendSetting</legend>
 		<table>
 			<tr> 
