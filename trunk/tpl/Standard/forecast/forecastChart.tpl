@@ -11,15 +11,15 @@ $insertChart
 <table>
 	<tr>
 		<td><b>$dailyPocketMoneyLabel</b> </td>
-		<td style = "text-align: right;">$dailyPocketMoneyValue  </td>
+		<td style = "text-align: right;">$dailyPocketMoneyValue $accountCurrency </td>
 		<td> $dailyPocketMoneyToolTip</td>
 	</tr>
 	<tr>
 		<td><b>$balancedEndDateLabel1</b> </td>
-		<td style = "text-align: right;">$balancedEndDate1 </td>
+		<td style = "text-align: right;">$balancedEndDate1&nbsp;$accountCurrency </td>
 	</tr>
 	<tr>
 		<td><b>$balancedEndDateLabel2 </b></td>
-		<td style = "text-align: right;">$balancedEndDate2</td>
+		<td style = "text-align: right;">$balancedEndDate2&nbsp;$accountCurrency </td>
 	</tr>
 </table>
