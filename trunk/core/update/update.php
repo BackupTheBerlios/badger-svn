@@ -164,29 +164,29 @@ function getUpdateTranslation($pageId, $id) {
 		'updateProcedure' => array (
 			'en' => array (
 				'pageTitle' => 'Update BADGER finance',
-				'legend' => 'Stept to Update',
-				'updateInformation' => 'XXXchange detected',
+				'legend' => 'Steps to Update',
+				'updateInformation' => 'BADGER finance detected an update of its files. This page updates the database. All your data will be preserved.',
 				'dbVersionText' => 'Database version:',
 				'fileVersionText' => 'File version:',
-				'stepDescription' => 'XXXstep description',
-				'step1PreLink' => 'XXXclick link',
+				'stepDescription' => 'The update consists of two simple steps. First, a backup of the database is saved to your computer. This preserves your data in the rare case anything goes wrong. Second, the database is updated.',
+				'step1PreLink' => 'Please click the following link and save the file to your computer.',
 				'step1LinkText' => 'Save backup',
 				'step1PostLink' => '',
-				'step2PreLink' => 'XXXclick link',
+				'step2PreLink' => 'Please click the following link to start the database update.',
 				'step2LinkText' => 'Update database',
 				'step2PostLink' => ''
 			),
 			'de' => array (
 				'pageTitle' => 'BADGER finance aktualisieren',
 				'legend' => 'Schritte zur Aktualisierung',
-				'updateInformation' => 'XXXƒnderung festgestellt',
+				'updateInformation' => 'BADGER finance hat eine Aktualisierung seiner Dateien festgestellt. Diese Seite aktualisiert die Datenbank. Ihre Daten bleiben vollst‰ndig erhalten.',
 				'dbVersionText' => 'Datenbank-Version:',
 				'fileVersionText' => 'Datei-Version:',
-				'stepDescription' => 'XXXSchrittbeschreibung',
-				'step1PreLink' => 'XXXklicke Link',
+				'stepDescription' => 'Die Aktualisierung besteht aus zwei einfachen Schritten. Zuerst wird eine Sicherheitskopie der Datenbank auf Ihrem Computer gespeichert. Dadurch bleiben Ihre Daten auch im unwahrscheinlichen Fall eines Fehlschlags erhalten. Anschlieﬂend wird die Datenbank aktualisiert.',
+				'step1PreLink' => 'Bitte klicken Sie auf folgenden Link und speichern Sie die Datei auf Ihrem Computer.',
 				'step1LinkText' => 'Sicherungskopie speichern',
 				'step1PostLink' => '',
-				'step2PreLink' => 'XXXklicke Link',
+				'step2PreLink' => 'Bitte klicken Sie auf folgenden Link, um die Datenbank-Aktualisierung zu beginnen.',
 				'step2LinkText' => 'Datenbank aktualisieren',
 				'step2PostLink' => ''
 			)
@@ -200,8 +200,9 @@ function getUpdateTranslation($pageId, $id) {
 				'postNextText' => '',
 				'logEntryHeader' => 'Information from the update:',
 				'updateInformation' => 'BADGER finance is now performing the update. It is performed step-by-step, one step for each version.',
-				'errorInformation' => 'Please read the output of the process. If it reports any severe errors, send the whole output to the BADGER development team (see help for contact info).',
+				'errorInformation' => 'Please read the output of the process. If it encounters any severe errors they are written in red. In this case, please send the whole output to the BADGER development team (see help for contact info).',
 				'updateFinished' => 'The update has finished.',
+				'severeError' => 'The update encountered a severe error. Please send the whole output to the BADGER finance development team.'
 			),
 			'de' => array (
 				'pageTitle' => 'BADGER finance wird aktualisiert',
@@ -211,8 +212,9 @@ function getUpdateTranslation($pageId, $id) {
 				'postNextText' => '',
 				'logEntryHeader' => 'Informationen der Aktualisierung:',
 				'updateInformation' => 'Die Aktualisierung wird nun durchgef¸hrt. Dies findet Schritt f¸r Schritt statt, einen Schritt f¸r jede Version.',
-				'errorInformation' => 'Bitte lesen sie die Ausgabe dieses Prozesses. Falls er irgend welche schweren Fehler meldet, schicken sie die gesamte Ausgabe an das BADGER Entwicklungsteam (siehe Hilfe f¸r Kontaktinformationen).',
+				'errorInformation' => 'Bitte lesen sie die Ausgabe dieses Prozesses. Die einfachen Informationen sind auf Englisch gehalten. Falls der Prozess irgend welche schweren Fehler meldet, sind diese rot eingef‰rbt. Bitte schicken Sie in diesem Fall die gesamte Ausgabe an das BADGER Entwicklungsteam (siehe Hilfe f¸r Kontaktinformationen).',
 				'updateFinished' => 'Die Aktualisierung ist beendet.',
+				'severeError' => 'Die Aktualisierung stieﬂ auf einen schweren Fehler. Bitte schicken Sie die gesamte Ausgabe an das BADGER finance development team.'
 			)
 		)
 	);
