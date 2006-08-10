@@ -50,11 +50,23 @@ function compare() {
 	
 	echo <<<EOT
 <style type="text/css">
+	body {
+		font-family: Verdana, sans-serif;
+	}
 	.old {
 		background-color: #8888ff;
 	}
 	.new {
 		background-color: #ff8888;
+	}
+	.even {
+		background-color: #eeeeee;
+	}
+	.odd {
+		background-color: #bbbbbb;
+	}
+	tr:hover {
+		background-color: #00dddd;
 	}
 </style>
 EOT;
@@ -67,10 +79,14 @@ EOT;
 	$addedTables = array_diff($newTables, $oldTables);
 	$bothTables = array_intersect($newTables, $oldTables);
 	
-	echo "Deleted Tables:<br />\n";
-	echo array2Ul($deletedTables);
-	echo "Added Tables:<br />\n";
-	echo array2Ul($addedTables);
+	if (count($deletedTables)) {
+		echo "Deleted Tables:<br />\n";
+		echo array2Ul($deletedTables);
+	}
+	if (count($addedTables)) {
+		echo "Added Tables:<br />\n";
+		echo array2Ul($addedTables);
+	}
 
 	foreach ($bothTables as $currentTable) {
 		echo "<h2>Table $currentTable</h2>\n";
@@ -82,12 +98,16 @@ EOT;
 		$addedColumns = array_diff($newColumns, $oldColumns);
 		$bothColumns = array_intersect($newColumns, $oldColumns);
 		
-		echo "Deleted Columns:<br />\n";
-		echo array2Ul($deletedColumns);
-		echo "Added Columns:<br />\n";
-		echo array2Ul($addedColumns);
-		echo "Both Columns:<br />\n";
-		echo array2Ul($bothColumns);
+		if (count($deletedColumns)) {
+			echo "Deleted Columns:<br />\n";
+			echo array2Ul($deletedColumns);
+		}
+		if (count($addedColumns)) {
+			echo "Added Columns:<br />\n";
+			echo array2Ul($addedColumns);
+		}
+		//echo "Both Columns:<br />\n";
+		//echo array2Ul($bothColumns);
 
 		$primaryKeys = array();
 
@@ -126,7 +146,7 @@ EOT;
 		$sql = "SELECT o.* FROM `$oldDb`.`$currentTable` o
 					LEFT OUTER JOIN `$newDb`.`$currentTable` n ON";
 		foreach ($primaryKeys as $val) {
-			$sql .= " o.`$val` != n.`$val` AND";
+			$sql .= " o.`$val` = n.`$val` AND";
 		}
 		$sql = substr($sql, 0, strlen($sql) - 3);
 		$sql .= " WHERE";
@@ -144,7 +164,7 @@ EOT;
 		$sql = "SELECT n.* FROM `$newDb`.`$currentTable` n
 					LEFT OUTER JOIN `$oldDb`.`$currentTable` o ON";
 		foreach ($primaryKeys as $val) {
-			$sql .= " n.`$val` != o.`$val` AND";
+			$sql .= " n.`$val` = o.`$val` AND";
 		}
 		$sql = substr($sql, 0, strlen($sql) - 3);
 		$sql .= " WHERE";
@@ -256,12 +276,14 @@ function printHTMLTable($result) {
 		echo "<th>$key</th>";
 	}
 	echo "</tr>\n";
+	$odd = true;
 	do {
-		echo '<tr>';
+		echo '<tr class="' . ($odd ? 'odd' : 'even') . '">';
 		foreach ($row as $val) {
 			echo '<td>' . htmlentities($val) . '</td>';
 		}
 		echo "</tr>\n";
+		$odd = !$odd;
 	} while ($row = mysql_fetch_array($result, MYSQL_ASSOC));
 	echo "</table>\n";
 }
