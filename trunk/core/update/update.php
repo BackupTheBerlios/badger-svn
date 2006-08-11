@@ -139,14 +139,31 @@ function update() {
 		eval('$updateLog .= "' . $tpl->getTemplate('update/updateStepEntry') . '";');
 	}
 
-	$us->setProperty('badgerDbVersion', BADGER_VERSION);
-
 	$updateInformation = getUpdateTranslation('updateUpdate', 'updateInformation');
 	$errorInformation = getUpdateTranslation('updateUpdate', 'errorInformation');
 	$dbVersionText = getUpdateTranslation('updateProcedure', 'dbVersionText');
 	$fileVersionText = getUpdateTranslation('updateProcedure', 'fileVersionText');
 	$updateFinished = getUpdateTranslation('updateUpdate', 'updateFinished');
 	
+	$goToStartPagePreLink = getUpdateTranslation('updateUpdate', 'goToStartPagePreLink');
+	$goToStartPageLinkText = getUpdateTranslation('updateUpdate', 'goToStartPageLinkText');
+	$goToStartPagePostLink = getUpdateTranslation('updateUpdate', 'goToStartPagePostLink');
+	
+	$urlParts = getCurrentURL();
+	$parts = parse_url($us->getProperty('badgerStartPage'));
+	$urlParts['path'] = BADGER_ROOT . '/' . $parts['path'];
+	if (isset($parts['query'])) {
+		$urlParts['query'] = $parts['query'];
+	} else {
+		unset($urlParts['query']);
+	}
+	if (isset($parts['fragment'])) {
+		$urlParts['fragment'] = $parts['fragment'];
+	} else {
+		unset($urlParts['fragment']);
+	}
+	$startPageURL = buildURL($urlParts);
+
 	eval('echo "' . $tpl->getTemplate('update/update') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
@@ -308,18 +325,27 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'updateUpdate', id = 'errorInformation', en = 'Please read the output of the process. If it encounters any severe errors they are written in red. In this case, please send the whole output to the BADGER development team (see help for contact info).', de = 'Bitte lesen sie die Ausgabe dieses Prozesses. Die einfachen Informationen sind auf Englisch gehalten. Falls der Prozess irgend welche schweren Fehler meldet, sind diese rot eingef&auml;rbt. Bitte schicken Sie in diesem Fall die gesamte Ausgabe an das BADGER Entwicklungsteam (siehe Hilfe f&uuml;r Kontaktinformationen).'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'updateUpdate', id = 'updateFinished', en = 'The update has finished.', de = 'Die Aktualisierung ist beendet.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'updateUpdate', id = 'severeError', en = 'The update encountered a severe error. Please send the whole output to the BADGER finance development team.', de = 'Die Aktualisierung stie&szlig; auf einen schweren Fehler. Bitte schicken Sie die gesamte Ausgabe an das BADGER finance development team.'");
-	
+	$log .= doQuery("REPLACE i18n SET page_id = 'updateUpdate', id = 'goToStartPagePreLink', en = 'Please ', de = 'Bitte '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'updateUpdate', id = 'goToStartPageLinkText', en = 'go to start page', de = 'zur Startseite gehen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'updateUpdate', id = 'goToStartPagePostLink', en = ' to continue.', de = ' um fortzusetzen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'goToStartPagePreLink', en = 'Please ', de = 'Bitte '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'goToStartPageLinkText', en = 'go to start page', de = 'zur Startseite gehen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'goToStartPagePostLink', en = ' to continue.', de = ' um fortzusetzen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'newerVersion', en = 'Your backup file was from a previous version of BADGER finance. A database update will occur.', de = 'Ihre Sicherheitskopie war von einer vorherigen Version von BADGER finance. Es wird eine Datenbank-Aktualisierung stattfinden.'");
+
 	$log .= "&rarr; Updating old translation entries.\n";
-	$log .= doQuery("UPDATE i18n SET en = 'Session time (min):', de = 'Sessionlänge (min):' WHERE page_id = 'UserSettingsAdmin' AND id = 'session_time_name'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'session_time_name', en = 'Session time (min):', de = 'Sessionlänge (min):'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'askImportVersionInfo', en = 'If you upload a backup created with a previous BADGER finance version an update to the current database layout will occur after importing. All your data will be preserved.', de = 'Falls Sie eine von einer vorherigen BADGER-finance-Version erstellten Sicherheitskopie hochladen, wird im Anschluss an den Import eine Datenbank-Aktualisierung auf die neueste Version stattfinden. All Ihre Daten bleiben erhalten.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'insertSuccessful', en = 'Data successfully saved. Please use the password from the backup file to log in.', de = 'Die Daten wurden erfolgreich importiert. Bitte benutzen Sie das Passwort aus der Sicherheitskopie zum einloggen.'");
 
 	$log .= "&rarr; Updating demo account menu links.\n";
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"35\";' WHERE prop_key = 'accountNaviId_3'");
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"34\";' WHERE prop_key = 'accountNaviId_4'");
 	
-	$log .= "&rarr; Updating database version to 1.0 Beta 2.\n";
+	$log .= "&rarr; Updating database version to 1.0 beta 2.\n";
 	$log .= doQuery("REPLACE user_settings SET prop_key = 'badgerDbVersion', prop_value = 's:10:\"1.0 beta 2\";'");
 
-	$log .= "\n&rarr;&rarr; Update to version 1.0 Beta 2 finished. &larr;&larr;\n\n";
+	$log .= "\n&rarr;&rarr; Update to version 1.0 beta 2 finished. &larr;&larr;\n\n";
 
 	return $log;
 }
@@ -395,7 +421,10 @@ function getUpdateTranslation($pageId, $id) {
 				'updateInformation' => 'BADGER finance is now performing the update. It is performed step-by-step, one step for each version.',
 				'errorInformation' => 'Please read the output of the process. If it encounters any severe errors they are written in red. In this case, please send the whole output to the BADGER development team (see help for contact info).',
 				'updateFinished' => 'The update has finished.',
-				'severeError' => 'The update encountered a severe error. Please send the whole output to the BADGER finance development team.'
+				'severeError' => 'The update encountered a severe error. Please send the whole output to the BADGER finance development team.',
+				'goToStartPagePreLink' => 'Please ',
+				'goToStartPageLinkText' => 'go to start page',
+				'goToStartPagePostLink' => ' to continue.'
 			),
 			'de' => array (
 				'pageTitle' => 'BADGER finance wird aktualisiert',
@@ -407,7 +436,10 @@ function getUpdateTranslation($pageId, $id) {
 				'updateInformation' => 'Die Aktualisierung wird nun durchgeführt. Dies findet Schritt für Schritt statt, einen Schritt für jede Version.',
 				'errorInformation' => 'Bitte lesen sie die Ausgabe dieses Prozesses. Die einfachen Informationen sind auf Englisch gehalten. Falls der Prozess irgend welche schweren Fehler meldet, sind diese rot eingefärbt. Bitte schicken Sie in diesem Fall die gesamte Ausgabe an das BADGER Entwicklungsteam (siehe Hilfe für Kontaktinformationen).',
 				'updateFinished' => 'Die Aktualisierung ist beendet.',
-				'severeError' => 'Die Aktualisierung stieß auf einen schweren Fehler. Bitte schicken Sie die gesamte Ausgabe an das BADGER finance development team.'
+				'severeError' => 'Die Aktualisierung stieß auf einen schweren Fehler. Bitte schicken Sie die gesamte Ausgabe an das BADGER finance development team.',
+				'goToStartPagePreLink' => 'Bitte ',
+				'goToStartPageLinkText' => 'zur Startseite gehen',
+				'goToStartPagePostLink' => ' um fortzusetzen.'
 			)
 		)
 	);

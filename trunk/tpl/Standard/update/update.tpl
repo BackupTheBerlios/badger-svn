@@ -13,3 +13,5 @@ $betweenVersionsBlock
 $updateLog
 
 <p>$updateFinished</p>
+
+<p>$goToStartPagePreLink <a href="$startPageURL">$goToStartPageLinkText</a> $goToStartPagePostLink</p>

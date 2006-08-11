@@ -98,24 +98,49 @@ function printAskInsert() {
 }
 
 function printInsert() {
-	global $tpl;
+	global $tpl, $us, $badgerDb;
 	$widgets = new WidgetEngine($tpl); 
 	
 	$widgets->addNavigationHead();
 
 	$insertTitle = getBadgerTranslation2('importExport', 'insertTitle'); 
+	$updateInfo = '';
 	echo $tpl->getHeader($insertTitle);
+	
+	$goToStartPagePreLink = getBadgerTranslation2('importExport', 'goToStartPagePreLink');
+	$goToStartPageLinkText = getBadgerTranslation2('importExport', 'goToStartPageLinkText');
+	$goToStartPagePostLink = getBadgerTranslation2('importExport', 'goToStartPagePostLink');
 	
 	if (!isset($_POST['confirmUpload']) || $_POST['confirmUpload'] !== 'yes') {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoInsert');
 	} else if (!isset($_FILES['sqlDump']) || !is_uploaded_file($_FILES['sqlDump']['tmp_name'])) {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoFile');
 	} else {
-		applySqlDump();
 		$insertMsg = getBadgerTranslation2('importExport', 'insertSuccessful');
+		$newerVersionMsg = getBadgerTranslation2('importExport', 'newerVersion');
+		if (applySqlDump() === 'newerVersion') {
+			eval(' $updateInfo = "' . $tpl->getTemplate('importExport/newerVersion') . '";');
+		}
 	}
+
+	$us = new UserSettings($badgerDb);
+
+	$urlParts = getCurrentURL();
+	$parts = parse_url($us->getProperty('badgerStartPage'));
+	$urlParts['path'] = BADGER_ROOT . '/' . $parts['path'];
+	if (isset($parts['query'])) {
+		$urlParts['query'] = $parts['query'];
+	} else {
+		unset($urlParts['query']);
+	}
+	if (isset($parts['fragment'])) {
+		$urlParts['fragment'] = $parts['fragment'];
+	} else {
+		unset($urlParts['fragment']);
+	}
+	$startPageURL = buildURL($urlParts);
 	
-	eval(' echo "' . $tpl->getTemplate('importExport/insert') . '";');
+	eval('echo "' . $tpl->getTemplate('importExport/insert') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
@@ -134,9 +159,11 @@ function applySqlDump() {
 	
 	$version = fgets($sqlDump);
 	
-//	if (trim($version) !== BADGER_VERSION_TAG) {
-//		throw new BadgerException('importExport', 'incompatibleBadgerVersion');
-//	}
+	if (trim($version) !== BADGER_VERSION_TAG) {
+		$result = 'newerVersion';
+	} else {
+		$result = 'sameVersion';
+	}
 	
 	while (!feof($sqlDump)) {
 		$sql = trim(fgets($sqlDump));
@@ -149,11 +176,13 @@ function applySqlDump() {
 		
 		if (PEAR::isError($dbResult)) {
 			if ($dbResult->getCode() != DB_ERROR_NOSUCHTABLE && $dbResult->getCode() != DB_ERROR_ALREADY_EXISTS) {
-				//throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage() . ' ' . $sql);
-				echo $dbResult->getMessage() . ' ' . $sql . '<br />';
+				throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage() . ' ' . $sql);
+				//echo $dbResult->getMessage() . ' ' . $sql . '<br />';
 			}
 		}
 	}
+	
+	return $result;
 }
 		
 require_once BADGER_ROOT . '/includes/fileFooter.php';
