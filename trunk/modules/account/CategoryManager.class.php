@@ -331,7 +331,7 @@ class CategoryManager extends DataGridHandler {
 	 * @return object The new Account object.
 	 */
 	public function addCategory($title, $description = null, $outsideCapital = null) {
-		$categoryId = $this->badgerDb->nextId('categoryIds');
+		$categoryId = $this->badgerDb->nextId('category_ids');
 		
 		$sql = "INSERT INTO category
 			(category_id, title ";

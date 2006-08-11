@@ -54,7 +54,7 @@ function addToNavi(
 			break;
 	}
 	
-	$naviId = $badgerDb->nextId('naviIds');
+	$naviId = $badgerDb->nextId('navi_ids');
 
 	$sql = "INSERT INTO navi (navi_id, parent_id, menu_order, item_type, item_name, icon_url, command)
 		VALUES ($naviId, $parentId, $position, '$dbType', '"

@@ -661,9 +661,10 @@ class Account extends DataGridHandler {
 		$category = null,
 		$outsideCapital = null,
 		$exceptional = null,
-		$periodical = null
+		$periodical = null,
+		$plannedTransaction = null
 	) {
-		$finishedTransactionId = $this->badgerDb->nextId('finishedTransactionIds');
+		$finishedTransactionId = $this->badgerDb->nextId('finished_transaction_ids');
 		
 		$sql = "INSERT INTO finished_transaction
 			(finished_transaction_id, account_id, amount ";
@@ -698,6 +699,10 @@ class Account extends DataGridHandler {
 		
 		if ($periodical) {
 			$sql .= ", periodical";
+		}
+		
+		if ($plannedTransaction) {
+			$sql .= ", planned_transaction_id";
 		}
 		
 		$sql .= ")
@@ -735,8 +740,11 @@ class Account extends DataGridHandler {
 			 $sql .= ", " . $this->badgerDb->quoteSmart($periodical);
 		}
 		
-		$sql .= ")";
+		if ($plannedTransaction) {
+			$sql .= ", " . $plannedTransaction->getId();
+		}
 		
+		$sql .= ")";
 		
 		$dbResult =& $this->badgerDb->query($sql);
 		
@@ -860,7 +868,7 @@ class Account extends DataGridHandler {
 		$category = null,
 		$outsideCapital = null
 	) {
-		$plannedTransactionId = $this->badgerDb->nextId('plannedTransactionIds');
+		$plannedTransactionId = $this->badgerDb->nextId('planned_transaction_ids');
 		
 		$sql = "INSERT INTO planned_transaction
 			(planned_transaction_id, account_id, title, amount, repeat_unit, repeat_frequency, begin_date ";

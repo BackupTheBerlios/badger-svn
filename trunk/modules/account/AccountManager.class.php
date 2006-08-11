@@ -294,7 +294,7 @@ class AccountManager extends DataGridHandler {
 	 * @return object The new Account object.
 	 */
 	public function addAccount($title, $currency, $description = null, $lowerLimit = null, $upperLimit = null) {
-		$accountId = $this->badgerDb->nextId('accountIds');
+		$accountId = $this->badgerDb->nextId('account_ids');
 		
 		$sql = "INSERT INTO account
 			(account_id, title, currency_id ";

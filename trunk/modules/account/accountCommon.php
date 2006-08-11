@@ -206,69 +206,78 @@ function transferFormerFinishedTransactions($account) {
 	}
 
 	while ($currentTransaction = $account->getNextPlannedTransaction()) { 
-		$date = new Date($currentTransaction->getBeginDate());
-		$dayOfMonth = $date->getDay();
-		
-		//While we are before now and the end date of this transaction
-		while(
-			!$date->after($now)
-			&& !$date->after(is_null($tmp = $currentTransaction->getEndDate()) ? new Date('9999-12-31') : $tmp)
-		){
-
-			if($date->after($lastInsertDate)) {
-				$account->addFinishedTransaction(
-					$currentTransaction->getAmount(),
-					$currentTransaction->getTitle(),
-					$currentTransaction->getDescription(),
-					new Date($date),
-					$currentTransaction->getTransactionPartner(),
-					$currentTransaction->getCategory(),
-					$currentTransaction->getOutsideCapital(),
-					false,
-					true
-				);
-			}
-
-			//do the date calculation
-			switch ($currentTransaction->getRepeatUnit()){
-				case 'day': 
-					$date->addSeconds($currentTransaction->getRepeatFrequency() * 24 * 60 * 60);
-					break;
-					
-				case 'week':
-					$date->addSeconds($currentTransaction->getRepeatFrequency() * 7 * 24 * 60 * 60);
-					break;
-					
-				case 'month':
-					//Set the month
-					$date = new Date(Date_Calc::endOfMonthBySpan($currentTransaction->getRepeatFrequency(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
-					//And count back as far as the last valid day of this month
-					while($date->getDay() > $dayOfMonth){
-						$date->subtractSeconds(24 * 60 * 60);
-					}
-					break; 
-				
-				case 'year':
-					$newYear = $date->getYear() + $currentTransaction->getRepeatFrequency();
-					if (
-						$dayOfMonth == 29
-						&& $date->getMonth() == 2
-						&& !Date_Calc::isLeapYear($newYear)
-					) {
-						$date->setDay(28);
-					} else {
-						$date->setDay($dayOfMonth);
-					}
-					
-					$date->setYear($newYear);
-					break;
-				
-				default:
-					throw new BadgerException('Account', 'IllegalRepeatUnit', $currentTransaction->getRepeatUnit());
-					exit;
-			}
-		}
+		transferFinishedTransactions($account, $currentTransaction, $lastInsertDate);
 	} 
+}
 
+function transferFinishedTransactions($account, $plannedTransaction, $startDate = null) {
+	$now = new Date();
+	$now->setHour(0);
+	$now->setMinute(0);
+	$now->setSecond(0);
+
+	$date = new Date($plannedTransaction->getBeginDate());
+	$dayOfMonth = $date->getDay();
+	
+	//While we are before now and the end date of this transaction
+	while(
+		!$date->after($now)
+		&& !$date->after(is_null($tmp = $plannedTransaction->getEndDate()) ? new Date('9999-12-31') : $tmp)
+	){
+
+		if($startDate === null || $date->after($startDate)) {
+			$account->addFinishedTransaction(
+				$plannedTransaction->getAmount(),
+				$plannedTransaction->getTitle(),
+				$plannedTransaction->getDescription(),
+				new Date($date),
+				$plannedTransaction->getTransactionPartner(),
+				$plannedTransaction->getCategory(),
+				$plannedTransaction->getOutsideCapital(),
+				false,
+				true,
+				$plannedTransaction
+			);
+		}
+
+		//do the date calculation
+		switch ($plannedTransaction->getRepeatUnit()){
+			case 'day': 
+				$date->addSeconds($plannedTransaction->getRepeatFrequency() * 24 * 60 * 60);
+				break;
+				
+			case 'week':
+				$date->addSeconds($plannedTransaction->getRepeatFrequency() * 7 * 24 * 60 * 60);
+				break;
+				
+			case 'month':
+				//Set the month
+				$date = new Date(Date_Calc::endOfMonthBySpan($plannedTransaction->getRepeatFrequency(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+				//And count back as far as the last valid day of this month
+				while($date->getDay() > $dayOfMonth){
+					$date->subtractSeconds(24 * 60 * 60);
+				}
+				break; 
+			
+			case 'year':
+				$newYear = $date->getYear() + $plannedTransaction->getRepeatFrequency();
+				if (
+					$dayOfMonth == 29
+					&& $date->getMonth() == 2
+					&& !Date_Calc::isLeapYear($newYear)
+				) {
+					$date->setDay(28);
+				} else {
+					$date->setDay($dayOfMonth);
+				}
+				
+				$date->setYear($newYear);
+				break;
+			
+			default:
+				throw new BadgerException('Account', 'IllegalRepeatUnit', $plannedTransaction->getRepeatUnit());
+				exit;
+		}
+	}
 }
 ?>

@@ -108,7 +108,7 @@ function printInsert() {
 	
 	if (!isset($_POST['confirmUpload']) || $_POST['confirmUpload'] !== 'yes') {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoInsert');
-	} else if (!is_uploaded_file($_FILES['sqlDump']['tmp_name'])) {
+	} else if (!isset($_FILES['sqlDump']) || !is_uploaded_file($_FILES['sqlDump']['tmp_name'])) {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoFile');
 	} else {
 		applySqlDump();
@@ -134,9 +134,9 @@ function applySqlDump() {
 	
 	$version = fgets($sqlDump);
 	
-	if (trim($version) !== BADGER_VERSION_TAG) {
-		throw new BadgerException('importExport', 'incompatibleBadgerVersion');
-	}
+//	if (trim($version) !== BADGER_VERSION_TAG) {
+//		throw new BadgerException('importExport', 'incompatibleBadgerVersion');
+//	}
 	
 	while (!feof($sqlDump)) {
 		$sql = trim(fgets($sqlDump));
@@ -148,7 +148,10 @@ function applySqlDump() {
 		$dbResult =& $badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {
-			throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage() . $sql);
+			if ($dbResult->getCode() != DB_ERROR_NOSUCHTABLE && $dbResult->getCode() != DB_ERROR_ALREADY_EXISTS) {
+				//throw new BadgerException('importExport', 'SQLError', $dbResult->getMessage() . ' ' . $sql);
+				echo $dbResult->getMessage() . ' ' . $sql . '<br />';
+			}
 		}
 	}
 }

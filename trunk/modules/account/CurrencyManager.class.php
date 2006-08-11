@@ -280,7 +280,7 @@ class CurrencyManager extends DataGridHandler {
 	 * @return object The new Currency object.
 	 */
 	public function addCurrency($symbol, $longName) {
-		$currencyId = $this->badgerDb->nextId('currencyIds');
+		$currencyId = $this->badgerDb->nextId('currency_ids');
 		
 		$sql = "INSERT INTO currency
 			(currency_id, symbol, long_name) VALUES ($currencyId, '" . $this->badgerDb->escapeSimple($symbol) . "', '" . $this->badgerDb->escapeSimple($longName) . "')";
