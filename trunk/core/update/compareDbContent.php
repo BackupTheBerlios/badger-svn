@@ -206,6 +206,8 @@ EOT;
 					echo "<th>$keys[$i]</th>";
 				}
 				echo "</tr>";
+				$data = array();
+				$currData = 0;
 				while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
 					echo '<tr class="old">';
 					for ($i = 0; $i < count($keys) / 2; $i++) {
@@ -215,10 +217,29 @@ EOT;
 					echo '<tr class="new">';
 					for ($i = count($keys) / 2; $i < count($keys); $i++) {
 						echo '<td>' . htmlentities($row[$i]) . '</td>';
+						$data[$currData][] = $row[$i];
 					}
 					echo "</tr>\n";
+					
+					$currData++;
 				}
 				echo "</table>\n";
+				
+				echo "<pre>\n";
+				foreach ($data as $row) {
+					echo "xxSTARTxx SET";
+					$firstRow = true;
+					foreach ($row as $key => $val) {
+						if (!$firstRow) {
+							echo ",";
+						} else {
+							$firstRow = false;
+						}
+						echo " $keys[$key] = '" . mysql_escape_string($val) . "'";
+					}
+					echo "\n";
+				}
+				echo "</pre>\n";
 			} // if changed rows
 		} // if otherColumns
 		else {
@@ -277,14 +298,32 @@ function printHTMLTable($result) {
 	}
 	echo "</tr>\n";
 	$odd = true;
+	$data = array();
 	do {
 		echo '<tr class="' . ($odd ? 'odd' : 'even') . '">';
 		foreach ($row as $val) {
 			echo '<td>' . htmlentities($val) . '</td>';
 		}
+		$data[] = $row;
 		echo "</tr>\n";
 		$odd = !$odd;
 	} while ($row = mysql_fetch_array($result, MYSQL_ASSOC));
 	echo "</table>\n";
+	
+	echo "<pre>\n";
+	foreach ($data as $row) {
+		echo "xxSTARTxx SET";
+		$firstRow = true;
+		foreach ($row as $key => $val) {
+			if (!$firstRow) {
+				echo ",";
+			} else {
+				$firstRow = false;
+			}
+			echo " $key = '" . mysql_escape_string($val) . "'";
+		}
+		echo "\n";
+	}
+	echo "</pre>";
 }
 ?>
