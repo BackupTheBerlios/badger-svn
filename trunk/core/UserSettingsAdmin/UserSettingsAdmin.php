@@ -170,7 +170,8 @@ $date_formats = array(
 	"dd/mm/yyyy" => getBadgerTranslation2('DateFormats','dd/mm/yyyy'),
 	"dd-mm-yyyy" => getBadgerTranslation2('DateFormats','dd-mm-yyyy'),
 	"yyyy-mm-dd" => getBadgerTranslation2('DateFormats','yyyy-mm-dd'),
-	"yyyy/mm/dd" => getBadgerTranslation2('DateFormats','yyyy/mm/dd')
+	"yyyy/mm/dd" => getBadgerTranslation2('DateFormats','yyyy/mm/dd'),
+	'mm/dd/yy' => getBadgerTranslation2('DateFormats', 'mm/dd/yy')
 );
 
 $DateFormatLabel = $widgets->createLabel("DateFormat", getBadgerTranslation2('UserSettingsAdmin','date_format_name'), true);

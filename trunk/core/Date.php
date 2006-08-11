@@ -316,8 +316,8 @@ class Date
 		$formatString = $us->getProperty('badgerDateFormat');
 		
 		$formatString = str_replace(
-			array ('dd', 'mm', 'yyyy'),
-			array ('%d', '%m', '%Y'),
+			array ('dd', 'mm', 'yyyy', 'yy'),
+			array ('%d', '%m', '%Y', '%y'),
 			$formatString
 		);
 		

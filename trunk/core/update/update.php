@@ -332,7 +332,8 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'goToStartPageLinkText', en = 'go to start page', de = 'zur Startseite gehen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'goToStartPagePostLink', en = ' to continue.', de = ' um fortzusetzen.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'newerVersion', en = 'Your backup file was from a previous version of BADGER finance. A database update will occur.', de = 'Ihre Sicherheitskopie war von einer vorherigen Version von BADGER finance. Es wird eine Datenbank-Aktualisierung stattfinden.'");
-
+	$log .= doQuery("REPLACE i18n SET page_id = 'DateFormats', id = 'mm/dd/yy', en = 'mm/dd/yy', de = 'mm/tt/jj'");
+	
 	$log .= "&rarr; Updating old translation entries.\n";
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'session_time_name', en = 'Session time (min):', de = 'Sessionlänge (min):'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'askImportVersionInfo', en = 'If you upload a backup created with a previous BADGER finance version an update to the current database layout will occur after importing. All your data will be preserved.', de = 'Falls Sie eine von einer vorherigen BADGER-finance-Version erstellten Sicherheitskopie hochladen, wird im Anschluss an den Import eine Datenbank-Aktualisierung auf die neueste Version stattfinden. All Ihre Daten bleiben erhalten.'");
@@ -342,6 +343,9 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"35\";' WHERE prop_key = 'accountNaviId_3'");
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"34\";' WHERE prop_key = 'accountNaviId_4'");
 	
+	$log .= "&rarr; Increasing security of session timeout.\n";
+	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"30\";' WHERE prop_key = 'badgerSessionTime' AND prop_value = 's:4:\"9999\";'");
+
 	$log .= "&rarr; Updating database version to 1.0 beta 2.\n";
 	$log .= doQuery("REPLACE user_settings SET prop_key = 'badgerDbVersion', prop_value = 's:10:\"1.0 beta 2\";'");
 
