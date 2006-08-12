@@ -14,7 +14,7 @@
 **/
 //Probably valid up to 31.10.2006 (date of planed VR-internal Software-Changing)
 // The next line determines the displayed name of this parser.
-// BADGER_REAL_PARSER_NAME Voksbank Rhein-Neckar
+// BADGER_REAL_PARSER_NAME Volksbank Rhein-Neckar
 /**
  * transform csv to array
  * 
