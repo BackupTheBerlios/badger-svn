@@ -9,11 +9,10 @@
 * Open Source Finance Management
 * Visit http://www.badger-finance.org
 *
-* Parse .csv files from Volksbank Nahetal & Volksbank Rheinböllen (Germany). Tested with files from 27.07.2006
+* Parse .xls files from Bank of America (USA). Not tested yet
 **/
-//Probably valid up to 31.10.2006 (date of planed VR-internal Software-Changing)
 // The next line determines the displayed name of this parser.
-// BADGER_REAL_PARSER_NAME Volksbank Nahetal / Rheinböllen
+// BADGER_REAL_PARSER_NAME Bank of America
 /**
  * transform csv to array
  *
@@ -28,7 +27,7 @@ function parseToArray($fp, $accountId){
          */
         $csvRow = 0;
         /**
-         * is set true, a line contains ";" , but not the correct number for this parser (5)
+         * is set true, a line contains "\t" (tabs), but not the correct number for this parser (5)
          *
          * @var boolean
          */
@@ -43,9 +42,9 @@ function parseToArray($fp, $accountId){
         while (!feof($fp)) {
             //read one line
             $rowArray = NULL;
-            //ignore header (first 9 lines)
+            //ignore header (first 16 lines)
             if (!$headerIgnored){
-                for ($headerLine = 0; $headerLine < 5; $headerLine++) {
+                for ($headerLine = 0; $headerLine < 16; $headerLine++) {
                     $garbage = fgets($fp, 1024);
                     //to ignore this code on the next loop run
                     $headerIgnored = true;
@@ -54,21 +53,23 @@ function parseToArray($fp, $accountId){
             //read one line
             $line = fgets($fp, 1024);
             //if line is not empty or is no header
-            if (strstr($line, ";")) { // 
-                //if line contains excactly 4 ;, to ensure it is a valid Postbank csv file
-                if (substr_count ($line, ";")==4){
+            if (strstr($line, ",")) { 
+                //if line contains excactly 3 ',', to ensure it is a valid Postbank csv file
+                if (substr_count ($line, ",")==3){
                     // divide String to an array
-                    $transactionArray = explode(";", $line);
+                    $transactionArray = explode(",", $line);
                     //format date YY-MM-DD or YYYY-MM-DD
-                    $valutaDate = explode(".", $transactionArray[1]); //Valuta Date
-                    $valutaDate[4] = $valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
-                    $valutaDate1 = new Date($valutaDate[4]);
-                                 
-                    $transactionPartner = $transactionArray[2];       
-                    //format amount to usersettings
-                    $transactionArray[3] = str_replace(".","", $transactionArray[3]);
-                    $transactionArray[3] = str_replace(",",".",$transactionArray[3]);
-                    $amount1 = new Amount($transactionArray[3]);
+                    
+                    $valutaDate = explode("/", $transactionArray[0]); //Valuta Date
+                    $valutaDate[3] = $valutaDate[2] . "-" . $valutaDate[0] . "-" . $valutaDate[1];
+                    $valutaDate1 = new Date($valutaDate[3]);
+                    //avoid " & \ in the title & description, those characters could cause problems
+                    $transactionArray[1] = str_replace("\"","",$transactionArray[1]);
+                    $transactionArray[1] = str_replace("\\","",$transactionArray[1]);
+                              
+                    //format amount to usersettings                  
+                    $transactionArray[2] = str_replace("\"","",$transactionArray[2]);
+                    $amount1 = new Amount($transactionArray[2]);
                     /**
                      * transaction array
                      *
@@ -77,11 +78,11 @@ function parseToArray($fp, $accountId){
                     $rowArray = array (
                        "categoryId" => "",
                        "accountId" => $accountId,
-                       "title" => "",// cut title with more than 100 chars
+                       "title" => substr($transactionArray[1],0,99),// cut title with more than 100 chars
                        "description" => "",
                        "valutaDate" => $valutaDate1,
                        "amount" => $amount1,
-                       "transactionPartner" => $transactionPartner
+                       "transactionPartner" => ""
                     );
                 } else{
                     $noValidFile = 'true';
@@ -115,5 +116,4 @@ function parseToArray($fp, $accountId){
             }
         }
 }
-
 ?>
