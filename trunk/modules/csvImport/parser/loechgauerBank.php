@@ -10,6 +10,7 @@
 * Visit http://www.badger-finance.org
 *
 * Parse .csv files from Löchgauer Bank (Germany). Tested with files from 07.08.2006
+* written by juergen
 */
 //Probably valid up to 31.10.2006 (date of planed VR-internal Software-Changing)
 //The next line determines the displayed name of this parser.
