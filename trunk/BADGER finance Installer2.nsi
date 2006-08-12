@@ -142,6 +142,8 @@ FunctionEnd
 
 Function .onInit
     InitPluginsDir
+    MessageBox MB_ICONQUESTION|MB_OKCANCEL|MB_DEFBUTTON2 "Auf ihrem System sollte kein Webserver und keine Datenbank installiert sein. Ist dies der Fall, laden sie sich bitte die php Version von http://badger-finance.org herunter. Please ensure that there is no webserver or database server already installed on your system. In this case please download the php version from http://badger-finance.org ." IDOK +2
+    Abort
 FunctionEnd
 
 # Uninstaller functions
