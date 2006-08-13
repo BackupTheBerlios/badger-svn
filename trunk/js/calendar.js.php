@@ -53,9 +53,10 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 //		- Perhaps I missed something?
 //	email: popcalendar@enikao.net
 //
-//  modified by sepp (badger-TEAM)
+//  modified by sepp (BADGER Team)
 //  - language support disabled -> generated dynamically by php from a DB
 //  - some onLoad-bugs fixed
+//  - styles extracted
 
 	var enablePast = 0;		// 0 - disabled ; 1 - enabled
 	var fixedX = -1;		// x position (-1 if to appear below control)
@@ -167,26 +168,26 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		}
 		
 		document.write (
-			'<div onclick="bShow=true" id="calendar" style="z-index:+999;position:absolute;visibility:hidden;">' +
-				'<table width="'+((showWeekNumber==1)?250:220)+'" style="font-family:Arial;font-size:11px;border: 1px solid #A0A0A0;background-color:#ffffff">' +
-					'<tr style="background-color:#99cc00;"><td>' + 
+			'<div onclick="bShow=true" id="calendar">' +
+				'<table width="'+((showWeekNumber==1)?250:220)+'">' +
+					'<tr class="calendarHead"><td>' + 
 						'<table width="100%"><tr>' +
-							'<td style="padding:2px;font-family:Arial;font-size:11px;"><span id="caption" style="font-weight:bold;color:#ffffff;"></span></td>' + 
-							'<td align="right"><a href="javascript:hideCalendar()" id="imgCloseCalendar"><img src="'+imgDir+'close.gif" width="15" height="13" border="0" title="'+closeCalendarMessage+'" alt="'+closeCalendarMessage+'" /></a></td>' +
+							'<td class="CALCaption"><span id="CALCaption"></span></td>' + 
+							'<td align="right"><a href="javascript:hideCalendar()" id="imgCloseCalendar">' +
+							   '<img src="'+imgDir+'close.gif" width="15" height="13" border="0" title="'+closeCalendarMessage+'" alt="'+closeCalendarMessage+'" /></a></td>' +
 						'</tr></table>' +
 					'</td></tr>' +
-					'<tr><td style="padding:5px;background-color:#ffffff"><div id="content" style="display:inline;"></div></td></tr>');
+					'<tr><td class="CALContent"><div id="CALContent"></div></td></tr>');
 		
 		
 		if (showToday == 1) {
-			document.write ('<tr style="background-color:#f0f0f0"><td style="padding:5px;text-align:center;"><span id="lblToday"></span></td></tr>');
+			document.write ('<tr class="CALTodayString"><td><span id="lblToday">_</span></td></tr>');
 		}
 			
 		
-		document.write ('</table></div><div id="selectMonth" style="z-index:+999;position:absolute;visibility:hidden;"></div><div id="selectYear" style="z-index:+999;position:absolute;visibility:hidden;"></div>');
+		document.write ('</table></div><div id="selectMonth"></div><div id="selectYear"></div>');
 	}
 
-	var	styleAnchor = 'text-decoration:none;color:black;';
 	var	styleLightBorder = 'border:1px solid #a0a0a0;';
 
 	function swapImage(srcImg, destImg) {
@@ -210,7 +211,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 			yearConstructed = false;
 
 			if (showToday == 1) {
-				document.getElementById('lblToday').innerHTML =	'<span style="color:#99cc00">' + todayString + ' <a onmousemove="window.status=\''+gotoString+'\'" onmouseout="window.status=\'\'" title="'+gotoString+'" style="'+styleAnchor+'" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">'+dayName[(today.getDay()-startAt==-1)?6:(today.getDay()-startAt)]+', ' + dateNow + ' ' + monthName[monthNow] + ' ' + yearNow + '</a></span>';
+				document.getElementById('lblToday').innerHTML =	todayString + '&nbsp;<a onmousemove="window.status=\''+gotoString+'\'" onmouseout="window.status=\'\'" title="'+gotoString+'" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">'+dayName[(today.getDay()-startAt==-1)?6:(today.getDay()-startAt)]+', ' + dateNow + ' ' + monthName[monthNow] + ' ' + yearNow + '</a>';
 			}
 
 			bPageLoaded=true;
@@ -219,12 +220,12 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 
 	function constructCaption() {
 		if (!ns4) {
-			sHTML1 = '<span id="spanLeft" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeLeft\',\'left2.png\');this.style.borderColor=\'#000000\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.png" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanRight" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeRight\',\'right2.png\');this.style.borderColor=\'#000000\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.png" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
-			sHTML1 += '<span id="spanMonth" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeMonth\',\'drop2.png\');this.style.borderColor=\'#000000\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
-			sHTML1 += '<span id="spanYear" style="border:1px solid #BFFF00;cursor:pointer" onmouseover="swapImage(\'changeYear\',\'drop2.png\');this.style.borderColor=\'#000000\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.png\');this.style.borderColor=\'#BFFF00\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
+			sHTML1 = '<span id="spanLeft" class="spanFilterBox" onmouseover="swapImage(\'changeLeft\',\'left2.png\');this.className=\'spanActive\';window.status=\''+scrollLeftMessage+'\'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage(\'changeLeft\',\'left1.png\');this.className=\'spanFilterBox\';window.status=\'\';clearTimeout(timeoutID1)" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartDecMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollLeftMessage+'">&nbsp<img id="changeLeft" src="'+imgDir+'left1.png" width="10" height="11" border="0" alt="'+scrollLeftMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanRight" class="spanFilterBox" onmouseover="swapImage(\'changeRight\',\'right2.png\');this.className=\'spanActive\';window.status=\''+scrollRightMessage+'\'" onmouseout="clearInterval(intervalID1);swapImage(\'changeRight\',\'right1.png\');this.className=\'spanFilterBox\';window.status=\'\';clearTimeout(timeoutID1)" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'StartIncMonth()\',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)" title="'+scrollRightMessage+'">&nbsp<img id="changeRight" src="'+imgDir+'right1.png" width="10" height="11" border="0" alt="'+scrollRightMessage+'" />&nbsp</span>&nbsp;';
+			sHTML1 += '<span id="spanMonth" class="spanFilterBox" onmouseover="swapImage(\'changeMonth\',\'drop2.png\');this.className=\'spanActive\';window.status=\''+selectMonthMessage+'\'" onmouseout="swapImage(\'changeMonth\',\'drop1.png\');this.className=\'spanFilterBox\';window.status=\'\'" onclick="popUpMonth()" title="'+selectMonthMessage+'"></span>&nbsp;';
+			sHTML1 += '<span id="spanYear" class="spanFilterBox" onmouseover="swapImage(\'changeYear\',\'drop2.png\');this.className=\'spanActive\';window.status=\''+selectYearMessage+'\'" onmouseout="swapImage(\'changeYear\',\'drop1.png\');this.className=\'spanFilterBox\';window.status=\'\'" onclick="popUpYear()" title="'+selectYearMessage+'"></span>&nbsp;';
 	
-			document.getElementById('caption').innerHTML = sHTML1;
+			document.getElementById('CALCaption').innerHTML = sHTML1;
 
 			//Hack to adjust close button message
 			closeButtonImg = document.getElementById('imgCloseCalendar');
@@ -306,10 +307,10 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 				if (i == monthSelected){
 					sName = '<b>' + sName + '</b>';
 				}
-				sHTML += '<tr><td id="m' + i + '" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="monthConstructed=false;monthSelected=' + i + ';constructCalendar();popDownMonth();event.cancelBubble=true"><span style="color:#000000">&nbsp;' + sName + '&nbsp;</span></td></tr>';
+				sHTML += '<tr><td id="m' + i + '" onmouseover="this.className=\'selectMouseOver\'" onmouseout="this.className=\'\'" style="cursor:pointer" onclick="monthConstructed=false;monthSelected=' + i + ';constructCalendar();popDownMonth();event.cancelBubble=true">&nbsp;' + sName + '&nbsp;</td></tr>';
 			}
 			
-			document.getElementById('selectMonth').innerHTML = '<table width="70" style="font-family:Arial;font-size:11px;border:1px solid #a0a0a0;background-color:#f0f0f0" cellspacing="0" onmouseover="clearTimeout(timeoutID1)" onmouseout="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'popDownMonth()\',100);event.cancelBubble=true">' + sHTML + '</table>';
+			document.getElementById('selectMonth').innerHTML = '<table class="selectMonthYear" width="70" cellspacing="0" onmouseover="clearTimeout(timeoutID1)" onmouseout="clearTimeout(timeoutID1);timeoutID1=setTimeout(\'popDownMonth()\',100);event.cancelBubble=true">' + sHTML + '</table>';
 
 			monthConstructed = true;
 		}
@@ -340,9 +341,9 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		for	(i=0; i<7; i++) {
 			newYear	= (i + nStartingYear) + 1;
 			if (newYear == yearSelected)
-				txtYear = '<span style="color:#000000;font-weight:bold;">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span class="CALYearSelected">&nbsp;' + newYear + '&nbsp;</span>';
 			else
-				txtYear = '<span style="color:#000000;">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span class="CALYear">&nbsp;' + newYear + '&nbsp;</span>';
 			document.getElementById('y'+i).innerHTML = txtYear;
 		}
 		nStartingYear++;
@@ -353,9 +354,9 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		for	(i=0; i<7; i++) {
 			newYear = (i + nStartingYear) - 1;
 			if (newYear == yearSelected)
-				txtYear = '<span style="color:#000000;font-weight:bold">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span class="CALYearSelected">&nbsp;' + newYear + '&nbsp;</span>';
 			else
-				txtYear = '<span style="color:#000000;">&nbsp;' + newYear + '&nbsp;</span>';
+				txtYear = '<span class="CALYear">&nbsp;' + newYear + '&nbsp;</span>';
 			document.getElementById('y'+i).innerHTML = txtYear;
 		}
 		nStartingYear--;
@@ -373,20 +374,20 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		popDownMonth();
 		sHTML = '';
 		if (!yearConstructed) {
-			sHTML = '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="clearInterval(intervalID1);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID1);intervalID1=setInterval(\'decYear()\',30)" onmouseup="clearInterval(intervalID1)"><span style="color:#000000">-</span></td></tr>';
+			sHTML = '<tr><td align="center" onmouseover="this.className=\'selectMouseOver\'" onmouseout="clearInterval(intervalID1);this.className=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID1);intervalID1=setInterval(\'decYear()\',30)" onmouseup="clearInterval(intervalID1)">-</td></tr>';
 
 			j = 0;
 			nStartingYear =	yearSelected - 3;
 			for ( i = (yearSelected-3); i <= (yearSelected+3); i++ ) {
 				sName = i;
 				if (i == yearSelected) sName = '<b>' + sName + '</b>';
-				sHTML += '<tr><td id="y' + j + '" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="this.style.backgroundColor=\'\'" style="cursor:pointer" onclick="selectYear('+j+');event.cancelBubble=true"><span style="color:#00000">&nbsp;' + sName + '&nbsp;</span></td></tr>';
+				sHTML += '<tr><td id="y' + j + '" onmouseover="this.className=\'selectMouseOver\'" onmouseout="this.className=\'\'" style="cursor:pointer" onclick="selectYear('+j+');event.cancelBubble=true">&nbsp;' + sName + '&nbsp;</td></tr>';
 				j++;
 			}
 
-			sHTML += '<tr><td align="center" onmouseover="this.style.backgroundColor=\'#99cc00\'" onmouseout="clearInterval(intervalID2);this.style.backgroundColor=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID2);intervalID2=setInterval(\'incYear()\',30)" onmouseup="clearInterval(intervalID2)"><span style="color:#000000">+</span></td></tr>';
+			sHTML += '<tr><td align="center" onmouseover="this.className=\'selectMouseOver\'" onmouseout="clearInterval(intervalID2);this.className=\'\'" style="cursor:pointer" onmousedown="clearInterval(intervalID2);intervalID2=setInterval(\'incYear()\',30)" onmouseup="clearInterval(intervalID2)">+</td></tr>';
 
-			document.getElementById('selectYear').innerHTML = '<table width="44" cellspacing="0" style="font-family:Arial;font-size:11px;border:1px solid #a0a0a0;background-color:#f0f0f0" onmouseover="clearTimeout(timeoutID2)" onmouseout="clearTimeout(timeoutID2);timeoutID2=setTimeout(\'popDownYear()\',100)">' + sHTML + '</table>';
+			document.getElementById('selectYear').innerHTML = '<table class="selectMonthYear" width="44" cellspacing="0" onmouseover="clearTimeout(timeoutID2)" onmouseout="clearTimeout(timeoutID2);timeoutID2=setTimeout(\'popDownYear()\',100)">' + sHTML + '</table>';
 
 			yearConstructed = true;
 		}
@@ -474,20 +475,20 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		
 		if (dayPointer<0) dayPointer = 6;
 
-		sHTML = '<table border="0" style="font-family:verdana;font-size:10px;"><tr>';
+		sHTML = '<table border="0"><tr>';
 
 		if (showWeekNumber == 1) {
-			sHTML += '<td width="27"><b>' + weekString + '</b></td><td width="1" rowspan="7" style="padding:0px;background-color:#d0d0d0"><img src="'+imgDir+'divider.gif" width="1" /></td>';
+			sHTML += '<td width="27"><b>' + weekString + '</b></td><td class="CALweekseparator" width="1" rowspan="7"><img src="'+imgDir+'divider.gif" width="1" /></td>';
 		}
 
 		for (i = 0; i<7; i++) {
-			sHTML += '<td width="27" align="right"><b><span style="color:#99cc00">' + dayName[i] + '</span></b></td>';
+			sHTML += '<td width="27" align="right"><b><span class="CALDayNames">' + dayName[i] + '</span></b></td>';
 		}
 
 		sHTML += '</tr><tr>';
 		
 		if (showWeekNumber == 1) {
-			sHTML += '<td align="right">' + WeekNbr(startDate) + '&nbsp;</td>';
+			sHTML += '<td align="right"><span class="CALWeekNumbers">' + WeekNbr(startDate) + '</span>&nbsp;</td>';
 		}
 
 		for	( var i=1; i<=dayPointer;i++ ) {
@@ -497,15 +498,14 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 		for	( datePointer=1; datePointer <= numDaysInMonth; datePointer++ ) {
 			dayPointer++;
 			sHTML += '<td align="right">';
-			sStyle=styleAnchor;
-			if ((datePointer == odateSelected) && (monthSelected == omonthSelected) && (yearSelected == oyearSelected))
-			{ sStyle+=styleLightBorder }
+			sStyle='';
+			//if ((datePointer == odateSelected) && (monthSelected == omonthSelected) && (yearSelected == oyearSelected))
+			//{ sStyle+=styleLightBorder }
 
 			sHint = '';
 			for (k = 0;k < HolidaysCounter; k++) {
 				if ((parseInt(Holidays[k].d) == datePointer)&&(parseInt(Holidays[k].m) == (monthSelected+1))) {
 					if ((parseInt(Holidays[k].y)==0)||((parseInt(Holidays[k].y)==yearSelected)&&(parseInt(Holidays[k].y)!=0))) {
-						sStyle+= 'background-color:#fdd;';
 						sHint += sHint=="" ? Holidays[k].desc : "\n"+Holidays[k].desc;
 					}
 				}
@@ -528,35 +528,43 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 				isPast = 0;
 			}
 
-			if ((datePointer == dateNow) && (monthSelected == monthNow) && (yearSelected == yearNow)) {	///// today
-				sHTML += "<b><a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+"><span style=\"color:#ff0000\">&nbsp;" + datePointer + "</span>&nbsp;</a></b>";
-			} else if (dayPointer % 7 == (startAt * -1)+1) {									///// SI ES DOMINGO
+			if ((datePointer == dateNow) && (monthSelected == monthNow) && (yearSelected == yearNow)) {	
+				// today
+				cssStyle = 'CALToday';
+			} else if (dayPointer % 7 == (startAt * -1)+1) {
 				if (isPast==1)
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
+					//past sundays
+					cssStyle = 'CALSundayPast';
 				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#99cc00\">" + datePointer + "</span>&nbsp;</a>";
-			} else if ((dayPointer % 7 == (startAt * -1)+7 && startAt==1) || (dayPointer % 7 == startAt && startAt==0)) {	///// SI ES SABADO
+					//sundays
+					cssStyle = 'CALSunday';
+			} else if ((dayPointer % 7 == (startAt * -1)+7 && startAt==1) || (dayPointer % 7 == startAt && startAt==0)) {
 				if (isPast==1)
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
+					//past saturday
+					cssStyle = 'CALSaturdayPast';
 				else
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#99cc00\">" + datePointer + "</span>&nbsp;</a>";
-			} else {							 												///// CUALQUIER OTRO DIA
+					//saturday
+					cssStyle = 'CALSaturday';
+			} else {
 				if (isPast==1)
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#909090\">" + datePointer + "</span>&nbsp;</a>";
-				else //normale Tage
-					sHTML += "<a "+dateMessage+" title=\"" + sHint + "\" style='"+sStyle+"' "+selDayAction+">&nbsp;<span style=\"color:#C7C7C7\">" + datePointer + "</span>&nbsp;</a>";
+					//past workingdays
+					cssStyle = 'CALWorkingdayPast';
+				else 
+					//workingsdays
+					cssStyle = 'CALWorkingday';
 			}
+			sHTML += "<a "+dateMessage+" title=\""+sHint+"\" "+selDayAction+">&nbsp;<span class=\""+cssStyle+"\">" + datePointer + "</span>&nbsp;</a></b>";
 
 			sHTML += '';
 			if ((dayPointer+startAt) % 7 == startAt) {
 				sHTML += '</tr><tr>';
 				if ((showWeekNumber == 1) && (datePointer < numDaysInMonth)) {
-					sHTML += '<td align="right">' + (WeekNbr(new Date(yearSelected,monthSelected,datePointer+1))) + '&nbsp;</td>';
+					sHTML += '<td align="right"><span class="CALWeekNumbers">' + (WeekNbr(new Date(yearSelected,monthSelected,datePointer+1))) + '</span>&nbsp;</td>';
 				}
 			}
 		}
 
-		document.getElementById('content').innerHTML   = sHTML
+		document.getElementById('CALContent').innerHTML   = sHTML
 		document.getElementById('spanMonth').innerHTML = '&nbsp;' +	monthName[monthSelected] + '&nbsp;<img id="changeMonth" src="'+imgDir+'drop1.png" width="12" height="10" border="0" alt="" />'
 		document.getElementById('spanYear').innerHTML  = '&nbsp;' + yearSelected	+ '&nbsp;<img id="changeYear" src="'+imgDir+'drop1.png" width="12" height="10" border="0" alt="" />';
 	}

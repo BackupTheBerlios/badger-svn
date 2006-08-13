@@ -62,6 +62,8 @@ function _jsVal_Language() {
 	}
 	public function addCalendarJS() {
 		$this->tpl->addJavaScript("js/calendar.js.php?badgerRoot=".$this->tpl->getBadgerRoot());
+		$this->tpl->addCSS("Widgets/calendar/style.css");
+		
 		$this->tpl->addOnLoadEvent("initCalendar();");
 		$this->CalendarJSAdded = true;
 	}
