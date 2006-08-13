@@ -26,9 +26,10 @@ h3 {
 }
 
 #header {
-	/*background-color: #aaaaff;*/
+	background-color: #D3E3FC;
 	background-image: url(background.jpg);
 	background-position: left;
+	background-repeat: no-repeat;
 	height: 43px;
 }
 #header table {
