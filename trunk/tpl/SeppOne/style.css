@@ -63,16 +63,21 @@ h3 {
 	overflow: scroll;
 }
 #CSVscroll table {
-	border: 1px solid #ececec;
+	border: 1px solid #000000;
+	background-color: #ffffff;
 }
 
 #CSVscroll table th {
-	background-color: #000000;
-	color: #ffffff;
+	background-color: #EFEDDE;
+	color: #000000;
+	font-weight: bold;
+	border-bottom: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    border-left: 1px solid #ffffff;  
 }
 #CSVscroll table td {
-	border-right: 1px solid #d4d4d4;
-	border-bottom: 1px solid #d4d4d4;
+    border-right: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 /* END CSV-Report */
 
