@@ -57,9 +57,11 @@ tr.CALTodayString td {
 span.spanFilterBox {
 	border:1px solid #B3CCFF;
 	cursor:pointer;
+	font-weight: bold;
 }
 span.spanActive {
 	border: 1px solid black;
+	font-weight: bold;
 }
 
 td.selectMouseOver {
