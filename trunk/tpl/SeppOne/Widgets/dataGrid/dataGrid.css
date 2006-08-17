@@ -67,21 +67,21 @@
 }
 
 tr.dgRow {
-	background-color: #ffffff;
+	background-color: #FFFFFF;
 	width: 100%;
 }
 tr.dgRowSelected {
-	background-color: #99BBFF;
+	background-color: #336699;
 	width: 100%;
 	color: white;
 }
 tr.dgRowSelectedActive {
-	background-color: #0055FF;
+	background-color: #99BBFF;
 	width: 100%;
 	color: white;
 }
 tr.dgRowActive {
-	background-color: #ffffaa;
+	background-color: #FFCCCC;
 	width: 100%;
 }
 

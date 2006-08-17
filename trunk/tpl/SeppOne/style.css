@@ -1,7 +1,7 @@
 body, html {
 	margin: 0px;
 	padding: 0px;
-	background-color: #F5F5E0;
+	background-color: #FAFBED;
 }
 
 body, form, img {
@@ -118,7 +118,7 @@ fieldset {
 	-moz-border-radius: 8px;	
 }
 
-input, textarea {
+input, textarea, select {
 	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
 	font-size: 10pt;
 	/*border: 1px solid #d4d4d4;*/
@@ -127,8 +127,8 @@ input, textarea {
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #ccc;
 }
-input:focus, textarea:focus {
-	background-color: #ffffaa;
+input:focus, textarea:focus, select:focus {
+	background-color: #FFCCCC;
 	border: 1px solid #d4d4d4;
 }
 input.inputString {
