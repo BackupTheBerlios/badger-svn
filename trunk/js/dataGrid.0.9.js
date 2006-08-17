@@ -71,13 +71,13 @@ function dgDeleteResponse(objXHR) {
 			}
 		} //switch	
 	} else {
-		messageLayer('show', '<span class="dgMessageError">'+objXHR.responseText+'</span>');
+		messageLayer('show', '<span class="dgMessageError"> '+objXHR.responseText+' </span>');
 	}
 }
 
 //XHR Error
 function dgError() {
-	messageLayer('show', '<span class="dgMessageError">XHR Error</span>');
+	messageLayer('show', '<span class="dgMessageError"> XHR Error </span>');
 }
 
 function dgInsertData(objXHR) {
