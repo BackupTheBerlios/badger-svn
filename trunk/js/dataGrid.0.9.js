@@ -137,8 +137,8 @@ function dgInsertData(objXHR) {
 			cell.style.width = dgHeaderSize[i] + "px";
 			cell.align = dgCellAlign[i];
 			xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
-			if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent + "&nbsp;"; // FF
-			if (xmlElement.text) cell.innerHTML = xmlElement.text + "&nbsp;"; //IE
+			if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent; // FF
+			if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
 			if (xmlElement.innerHTML) { //Opera
 				//Incredibly ugly hack to show images in Opera
 				text = xmlElement.innerHTML;
@@ -149,7 +149,7 @@ function dgInsertData(objXHR) {
 			 		text = text.replace('&quot;', '\"').replace('&quot;', '\"');
 			 	}
 			 	
-			 	cell.innerHTML = text;
+			 	cell.innerHTML = text & "&nbsp;";
 			}
 			newRow.appendChild(cell);
 		}		
