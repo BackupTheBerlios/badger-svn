@@ -147,11 +147,11 @@ function dgInsertData(objXHR) {
 			 		text = "<" + text.substr(4, text.length - 8) + ">";
 					//Why do we have to call replace twice?
 			 		text = text.replace('&quot;', '\"').replace('&quot;', '\"');
-			 	}
-			 	
-			 	cell.innerHTML = text & "&nbsp;";
+			 	}			 	
+			 	cell.innerHTML = text;
 			}
-			newRow.appendChild(cell);
+			cell.innerHTML = cell.innerHTML + "&nbsp;";
+			newRow.appendChild(cell);			
 		}		
 		//insert empty cell as last one (only display purposes)
 		lastTD = document.createElement("td");
