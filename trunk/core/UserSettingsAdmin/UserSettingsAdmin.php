@@ -13,14 +13,6 @@
 define("BADGER_ROOT", "../..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 
-// Initialization
-
-$tpl->addCSS("style.css");
-$widgets = new WidgetEngine($tpl);
-$widgets->addJSValMessages(); 
-$widgets->addToolTipJS();
-$widgets->addNavigationHead();
-
 //$us->setProperty('badgerPassword',md5("badger"));
 
 // Was the form for change of User Settings sent?
@@ -122,6 +114,15 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 } else {
 	$change_password = false;
 };
+
+// Initialization
+$tpl = new TemplateEngine($us, BADGER_ROOT);
+
+$tpl->addCSS("style.css");
+$widgets = new WidgetEngine($tpl);
+$widgets->addJSValMessages(); 
+$widgets->addToolTipJS();
+$widgets->addNavigationHead();
 
 $pageHeading = getBadgerTranslation2('UserSettingsAdmin', 'title');
 
