@@ -110,7 +110,7 @@ function parseDate (date, format) {
 			} else if ((aFormat[i] == "m") || (aFormat[i] == "mm")) {
 				monthSelected = parseInt(aData[i], 10);
 				tokensChanged++;
-			} else if (aFormat[i] == "yyyy") {
+			} else if ((aFormat[i] == "yyyy") || (aFormat[i] == "yy")) {
 				yearSelected = parseInt(aData[i], 10);
 				tokensChanged++;
 			} else if (aFormat[i] == "mmm") {
@@ -159,7 +159,7 @@ function updateDateRange() {
 	
 	var startFormat = format;
 	
-	startDateObj.value = startFormat.replace("dd", startDay).replace("mm", startMonth).replace("yyyy", startYear);
+	startDateObj.value = startFormat.replace("dd", startDay).replace("mm", startMonth).replace("yyyy", startYear).replace("yy", startYear.toString().substr(2, 2));
 
 	var endDateObj = document.getElementsByName("endDate")[0];
 	if (month == "fullYear") {
@@ -189,7 +189,7 @@ function updateDateRange() {
 	}
 	
 	var endFormat = format;
-	endDateObj.value = endFormat.replace("dd", endDay).replace("mm", endMonth).replace("yyyy", endYear);
+	endDateObj.value = endFormat.replace("dd", endDay).replace("mm", endMonth).replace("yyyy", endYear).replace("yy", endYear.toString().substr(2, 2));
 }
 
 function getLastDay(month, year) {
