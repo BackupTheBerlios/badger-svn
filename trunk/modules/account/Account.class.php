@@ -491,6 +491,14 @@ class Account extends DataGridHandler {
 		
 		$result = array();
 
+		$sumDirection = 'asc';
+
+		foreach ($this->order as $val) {
+			if ($val['key'] == 'sum') {
+				$sumDirection = $val['dir'];
+			}
+		}
+
 		switch ($this->type) {
 			case 'transaction':
 				$this->fetchTransactions();
@@ -506,14 +514,30 @@ class Account extends DataGridHandler {
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
-						'amount' => $currentTransaction->getAmount()->getFormatted(),
+						'amount' => $currentTransaction->getAmount(),
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
 						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : '',
-						'sum' => $sum->getFormatted()
+						'sum' => new Amount($sum)
 					);
 				}
+				
+				if ($sumDirection == 'desc' && count($result) > 0) {
+					$lastEntry = count($result) - 1;
+	
+					$maxSum = new Amount($result[$lastEntry]['sum']);
+					
+					for ($currentResult = 0; $currentResult < count($result); $currentResult++) {
+						$result[$currentResult]['sum']->sub($maxSum)->mul(-1)->add($result[$currentResult]['amount']);
+					}
+				}
+
+				for ($currentResult = 0; $currentResult < count($result); $currentResult++) {
+					$result[$currentResult]['amount'] = $result[$currentResult]['amount']->getFormatted();
+					$result[$currentResult]['sum'] = $result[$currentResult]['sum']->getFormatted();
+				}
+				
 				break;
 			
 			case 'finished':
