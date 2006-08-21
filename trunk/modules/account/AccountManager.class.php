@@ -168,11 +168,13 @@ class AccountManager extends DataGridHandler {
 		$result = array();
 		
 		foreach($this->accounts as $currentAccount){
+			$classBalance = ($currentAccount->getBalance()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+
 			$result[] = array (
 				'accountId' => $currentAccount->getId(),
 				'currency' => is_null($tmp = $currentAccount->getCurrency()) ? '' : $tmp->getSymbol(),
 				'title' => $currentAccount->getTitle(),
-				'balance' => $currentAccount->getBalance()->getFormatted()
+				'balance' => "<span class='$classBalance'>" . $currentAccount->getBalance()->getFormatted() . '</span>'
 			);
 		}
 		

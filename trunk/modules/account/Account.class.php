@@ -550,12 +550,14 @@ class Account extends DataGridHandler {
 				while ($this->fetchNextFinishedTransaction());
 				
 				foreach($this->finishedTransactions as $currentTransaction){
+					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+
 					$result[] = array (
 						'finishedTransactionId' => $currentTransaction->getId(),
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
-						'amount' => $currentTransaction->getAmount()->getFormatted(),
+						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
@@ -570,11 +572,13 @@ class Account extends DataGridHandler {
 				while ($this->fetchNextPlannedTransaction());
 		
 				foreach($this->plannedTransactions as $currentTransaction){
+					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+
 					$result[] = array (
 						'plannedTransactionId' => 'p' . $currentTransaction->getId() . '_X',
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
-						'amount' => $currentTransaction->getAmount()->getFormatted(),
+						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'beginDate' => $currentTransaction->getBeginDate()->getFormatted(),
