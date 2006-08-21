@@ -154,7 +154,7 @@ function showSelectPage() {
 	$errorMsgStartBeforeEndField = $widgets->createField('errorMsgStartBeforeEnd', null, getBadgerTranslation2('statistics','errorDate'), null, false, 'hidden');
 	$errorMsgEndInFutureField = $widgets->createField('errorMsgEndInFuture', null, getBadgerTranslation2('statistics','errorEndDate'), null, false, 'hidden');
 
-	$submitButton = $widgets->createButton('submit', 'Anzeigen', 'submitSelect();', "Widgets/accept.gif");
+	$submitButton = $widgets->createButton('submit', getBadgerTranslation2('statistics', 'showButton'), 'submitSelect();', "Widgets/accept.gif");
 
 	eval('echo "' . $tpl->getTemplate('statistics/select') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
