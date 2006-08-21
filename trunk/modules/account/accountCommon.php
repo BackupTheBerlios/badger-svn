@@ -129,11 +129,15 @@ function getSpendingMoney($accountId, $startDate) {
 function getCategorySelectArray() {
 	global $badgerDb;
 	$cm = new CategoryManager($badgerDb);
-	$order = array ( 
-	array(
-       'key' => 'title',
-       'dir' => 'asc'
-       )
+	$order = array (
+		array (
+			'key' => 'parentTitle',
+			'dir' => 'asc'
+		),
+		array (
+			'key' => 'title',
+			'dir' => 'asc'
+		)
  	);
 	
 	$cm->setOrder($order);

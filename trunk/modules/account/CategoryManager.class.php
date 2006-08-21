@@ -380,6 +380,8 @@ class CategoryManager extends DataGridHandler {
 	 * @throws BadgerException If an SQL error occured.
 	 */
 	private function fetchFromDB() {
+		global $logger;
+		
 		if($this->dataFetched){
 			return;
 		}
@@ -400,6 +402,8 @@ class CategoryManager extends DataGridHandler {
 		}
 		
 		$this->dbResult =& $this->badgerDb->query($sql);
+
+		$logger->log("CategoryManager::fetchFromDB SQL query: $sql");
 		
 		if (PEAR::isError($this->dbResult)) {
 			//echo "SQL Error: " . $this->dbResult->getMessage();
