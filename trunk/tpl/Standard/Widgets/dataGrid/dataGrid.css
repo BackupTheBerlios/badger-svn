@@ -80,3 +80,11 @@ fieldset.dataGridLegend {
 	margin-top: 1em;
 	width: 40em;
 }
+
+.dgPositiveAmount {
+	color: #000000;
+}
+
+.dgNegativeAmount {
+	color: #ff0000;
+}

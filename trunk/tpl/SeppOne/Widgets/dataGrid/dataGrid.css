@@ -89,3 +89,15 @@ fieldset.dataGridLegend {
 	margin-top: 1em;
 	width: 40em;
 }
+
+.dgPositiveAmount {
+	color: #007f00;
+}
+
+tr.dgRowSelected .dgPositiveAmount {
+	color: #00cc00;
+}
+	
+.dgNegativeAmount {
+	color: #ff0000;
+}

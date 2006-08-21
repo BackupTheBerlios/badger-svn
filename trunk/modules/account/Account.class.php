@@ -534,8 +534,14 @@ class Account extends DataGridHandler {
 				}
 
 				for ($currentResult = 0; $currentResult < count($result); $currentResult++) {
-					$result[$currentResult]['amount'] = $result[$currentResult]['amount']->getFormatted();
-					$result[$currentResult]['sum'] = $result[$currentResult]['sum']->getFormatted();
+					$valAmount = $result[$currentResult]['amount'];
+					$valSum = $result[$currentResult]['sum'];
+
+					$classAmount = ($valAmount->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+					$result[$currentResult]['amount'] = "<span class='$classAmount'>" . $valAmount->getFormatted() . '</span>';
+
+					$classSum = ($valSum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
+					$result[$currentResult]['sum'] = "<span class='$classSum'>" . $valSum->getFormatted() . '</span>';
 				}
 				
 				break;
