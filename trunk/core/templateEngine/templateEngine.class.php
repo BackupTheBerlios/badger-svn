@@ -10,6 +10,8 @@
 * Visit http://www.badger-finance.org 
 *
 **/
+
+require_once BADGER_ROOT . '/core/urlTools.php';
 /**
  * Template-Engine Class
  * Get the Template (*.tpl) from the tpl-Folder
@@ -79,7 +81,7 @@ class TemplateEngine {
 		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
 		
 		// create start page link
-		$startPageLink = '/' . $us->getProperty('badgerStartPage');
+		$startPageLink = getAbsoluteStartPage();
 		
 		// write XHTML Processing Instruction
 		echo '<?xml version="1.0" encoding="iso-8859-1"?>';

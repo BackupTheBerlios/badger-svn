@@ -57,7 +57,7 @@ function buildURL($urlParts, $includeUser = false) {
 	$result .= $urlParts['host'];
 	$result .= ':';
 	$result .= $urlParts['port'];
-	$result .= '/';
+	//$result .= '/';
 	$result .= htmlpath($urlParts['path']);
 	if (isset($urlParts['query'])) {
 		$result .= '?';
@@ -71,11 +71,32 @@ function buildURL($urlParts, $includeUser = false) {
 	return $result;
 }
 
+function getAbsoluteStartPage() {
+	global $us;
+
+	$urlParts = getCurrentURL();
+	$parts = parse_url($us->getProperty('badgerStartPage'));
+	$urlParts['path'] = BADGER_ROOT . '/' . $parts['path'];
+	if (isset($parts['query'])) {
+		$urlParts['query'] = $parts['query'];
+	} else {
+		unset($urlParts['query']);
+	}
+	if (isset($parts['fragment'])) {
+		$urlParts['fragment'] = $parts['fragment'];
+	} else {
+		unset($urlParts['fragment']);
+	}
+	
+	return buildURL($urlParts);
+}
+
 function htmlpath($relativePath) {
 	$realpath = realpath($relativePath);
 	$realpath = str_replace(DIRECTORY_SEPARATOR, '/', $realpath);
 	$docroot = $_SERVER['DOCUMENT_ROOT'];
 	$htmlpath = str_replace($docroot, '', $realpath);
+	//$htmlpath = str_replace('//', '/', $htmlpath);
 
 	return $htmlpath;
 }

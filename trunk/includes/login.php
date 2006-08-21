@@ -102,27 +102,9 @@ elseif(isset($_POST['password']) && md5($_POST['password']) == $readoutpassword 
 	set_session_var('password',md5($_POST['password']));
 	
 	if (!isset($_session['sessionTimeout']) || $_session['sessionTimeout'] != true) {
-		$urlParts = getCurrentURL();
+		$url = getAbsoluteStartPage();
 	
-		$parts = parse_url($us->getProperty('badgerStartPage'));
-
-		$urlParts['path'] = BADGER_ROOT . '/' . $parts['path'];
-		
-		if (isset($parts['query'])) {
-			$urlParts['query'] = $parts['query'];
-		} else {
-			unset($urlParts['query']);
-		}
-		
-		if (isset($parts['fragment'])) {
-			$urlParts['fragment'] = $parts['fragment'];
-		} else {
-			unset($urlParts['fragment']);
-		}
-		
-		$url = buildURL($urlParts);
-	
-$logger->log('Login redirect URL: ' . $url);
+		$logger->log('Login redirect URL: ' . $url);
 
 		header('Location: ' . $url);
 		
@@ -251,8 +233,7 @@ if($passwordcorrect == false) {
 	$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
 		
 	if(isset($_GET['logout']) && $_GET['logout'] == "true"){
-		$Action = BADGER_ROOT . "/";
-		$Action .= $us->getProperty('badgerStartPage');
+		$Action = getAbsoluteStartPage();
 	}else{
 		$Action = $_SERVER['PHP_SELF'];
 	};

@@ -7,7 +7,7 @@
 $additionalHeaderTags
 $JSOnLoadEvents
 </head>
-<body><a href="{BADGER_ROOT}$startPageLink">
+<body><a href="$startPageLink">
 <div id="header" valign="top">
 	<table cellpadding="0" cellspacing="0" width="100%"><tr>
 		<td align="right"></td>

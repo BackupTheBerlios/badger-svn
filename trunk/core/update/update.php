@@ -149,20 +149,7 @@ function update() {
 	$goToStartPageLinkText = getUpdateTranslation('updateUpdate', 'goToStartPageLinkText');
 	$goToStartPagePostLink = getUpdateTranslation('updateUpdate', 'goToStartPagePostLink');
 	
-	$urlParts = getCurrentURL();
-	$parts = parse_url($us->getProperty('badgerStartPage'));
-	$urlParts['path'] = BADGER_ROOT . '/' . $parts['path'];
-	if (isset($parts['query'])) {
-		$urlParts['query'] = $parts['query'];
-	} else {
-		unset($urlParts['query']);
-	}
-	if (isset($parts['fragment'])) {
-		$urlParts['fragment'] = $parts['fragment'];
-	} else {
-		unset($urlParts['fragment']);
-	}
-	$startPageURL = buildURL($urlParts);
+	$startPageURL = getAbsoluteStartPage();
 
 	eval('echo "' . $tpl->getTemplate('update/update') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
