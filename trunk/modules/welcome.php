@@ -12,12 +12,30 @@
 **/
 define("BADGER_ROOT", "..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
+require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
-$tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl); 
-$widgets->addToolTipJS();
+$tpl->addJavaScript("js/behaviour.js");
+$tpl->addJavaScript("js/prototype.js");
 
-$accountOverview = getBadgerTranslation2 ('accountAccount', 'pageTitleOverview');
+$dataGrid = new DataGrid($tpl);
+$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
+$dataGrid->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'), getBadgerTranslation2('accountAccount', 'colBalance'),getBadgerTranslation2('accountAccount', 'colCurrency'));
+$dataGrid->columnOrder = array("title","balance","currency"); 
+//$dataGrid->deleteMsg = getBadgerTranslation2('accountAccount', 'deleteMsg');
+//$dataGrid->deleteRefreshType = "refreshPage";
+$dataGrid->initialSort = "title";
+$dataGrid->initialSortDirection = "asc";
+$dataGrid->headerSize = array(200,150,100);
+$dataGrid->cellAlign = array("left","right","left");
+$dataGrid->height = "130px";
+$dataGrid->width = "520px";
+$dataGrid->editAction = "account/AccountOverview.php?accountID=";
+$dataGrid->initDataGridJS();
+
+
+//$accountOverview = getBadgerTranslation2 ('accountAccount', 'pageTitleOverview');
 $categoryOverview = getBadgerTranslation2 ('accountCategory', 'pageTitleOverview');
 $statistics = getBadgerTranslation2 ('statistics','pageTitle');
 $backup = getBadgerTranslation2 ('importExport', 'askTitle');
@@ -27,14 +45,12 @@ $userPrefrences = getBadgerTranslation2 ('UserSettingsAdmin', 'title');
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Badger");
 
-$Modul1 = "<a href='".BADGER_ROOT."/modules/account/AccountManagerOverview.php'>$accountOverview</a>";
-$Modul2 = "<a href='".BADGER_ROOT."/modules/account/CategoryManagerOverview.php'>$categoryOverview</a>";
-$Modul3 = "<a href='".BADGER_ROOT."/modules/statistics/statistics.php'>$statistics</a>";
-$Modul4 = "<a href='".BADGER_ROOT."/modules/importExport/importExport.php?mode=export'>$backup</a>";
-$Modul5 = "<a href='".BADGER_ROOT."/core/UserSettingsAdmin/UserSettingsAdmin.php'>$userPrefrences</a>";
+$accountOverviewHeader = getBadgerTranslation2('accountAccount', 'pageTitleOverview');
+$accountOverviewGrid = $dataGrid->writeDataGrid();
 
 eval("echo \"".$tpl->getTemplate("badgerOverview")."\";");
-
-
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
+
 ?>
