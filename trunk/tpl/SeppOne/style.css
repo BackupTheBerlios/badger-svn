@@ -124,8 +124,12 @@ input, textarea, select {
 	/*border: 1px solid #d4d4d4;*/
 	border-top: 1px solid #d4d4d4;
 	border-left: 1px solid #d4d4d4;
-	border-bottom: 1px solid #ccc;
-	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
+}
+input {
+	padding-left: 3px;
+	padding-right: 3px;
 }
 input:focus, textarea:focus, select:focus {
 	background-color: #FFCCCC;
