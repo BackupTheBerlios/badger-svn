@@ -56,11 +56,17 @@ class TemplateEngine {
 			$filename = $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl';
 			if(file_exists($filename)) {
 				$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
-				$templatefile=str_replace("{BADGER_ROOT}",$this->badgerRoot,$templatefile);
 			} else 	{
-				throw new badgerException('templateEngine', 'noTemplate', $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl'); 
-				//$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
+				//if none is existing -> try to get the standard one
+				$filename = $this->badgerRoot.'/tpl/Standard/'.$template.'.tpl';
+				if(file_exists($filename)) {
+					$templatefile=str_replace("\"","\\\"",implode(file($filename),''));
+				} else 	{
+					throw new badgerException('templateEngine', 'noTemplate', $this->badgerRoot.'/tpl/'.$this->theme.'/'.$template.'.tpl'); 
+					//$templatefile='<!-- TEMPLATE NOT FOUND: '.$filename.' -->';
+				}
 			}
+			$templatefile = str_replace("{BADGER_ROOT}",$this->badgerRoot,$templatefile);
 			$templatefile = preg_replace("'<if ([^>]*?)>(.*?)</if>'si", "\".( (\\1) ? \"\\2\" : \"\").\"", $templatefile);
 			$templatecache[$template] = $templatefile;
 		}
