@@ -99,11 +99,11 @@ span.CALToday {
 	font-weight: bold;
 }
 
-span.CALWorkingday {
+span.CALWeekday {
 	color:#C7C7C7
 }
 
-span.CALWorkingdayPast {
+span.CALWeekdayPast {
 	color:#909090
 }
 
