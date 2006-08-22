@@ -122,3 +122,7 @@ span.CALSunday {
 span.CALSundayPast {
 	color:#909090
 }
+
+a.CALselectedDay {
+	border: 1px solid #ff0000
+}

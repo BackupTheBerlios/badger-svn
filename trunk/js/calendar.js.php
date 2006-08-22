@@ -499,8 +499,9 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 			dayPointer++;
 			sHTML += '<td align="right">';
 			sStyle='';
-			//if ((datePointer == odateSelected) && (monthSelected == omonthSelected) && (yearSelected == oyearSelected))
-			//{ sStyle+=styleLightBorder }
+			highlightSelectedDay='';
+			if ((datePointer == odateSelected) && (monthSelected == omonthSelected) && (yearSelected == oyearSelected))
+			{ highlightSelectedDay = " class=\"CALselectedDay\" " }
 
 			sHint = '';
 			for (k = 0;k < HolidaysCounter; k++) {
@@ -553,7 +554,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 					//workingsdays
 					cssStyle = 'CALWorkingday';
 			}
-			sHTML += "<a "+dateMessage+" title=\""+sHint+"\" "+selDayAction+">&nbsp;<span class=\""+cssStyle+"\">" + datePointer + "</span>&nbsp;</a></b>";
+			sHTML += "<a "+dateMessage+" title=\""+sHint+"\" "+selDayAction+" "+ highlightSelectedDay +">&nbsp;<span class=\""+cssStyle+"\">" + datePointer + "</span>&nbsp;</a></b>";
 
 			sHTML += '';
 			if ((dayPointer+startAt) % 7 == startAt) {
