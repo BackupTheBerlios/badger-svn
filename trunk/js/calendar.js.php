@@ -548,11 +548,11 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 					cssStyle = 'CALSaturday';
 			} else {
 				if (isPast==1)
-					//past workingdays
-					cssStyle = 'CALWorkingdayPast';
+					//past weekdays
+					cssStyle = 'CALWeekdayPast';
 				else 
-					//workingsdays
-					cssStyle = 'CALWorkingday';
+					//weekdays
+					cssStyle = 'CALWeekday';
 			}
 			sHTML += "<a "+dateMessage+" title=\""+sHint+"\" "+selDayAction+" "+ highlightSelectedDay +">&nbsp;<span class=\""+cssStyle+"\">" + datePointer + "</span>&nbsp;</a></b>";
 
