@@ -49,6 +49,7 @@ $accountOverviewHeader = getBadgerTranslation2('accountAccount', 'pageTitleOverv
 $accountOverviewGrid = $dataGrid->writeDataGrid();
 
 $btnOpen =  $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'open'), "dgEdit()", "Widgets/table_go.gif");
+
 eval("echo \"".$tpl->getTemplate("badgerOverview")."\";");
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 
