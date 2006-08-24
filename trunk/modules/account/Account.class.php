@@ -491,14 +491,6 @@ class Account extends DataGridHandler {
 		
 		$result = array();
 
-		$sumDirection = 'asc';
-
-		foreach ($this->order as $val) {
-			if ($val['key'] == 'sum') {
-				$sumDirection = $val['dir'];
-			}
-		}
-
 		switch ($this->type) {
 			case 'transaction':
 				$this->fetchTransactions();
@@ -508,42 +500,23 @@ class Account extends DataGridHandler {
 				foreach($this->finishedTransactions as $currentTransaction){
 					$sum->add($currentTransaction->getAmount());
 					
+					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+					$classSum = ($sum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
+
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
 						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png', 'title="' . getBadgerTranslation2('Account', $currentTransaction->getType()) . '"'), 
 						'title' => $currentTransaction->getTitle(),
 						'description' => $currentTransaction->getDescription(),
 						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
-						'amount' => $currentTransaction->getAmount(),
+						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
 						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
 						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : '',
-						'sum' => new Amount($sum)
+						'sum' => "<span class='$classSum'>" . $sum->getFormatted() . '</span>'
 					);
 				}
-				
-				if ($sumDirection == 'desc' && count($result) > 0) {
-					$lastEntry = count($result) - 1;
-	
-					$maxSum = new Amount($result[$lastEntry]['sum']);
-					
-					for ($currentResult = 0; $currentResult < count($result); $currentResult++) {
-						$result[$currentResult]['sum']->sub($maxSum)->mul(-1)->add($result[$currentResult]['amount']);
-					}
-				}
-
-				for ($currentResult = 0; $currentResult < count($result); $currentResult++) {
-					$valAmount = $result[$currentResult]['amount'];
-					$valSum = $result[$currentResult]['sum'];
-
-					$classAmount = ($valAmount->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-					$result[$currentResult]['amount'] = "<span class='$classAmount'>" . $valAmount->getFormatted() . '</span>';
-
-					$classSum = ($valSum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
-					$result[$currentResult]['sum'] = "<span class='$classSum'>" . $valSum->getFormatted() . '</span>';
-				}
-				
 				break;
 			
 			case 'finished':
