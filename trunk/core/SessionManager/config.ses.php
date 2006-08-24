@@ -162,7 +162,7 @@ function session_kill(){
 	global $sess,$_db_table_config;
 	$sql = "update $_db_table_config set logout=1";
 	query($sql);
-	setcookie('badger_sess',0,time()-500);
+	setcookie('badger_sess', false, 0, '/');
 }
 
 function get_session_length(){
