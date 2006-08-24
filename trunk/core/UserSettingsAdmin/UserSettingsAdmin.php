@@ -115,10 +115,12 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 	$change_password = false;
 };
 
-// Initialization
+// Re-Initialization of the tpl-engine after tpl change
 $tpl = new TemplateEngine($us, BADGER_ROOT);
+$tpl->addCSS("style.css", "print, screen");
+$tpl->addCSS("print.css", "print");
+$tpl->addJavaScript("js/jsval.js");
 
-$tpl->addCSS("style.css");
 $widgets = new WidgetEngine($tpl);
 $widgets->addJSValMessages(); 
 $widgets->addToolTipJS();
