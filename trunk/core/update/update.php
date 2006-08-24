@@ -320,11 +320,26 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'goToStartPagePostLink', en = ' to continue.', de = ' um fortzusetzen.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'newerVersion', en = 'Your backup file was from a previous version of BADGER finance. A database update will occur.', de = 'Ihre Sicherheitskopie war von einer vorherigen Version von BADGER finance. Es wird eine Datenbank-Aktualisierung stattfinden.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'DateFormats', id = 'mm/dd/yy', en = 'mm/dd/yy', de = 'mm/tt/jj'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics', id = 'showButton', en = 'Show', de = 'Anzeigen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'open', en = 'Open', de = 'Öffnen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Navigation', id = 'releaseNotes', en = 'Release Notes', de = 'Versionsgeschichte (englisch)'");
+
 	
 	$log .= "&rarr; Updating old translation entries.\n";
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'mandatory_change_password_heading', en = 'You are currently using the BADGER standard password.<br />\r\nPlease change it.<br />\r\nSie können die Sprache von BADGER unter dem Menüpunkt System / Preferences unter Language ändern.', de = 'Sie verwenden momentan das BADGER Standardpasswort.<br />\r\nBitte ändern Sie es.<br />\r\nYou can change the language of BADGER at menu System / Einstellungen, field Sprache.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'session_time_name', en = 'Session time (min):', de = 'Sessionlänge (min):'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'askImportVersionInfo', en = 'If you upload a backup created with a previous BADGER finance version an update to the current database layout will occur after importing. All your data will be preserved.', de = 'Falls Sie eine von einer vorherigen BADGER-finance-Version erstellten Sicherheitskopie hochladen, wird im Anschluss an den Import eine Datenbank-Aktualisierung auf die neueste Version stattfinden. All Ihre Daten bleiben erhalten.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'importExport', id = 'insertSuccessful', en = 'Data successfully saved. Please use the password from the backup file to log in.', de = 'Die Daten wurden erfolgreich importiert. Bitte benutzen Sie das Passwort aus der Sicherheitskopie zum einloggen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'periodicalToolTip', en = 'This setting is used for automatic pocket money calculation. When calculating your pocket money from the past (i.e. your regular money spending habits), the BADGER will ignore all transactions marked &quot;periodical&quot; because it assumes that you have those already covered in the future recurring transactions. An example would be your rent. For the future rent, you have entered a recurring transactions. Past rent payments are flagged &quot;periodical transactions&quot; and not used for pocket money calculation.', de = 'Diese Wert wird bei der automatischen Taschengeldberechnung benutzt. Wenn der BADGER das Taschengeld der Vergangenheit (also Ihr Ausgabeverhalten) berechnet, ignoriert er periodische Transaktionen, da angenommen wird, dass diese über wiederkehrende Transaktionen in der Zukunft bereits erfasst sind. Ein Beispiel hierfür ist die Miete: Für die Zukunft wird die Miete über eine wiederkehrende Transaktion abgebildet, muss also nicht im Taschengeld berücksichtigt werden. In der Vergangenheit sind die Mietzahlungen periodische Transaktionen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'ExceptionalToolTip', en = 'This setting is used for automatic pocket money calculation. When calculating your pocket money from the past (i.e. your regular money spending habits), the BADGER will ignore all transactions marked &quot;exceptional&quot; because they do not resemble your usual spending habits. Examples would be a surprise car repair job, a new tv (unless you buy new tvs every month) or a holiday.', de = 'Diese Wert wird bei der automatischen Taschengeldberechnung benutzt. Wenn der BADGER das Taschengeld der Vergangenheit (also Ihr Ausgabeverhalten) berechnet, ignoriert er außergewöhnliche Transaktionen. Beispiele hierfür sind eine große Autoreparatur, ein neuer Fernseher (wenn man nicht jeden Monat einen neuen kauft) oder ein Urlaub.'");
+
+
+	$log .= "&rarr; Inserting new menu entry for release notes.\n";
+	$log .= doQuery("SELECT @max_navi_id := max(navi_id) FROM navi;");
+	$log .= doQuery("INSERT INTO navi(navi_id, parent_id, menu_order, item_type, item_name, tooltip, icon_url, command) VALUES (@max_navi_id + 1, 28, 10, 'i', 'releaseNotes', '', 'information.gif', 'javascript:showReleaseNotes();')");
+	$log .= "&rarr; Updating max id to navigation sequence table.\n";
+	$log .= doQuery("UPDATE navi_ids_seq SET id = ((SELECT MAX(navi_id) FROM navi) + 1)");
+
 
 	$log .= "&rarr; Updating demo account menu links.\n";
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"35\";' WHERE prop_key = 'accountNaviId_3'");
