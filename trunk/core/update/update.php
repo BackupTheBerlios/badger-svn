@@ -323,7 +323,7 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics', id = 'showButton', en = 'Show', de = 'Anzeigen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'open', en = 'Open', de = 'Öffnen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'Navigation', id = 'releaseNotes', en = 'Release Notes', de = 'Versionsgeschichte (englisch)'");
-
+	$log .= doQuery("REPLACE i18n SET page_id = 'welcome', id = 'pageTitle', en = 'Your accounts', de = 'Ihre Konten'");
 	
 	$log .= "&rarr; Updating old translation entries.\n";
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'mandatory_change_password_heading', en = 'You are currently using the BADGER standard password.<br />\r\nPlease change it.<br />\r\nSie können die Sprache von BADGER unter dem Menüpunkt System / Preferences unter Language ändern.', de = 'Sie verwenden momentan das BADGER Standardpasswort.<br />\r\nBitte ändern Sie es.<br />\r\nYou can change the language of BADGER at menu System / Einstellungen, field Sprache.'");

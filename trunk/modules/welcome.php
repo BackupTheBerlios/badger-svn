@@ -41,11 +41,11 @@ $statistics = getBadgerTranslation2 ('statistics','pageTitle');
 $backup = getBadgerTranslation2 ('importExport', 'askTitle');
 $userPrefrences = getBadgerTranslation2 ('UserSettingsAdmin', 'title');
 
+$accountOverviewHeader = getBadgerTranslation2('welcome', 'pageTitle');
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Badger");
 
-$accountOverviewHeader = getBadgerTranslation2('accountAccount', 'pageTitleOverview');
 $accountOverviewGrid = $dataGrid->writeDataGrid();
 
 $btnOpen =  $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'open'), "dgEdit()", "Widgets/table_go.gif");
