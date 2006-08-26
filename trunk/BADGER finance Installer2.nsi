@@ -6,7 +6,7 @@ SetCompressor /SOLID lzma
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION "1.0 Beta"
+!define VERSION "1.0 Beta 2"
 !define COMPANY "BADGER finance Community"
 !define URL http://www.badger-finance.org
 
@@ -30,7 +30,7 @@ LoadLanguageFile "${NSISDIR}\Contrib\Language files\German.nlf"
 LoadLanguageFile "${NSISDIR}\Contrib\Language files\English.nlf"
 
 # Installer attributes
-OutFile "BADGER finance 1.0 Beta.exe"
+OutFile "BADGER finance 1.0 Beta 2.exe"
 InstallDir "$PROGRAMFILES\BADGER finance"
 CRCCheck on
 XPStyle on
