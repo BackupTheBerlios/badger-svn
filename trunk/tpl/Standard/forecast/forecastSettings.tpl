@@ -7,28 +7,28 @@
 		<legend>$legendSetting</legend>
 		<table>
 			<tr> 
-				<td><b>$endDateLabel</b> </td>
-				<td>$endDateField $endDateToolTip </td>
+				<td><b>$endDateLabel</b></td>
+				<td style="white-space: nowrap;">$endDateField $endDateToolTip</td>
 			</tr>
 			<tr> 
-			 	<td>$accountLabel </td>
-			 	<td> $accountField </td>
+			 	<td>$accountLabel</td>
+			 	<td style="white-space: nowrap;">$accountField</td>
 			<tr>
 			<tr> 
 				<td>$savingTargetLabel</td>
-				<td>$savingTargetField</td>
+				<td style="white-space: nowrap;">$savingTargetField</td>
 			</tr>
 			<tr> 
-				<td>$pocketMoney1Label </td>
-				<td> $pocketMoney1Field</td>
+				<td>$pocketMoney1Label</td>
+				<td style="white-space: nowrap;">$pocketMoney1Field</td>
 			</tr>
 			<tr> 
-				<td>$pocketMoney2Label </td>
-				<td>$pocketMoney2Field</td>
+				<td>$pocketMoney2Label</td>
+				<td style="white-space: nowrap;">$pocketMoney2Field</td>
 			</tr>
 			<tr> 
-				<td><b>$calculatedPocketMoneyLabel </b></td>
-				<td>$calculatePocketMoneyStartDateField <br /> $writeCalcuatedPocketMoneyButton $writeCalculatedToolTip</td>
+				<td><b>$calculatedPocketMoneyLabel</b></td>
+				<td style="white-space: nowrap;">$calculatePocketMoneyStartDateField<br />$writeCalcuatedPocketMoneyButton $writeCalculatedToolTip</td>
 			</tr>
 		</table>
 	</fieldset>
@@ -39,27 +39,27 @@
 		<table>
 			<tr> 
 				<td>$lowerLimitLabel </td>
-				<td>$lowerLimitBox $lowerLimitToolTip </td>
+				<td style="white-space: nowrap;">$lowerLimitBox $lowerLimitToolTip</td>
 			</tr>
 			<tr> 
 			 	<td>$upperLimitLabel</td>
-			 	<td> $upperLimitBox $upperLimitToolTip </td>
+			 	<td style="white-space: nowrap;">$upperLimitBox $upperLimitToolTip</td>
 			<tr>
 			<tr> 
 				<td>$plannedTransactionsLabel</td>
-				<td>$plannedTransactionsBox $plannedTransactionsToolTip</td>
+				<td style="white-space: nowrap;">$plannedTransactionsBox $plannedTransactionsToolTip</td>
 			</tr>
 			<tr> 
 				<td>$savingTargetLabel1</td>
-				<td> $savingTargetBox $savingTargetToolTip </td>
+				<td style="white-space: nowrap;">$savingTargetBox $savingTargetToolTip</td>
 			</tr>
 			<tr> 
 				<td>$pocketMoney1Label1</td>
-				<td>$pocketMoney1Box $pocketMoney1ToolTip</td>
+				<td style="white-space: nowrap;">$pocketMoney1Box $pocketMoney1ToolTip</td>
 			</tr>
 			<tr> 
 				<td>$pocketMoney2Label1</td>
-				<td>$pocketMoney2Box $pocketMoneyTool2Tip</td>
+				<td style="white-space: nowrap;">$pocketMoney2Box $pocketMoneyTool2Tip</td>
 			</tr>
 		</table>
 	</fieldset>
