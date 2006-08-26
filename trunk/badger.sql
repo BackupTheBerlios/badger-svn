@@ -1,6 +1,3 @@
-CREATE DATABASE badgerbank;
-USE badgerbank;
-
 -- phpMyAdmin SQL Dump
 -- version 2.8.0.2
 -- http://www.phpmyadmin.net
