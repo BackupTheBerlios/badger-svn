@@ -89,6 +89,9 @@ class TemplateEngine {
 		// create start page link
 		$startPageLink = getAbsoluteStartPage();
 		
+		// Set character set
+		header ('Content-Type: text/html; charset=ISO-8859-1');
+
 		// write XHTML Processing Instruction
 		echo '<?xml version="1.0" encoding="iso-8859-1"?>';
 		
