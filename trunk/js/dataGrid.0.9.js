@@ -104,6 +104,7 @@ function dgInsertData(objXHR) {
 		columnPosition[columnName] = intPosition;		
 	}
 	
+
 	for (j=0; j<xmlRows.length; j++) {
 		xmlCells = xmlRows[j].getElementsByTagName("cell");
 		
@@ -143,10 +144,16 @@ function dgInsertData(objXHR) {
 				//Incredibly ugly hack to show images in Opera
 				text = xmlElement.innerHTML;
 
-				if (text.substr(0, 7) == "&lt;img" && text.substr(text.length - 4, 4) == "&gt;")  {
-			 		text = "<" + text.substr(4, text.length - 8) + ">";
-					//Why do we have to call replace twice?
-			 		text = text.replace('&quot;', '\"').replace('&quot;', '\"');
+				if (text.substr(0, 4) == "&lt;" && text.substr(text.length - 4, 4) == "&gt;")  {
+					var oldText = "";
+					while (oldText != text) {
+						oldText = text;
+						
+				 		text = text.replace("&lt;", "<")
+				 		text = text.replace("&gt;", ">");
+				 		text = text.replace("&quot;", '"');
+				 		text = text.replace("&apos;", '\'');
+					}
 			 	}			 	
 			 	cell.innerHTML = text;
 			}
