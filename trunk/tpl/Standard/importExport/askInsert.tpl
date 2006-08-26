@@ -1,5 +1,5 @@
 <h1>$askInsertTitle</h1>
-<form name="agreeform" onSubmit="return defaultagree(this)" action="$askInsertAction" enctype="multipart/form-data" method="POST">
+<form name="agreeform" onSubmit="return defaultagree(this)" action="$askInsertAction" enctype="multipart/form-data" accept-charset="ISO-8859-1" method="POST">
 <fieldset>
 	<legend>$legend</legend>
 	<p style="color:red; background-color: white; padding: 0.3em; border: 2px solid red; text-align: center;">$askImportWarning</p>

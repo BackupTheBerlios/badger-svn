@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form name="UserSettings" method="post" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php" onSubmit="return validateStandard(this, 'error');">
+<form name="UserSettings" method="post" accept-charset="ISO-8859-1" action="{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php" onSubmit="return validateStandard(this, 'error');">
 	<fieldset style="width: 30em;">
 		<legend>$FsHeading</legend>
 		<table>

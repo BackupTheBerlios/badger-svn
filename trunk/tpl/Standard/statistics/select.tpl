@@ -1,6 +1,6 @@
 <h1>$selectTitle</h1>
 
-<form method="post" action="$selectFormAction" id="selectForm" name="mainform">
+<form method="post" action="$selectFormAction" accept-charset="ISO-8859-1" id="selectForm" name="mainform">
 		
 	<fieldset style="position: absolute; left: 1em; top: 8em; width: 7em; height: 4em;">
 		<legend>$graphTypeText</legend>

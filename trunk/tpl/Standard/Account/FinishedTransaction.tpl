@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form method="post" name="mainform" action="$FormAction?action=save&accountID=$AccountID">
+<form method="post" name="mainform" accept-charset="ISO-8859-1" action="$FormAction?action=save&accountID=$AccountID">
 <table>
   <tr>
     <td>$AccountLabel</td>

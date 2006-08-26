@@ -5,7 +5,7 @@
 		</tr>
 		<tr>
 			<td>
-				<form name="MandatoryChangePassword" method="post" action="$MandatorySelf">
+				<form name="MandatoryChangePassword" method="post" accept-charset="ISO-8859-1" action="$MandatorySelf">
 					<fieldset>
 						<legend>$MandatoryFsHeading</legend>
 							<div class="USAHeading">$MandatoryHeading</div><br/>

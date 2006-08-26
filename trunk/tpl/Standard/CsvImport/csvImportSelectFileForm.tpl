@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form action="" method="post" enctype="multipart/form-data" name="Import" id="Import" onSubmit="return validateCompleteForm(this, 'error');">
+<form action="" method="post" enctype="multipart/form-data" name="Import" id="Import" accept-charset="ISO-8859-1" onSubmit="return validateCompleteForm(this, 'error');">
 
 <fieldset style = "width: 53em; height: 13em">
 <legend>$legend</legend>

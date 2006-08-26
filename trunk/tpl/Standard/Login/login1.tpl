@@ -6,4 +6,4 @@
 		</tr>
 		<tr>
 			<td>
-				<form method="post" action="$Action" id="loginForm">
+				<form method="post" accept-charset="ISO-8859-1" action="$Action" id="loginForm">
