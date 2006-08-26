@@ -46,7 +46,7 @@ Section BADGER SEC0000
     Abort
     SetOutPath $0\xampplite\htdocs\badger
     SetOverwrite on
-    File "D:\Eigene Dateien\BA\V. Semester\Projekt\BADGER UPDATER\badger\*"
+    File /r "D:\Eigene Dateien\BA\V. Semester\Projekt\BADGER UPDATER\badger\*"
 SectionEnd
 
 
