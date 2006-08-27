@@ -1,0 +1,90 @@
+#dgMessage {
+	display: none;
+	font-weight: bold;
+	color: white;
+}
+.dgMessageOK {
+	background-color: black;
+}
+.dgMessageError {
+	background-color: red;
+}
+.dgMessageHint {
+	background-color: green;
+}
+
+
+#dataGrid {
+	border: 1px solid #ececec;
+	width: 99.9%;
+	background-color: #ffffff;
+}
+#dgTableHead {
+	table-layout: fixed;
+	background-color: #000000;
+	color: #ffffff;
+	font-weight: bold;
+	width: 100%;
+	cursor: pointer;
+}
+#dgTableHead td {
+	overflow: hidden;
+    padding: 2px 0px 2px 3px;
+    margin: 0px;
+    height: 22px;
+    line-height: 12px;
+    border-right: 1px solid #ECE9D8;
+    border-bottom: 1px solid #ECE9D8;
+}
+
+#dgDivScroll {
+	width: 100%;
+	overflow: auto;
+}
+#dgTableFoot {
+	width: 100%;
+	background-color: #ECE9D8;
+}
+#dgTableData {
+	table-layout: fixed;
+	width: 99.8%;
+}
+#dgTableData td {
+	overflow: hidden;
+    padding: 2px 0px 2px 4px;
+    margin: 0px;
+    height: 22px;
+    line-height: 12px;
+}
+
+tr.dgRow {
+	background-color: #ffffff;
+	width: 100%;
+}
+tr.dgRowSelected {
+	background-color: #339900;
+	width: 100%;
+	color: white;
+}
+tr.dgRowSelectedActive {
+	background-color: #44CC00;
+	width: 100%;
+	color: white;
+}
+tr.dgRowActive {
+	background-color: #FFFF00;
+	width: 100%;
+}
+
+fieldset.dataGridLegend {
+	margin-top: 1em;
+	width: 40em;
+}
+
+.dgPositiveAmount {
+	color: #000000;
+}
+
+.dgNegativeAmount {
+	color: #ff0000;
+}
