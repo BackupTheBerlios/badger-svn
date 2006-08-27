@@ -208,9 +208,11 @@ if (isset($_POST['sendData'])){
 		$us->setProperty('forecastStandardAccount',$account);
 		
 		$selectedPocketMoney1 = new Amount ($_POST["pocketmoney1"], true);
-		$pocketMoney1 = $selectedPocketMoney1->getFormatted();		
+		$pocketMoney1 = $selectedPocketMoney1->get();		
+		$viewPocketMoney1 = $selectedPocketMoney1->getFormatted();
 		$selectedPocketMoney2 = new Amount ($_POST["pocketmoney2"], true);
-		$pocketMoney2 = $selectedPocketMoney2->getFormatted();	
+		$pocketMoney2 = $selectedPocketMoney2->get();	
+		$viewPocketMoney2 = $selectedPocketMoney2->getFormatted();
 		$dailyPocketMoneyLabel = NULL;
 		$dailyPocketMoneyValue = NULL;
 		$dailyPocketMoneyToolTip = NULL;
@@ -317,12 +319,12 @@ if (isset($_POST['sendData'])){
 				$day++;
 			} //foreach($totals as $key => $val) {
 			if ($pocketMoney1EndValue){
-				$balancedEndDateLabel1 = getBadgerTranslation2("forecast", "printedPocketMoney1Label"). ": " . $pocketMoney1 . " " . $accountCurrency . ")".":";
+				$balancedEndDateLabel1 = getBadgerTranslation2("forecast", "printedPocketMoney1Label"). ": " . $viewPocketMoney1 . " " . $accountCurrency . ")".":";
 				$printedPocketMoney1EndValue = new Amount ($pocketMoney1EndValue);
 				$balancedEndDate1 = $printedPocketMoney1EndValue->getFormatted();
 			}
 			if ($pocketMoney2EndValue){
-				$balancedEndDateLabel2 = getBadgerTranslation2("forecast", "printedPocketMoney2Label"). ": " . $pocketMoney2 . " ". $accountCurrency. ")".":";
+				$balancedEndDateLabel2 = getBadgerTranslation2("forecast", "printedPocketMoney2Label"). ": " . $viewPocketMoney2 . " ". $accountCurrency. ")".":";
 				$printedPocketMoney2EndValue = new Amount ($pocketMoney2EndValue);
 				$balancedEndDate2 = $printedPocketMoney2EndValue->getFormatted();
 			}
