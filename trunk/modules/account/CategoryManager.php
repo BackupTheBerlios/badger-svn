@@ -15,6 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/CategoryManager.class.php');
 require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 
+
 $redirectPageAfterSave = "CategoryManagerOverview.php";
 $pageTitle = getBadgerTranslation2 ('accountCategory','pageTitle');
 
@@ -23,7 +24,7 @@ $am = new AccountManager($badgerDb);
 
 $order = array (
 	array(
-		'key' => 'title',
+		'key' => 'parentTitle',
 		'dir' => 'asc'
 		)
 );	
@@ -89,7 +90,9 @@ function printFrontend() {
 	global $pageTitle;
 	global $tpl;
 	global $cm;
+	global $order;
 	global $redirectPageAfterSave;
+	
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	
