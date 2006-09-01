@@ -21,11 +21,10 @@ $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
+$dataGrid->UniqueId = "CurrencyManager";
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";
 $dataGrid->headerName = array(getBadgerTranslation2('accountCurrency', 'colSymbol'),getBadgerTranslation2('accountCurrency', 'colLongName'));
 $dataGrid->columnOrder = array("symbol","longName");
-$dataGrid->initialSort = "symbol"; 
-$dataGrid->initialSortDirection = "asc";
 $dataGrid->headerSize = array(80,120);
 $dataGrid->cellAlign = array("left","left");
 $dataGrid->width = "240px";

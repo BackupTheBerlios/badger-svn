@@ -21,7 +21,7 @@ require_once BADGER_ROOT . '/core/urlTools.php';
 class TemplateEngine {
 	private $templatecache;
 	private $theme;
-	private $badgerRoot;
+	public $badgerRoot;
 	private $additionalHeaderTags;
 	private $settings;
 	private $jsOnLoadEvents = array();

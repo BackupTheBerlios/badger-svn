@@ -31,6 +31,12 @@ class DataGrid {
 	private $LoadingMessage;
 	
 	/**
+	 * Unique ID of the dataGrid
+	 * @var string
+	 */
+	public $UniqueId;
+	
+	/**
 	 * Name of the dataGrid columns
 	 * @var array
 	 */
@@ -97,18 +103,6 @@ class DataGrid {
 	public $rowCounterName;
 	
 	/**
-	 * initial sort column name
-	 * @var string
-	 */	
-	public $initialSortColumn;
-	
-	/**
-	 * initial sort direction
-	 * @var string
-	 */	
-	public $initialSortDirection;
-	
-	/**
 	 * width of the datagrid (e.g. 100px, 20em, 100%)
 	 * @var string
 	 */	
@@ -125,18 +119,14 @@ class DataGrid {
 	 * @param object template engine
 	 */
 	public function __construct($tpl) {
-		global $print;
 		$this->tpl = $tpl;
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		$this->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 		$this->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 		$this->noRowSelectedMsg = getBadgerTranslation2('dataGrid', 'NoRowSelectedMsg');
 		
-		if($print){
-			$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
-		} else {
-			$tpl->addCss("Widgets/dataGrid/dataGrid.css", "screen");
-		}
+		$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
+		$tpl->addCss("Widgets/dataGrid/dataGrid.css", "screen");
 	}
 	
 	/**
@@ -178,7 +168,14 @@ class DataGrid {
 	 * function initDataGridJS ()
 	 */
 	public function initDataGridJS() {
+		global $badgerDb;
+		global $tpl;
+		
+		$us = new UserSettings($badgerDb);
+		
 		$this->tpl->addJavaScript("js/dataGrid.0.9.js");
+		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
+		$this->tpl->addOnLoadEvent('dgUniqueId = "'. $this->UniqueId .'";');
 		$this->tpl->addOnLoadEvent('dgHeaderName = new Array("'.implode('","',$this->headerName).'");');
 		$this->tpl->addOnLoadEvent('dgColumnOrder = new Array("'.implode('","',$this->columnOrder).'");');
 		$this->tpl->addOnLoadEvent('dgHeaderSize = new Array('.implode(',',$this->headerSize).');');
@@ -192,7 +189,11 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
 		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
 		$this->tpl->addOnLoadEvent('dgLoadingMessage = "'.$this->LoadingMessage.'";');
-		$this->tpl->addOnLoadEvent('addNewSortOrder("'.$this->initialSort.'", "'.$this->initialSortDirection.'");');
+		try {$strSortColumn = $us->getProperty('dgSortColumn'.$this->UniqueId);	} catch(BadgerException $e) {$strSortColumn="";};
+		try {$strSortOrder = $us->getProperty('dgSortOrder'.$this->UniqueId); } catch(BadgerException $e) {$strSortOrder="";};
+		if($strSortColumn<>"" and $strSortOrder<>"") {
+			$this->tpl->addOnLoadEvent('addNewSortOrder("'. $strSortColumn .'", "'. $strSortOrder .'");');
+		}
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');

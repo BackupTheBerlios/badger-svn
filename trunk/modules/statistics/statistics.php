@@ -62,13 +62,15 @@ function showSelectPage() {
 	$tpl->addHeaderTag('<script type="text/javascript">var badgerHelpChapter = "Statistiken";</script>');
 		
 	$dataGrid = new DataGrid($tpl);
+	$dataGrid->UniqueId = "AccountManagerStatistic";
 	$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-	$dataGrid->headerName = array(getBadgerTranslation2('statistics','accColTitle'), getBadgerTranslation2('statistics','accColBalance'), getBadgerTranslation2('statistics','accColCurrency'));
-	$dataGrid->columnOrder = array("title", "balance", 'currency');  
-	$dataGrid->initialSort = "title";
-	$dataGrid->initialSortDirection = "asc";
+	$dataGrid->headerName = array(
+		getBadgerTranslation2('statistics','accColTitle'), 
+		getBadgerTranslation2('statistics','accColBalance'), 
+		getBadgerTranslation2('statistics','accColCurrency'));
+	$dataGrid->columnOrder = array("title", "balance", "currency");  
 	$dataGrid->headerSize = array(160, 100, 75);
-	$dataGrid->cellAlign = array("left", 'right', 'left');
+	$dataGrid->cellAlign = array("left", "right", "left");
 	$dataGrid->width = '30em';
 	$dataGrid->height = '7em';
 	$dataGrid->initDataGridJS();

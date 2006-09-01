@@ -26,7 +26,10 @@ var objURLParameter = new Object;
 
 // retrieve data from server, define callback-function
 function loadData(strUrl) {
+	// get selected rows, so that we can restore selection after reloading
 	arrSelectedRows = dgGetAllIds();
+	
+	// load data
 	var myAjax = new Ajax.Request(
 		strUrl, {
 			method: 'post',
@@ -48,7 +51,6 @@ function deleteData(strUrl) {
 
 //displays the message from backend-object
 function dgDeleteResponse(objXHR) {
-
 	if (objXHR.responseText=="") {
 		
 		switch (dgDeleteRefreshType) {
@@ -399,33 +401,40 @@ function dgGetFirstId() {
 }
 
 
-//change sort order and hide/show sort images
-function addNewSortOrder(strColumn, strDirection) {
+// change sort order and hide/show sort images
+function addNewSortOrder(strSortColumn, strDirection) {
+	// reset old sorting image
 	if(strSortingColumnActive) changeColumnSortImage(strSortingColumnActive, "empty");
-	if(strColumn==objURLParameter["ok0"]) {
-		//click on the same column:  asc -> desc, desc -> asc
+		
+	if(strSortColumn==objURLParameter["ok0"]) {
+		// click on the same column:  change sort direction
 		if (objURLParameter["od0"]=="a") {
+			// asc -> desc
 			objURLParameter["od0"]="d";
-			changeColumnSortImage(strColumn, "desc");
+			changeColumnSortImage(strSortColumn, "desc");
 		} else {
+			// desc -> asc
 			objURLParameter["od0"]="a";
-			changeColumnSortImage(strColumn, "asc");
+			changeColumnSortImage(strSortColumn, "asc");
 		}
 	} else {
+		// click on a different column
 		objURLParameter["ok2"] = objURLParameter["ok1"];
 		objURLParameter["od2"] = objURLParameter["od1"];
 		objURLParameter["ok1"] = objURLParameter["ok0"];
 		objURLParameter["od1"] = objURLParameter["od0"];
-		objURLParameter["ok0"] = strColumn;
+		objURLParameter["ok0"] = strSortColumn;
 		if(strDirection!="desc") {
 			objURLParameter["od0"] = "a";
-			changeColumnSortImage(strColumn, "asc");
+			changeColumnSortImage(strSortColumn, "asc");
 		} else {
 			objURLParameter["od0"] = "d";
-			changeColumnSortImage(strColumn, "desc");
+			changeColumnSortImage(strSortColumn, "desc");
 		}
 	}
-	strSortingColumnActive = strColumn;
+	strSortingColumnActive = strSortColumn;
+	
+	saveSortParameter(dgUniqueId, objURLParameter["ok0"], objURLParameter["od0"]);
 }
 
 //change the image for sorting direction
@@ -472,4 +481,19 @@ function messageLayer(action, message) {
 //preselect an entry
 function dgPreselectId(id) {
 	arrSelectedRows.push(id);
+}
+
+function saveSortParameter(strUniqueId, strSortColumn, strSortOrder) {
+	if(strSortOrder=="a") {
+		strSortOrder = "asc";
+	} else {
+		strSortOrder = "desc";
+	}
+	
+	var strUrl = badgerRoot+"/core/widgets/DataGridSaveSortOrder.php";
+	var myAjax = new Ajax.Request(
+	strUrl, {
+		method: 'post',
+		parameters: "id="+strUniqueId+"&column="+strSortColumn+"&order="+strSortOrder,
+	}); 
 }

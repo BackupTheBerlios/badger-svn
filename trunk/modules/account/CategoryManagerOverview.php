@@ -21,12 +21,11 @@ $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
+$dataGrid->UniqueId = "CategoryManager";
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CategoryManager";
 $dataGrid->headerName = array(getBadgerTranslation2('accountCategory', 'colparentTitle'),getBadgerTranslation2('accountCategory', 'colTitle'),getBadgerTranslation2('accountCategory', 'colDescription'),getBadgerTranslation2('accountCategory', 'colOutsideCapital'));
 $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapital");
 $dataGrid->deleteMsg = getBadgerTranslation2('accountCategory', 'deleteMsg');
-$dataGrid->initialSort = "parentTitle";
-$dataGrid->initialSortDirection = "asc";
 $dataGrid->headerSize = array(200,200,300,100);
 $dataGrid->cellAlign = array("left","left","left","center");
 $dataGrid->height = "350px";

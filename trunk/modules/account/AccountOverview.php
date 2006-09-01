@@ -28,19 +28,23 @@ $account = $am->getAccountById($accountID);
 transferFormerFinishedTransactions($account);
 
 $pageTitle = getBadgerTranslation2 ('accountOverview','pageTitle');
+$pageTitle .= ": ".$account->getTitle();
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
 $dataGrid = new DataGrid($tpl);
-$pageTitle .= ": ".$account->getTitle();
-
+$dataGrid->UniqueId = "Account$accountID";
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID";
-$dataGrid->headerName = array(getBadgerTranslation2('accountOverview', 'colValutaDate'),getBadgerTranslation2('accountOverview', 'colTitle'), getBadgerTranslation2('accountOverview', 'colType'),getBadgerTranslation2('accountOverview', 'colAmount'),getBadgerTranslation2('accountOverview', 'colSum'),getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
+$dataGrid->headerName = array(
+	getBadgerTranslation2('accountOverview', 'colValutaDate'),
+	getBadgerTranslation2('accountOverview', 'colTitle'), 
+	getBadgerTranslation2('accountOverview', 'colType'),
+	getBadgerTranslation2('accountOverview', 'colAmount'),
+	getBadgerTranslation2('accountOverview', 'colSum'),
+	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
 $dataGrid->columnOrder = array("valutaDate","title","type","amount","sum","categoryTitle");  
-$dataGrid->initialSort = "valutaDate";
-$dataGrid->initialSortDirection = "asc";
 $dataGrid->height = "350px";
 $dataGrid->headerSize = array(120,210,39,80,120,200);
 $dataGrid->cellAlign = array("left","left","center","right","right","left");
