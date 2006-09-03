@@ -199,9 +199,11 @@ class DataGrid {
 		//}
 		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
 		if ( isset($dgParameter) ) {		
-				$this->tpl->addOnLoadEvent("deserializeParameter('".$dgParameter."');");
+				$this->tpl->addOnLoadEvent("initDataGrid('".$dgParameter."');");
+		}else {
+			$this->tpl->addOnLoadEvent("initDataGrid();");
 		}
-		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
+		//$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false);');

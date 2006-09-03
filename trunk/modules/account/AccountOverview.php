@@ -80,7 +80,7 @@ $categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accoun
 $categoryField = $widgets->createSelectField("category", getCategorySelectArray(true), "", "", false, "style='width: 210px;'");
 
 $btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dgSetFilterFields(['title','amount','valutaDate','category'])", "Widgets/dataGrid/filter.png");
-$btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "reset", "Widgets/cancel.gif");
+$btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "dgSetFilterFields();", "Widgets/cancel.gif");
 
 // DataGrid 
 $btnNewFinished = $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/finished_transaction_new.gif");

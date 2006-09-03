@@ -25,6 +25,12 @@ var mouseEventsDisabled = false;
 var objURLParameter = new Object;
 var intNumberOfActiveFilter;
 
+function initDataGrid(strParameter) {
+	if(strParameter) deserializeParameter(strParameter);
+	loadData(dgSourceXML + serializeParameter());
+	initSortOrder();	
+}
+
 // retrieve data from server, define callback-function
 function loadData(strUrl) {
 	// get selected rows, so that we can restore selection after reloading
@@ -447,6 +453,14 @@ function addNewSortOrder(strSortColumn, strDirection) {
 	saveDataGridParameter();		
 }
 
+function initSortOrder() {
+	if(objURLParameter["od0"]="a") {
+		changeColumnSortImage(objURLParameter["ok0"], "a");
+	} else {
+		changeColumnSortImage(objURLParameter["ok0"], "d");
+	}
+}
+
 //change the image for sorting direction
 function changeColumnSortImage(id, newstatus) {
 	switch(newstatus) {
@@ -478,7 +492,9 @@ function deserializeParameter(strParameter) {
 
 	for(i=0; i<lines.length;i++) {
 		parpair = lines[i].split("=");
-		if(parpair[1]!=undefined) objURLParameter[parpair[0]] = parpair[1];
+		if(parpair[1]!=undefined && parpair[1]!="") {
+			objURLParameter[parpair[0]] = parpair[1];
+		}
 	}
 }
 
