@@ -23,6 +23,7 @@ var strSortingColumnActive;
 var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
 var objURLParameter = new Object;
+var intNumberOfActiveFilter;
 
 // retrieve data from server, define callback-function
 function loadData(strUrl) {
@@ -53,7 +54,7 @@ function deleteData(strUrl) {
 			});
 }
 
-//displays the message from backend-object
+// displays the message from backend-object
 function dgDeleteResponse(objXHR) {
 	if (objXHR.responseText=="") {
 		
@@ -420,11 +421,11 @@ function addNewSortOrder(strSortColumn, strDirection) {
 		if (objURLParameter["od0"]=="a") {
 			// asc -> desc
 			objURLParameter["od0"]="d";
-			changeColumnSortImage(strSortColumn, "desc");
+			changeColumnSortImage(strSortColumn, "d");
 		} else {
 			// desc -> asc
 			objURLParameter["od0"]="a";
-			changeColumnSortImage(strSortColumn, "asc");
+			changeColumnSortImage(strSortColumn, "a");
 		}
 	} else {
 		// click on a different column
@@ -433,17 +434,17 @@ function addNewSortOrder(strSortColumn, strDirection) {
 		objURLParameter["ok1"] = objURLParameter["ok0"];
 		objURLParameter["od1"] = objURLParameter["od0"];
 		objURLParameter["ok0"] = strSortColumn;
-		if(strDirection!="desc") {
+		if(strDirection!="d") {
 			objURLParameter["od0"] = "a";
-			changeColumnSortImage(strSortColumn, "asc");
+			changeColumnSortImage(strSortColumn, "a");
 		} else {
 			objURLParameter["od0"] = "d";
-			changeColumnSortImage(strSortColumn, "desc");
+			changeColumnSortImage(strSortColumn, "d");
 		}
 	}
 	strSortingColumnActive = strSortColumn;
 	
-	saveSortParameter(dgUniqueId, objURLParameter["ok0"], objURLParameter["od0"]);
+	saveDataGridParameter();		
 }
 
 //change the image for sorting direction
@@ -452,10 +453,10 @@ function changeColumnSortImage(id, newstatus) {
 		case 'empty':
 			$("dgImg"+id).src = dgTplPath + "dropEmpty.gif";
 			break;
-		case 'asc':
+		case 'a':
 			$("dgImg"+id).src = dgTplPath + "dropDown.png";
 			break;
-		case 'desc':
+		case 'd':
 			$("dgImg"+id).src = dgTplPath + "dropUp.png";
 			break;
 	}	
@@ -470,6 +471,15 @@ function serializeParameter() {
 	    	strURLParameter = strURLParameter + "&" + parameter + "=" + objURLParameter[parameter];
 	    }
 	return strURLParameter;
+}
+
+function deserializeParameter(strParameter) {
+	lines = strParameter.split("&");
+
+	for(i=0; i<lines.length;i++) {
+		parpair = lines[i].split("=");
+		if(parpair[1]!=undefined) objURLParameter[parpair[0]] = parpair[1];
+	}
 }
 
 //display a message in the dataGrid footer
@@ -492,17 +502,50 @@ function dgPreselectId(id) {
 	arrSelectedRows.push(id);
 }
 
-function saveSortParameter(strUniqueId, strSortColumn, strSortOrder) {
-	if(strSortOrder=="a") {
-		strSortOrder = "asc";
-	} else {
-		strSortOrder = "desc";
-	}
-	
-	var strUrl = badgerRoot+"/core/widgets/DataGridSaveSortOrder.php";
+function saveDataGridParameter() {
+	//alert("id="+dgUniqueId + serializeParameter() );
+	var strUrl = badgerRoot+"/core/widgets/DataGridSaveParameter.php";
 	var myAjax = new Ajax.Request(
 	strUrl, {
 		method: 'post',
-		parameters: "id="+strUniqueId+"&column="+strSortColumn+"&order="+strSortOrder,
+		parameters: "id="+dgUniqueId + serializeParameter() ,
 	}); 
+}
+
+function dgSetFilterFields(arrayOfFields) {
+	dgDeleteAllFilter();
+	for (i=0; i<arrayOfFields.length; i++) {
+		if( $(arrayOfFields[i]) ) {
+			if( $F(arrayOfFields[i]) != "" && $F(arrayOfFields[i])!="NULL" ) {
+				strKey = arrayOfFields[i];
+				strValue = $F(arrayOfFields[i]);
+				if( $(arrayOfFields[i]+"Filter") ) {
+					strOperator = $F(arrayOfFields[i]+"Filter");
+				} else {					
+					strOperator = "eq";
+				}
+				dgAddFilter(strKey, strOperator, strValue);
+			}
+		}		
+	}
+	loadData(dgSourceXML + serializeParameter());
+	saveDataGridParameter();
+}
+
+function dgAddFilter(strKey, strOperator, strValue) {	
+	//alert(strKey+":"+strOperator+":"+strValue)
+	objURLParameter["fk"+intNumberOfActiveFilter] = strKey;
+	objURLParameter["fo"+intNumberOfActiveFilter] = strOperator;
+	objURLParameter["fv"+intNumberOfActiveFilter] = strValue;
+	intNumberOfActiveFilter++;
+
+}
+
+function dgDeleteAllFilter() {
+	for (i=0; i<intNumberOfActiveFilter; i++) {
+		objURLParameter["fk"+i] = "";
+		objURLParameter["fo"+i] = "";
+		objURLParameter["fv"+i] = "";
+	}
+	intNumberOfActiveFilter = 0;
 }

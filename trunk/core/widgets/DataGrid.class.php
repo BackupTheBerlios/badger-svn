@@ -176,7 +176,7 @@ class DataGrid {
 		
 		$us = new UserSettings($badgerDb);
 		
-		$this->tpl->addJavaScript("js/dataGrid.0.9.js");
+		$this->tpl->addJavaScript("js/dataGrid.js");
 		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
 		$this->tpl->addOnLoadEvent('dgUniqueId = "'. $this->UniqueId .'";');
 		$this->tpl->addOnLoadEvent('dgHeaderName = new Array("'.implode('","',$this->headerName).'");');
@@ -192,10 +192,14 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
 		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
 		$this->tpl->addOnLoadEvent('dgLoadingMessage = "'.$this->LoadingMessage.'";');
-		try {$strSortColumn = $us->getProperty('dgSortColumn'.$this->UniqueId);	} catch(BadgerException $e) {$strSortColumn="";};
-		try {$strSortOrder = $us->getProperty('dgSortOrder'.$this->UniqueId); } catch(BadgerException $e) {$strSortOrder="";};
-		if($strSortColumn<>"" and $strSortOrder<>"") {
-			$this->tpl->addOnLoadEvent('addNewSortOrder("'. $strSortColumn .'", "'. $strSortOrder .'");');
+		//try {$strSortColumn = $us->getProperty('dgSortColumn'.$this->UniqueId); } catch(BadgerException $e) {$strSortColumn="";};
+		//try {$strSortOrder = $us->getProperty('dgSortOrder'.$this->UniqueId); } catch(BadgerException $e) {$strSortOrder="";};
+		//if($strSortColumn<>"" and $strSortOrder<>"") {
+		//	$this->tpl->addOnLoadEvent('addNewSortOrder("'. $strSortColumn .'", "'. $strSortOrder .'");');
+		//}
+		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
+		if ( isset($dgParameter) ) {		
+				$this->tpl->addOnLoadEvent("deserializeParameter('".$dgParameter."');");
 		}
 		$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
@@ -203,5 +207,23 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false);');
 		
 	}
+	
+	public function getFilterSelectArray() {
+		$filterArray = array ();
+		
+		$filterArray["eq"] = "=";
+		$filterArray["lt"] = "<";
+		$filterArray["le"] = "<=";
+		$filterArray["gt"] = ">";
+		$filterArray["ge"] = ">=";
+		$filterArray["ne"] = "<>";
+		//TODO Translation
+		$filterArray["bw"] = "begins with";
+		$filterArray["ew"] = "ends with";
+		$filterArray["ct"] = "contains";
+		
+		return $filterArray;
+	}
+	
 }
 ?>

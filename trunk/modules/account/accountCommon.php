@@ -126,7 +126,7 @@ function getSpendingMoney($accountId, $startDate) {
 	return $sum;
 }
 
-function getCategorySelectArray() {
+function getCategorySelectArray($bTitleAsId=false) {
 	global $badgerDb;
 	$cm = new CategoryManager($badgerDb);
 	$order = array (
@@ -153,12 +153,21 @@ function getCategorySelectArray() {
 	
 	while ($cat = $cm->getNextCategory()) {
 		if(is_null($cat->getParent())){
-			$parentCats[$cat->getId()] = $cat->getTitle();
+			//TODO ?? should we really take the title instead the id for datagrid filter
+			if($bTitleAsId) {		
+				$parentCats[$cat->getTitle()] = $cat->getTitle();
+			} else {
+				$parentCats[$cat->getId()] = $cat->getTitle();
+			}
 			$children = $cat->getChildren();
 			//echo "<pre>"; print_r($children); echo "</pre>";
 			if($children){
 				foreach( $children as $key=>$value ){
-					$parentCats[$value->getId()] = " - " . $value->getTitle();
+					if($bTitleAsId) {
+						$parentCats[$value->getTitle()] = " - " . $value->getTitle();
+					} else {				
+						$parentCats[$value->getId()] = " - " . $value->getTitle();
+					}
 				};
 			};
 		};

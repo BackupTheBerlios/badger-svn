@@ -33,6 +33,8 @@ $pageTitle .= ": ".$account->getTitle();
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
+$widgets->addToolTipJS();
+$widgets->addCalendarJS();
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->UniqueId = "Account$accountID";
@@ -57,19 +59,37 @@ $dataGrid->initDataGridJS();
 $widgets->addNavigationHead();
 echo $tpl->getHeader($pageTitle);
 
-echo "<h1>$pageTitle</h1>";
+// DataGrid Filter
+$legendFilter = getBadgerTranslation2('dataGrid', 'filterLegend');
 
-echo $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/finished_transaction_new.gif");
-echo ' ';
-echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/planned_transaction_new.gif");
-echo ' ';
-echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
-echo ' ';
-echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
-echo ' ';
-echo $widgets->createButton("btnShowPlannedTransactions", getBadgerTranslation2('accountOverview', 'showPlannedTrans'),  "location.href = location.href.replace(/AccountOverview\.php/, 'AccountOverviewPlanned.php');", "Account/planned_transaction.png");
+$datagGridFilterArray = $dataGrid->getFilterSelectArray();
+	
+$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), false);
+$titleField = $widgets->createField("title", 30, "", "", false, "text", "");
+$titleFilterOperator = $widgets->createSelectField("titleFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");
+	
+$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), false);
+$valutaDateField = $widgets->addDateField("valutaDate", "");
+$valutaDateFilterOperator = $widgets->createSelectField("valutaDateFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");
+	
+$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), false);
+$amountField = $widgets->createField("amount", 14, "", "", false, "text", "");
+$amountFilterOperator = $widgets->createSelectField("amountFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");	
 
-echo $dataGrid->writeDataGrid();
+$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false, "");
+$categoryField = $widgets->createSelectField("category", getCategorySelectArray(true), "", "", false, "style='width: 210px;'");
+
+$btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dgSetFilterFields(['title','amount','valutaDate','category'])", "Widgets/dataGrid/filter.png");
+$btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "reset", "Widgets/cancel.gif");
+
+// DataGrid 
+$btnNewFinished = $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/finished_transaction_new.gif");
+$btnNewPlanned = $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/planned_transaction_new.gif");
+$btnEdit = $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
+$btnDelete = $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
+$btnShowPlannedTransactions = $widgets->createButton("btnShowPlannedTransactions", getBadgerTranslation2('accountOverview', 'showPlannedTrans'),  "location.href = location.href.replace(/AccountOverview\.php/, 'AccountOverviewPlanned.php');", "Account/planned_transaction.png");
+
+$dgHtml = $dataGrid->writeDataGrid();
 
 $legend = getBadgerTranslation2('dataGrid', 'legend');
 
