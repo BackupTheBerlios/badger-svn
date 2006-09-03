@@ -68,7 +68,8 @@ function printAskExport() {
 
 function printAskInsert() {
 	global $tpl;
-	$widgets = new WidgetEngine($tpl); 
+	$widgets = new WidgetEngine($tpl);	
+	$widgets->addJSValMessages();
 	
 	$tpl->addJavaScript("js/acceptTerms.js");
 	$tpl->addJavaScript("js/prototype.js");
@@ -93,7 +94,7 @@ function printAskInsert() {
 
 	$askImportSubmit = $widgets->createButton("submit", getBadgerTranslation2('importExport', 'askImportSubmitButton'), "submit", "Widgets/accept.gif", 'disabled="disabled"');	
 
-	eval(' echo "' . $tpl->getTemplate('importExport/askInsert') . '";');
+	eval('echo "' . $tpl->getTemplate('importExport/askInsert') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
