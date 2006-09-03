@@ -26,9 +26,12 @@ var objURLParameter = new Object;
 var intNumberOfActiveFilter;
 
 function initDataGrid(strParameter) {
-	if(strParameter) deserializeParameter(strParameter);
+	if(strParameter) {
+		deserializeParameter(strParameter);
+		initSortOrder();
+	}
 	loadData(dgSourceXML + serializeParameter());
-	initSortOrder();	
+	
 }
 
 // retrieve data from server, define callback-function
