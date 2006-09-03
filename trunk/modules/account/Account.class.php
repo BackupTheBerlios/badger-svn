@@ -46,6 +46,8 @@ class Account extends DataGridHandler {
 			'transactionPartner',
 			'categoryId',
 			'categoryTitle',
+			'parentCategoryId',
+			'parentCategoryTitle',
 			'sum'
 		),
 		'planned' => array (
@@ -60,7 +62,9 @@ class Account extends DataGridHandler {
 			'repeatUnit',
 			'repeatFrequency',
 			'categoryId',
-			'categoryTitle'
+			'categoryTitle',
+			'parentCategoryId',
+			'parentCategoryTitle',
 		),
 		'finished' => array (
 			'finishedTransactionId',
@@ -72,6 +76,8 @@ class Account extends DataGridHandler {
 			'transactionPartner',
 			'categoryId',
 			'categoryTitle',
+			'parentCategoryId',
+			'parentCategoryTitle',
 			'exceptional',
 			'periodical'
 		)
@@ -383,6 +389,8 @@ class Account extends DataGridHandler {
 			'transactionPartner' => 'string',
 			'categoryId' => 'integer',
 			'categoryTitle' => 'string',
+			'parentCategoryId' => 'integer',
+			'parentCategoryTitle' => 'string',
 			'repeatUnit' => 'string',
 			'repeatFrequency' => 'integer',
 			'exceptional' => 'boolean',
@@ -426,6 +434,8 @@ class Account extends DataGridHandler {
 				'transactionPartner' => Account::TABLE_PLACEHOLDER . '.transaction_parter',
 				'categoryId' => Account::TABLE_PLACEHOLDER . '.category_id',
 				'categoryTitle' => 'c.title',
+				'parentCategoryId' => 'pc.category_id',
+				'parentCategoryTitle' => 'pc.title',
 				'sum' => Account::TABLE_PLACEHOLDER . '.__SUM__'
 			),
 			'planned' => array (
@@ -440,7 +450,9 @@ class Account extends DataGridHandler {
 				'repeatUnit' => 'pt.repeat_unit',
 				'repeatFrequency' => 'pt.repeat_frequency',
 				'categoryId' => 'pt.category_id',
-				'categoryTitle' => 'c.title'
+				'categoryTitle' => 'c.title',
+				'parentCategoryId' => 'pc.category_id',
+				'parentCategoryTitle' => 'pc.title'
 			),
 			'finished' => array (
 				'transactionId' => 'ft.transaction_id',
@@ -452,6 +464,8 @@ class Account extends DataGridHandler {
 				'transactionPartner' => 'ft.transaction_parter',
 				'categoryId' => 'ft.category_id',
 				'categoryTitle' => 'c.title',
+				'parentCategoryId' => 'pc.category_id',
+				'parentCategoryTitle' => 'pc.title',
 				'exceptional' => 'ft.exceptional',
 				'periodical' => 'ft.periodical'
 			)
@@ -503,6 +517,13 @@ class Account extends DataGridHandler {
 					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
 					$classSum = ($sum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
 
+					$category = $currentTransaction->getCategory();
+					if (!is_null($category)) {
+						$parentCategory = $category->getParent();
+					} else {
+						$parentCategory = null;
+					}
+
 					$result[] = array (
 						'transactionId' => $currentTransaction->getId(),
 						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png', 'title="' . getBadgerTranslation2('Account', $currentTransaction->getType()) . '"'), 
@@ -512,8 +533,10 @@ class Account extends DataGridHandler {
 						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
-						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
-						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : '',
+						'categoryId' => ($category) ? $category->getId() : '',
+						'categoryTitle' => ($category) ? $category->getTitle() : '',
+						'parentCategoryId' => ($parentCategory) ? $parentCategory->getId() : '',
+						'parentCategoryTitle' => ($parentCategory) ? $parentCategory->getTitle() : '',
 						'sum' => "<span class='$classSum'>" . $sum->getFormatted() . '</span>'
 					);
 				}
@@ -525,6 +548,13 @@ class Account extends DataGridHandler {
 				foreach($this->finishedTransactions as $currentTransaction){
 					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
 
+					$category = $currentTransaction->getCategory();
+					if (!is_null($category)) {
+						$parentCategory = $category->getParent();
+					} else {
+						$parentCategory = null;
+					}
+
 					$result[] = array (
 						'finishedTransactionId' => $currentTransaction->getId(),
 						'title' => $currentTransaction->getTitle(),
@@ -533,8 +563,10 @@ class Account extends DataGridHandler {
 						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
 						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
 						'transactionPartner' => $currentTransaction->getTransactionPartner(),
-						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
-						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : '',
+						'categoryId' => ($category) ? $category->getId() : '',
+						'categoryTitle' => ($category) ? $category->getTitle() : '',
+						'parentCategoryId' => ($parentCategory) ? $parentCategory->getId() : '',
+						'parentCategoryTitle' => ($parentCategory) ? $parentCategory->getTitle() : '',
 						'exceptional' => is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp,
 						'periodical' => is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp
 					);
@@ -547,6 +579,13 @@ class Account extends DataGridHandler {
 				foreach($this->plannedTransactions as $currentTransaction){
 					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
 
+					$category = $currentTransaction->getCategory();
+					if (!is_null($category)) {
+						$parentCategory = $category->getParent();
+					} else {
+						$parentCategory = null;
+					}
+
 					$result[] = array (
 						'plannedTransactionId' => 'p' . $currentTransaction->getId() . '_X',
 						'title' => $currentTransaction->getTitle(),
@@ -558,8 +597,10 @@ class Account extends DataGridHandler {
 						'endDate' => ($tmp = $currentTransaction->getEndDate()) ? $tmp->getFormatted() : '',
 						'repeatUnit' => getBadgerTranslation2('Account', $currentTransaction->getRepeatUnit()),
 						'repeatFrequency' => $currentTransaction->getRepeatFrequency(),
-						'categoryId' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getId() : '',
-						'categoryTitle' => ($tmp = $currentTransaction->getCategory()) ? $tmp->getTitle() : ''
+						'categoryId' => ($category) ? $category->getId() : '',
+						'categoryTitle' => ($category) ? $category->getTitle() : '',
+						'parentCategoryId' => ($parentCategory) ? $parentCategory->getId() : '',
+						'parentCategoryTitle' => ($parentCategory) ? $parentCategory->getTitle() : ''
 					);
 				}
 				break;
@@ -592,7 +633,7 @@ class Account extends DataGridHandler {
 		
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
-			FROM finished_transaction ft 
+			FROM finished_transaction ft
 			WHERE finished_transaction_id = " .  $finishedTransactionId;
 		
 		//echo $sql . "\n";
@@ -1516,9 +1557,12 @@ class Account extends DataGridHandler {
 				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
 			FROM finished_transaction ft 
 				LEFT OUTER JOIN category c ON ft.category_id = c.category_id
+				LEFT OUTER JOIN category pc on c.parent_id = pc.category_id 
 			WHERE account_id = " .  $this->id . "\n";
 		
 		$where = $this->getFilterSQL();
+		$where = preg_replace('/pc.category_id = ([0-9]+)/', '(pc.category_id = \1 OR c.category_id = \1)', $where);
+		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
 		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
 		if($where) {
@@ -1574,12 +1618,15 @@ class Account extends DataGridHandler {
 				pt.repeat_frequency, pt.category_id
 			FROM planned_transaction pt
 				LEFT OUTER JOIN category c ON pt.category_id = c.category_id
+				LEFT OUTER JOIN category pc on c.parent_id = pc.category_id 
 			WHERE pt.account_id = " .  $this->id . " ";
 //				AND pt.begin_date <= '". $this->targetFutureCalcDate->getDate() . "'
 //				AND pt.end_date > NOW()\n"; 	
 
 		$where = $this->getFilterSQL();
 		//echo $where = $where . "\n" . $where;
+		$where = preg_replace('/pc.category_id = ([0-9]+)/', '(pc.category_id = \1 OR c.category_id = \1)', $where);
+		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
 		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
