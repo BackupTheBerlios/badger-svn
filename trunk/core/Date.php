@@ -171,10 +171,21 @@ class Date
 	       		$dayPos = strpos($formatString, 'dd');
 	       		$monthPos = strpos($formatString, 'mm');
 	       		$yearPos = strpos($formatString, 'yyyy');
+	       		if ($yearPos === false) {
+	       			$year2Pos = strpos($formatString, 'yy');
+	       		}
 	       		
 	       		$day = substr($date, $dayPos, 2);
 	       		$month = substr($date, $monthPos, 2);
 	       		$year = substr($date, $yearPos, 4);
+	       		if ($yearPos === false) {
+	       			$year = substr($date, $year2Pos, 2);
+	       			if ($year >= 70) {
+	       				$year += 1900;
+	       			} else {
+	       				$year += 2000;
+	       			}
+	       		}
 	       		
 	       		$date = "$year-$month-$day";
         	}
