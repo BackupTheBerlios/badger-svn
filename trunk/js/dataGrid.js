@@ -23,7 +23,6 @@ var strSortingColumnActive;
 var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
 var objURLParameter = new Object;
-var intNumberOfActiveFilter;
 
 // initalize
 function initDataGrid(strParameter) {
@@ -31,6 +30,7 @@ function initDataGrid(strParameter) {
 	if(strParameter) {
 		deserializeParameter(strParameter);
 		initSortOrder();
+		initFilterFields();
 	}
 	loadData(dgSourceXML + serializeParameter());	
 }
@@ -536,7 +536,11 @@ function dgPreselectId(id) {
 }
 
 function saveDataGridParameter() {
-	//alert("id="+dgUniqueId + serializeParameter() );
+	strParameter = serializeParameter()
+	if( strParameter.indexOf("id="+dgUniqueId)==false) {
+		strParameter = "id="+dgUniqueId + serializeParameter()
+	}
+
 	var strUrl = badgerRoot+"/core/widgets/DataGridSaveParameter.php";
 	var myAjax = new Ajax.Request(
 	strUrl, {
@@ -563,22 +567,28 @@ function dgSetFilterFields(arrayOfFields) {
 	}
 	loadData(dgSourceXML + serializeParameter());
 	saveDataGridParameter();
+	alert(objURLParameter["fn"]);
 }
 
 function dgAddFilter(strKey, strOperator, strValue) {	
-	//alert(strKey+":"+strOperator+":"+strValue)
-	objURLParameter["fk"+intNumberOfActiveFilter] = strKey;
-	objURLParameter["fo"+intNumberOfActiveFilter] = strOperator;
-	objURLParameter["fv"+intNumberOfActiveFilter] = strValue;
-	intNumberOfActiveFilter++;
-
+	objURLParameter["fk"+objURLParameter["fn"]] = strKey;
+	objURLParameter["fo"+objURLParameter["fn"]] = strOperator;
+	objURLParameter["fv"+objURLParameter["fn"]] = strValue;
+	objURLParameter["fn"]++;
 }
 
 function dgDeleteAllFilter() {
-	for (i=0; i<intNumberOfActiveFilter; i++) {
-		objURLParameter["fk"+i] = "";
-		objURLParameter["fo"+i] = "";
-		objURLParameter["fv"+i] = "";
+	for (i=0; i<10; i++) {
+		objURLParameter.push("fk"+i);
+		objURLParameter.push("fo"+i);
+		objURLParameter.push("fv"+i);
 	}
-	intNumberOfActiveFilter = 0;
+	objURLParameter["fn"] = -1;
+}
+
+function initFilterFields() {
+	for (i=0; i<objURLParameter["fn"]; i++) {
+		$(objURLParameter["fk"+i]).value = objURLParameter["fv"+i];
+		$(objURLParameter["fk"+i]+"Filter").value = objURLParameter["fo"+i];
+	}
 }

@@ -76,10 +76,10 @@ $amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTra
 $amountField = $widgets->createField("amount", 14, "", "", false, "text", "");
 $amountFilterOperator = $widgets->createSelectField("amountFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");	
 
-$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false, "");
-$categoryField = $widgets->createSelectField("category", getCategorySelectArray(true), "", "", false, "style='width: 210px;'");
+$categoryLabel = $widgets->createLabel("categoryId", getBadgerTranslation2('accountTransaction', 'category'), false, "");
+$categoryField = $widgets->createSelectField("categoryId", getCategorySelectArray(), "", "", false, "style='width: 210px;'");
 
-$btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dgSetFilterFields(['title','amount','valutaDate','category'])", "Widgets/dataGrid/filter.png");
+$btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dgSetFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/dataGrid/filter.png");
 $btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "dgSetFilterFields();", "Widgets/cancel.gif");
 
 // DataGrid 
