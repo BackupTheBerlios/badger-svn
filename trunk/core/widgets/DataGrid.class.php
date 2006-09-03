@@ -155,9 +155,12 @@ class DataGrid {
 						<tbody></tbody>
 					</table>
 					</div>
+							
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">						
 						<tr>
-							<td><span id="dgCount">0</span> '.$this->rowCounterName.'&nbsp;&nbsp;<span id="dgMessage"></span></td>
+							<td style="width: 110px"><span id="dgCount">0</span> '.$this->rowCounterName.'&nbsp;</td>
+							<td style="width: 35px"><span id="dgFilterStatus"></span></td>
+							<td><span id="dgMessage"></span></td>
 						</tr>
 					</table>
 					</div></form>';

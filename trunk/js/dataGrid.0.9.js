@@ -37,6 +37,10 @@ function loadData(strUrl) {
 			onFailure: dgError
 		}); 
 	messageLayer('show', '<span class="dgMessageHint"> '+dgLoadingMessage+' </span>');
+	// show loading image
+	$('dgDivScroll').className ="dgDivScrollLoading";
+	// hide old data
+	$('dgTableData').style.visibility = "hidden";
 }
 
 // delete data
@@ -178,9 +182,14 @@ function dgInsertData(objXHR) {
 		}
 	}
 	
-	//refresh row count
+	// refresh row count
 	$("dgCount").innerHTML = xmlRows.length;
+	
+	// hide loading message, image
 	messageLayer('hide');
+	$('dgDivScroll').className = "";
+	// display processed data
+	$('dgTableData').style.visibility = "visible";
 }
 
 

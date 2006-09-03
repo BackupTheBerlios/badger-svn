@@ -41,10 +41,24 @@
 	width: 100%;
 	overflow: auto;
 }
+div.dgDivScrollLoading {
+	background-color: #ECE9D8;
+	background-image: url(loading.gif);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
 #dgTableFoot {
 	width: 100%;
 	background-color: #ECE9D8;
 }
+#dgTableHead td {
+	overflow: hidden;
+    margin: 0px;
+    border-right: 1px solid #ECE9D8;
+    border-bottom: 1px solid #ECE9D8;
+}
+
 #dgTableData {
 	table-layout: fixed;
 	width: 99.8%;
