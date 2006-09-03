@@ -25,13 +25,14 @@ var mouseEventsDisabled = false;
 var objURLParameter = new Object;
 var intNumberOfActiveFilter;
 
+// initalize
 function initDataGrid(strParameter) {
+	// if there are some stored values in the usersettings
 	if(strParameter) {
 		deserializeParameter(strParameter);
 		initSortOrder();
 	}
-	loadData(dgSourceXML + serializeParameter());
-	
+	loadData(dgSourceXML + serializeParameter());	
 }
 
 // retrieve data from server, define callback-function
@@ -46,6 +47,7 @@ function loadData(strUrl) {
 			onComplete: dgInsertData,
 			onFailure: dgError
 		}); 
+	// show loading message
 	messageLayer('show', '<span class="dgMessageHint"> '+dgLoadingMessage+' </span>');
 	// show loading image
 	$('dgDivScroll').className ="dgDivScrollLoading";
@@ -96,110 +98,120 @@ function dgError() {
 	messageLayer('show', '<span class="dgMessageError"> XHR Error </span>');
 }
 
+// fill the datagrid with values
 function dgInsertData(objXHR) {
 	objXmlDoc = objXHR.responseXML;
 	//alert(objXHR.responseText);
-	xmlColumns = objXmlDoc.getElementsByTagName("column");
-	xmlRows = objXmlDoc.getElementsByTagName("row");
 	
-	//delete old table body if exists
-	if($("dgTableData").getElementsByTagName("tbody")[0]) {
-		Element.remove($("dgTableData").getElementsByTagName("tbody")[0])	
-	}
-	//create new table body
-	dgTableDataBody = document.createElement("tbody");
-	dgData = $("dgTableData").appendChild(dgTableDataBody);
-
-	//column assignment
-	//e.g. columnPosition['title'] is the first column in the xml-file;
-	var columnPosition = new Array();
-	for (intPosition=0; intPosition<xmlColumns.length; intPosition++) {
-		if(xmlColumns[intPosition].textContent) columnName = xmlColumns[intPosition].textContent; //FF
-		if(xmlColumns[intPosition].text) columnName = xmlColumns[intPosition].text; //IE
-		if(xmlColumns[intPosition].innerHTML) columnName = xmlColumns[intPosition].innerHTML; //Opera
-		columnPosition[columnName] = intPosition;		
-	}
-	
-
-	for (j=0; j<xmlRows.length; j++) {
-		xmlCells = xmlRows[j].getElementsByTagName("cell");
+	if(objXmlDoc) {
+		xmlColumns = objXmlDoc.getElementsByTagName("column");
+		xmlRows = objXmlDoc.getElementsByTagName("row");
 		
-		//first cell of a row, is always a unique ID
-		if(xmlCells[0].textContent) rowID = xmlCells[0].textContent; //FF
-		if(xmlCells[0].text) rowID = xmlCells[0].text; //IE
-		if(xmlCells[0].innerHTML) rowID = xmlCells[0].innerHTML; //Opera
-		
-		//define a new row
-		newRow = document.createElement("tr");
-		newRow.className = "dgRow";
-		newRow.id=rowID;
-		
-		//add checkbox as the first cell
-		checkTD = document.createElement("td");
-		checkTD.style.width = "25px";
-		checkBox = document.createElement("input");
-		checkBox.id = "check" + rowID;
-		checkBox.name = "check" + rowID;
-		checkBox.type = "checkbox";
-		checkTD.appendChild(checkBox);
-		checkTD.innerHTML = checkTD.innerHTML + "&nbsp;";
-		newRow.appendChild(checkTD);
-		
-		//insert cell values
-		// dgColumnOrder[0] -> 'balance' : name of the column
-		// columnPosition['balance'] -> '1' : first column
-		// cells[1].text{Content} -> '899.23' : value
-		for (i=0; i<dgColumnOrder.length; i++) {
-			cell = document.createElement("td");
-			cell.style.width = dgHeaderSize[i] + "px";
-			cell.align = dgCellAlign[i];
-			xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
-			if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent; // FF
-			if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
-			if (xmlElement.innerHTML) { //Opera
-				//Incredibly ugly hack to show images in Opera
-				text = xmlElement.innerHTML;
-
-				if (text.substr(0, 4) == "&lt;" && text.substr(text.length - 4, 4) == "&gt;")  {
-					var oldText = "";
-					while (oldText != text) {
-						oldText = text;
-						
-				 		text = text.replace("&lt;", "<")
-				 		text = text.replace("&gt;", ">");
-				 		text = text.replace("&quot;", '"');
-				 		text = text.replace("&apos;", '\'');
-					}
-			 	}			 	
-			 	cell.innerHTML = text;
-			}
-			cell.innerHTML = cell.innerHTML + "&nbsp;";
-			newRow.appendChild(cell);			
-		}		
-		//insert empty cell as last one (only display purposes)
-		lastTD = document.createElement("td");
-		newRow.appendChild(lastTD);
-		//add complete row to the grid
-		dgData.appendChild(newRow);
-	}
-	//refresh JS-behaviours of the rows
-	Behaviour.apply();
-
-	//activate previous selected rows (after resorting)
-	for (i=0; i<arrSelectedRows.length; i++) {
-		if($(arrSelectedRows[i])) {
-			selectRow($(arrSelectedRows[i]));
+		//delete old table body if exists
+		if($("dgTableData").getElementsByTagName("tbody")[0]) {
+			Element.remove($("dgTableData").getElementsByTagName("tbody")[0])	
 		}
+		//create new table body
+		dgTableDataBody = document.createElement("tbody");
+		dgData = $("dgTableData").appendChild(dgTableDataBody);
+	
+		//column assignment
+		//e.g. columnPosition['title'] is the first column in the xml-file;
+		var columnPosition = new Array();
+		for (intPosition=0; intPosition<xmlColumns.length; intPosition++) {
+			if(xmlColumns[intPosition].textContent) columnName = xmlColumns[intPosition].textContent; //FF
+			if(xmlColumns[intPosition].text) columnName = xmlColumns[intPosition].text; //IE
+			if(xmlColumns[intPosition].innerHTML) columnName = xmlColumns[intPosition].innerHTML; //Opera
+			columnPosition[columnName] = intPosition;		
+		}
+		
+	
+		for (j=0; j<xmlRows.length; j++) {
+			xmlCells = xmlRows[j].getElementsByTagName("cell");
+			
+			//first cell of a row, is always a unique ID
+			if(xmlCells[0].textContent) rowID = xmlCells[0].textContent; //FF
+			if(xmlCells[0].text) rowID = xmlCells[0].text; //IE
+			if(xmlCells[0].innerHTML) rowID = xmlCells[0].innerHTML; //Opera
+			
+			//define a new row
+			newRow = document.createElement("tr");
+			newRow.className = "dgRow";
+			newRow.id=rowID;
+			
+			//add checkbox as the first cell
+			checkTD = document.createElement("td");
+			checkTD.style.width = "25px";
+			checkBox = document.createElement("input");
+			checkBox.id = "check" + rowID;
+			checkBox.name = "check" + rowID;
+			checkBox.type = "checkbox";
+			checkTD.appendChild(checkBox);
+			checkTD.innerHTML = checkTD.innerHTML + "&nbsp;";
+			newRow.appendChild(checkTD);
+			
+			//insert cell values
+			// dgColumnOrder[0] -> 'balance' : name of the column
+			// columnPosition['balance'] -> '1' : first column
+			// cells[1].text{Content} -> '899.23' : value
+			for (i=0; i<dgColumnOrder.length; i++) {
+				cell = document.createElement("td");
+				cell.style.width = dgHeaderSize[i] + "px";
+				cell.align = dgCellAlign[i];
+				xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
+				if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent; // FF
+				if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
+				if (xmlElement.innerHTML) { //Opera
+					//Incredibly ugly hack to show images in Opera
+					text = xmlElement.innerHTML;
+	
+					if (text.substr(0, 4) == "&lt;" && text.substr(text.length - 4, 4) == "&gt;")  {
+						var oldText = "";
+						while (oldText != text) {
+							oldText = text;
+							
+					 		text = text.replace("&lt;", "<")
+					 		text = text.replace("&gt;", ">");
+					 		text = text.replace("&quot;", '"');
+					 		text = text.replace("&apos;", '\'');
+						}
+				 	}			 	
+				 	cell.innerHTML = text;
+				}
+				cell.innerHTML = cell.innerHTML + "&nbsp;";
+				newRow.appendChild(cell);			
+			}		
+			//insert empty cell as last one (only display purposes)
+			lastTD = document.createElement("td");
+			newRow.appendChild(lastTD);
+			//add complete row to the grid
+			dgData.appendChild(newRow);
+		}
+		//refresh JS-behaviours of the rows
+		Behaviour.apply();
+	
+		//activate previous selected rows (after resorting)
+		for (i=0; i<arrSelectedRows.length; i++) {
+			if($(arrSelectedRows[i])) {
+				selectRow($(arrSelectedRows[i]));
+			}
+		}		
+		// refresh row count
+		$("dgCount").innerHTML = xmlRows.length;
+		
+		// hide loading message
+		messageLayer('hide');
+		
+		// display processed data
+		$('dgTableData').style.visibility = "visible";
+	} else {
+		$("dgCount").innerHTML = "0";
+		messageLayer('show', '<span class="dgMessageError"> '+objXHR.responseText+' </span>');
+		dgDeleteAllFilter();
 	}
-	
-	// refresh row count
-	$("dgCount").innerHTML = xmlRows.length;
-	
-	// hide loading message, image
-	messageLayer('hide');
+	// hide loading image
 	$('dgDivScroll').className = "";
-	// display processed data
-	$('dgTableData').style.visibility = "visible";
+	
 }
 
 
@@ -457,10 +469,12 @@ function addNewSortOrder(strSortColumn, strDirection) {
 }
 
 function initSortOrder() {
-	if(objURLParameter["od0"]="a") {
-		changeColumnSortImage(objURLParameter["ok0"], "a");
-	} else {
-		changeColumnSortImage(objURLParameter["ok0"], "d");
+	if(objURLParameter["ok0"]!=undefined && objURLParameter["ok0"]!="") {
+		if(objURLParameter["od0"]=="a") {
+			changeColumnSortImage(objURLParameter["ok0"], "a");
+		} else {
+			changeColumnSortImage(objURLParameter["ok0"], "d");
+		}
 	}
 }
 
