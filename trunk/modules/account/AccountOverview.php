@@ -46,7 +46,7 @@ $dataGrid->headerName = array(
 	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
 $dataGrid->columnOrder = array("valutaDate","title","type","amount","sum","categoryTitle");  
 $dataGrid->height = "350px";
-$dataGrid->headerSize = array(120,210,39,80,120,200);
+$dataGrid->headerSize = array(90,350,39,80,120,200);
 $dataGrid->cellAlign = array("left","left","center","right","right","left");
 $dataGrid->deleteRefreshType = "refreshDataGrid";
 $dataGrid->deleteAction = "Transaction.php?action=delete&accountID=$accountID&ID=";

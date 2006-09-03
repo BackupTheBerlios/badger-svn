@@ -47,7 +47,7 @@ $dataGrid->headerName = array(
 	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
 $dataGrid->columnOrder = array("title","beginDate", "endDate", "repeatUnit", "repeatFrequency", "amount", "categoryTitle");  
 $dataGrid->height = "350px";
-$dataGrid->headerSize = array(210, 85, 85, 70, 70, 120, 200);
+$dataGrid->headerSize = array(210, 95, 85, 70, 75, 120, 200);
 $dataGrid->cellAlign = array("left", "right", "right", "left", "right", "right", "left");
 $dataGrid->deleteAction = "Transaction.php?action=delete&backTo=planned&accountID=$accountID&ID=";
 $dataGrid->editAction = "Transaction.php?action=edit&backTo=planned&accountID=$accountID&ID=";
