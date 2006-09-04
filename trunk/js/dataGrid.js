@@ -58,10 +58,10 @@ function loadData() {
 	$('dgTableData').style.visibility = "hidden";
 	
 	// filter image in footer
-	if( arrURLParameter["fn"]=="0" ) {
-		$('dgFilterStatus').style.visibility = "hidden";
-	} else {
+	if( arrURLParameter["fn"]>"0" && arrURLParameter["fn"]!=undefined) {
 		$('dgFilterStatus').style.visibility = "visible";
+	} else {
+		$('dgFilterStatus').style.visibility = "hidden";
 	}	
 }
 
