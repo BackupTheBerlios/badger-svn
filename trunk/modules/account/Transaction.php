@@ -128,10 +128,13 @@ function printFrontendFinished($AccountID, $ID) {
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
 	$widgets->addJSValMessages();
+	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 	
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);
 	echo $widgets->addToolTipLayer();
+	
 	
 	if($ID!="new") {
 		$acc = $am->getAccountById($AccountID);
@@ -223,6 +226,9 @@ function printFrontendPlanned($AccountID, $ID) {
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
 	$widgets->addJSValMessages();
+
+	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 
 	$widgets->addNavigationHead();
 	echo $tpl->getHeader($pageTitle);

@@ -219,10 +219,11 @@ if (
 if($passwordcorrect == false) {	
 	// Initialization
 	$widgets = new WidgetEngine($tpl);
+	$tpl->addJavaScript("js/prototype.js");
 	$tpl->addOnLoadEvent("Form.focusFirstElement('loginForm')");
 	$widgets->addJSValMessages();
 	$widgets->addToolTipJS(); 
-	$tpl->addJavaScript("js/prototype.js");
+		
 	echo $tpl->getHeader(getBadgerTranslation2('badger_login', 'header')); //write header
 	echo $widgets->addToolTipLayer();
 	// End of Initialization

@@ -68,9 +68,10 @@ function printFrontend() {
 	global $am;
 	global $redirectPageAfterSave;
 	$widgets = new WidgetEngine($tpl);
-	$widgets->addToolTipJS();
-	
+	$widgets->addToolTipJS();	
 	$widgets->addJSValMessages();
+	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 	
 	$widgets->addNavigationHead();
 	if (isset($_GET['ID'])) {

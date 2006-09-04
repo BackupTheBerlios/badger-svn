@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form action="" method="post" accept-charset="ISO-8859-1" enctype="multipart/form-data" name="mainform" id="Selection">
+<form action="" method="post" name="mainform" id="mainform">
  	<div id="CSVscroll">	
 		<table cellpadding="2" cellspacing="0">
 			<tr>

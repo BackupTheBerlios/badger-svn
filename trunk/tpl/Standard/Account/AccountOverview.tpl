@@ -1,7 +1,7 @@
 <h1>$pageTitle</h1>
 
 <div id="filter">
-	<form action="javascript:return false;" name="mainform">
+	<form action="javascript:return false;" name="mainform" id="mainform">
 		<fieldset>
 			<legend>$legendFilter</legend>
 			<table>

@@ -121,7 +121,7 @@ function _jsVal_Language() {
 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" id=\"".$fieldname."\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
-			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)'><img src=\"".BADGER_ROOT."/tpl/".$this->tpl->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
+			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' tabindex=\"-999\"><img src=\"".BADGER_ROOT."/tpl/".$this->tpl->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
 			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine', 'CalendarJSNotAdded'); 
@@ -191,10 +191,14 @@ function _jsVal_Language() {
 	}
 	
 	public function createButton($name, $text, $action, $img="", $addTags=""){
-		if ($action=="submit") $action = "if(validateCompleteForm(this.form, 'error')) {this.form.submit()} else {return false}";
-		//if ($action=="submit") $action = "this.form.submit();";
-		//if ($action=="") $action = "void(0);return false;"; 
-		$output = "<button $addTags name='$name' id='$name' onclick=\"".$action."\">\n";
+		if ($action=="submit") { 
+			$action = "if(validateCompleteForm(this.form, 'error')) {this.form.submit()} else {return false}";
+			$type = "submit";
+		} else {
+			$type = "button";		
+		}
+		
+		$output = "<button $addTags name='$name' id='$name' onclick=\"".$action."\" type=\"$type\">\n";
 		$output .= "<table cellspacing='0' cellpadding='0'>\n";
 		$output .= "\t<tr>\n";
 		if ($img) {

@@ -1,5 +1,5 @@
 <h1>$pageHeading</h1>
-<form action="" method="post" accept-charset="ISO-8859-1" enctype="multipart/form-data" name="mainform" id="Selection" onSubmit="return validateCompleteForm(this, 'error');">
+<form action="" method="post" accept-charset="ISO-8859-1" enctype="multipart/form-data" name="mainform" id="mainform" onSubmit="return validateCompleteForm(this, 'error');">
 	<table>
 	<tr>
 	<td  valign="top">
