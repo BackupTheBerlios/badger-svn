@@ -75,3 +75,26 @@
 	</table>
 $sendButton <br />
 </form>
+
+<div id="errorDiv">
+</div>
+
+<div id="flashContainer" class="flashContainer" style="display: none;">
+</div>
+<div class="flashClear"></div>
+<br />
+<table>
+	<tr id="dailyPocketMoneyRow" style="display: none;">
+		<td><b>$dailyPocketMoneyLabel</b> </td>
+		<td style="text-align: right;" id="dailyPocketMoneyText"></td>
+		<td> $dailyPocketMoneyToolTip</td>
+	</tr>
+	<tr id="balancedEndDate1Row" style="display: none;">
+		<td><b>$balancedEndDateLabel1</b> </td>
+		<td style = "text-align: right;" id="balancedEndDate1Text"></td>
+	</tr>
+	<tr id="balancedEndDate2Row" style="display: none;">
+		<td><b>$balancedEndDateLabel2 </b></td>
+		<td style = "text-align: right;" id="balancedEndDate2Text"></td>
+	</tr>
+</table>

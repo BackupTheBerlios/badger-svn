@@ -11,6 +11,70 @@
 *
 **/
 
+function getGPC($array, $key, $type = 'string', $escaped = false) {
+	if ($type == 'checkbox') {
+		return isset($array[$key]);
+	}
+
+	if ($escaped) {
+		$val = escaped($array, $key);
+	} else {
+		$val = unescaped($array, $key);
+	}
+	
+	switch ($type) {
+		case 'int':
+		case 'integer':
+			settype($val, 'integer');
+			break;
+		
+		case 'float':
+		case 'double':
+			settype($val, 'float');
+			break;
+		
+		case 'Amount':
+			$val = new Amount($val);
+			break;
+		
+		case 'AmountFormatted':
+			$val = new Amount($val, true);
+			break;
+		
+		case 'Date':
+			$val = new Date($val);
+			break;
+		
+		case 'DateFormatted':
+			$val = new Date($val, true);
+			break;
+		
+		case 'intList':
+		case 'integerList':
+			$arr = explode(',', $val);
+			foreach ($arr as $val) {
+				settype($val, 'integer');
+				$val[] = $val;
+			}
+			break;
+		
+		case 'floatList':
+		case 'doubleList':
+			$arr = explode(',', $val);
+			foreach ($arr as $val) {
+				settype($val, 'float');
+				$val[] = $val;
+			}
+			break;
+		
+		case 'string':
+		default:
+			
+	}
+	
+	return $val;
+}
+
 /**
  * Gets the escaped $key value out of $array.
  * 
@@ -22,11 +86,37 @@
  * @return mixed The value of key $key in $array in escaped form.
  */
 function escaped($array, $key) {
-	if (get_magic_quotes_gpc()) {
-		return $array[$key];
-	} else {
-		return addslashes($array[$key]);
+	if (!isset($array[$key])) {
+		throw new BadgerException('common', 'gpcFieldUndefined', $key);
 	}
+
+	if (!is_array($array[$key])) {
+		if (get_magic_quotes_gpc()) {
+			return $array[$key];
+		} else {
+			return addslashes($array[$key]);
+		}
+	} else {
+		return escapeArray($array[$key]);
+	}
+}
+
+function escapeArray($array) {
+	$result = array();
+	
+	foreach ($array as $key => $val) {
+		if (!is_array($val)) {
+			if (get_magic_quotes_gpc()) {
+				$result[$key] = $val;
+			} else {
+				$result[$key] = addslashes($val);
+			}
+		} else {
+			$result[$key] = escapeArray($val);
+		}
+	}
+	
+	return $result;
 }
 
 /**
@@ -40,11 +130,37 @@ function escaped($array, $key) {
  * @return mixed The value of key $key in $array in unescaped form.
  */
 function unescaped($array, $key) {
-	if (!get_magic_quotes_gpc()) {
-		return $array[$key];
-	} else {
-		return stripslashes($array[$key]);
+	if (!isset($array[$key])) {
+		throw new BadgerException('common', 'gpcFieldUndefined', $key);
 	}
+
+	if (!is_array($array[$key])) {
+		if (!get_magic_quotes_gpc()) {
+			return $array[$key];
+		} else {
+			return stripslashes($array[$key]);
+		}
+	} else {
+		return unescapeArray($array[$key]);
+	}
+}
+
+function unescapeArray($array) {
+	$result = array();
+	
+	foreach ($array as $key => $val) {
+		if (!is_array($val)) {
+			if (!get_magic_quotes_gpc()) {
+				$result[$key] = $val;
+			} else {
+				$result[$key] = stripslashes($val);
+			}
+		} else {
+			$result[$key] = unescapeArray($val);
+		}
+	}
+	
+	return $result;
 }
 
 /**
