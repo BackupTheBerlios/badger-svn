@@ -174,7 +174,11 @@ class FinishedTransaction {
 			$this->exceptional = $data['exceptional'];
 			$this->periodical = $data['periodical'];
 			if ($data['planned_transaction_id']) {
-				$this->sourcePlannedTransaction = $account->getPlannedTransactionById($data['planned_transaction_id']);
+				try {
+					$this->sourcePlannedTransaction = $account->getPlannedTransactionById($data['planned_transaction_id']);
+				} catch (BadgerException $ex) {
+					$this->sourcePlannedTransaction = null;
+				}
 			}
 			$this->type = 'FinishedTransaction';
 		} else {
