@@ -605,7 +605,9 @@ function dgDeleteAllFilter() {
 function initFilterFields(arrayOfFields) {
 	for (i=0; i<arrURLParameter["fn"]; i++) {
 		$(arrURLParameter["fk"+i]).value = arrURLParameter["fv"+i];
-		$(arrURLParameter["fk"+i]+"Filter").value = arrURLParameter["fo"+i];
+		if($(arrURLParameter["fk"+i]+"Filter")) {
+			$(arrURLParameter["fk"+i]+"Filter").value = arrURLParameter["fo"+i];
+		}
 	}
 	if(arrayOfFields) {
 		for (i=0; i<arrayOfFields.length; i++) {
