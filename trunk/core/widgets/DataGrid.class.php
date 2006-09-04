@@ -159,7 +159,7 @@ class DataGrid {
 					<table id="dgTableFoot" cellpadding="2" cellspacing="0">						
 						<tr>
 							<td style="width: 110px"><span id="dgCount">0</span> '.$this->rowCounterName.'&nbsp;</td>
-							<td style="width: 35px"><span id="dgFilterStatus"></span></td>
+							<td style="width: 35px"><span id="dgFilterStatus"><img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/filter.gif"></span></td>
 							<td><span id="dgMessage"></span></td>
 						</tr>
 					</table>
@@ -203,7 +203,6 @@ class DataGrid {
 		}else {
 			$this->tpl->addOnLoadEvent("initDataGrid();");
 		}
-		//$this->tpl->addOnLoadEvent('loadData(dgSourceXML + serializeParameter());');
 		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false);');

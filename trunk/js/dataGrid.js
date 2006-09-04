@@ -22,7 +22,7 @@ var objRowActive;
 var strSortingColumnActive;
 var arrSelectedRows = new Array();
 var mouseEventsDisabled = false;
-var objURLParameter = new Object;
+var arrURLParameter = new Array();
 
 // initalize
 function initDataGrid(strParameter) {
@@ -32,11 +32,14 @@ function initDataGrid(strParameter) {
 		initSortOrder();
 		initFilterFields();
 	}
-	loadData(dgSourceXML + serializeParameter());	
+	loadData();
 }
 
 // retrieve data from server, define callback-function
-function loadData(strUrl) {
+function loadData() {
+	// Base Grid Url + Parameter	
+	strUrl = dgSourceXML + "&" + serializeParameter();
+
 	// get selected rows, so that we can restore selection after reloading
 	arrSelectedRows = dgGetAllIds();
 	
@@ -47,12 +50,19 @@ function loadData(strUrl) {
 			onComplete: dgInsertData,
 			onFailure: dgError
 		}); 
-	// show loading message
+
+	// show loading message, image
 	messageLayer('show', '<span class="dgMessageHint"> '+dgLoadingMessage+' </span>');
-	// show loading image
 	$('dgDivScroll').className ="dgDivScrollLoading";
 	// hide old data
 	$('dgTableData').style.visibility = "hidden";
+	
+	// filter image in footer
+	if( arrURLParameter["fn"]=="0" ) {
+		$('dgFilterStatus').style.visibility = "hidden";
+	} else {
+		$('dgFilterStatus').style.visibility = "visible";
+	}	
 }
 
 // delete data
@@ -72,7 +82,7 @@ function dgDeleteResponse(objXHR) {
 		switch (dgDeleteRefreshType) {
 		case 'refreshDataGrid': 
 			//refresh complete dataGrid				
-			loadData(dgSourceXML + serializeParameter());
+			loadData();
 			break;
 		case 'refreshPage': 
 			//refresh complete page	
@@ -279,7 +289,7 @@ var behaviour =  {
 		element.onclick = function(){
 			id = this.id.replace("dgColumn","");
 			addNewSortOrder(id);
-			loadData(dgSourceXML + serializeParameter());
+			loadData();
 		}
 	},
 	// checkbox in the dataGrid-Header, for (de-)selecting all
@@ -437,29 +447,29 @@ function addNewSortOrder(strSortColumn, strDirection) {
 	// reset old sorting image
 	if(strSortingColumnActive) changeColumnSortImage(strSortingColumnActive, "empty");
 		
-	if(strSortColumn==objURLParameter["ok0"]) {
+	if(strSortColumn==arrURLParameter["ok0"]) {
 		// click on the same column:  change sort direction
-		if (objURLParameter["od0"]=="a") {
+		if (arrURLParameter["od0"]=="a") {
 			// asc -> desc
-			objURLParameter["od0"]="d";
+			arrURLParameter["od0"]="d";
 			changeColumnSortImage(strSortColumn, "d");
 		} else {
 			// desc -> asc
-			objURLParameter["od0"]="a";
+			arrURLParameter["od0"]="a";
 			changeColumnSortImage(strSortColumn, "a");
 		}
 	} else {
 		// click on a different column
-		objURLParameter["ok2"] = objURLParameter["ok1"];
-		objURLParameter["od2"] = objURLParameter["od1"];
-		objURLParameter["ok1"] = objURLParameter["ok0"];
-		objURLParameter["od1"] = objURLParameter["od0"];
-		objURLParameter["ok0"] = strSortColumn;
+		arrURLParameter["ok2"] = arrURLParameter["ok1"];
+		arrURLParameter["od2"] = arrURLParameter["od1"];
+		arrURLParameter["ok1"] = arrURLParameter["ok0"];
+		arrURLParameter["od1"] = arrURLParameter["od0"];
+		arrURLParameter["ok0"] = strSortColumn;
 		if(strDirection!="d") {
-			objURLParameter["od0"] = "a";
+			arrURLParameter["od0"] = "a";
 			changeColumnSortImage(strSortColumn, "a");
 		} else {
-			objURLParameter["od0"] = "d";
+			arrURLParameter["od0"] = "d";
 			changeColumnSortImage(strSortColumn, "d");
 		}
 	}
@@ -469,11 +479,11 @@ function addNewSortOrder(strSortColumn, strDirection) {
 }
 
 function initSortOrder() {
-	if(objURLParameter["ok0"]!=undefined && objURLParameter["ok0"]!="") {
-		if(objURLParameter["od0"]=="a") {
-			changeColumnSortImage(objURLParameter["ok0"], "a");
+	if(arrURLParameter["ok0"]!=undefined && arrURLParameter["ok0"]!="") {
+		if(arrURLParameter["od0"]=="a") {
+			changeColumnSortImage(arrURLParameter["ok0"], "a");
 		} else {
-			changeColumnSortImage(objURLParameter["ok0"], "d");
+			changeColumnSortImage(arrURLParameter["ok0"], "d");
 		}
 	}
 }
@@ -493,14 +503,12 @@ function changeColumnSortImage(id, newstatus) {
 	}	
 }
 
-//convert array to string
 function serializeParameter() {
-	var strURLParameter = "";
-	
-	for (var parameter in objURLParameter)
-		if(parameter!="extend" && objURLParameter[parameter]!=undefined) { 
-	    	strURLParameter = strURLParameter + "&" + parameter + "=" + objURLParameter[parameter];
-	    }
+	var strURLParameter = $H(arrURLParameter).toQueryString();
+	// reinitialize array without undefinded parameters
+	arrURLParameter = new Array();
+	deserializeParameter(strURLParameter);
+	strURLParameter = $H(arrURLParameter).toQueryString();
 	return strURLParameter;
 }
 
@@ -509,8 +517,8 @@ function deserializeParameter(strParameter) {
 
 	for(i=0; i<lines.length;i++) {
 		parpair = lines[i].split("=");
-		if(parpair[1]!=undefined && parpair[1]!="") {
-			objURLParameter[parpair[0]] = parpair[1];
+		if(parpair[0]!=undefined && parpair[1]!="undefined" && parpair[1]!="" ) {
+			arrURLParameter[parpair[0]] = parpair[1];
 		}
 	}
 }
@@ -535,60 +543,75 @@ function dgPreselectId(id) {
 	arrSelectedRows.push(id);
 }
 
-function saveDataGridParameter() {
-	strParameter = serializeParameter()
-	if( strParameter.indexOf("id="+dgUniqueId)==false) {
-		strParameter = "id="+dgUniqueId + serializeParameter()
-	}
-
+function saveDataGridParameter() {	
 	var strUrl = badgerRoot+"/core/widgets/DataGridSaveParameter.php";
+	var strParameter = serializeParameter();
+	
+	if( strParameter.indexOf("id="+dgUniqueId)==-1 ) {
+		strParameter = "id="+dgUniqueId+"&"+strParameter
+	}	
 	var myAjax = new Ajax.Request(
 	strUrl, {
 		method: 'post',
-		parameters: "id="+dgUniqueId + serializeParameter() ,
+		parameters: strParameter ,
 	}); 
 }
 
 function dgSetFilterFields(arrayOfFields) {
 	dgDeleteAllFilter();
-	for (i=0; i<arrayOfFields.length; i++) {
-		if( $(arrayOfFields[i]) ) {
-			if( $F(arrayOfFields[i]) != "" && $F(arrayOfFields[i])!="NULL" ) {
-				strKey = arrayOfFields[i];
-				strValue = $F(arrayOfFields[i]);
-				if( $(arrayOfFields[i]+"Filter") ) {
-					strOperator = $F(arrayOfFields[i]+"Filter");
-				} else {					
-					strOperator = "eq";
+	if(arrayOfFields){
+		for (i=0; i<arrayOfFields.length; i++) {
+			if( $(arrayOfFields[i]) ) {
+				if( $F(arrayOfFields[i]) != "" && $F(arrayOfFields[i])!="NULL" ) {
+					strKey = arrayOfFields[i];
+					strValue = $F(arrayOfFields[i]);
+					if( $(arrayOfFields[i]+"Filter") ) {
+						strOperator = $F(arrayOfFields[i]+"Filter");
+					} else {					
+						strOperator = "eq";
+					}
+					dgAddFilter(strKey, strOperator, strValue);
 				}
-				dgAddFilter(strKey, strOperator, strValue);
-			}
-		}		
+			}		
+		}
 	}
-	loadData(dgSourceXML + serializeParameter());
+	loadData();
 	saveDataGridParameter();
-	alert(objURLParameter["fn"]);
+}
+
+function dgResetFilter(arrayOfFields) {
+	dgDeleteAllFilter();
+	saveDataGridParameter();	
+	loadData();
+	initFilterFields(arrayOfFields);	
 }
 
 function dgAddFilter(strKey, strOperator, strValue) {	
-	objURLParameter["fk"+objURLParameter["fn"]] = strKey;
-	objURLParameter["fo"+objURLParameter["fn"]] = strOperator;
-	objURLParameter["fv"+objURLParameter["fn"]] = strValue;
-	objURLParameter["fn"]++;
+	arrURLParameter["fk"+arrURLParameter["fn"]] = strKey;
+	arrURLParameter["fo"+arrURLParameter["fn"]] = strOperator;
+	arrURLParameter["fv"+arrURLParameter["fn"]] = strValue;
+	arrURLParameter["fn"]++;
 }
 
 function dgDeleteAllFilter() {
-	for (i=0; i<10; i++) {
-		objURLParameter.push("fk"+i);
-		objURLParameter.push("fo"+i);
-		objURLParameter.push("fv"+i);
+	for (i=0; i<arrURLParameter["fn"]; i++) {
+		arrURLParameter = arrURLParameter.without("fk"+i);
+		arrURLParameter = arrURLParameter.without("fo"+i);
+		arrURLParameter = arrURLParameter.without("fv"+i);
 	}
-	objURLParameter["fn"] = -1;
+	arrURLParameter["fn"] = 0;
 }
 
-function initFilterFields() {
-	for (i=0; i<objURLParameter["fn"]; i++) {
-		$(objURLParameter["fk"+i]).value = objURLParameter["fv"+i];
-		$(objURLParameter["fk"+i]+"Filter").value = objURLParameter["fo"+i];
+function initFilterFields(arrayOfFields) {
+	for (i=0; i<arrURLParameter["fn"]; i++) {
+		$(arrURLParameter["fk"+i]).value = arrURLParameter["fv"+i];
+		$(arrURLParameter["fk"+i]+"Filter").value = arrURLParameter["fo"+i];
+	}
+	if(arrayOfFields) {
+		for (i=0; i<arrayOfFields.length; i++) {
+			if( $(arrayOfFields[i]) ) {
+				$(arrayOfFields[i]).value = "";
+			}
+		}
 	}
 }

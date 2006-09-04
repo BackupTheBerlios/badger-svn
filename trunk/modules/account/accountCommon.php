@@ -153,7 +153,6 @@ function getCategorySelectArray() {
 	
 	while ($cat = $cm->getNextCategory()) {
 		if(is_null($cat->getParent())){
-			//TODO ?? should we really take the title instead the id for datagrid filter
 			$parentCats[$cat->getId()] = $cat->getTitle();
 			$children = $cat->getChildren();
 			//echo "<pre>"; print_r($children); echo "</pre>";

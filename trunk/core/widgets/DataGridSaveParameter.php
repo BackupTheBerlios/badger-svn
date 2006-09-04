@@ -20,9 +20,6 @@
 define ('BADGER_ROOT', '../..');
 require_once BADGER_ROOT . '/includes/fileHeaderBackEnd.inc.php';
 
-$us->setProperty('dgSortColumn'.$_POST['id'], $_POST['ok0']);
-$us->setProperty('dgSortOrder'.$_POST['id'], $_POST['od0']);
-
 $strParameter = "";
 foreach($_POST as $key => $value) {
 	if($key!="_") {
@@ -31,7 +28,6 @@ foreach($_POST as $key => $value) {
 }
 
 $us->setProperty('dgParameter'.$_POST['id'], $strParameter);
-//$us->setProperty('dgParameter'.$_POST['id'], $HTTP_RAW_POST_DATA); 
 
 
 ?>
