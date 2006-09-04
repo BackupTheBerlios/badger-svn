@@ -13,6 +13,7 @@
 					<td>$valutaDateLabel</td>
 					<td>$valutaDateFilterOperator</td>
 					<td>$valutaDateField</td>
+					<td>$btnFilterOkay</td>
 				</tr>
 				<tr>
 					<td>$categoryLabel</td>
@@ -22,13 +23,7 @@
 					<td>$amountLabel</td>
 					<td>$amountFilterOperator</td>
 					<td>$amountField</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>&nbsp;&nbsp;&nbsp;</td>
-					<td colspan="3" align="right">$btnFilterOkay&nbsp;$btnFilterReset</td>				
+					<td>$btnFilterReset</td>
 				</tr>
 			</table>
 		</fieldset>

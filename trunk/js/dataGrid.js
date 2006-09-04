@@ -550,6 +550,7 @@ function saveDataGridParameter() {
 	if( strParameter.indexOf("id="+dgUniqueId)==-1 ) {
 		strParameter = "id="+dgUniqueId+"&"+strParameter
 	}	
+	
 	var myAjax = new Ajax.Request(
 	strUrl, {
 		method: 'post',
@@ -595,10 +596,11 @@ function dgAddFilter(strKey, strOperator, strValue) {
 
 function dgDeleteAllFilter() {
 	for (i=0; i<arrURLParameter["fn"]; i++) {
-		arrURLParameter = arrURLParameter.without("fk"+i);
-		arrURLParameter = arrURLParameter.without("fo"+i);
-		arrURLParameter = arrURLParameter.without("fv"+i);
+		arrURLParameter["fk"+i] = undefined;
+		arrURLParameter["fo"+i] = undefined;
+		arrURLParameter["fv"+i] = undefined;
 	}
+	arrURLParameter.compact();
 	arrURLParameter["fn"] = 0;
 }
 
