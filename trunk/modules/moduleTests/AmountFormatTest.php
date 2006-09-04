@@ -14,8 +14,9 @@
 bcscale(2);
 
 
-test('4000');
-test('400');
+test(4000);
+test(400);
+test('123456789012345678901234567');
 test('0');
 test('0.00');
 test('1.00');
@@ -59,8 +60,14 @@ function test($str) {
 }
 
 function format($str, $decPoint, $thousandsSep) {
+	
+	settype($str, 'string');
+
+	$str = ($str ? $str : '0');
+	
 	$str = trim($str);
 	
+	//Sort out negative numbers
 	if (substr($str, 0, 1) == '-') {
 		$negative = true;
 		$firstDigit = 1;
@@ -71,18 +78,22 @@ function format($str, $decPoint, $thousandsSep) {
 	
 	$decPosition = strpos($str, '.');
 
-	if ($decPosition != 0) {
+	//if there is a decimal point
+	if ($decPosition !== false) {
+		//copy at most two fraction digits
 		$start = $decPosition - 1;
 		$result = $decPoint . substr($str, $decPosition + 1, 2);
 	} else {
-		$start = strlen($str);
+		$start = strlen($str) - 1;
 		$result = $decPoint;
 	}
 	
+	//Pad up to two zeros
 	$result .= str_repeat('0', strlen($decPoint) + 2 - strlen($result));
 
 	$count = 0;
 	
+	//Insert thousands separators
 	for ($i = $start; $i >= $firstDigit; $i--) {
 		if ($count == 3) {
 			$result = $thousandsSep . $result;
@@ -94,10 +105,12 @@ function format($str, $decPoint, $thousandsSep) {
 		$count++;	
 	}
 	
+	//Add negative sign
 	if ($negative) {
 		$result = '-' . $result;
 	}
 	
 	return $result;
 }
+
 ?>

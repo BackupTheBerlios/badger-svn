@@ -60,6 +60,8 @@ class Amount {
 		
 		$str = ($this->amount ? $this->amount : '0');
 		
+		settype($str, 'string');
+
 		$str = trim($str);
 		
 		//Sort out negative numbers
@@ -74,12 +76,12 @@ class Amount {
 		$decPosition = strpos($str, '.');
 	
 		//if there is a decimal point
-		if ($decPosition != 0) {
+		if ($decPosition !== false) {
 			//copy at most two fraction digits
 			$start = $decPosition - 1;
 			$result = $decPoint . substr($str, $decPosition + 1, 2);
 		} else {
-			$start = strlen($str);
+			$start = strlen($str) - 1;
 			$result = $decPoint;
 		}
 		
