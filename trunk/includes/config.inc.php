@@ -57,7 +57,7 @@
 	 * 
 	 * @var global constant
 	 */	
- define("LOG_FILE_NAME", BADGER_ROOT . "/exceptions.log");
+ define("LOG_FILE_NAME", BADGER_ROOT . "/.htlog");
  
   	/**
 	 * Formatting for date used in log entries according to http://www.php.net/date
