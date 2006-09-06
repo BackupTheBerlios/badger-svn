@@ -17,7 +17,6 @@ require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 
 
 $redirectPageAfterSave = "CategoryManagerOverview.php";
-$pageTitle = getBadgerTranslation2 ('accountCategory','pageTitle');
 
 $cm = new CategoryManager($badgerDb);
 $am = new AccountManager($badgerDb);
@@ -87,26 +86,15 @@ if (isset($_GET['action'])) {
 	}	
 }
 function printFrontend() {
-	global $pageTitle;
 	global $tpl;
 	global $cm;
 	global $order;
 	global $redirectPageAfterSave;
 	
-	$widgets = new WidgetEngine($tpl);
-	$widgets->addToolTipJS();	
-	$widgets->addJSValMessages();
-	
-	$tpl->addJavaScript("js/prototype.js");
-	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
-
-	$widgets->addNavigationHead();
-	echo $tpl->getHeader($pageTitle);
-	echo $widgets->addToolTipLayer();
-	
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
 		$ID = $_GET['ID'];
+		$pageTitle = getBadgerTranslation2 ('accountCategory','pageTitleEdit');
 		$category = $cm->getCategoryById($ID);
 		$titleValue = $category->getTitle();
 		$descriptionValue = $category->getDescription();
@@ -124,6 +112,7 @@ function printFrontend() {
 		}
 	} else {
 		//new: empty values
+		$pageTitle = getBadgerTranslation2 ('accountCategory','pageTitleNew');
 		$ID = "new";
 		$titleValue = "";
 		$descriptionValue = "";
@@ -131,6 +120,17 @@ function printFrontend() {
 		$parentValue = "";
 		$parentId = "";
 	}
+	
+	$widgets = new WidgetEngine($tpl);
+	$widgets->addToolTipJS();	
+	$widgets->addJSValMessages();
+	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
+	$widgets->addNavigationHead();
+	echo $tpl->getHeader($pageTitle);
+	echo $widgets->addToolTipLayer();
+	
+	
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	$legend = getBadgerTranslation2('accountCategory', 'legend');
