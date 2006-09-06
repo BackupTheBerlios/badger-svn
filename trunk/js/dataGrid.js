@@ -140,9 +140,9 @@ function dgInsertData(objXHR) {
 			xmlCells = xmlRows[j].getElementsByTagName("cell");
 			
 			//first cell of a row, is always a unique ID
-			if(xmlCells[0].textContent) rowID = xmlCells[0].textContent; //FF
-			if(xmlCells[0].text) rowID = xmlCells[0].text; //IE
-			if(xmlCells[0].innerHTML) rowID = xmlCells[0].innerHTML; //Opera
+			if(xmlCells[0].textContent) rowID = URLDecode(xmlCells[0].textContent); //FF
+			if(xmlCells[0].text) rowID = URLDecode(xmlCells[0].text); //IE
+			if(xmlCells[0].innerHTML) rowID = URLDecode(xmlCells[0].innerHTML); //Opera
 			
 			//define a new row
 			newRow = document.createElement("tr");
@@ -169,11 +169,11 @@ function dgInsertData(objXHR) {
 				cell.style.width = dgHeaderSize[i] + "px";
 				cell.align = dgCellAlign[i];
 				xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
-				if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent; // FF
-				if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
+				if (xmlElement.textContent) cell.innerHTML = URLDecode(xmlElement.textContent); // FF
+				if (xmlElement.text) cell.innerHTML = URLDecode(xmlElement.text); //IE
 				if (xmlElement.innerHTML) { //Opera
 					//Incredibly ugly hack to show images in Opera
-					text = xmlElement.innerHTML;
+					text = URLDecode(xmlElement.innerHTML);
 	
 					if (text.substr(0, 4) == "&lt;" && text.substr(text.length - 4, 4) == "&gt;")  {
 						var oldText = "";
@@ -618,4 +618,11 @@ function initFilterFields(arrayOfFields) {
 			}
 		}
 	}
+}
+
+function URLDecode(strEncodeString) {
+  // Create a regular expression to search all +s in the string
+  var lsRegExp = /\+/g;
+  // Return the decoded string
+  return unescape(strEncodeString.replace(lsRegExp, " "));
 }

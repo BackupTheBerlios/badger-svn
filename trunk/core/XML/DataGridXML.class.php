@@ -12,12 +12,6 @@
 **/
 
 /**
- * uses Serializer.php to structure Data in XML format.
- */
-require_once 'Serializer.php';
-
-
-/**
  * Supplies the data to a DataGrid in XML.
  * 
  * @author Eni Kao, Para Phil 
@@ -25,13 +19,6 @@ require_once 'Serializer.php';
  */
 class DataGridXML {
 
-	/**
-	 * The XML Serializer Object.
-	 * 
-	 * @var object
-	 */
-	private $serializer;
-	
 	/**
 	 * All column heads in the table.
 	 * 
@@ -53,7 +40,6 @@ class DataGridXML {
 	 * @param array $rows The rows of the Object
 	 */
 	function __construct() {
-		$this->initSerializer();
 		$numArgs = func_num_args();
 		
 		// The constructor can't be overloaded the usual way so we have to use this workaround.		
@@ -64,32 +50,6 @@ class DataGridXML {
 			$rows = func_get_arg(1);
 			$this->setData($columns, $rows);
 		}
-	}
-	
-	/**
-	 * Initialize the Serializer.
-	 * 
-	 * @return void
-	 */
-	private function initSerializer() {
-
-		// Makes the Serializer use sensible tag names.   
-		$options = array (
-			XML_SERIALIZER_OPTION_ROOT_NAME => "datatable",
-			XML_SERIALIZER_OPTION_DEFAULT_TAG => array (
-				'columns' => 'column',
-				'rows' => 'row',
-				'row' => 'cell'
-			)
-		);
-		
-    	// If the debug mode is on the xml will be formatted to a more pretty format.
-    	if (defined('BADGER_DEBUG')) {
-    		$options[XML_SERIALIZER_OPTION_INDENT] = '    ';
-			$options[XML_SERIALIZER_OPTION_LINEBREAKS] = "\n";
-    	}
-
-		$this->serializer = new XML_Serializer($options);
 	}
 	
 	/**
@@ -112,7 +72,7 @@ class DataGridXML {
 	 */
 	public function setColumns($columns) {
 		if (is_array($columns)) {
-			$this->columns = $this->removeNonNumericIndices($columns);
+			$this->columns = $columns;
 		}
 	}
 
@@ -124,7 +84,7 @@ class DataGridXML {
 	 */
 	public function setRows($rows) {
 		if (is_array($rows)) {
-			$this->rows = $this->removeNonNumericIndices($rows);
+			$this->rows = $rows;
 		}
 	}
 
@@ -141,7 +101,7 @@ class DataGridXML {
 		// checks if we have already data 
 		if (is_array($this->rows)) {
 			if (is_array($rows)) {
-				$this->rows = array_merge($this->rows, $this->removeNonNumericIndices($rows));
+				$this->rows = array_merge($this->rows, $rows);
 			}
 		} else {
 			$this->setRows($rows);
@@ -205,18 +165,28 @@ class DataGridXML {
 			throw new BadgerException('DataGridXML', 'undefinedColumns');
 		}
 		
-		$data = array (
-			'columns' => $this->columns,
-			'rows' => $this->rows 
-		);
-	
-		$result = $this->serializer->serialize($data);
-		
-		if ($result === true) {
-			return $this->serializer->getSerializedData();
-		} else {
-			throw new BadgerException('DataGridXML','XmlSerializerException');
+		$result = "<datatable>";
+
+		$result .= "<columns>";
+		foreach ($this->columns as $col) {
+			$result .= "<column>$col</column>";
 		}
+		$result .= "</columns>";
+		
+		$result .= "<rows>";
+		foreach ($this->rows as $row) {
+			$result .= "<row>";
+			foreach ($row as $field) {
+				$field = urlencode($field);
+				$result .= "<cell>$field</cell>";
+			}
+			$result .= "</row>";
+		}
+		$result .= "</rows>";
+		
+		$result .= "</datatable>";
+		
+		return $result;
 	}
 	
 	/**
