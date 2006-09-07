@@ -100,10 +100,14 @@ fieldset.dataGridLegend {
 	width: 40em;
 }
 
-.dgPositiveAmount {
+.dgPositiveAmount, .dgOverMaxAmount {
 	color: #000000;
 }
 
-.dgNegativeAmount {
+.dgNegativeAmount, .dgUnderMinAmount {
 	color: #ff0000;
+}
+
+.dgOverMaxAmount, .dgUnderMinAmount {
+	font-weight: bold;
 }

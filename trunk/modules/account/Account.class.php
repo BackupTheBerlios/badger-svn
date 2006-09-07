@@ -538,12 +538,24 @@ class Account extends DataGridHandler {
 			$firstOrderValutaDate = false;
 		}
 		$todayMarkerSet = false;
-
+		
 		foreach($this->finishedTransactions as $currentTransaction){
 			$sum->add($currentTransaction->getAmount());
 			
 			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-			$classSum = ($sum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
+			if ($sum->compare(0) >= 0) {
+				if ($sum->compare($this->upperLimit) <= 0) {
+					$classSum = 'dgPositiveAmount'; 
+				} else {
+					$classSum = 'dgOverMaxAmount';
+				}
+			} else {
+				if ($sum->compare($this->lowerLimit) >= 0) {
+					$classSum = 'dgNegativeAmount';
+				} else {
+					$classSum = 'dgUnderMinAmount';
+				}
+			}
 
 			$category = $currentTransaction->getCategory();
 			if (!is_null($category)) {
