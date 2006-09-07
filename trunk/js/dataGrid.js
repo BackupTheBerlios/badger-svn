@@ -152,6 +152,7 @@ function dgInsertData(objXHR) {
 				newCell = document.createElement("td");
 				newCell.colSpan = dgColumnOrder.length+2;
 				newCell.style.height = "5px"; //overwrite css style
+				newCell.style.width = "100%"; 
 				newRow.appendChild(newCell);
 								
 				dgData.appendChild(newRow);
