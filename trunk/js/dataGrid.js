@@ -168,27 +168,22 @@ function dgInsertData(objXHR) {
 				cell = document.createElement("td");
 				cell.style.width = dgHeaderSize[i] + "px";
 				cell.align = dgCellAlign[i];
+								
 				xmlElement = xmlCells[columnPosition[dgColumnOrder[i]]];
-				if (xmlElement.textContent) cell.innerHTML = URLDecode(xmlElement.textContent); // FF
-				if (xmlElement.text) cell.innerHTML = URLDecode(xmlElement.text); //IE
-				if (xmlElement.innerHTML) { //Opera
-					//Incredibly ugly hack to show images in Opera
-					text = URLDecode(xmlElement.innerHTML);
-	
-					if (text.substr(0, 4) == "&lt;" && text.substr(text.length - 4, 4) == "&gt;")  {
-						var oldText = "";
-						while (oldText != text) {
-							oldText = text;
-							
-					 		text = text.replace("&lt;", "<")
-					 		text = text.replace("&gt;", ">");
-					 		text = text.replace("&quot;", '"');
-					 		text = text.replace("&apos;", '\'');
-						}
-				 	}			 	
-				 	cell.innerHTML = text;
+				// get cell className
+				cell.className = xmlElement.getAttribute("class");
+				// get cell inner content
+				if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent; // FF
+				if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
+				if (xmlElement.innerHTML) cell.innerHTML = xmlElement.innerHTML; //Opera
+				
+				if (xmlElement.getAttribute("img")) {
+					cell.innerHTML = "<img src='"+badgerRoot+"/"+xmlElement.getAttribute("img")+"' alt='"+xmlElement.getAttribute("title")+"' />"
 				}
-				cell.innerHTML = cell.innerHTML + "&nbsp;";
+				// decode content
+				cell.innerHTML = URLDecode(cell.innerHTML) + "&nbsp;";
+				
+				// add cell
 				newRow.appendChild(cell);			
 			}		
 			//insert empty cell as last one (only display purposes)
