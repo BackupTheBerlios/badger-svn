@@ -144,6 +144,19 @@ function dgInsertData(objXHR) {
 			if(xmlCells[0].text) rowID = URLDecode(xmlCells[0].text); //IE
 			if(xmlCells[0].innerHTML) rowID = URLDecode(xmlCells[0].innerHTML); //Opera
 			
+			// add separator
+			if (xmlCells[0].getAttribute("marker")) {
+				newRow = document.createElement("tr");
+				newRow.id="separator";
+				newRow.className = "dgRowSeparator";				
+				newCell = document.createElement("td");
+				newCell.colSpan = dgColumnOrder.length+2;
+				newCell.style.height = "5px"; //overwrite css style
+				newRow.appendChild(newCell);
+								
+				dgData.appendChild(newRow);
+			}
+			
 			//define a new row
 			newRow = document.createElement("tr");
 			newRow.className = "dgRow";
@@ -177,12 +190,12 @@ function dgInsertData(objXHR) {
 				if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
 				if (xmlElement.innerHTML) cell.innerHTML = xmlElement.innerHTML; //Opera
 				
+				// add image
 				if (xmlElement.getAttribute("img")) {
-					cell.innerHTML = "<img src='"+badgerRoot+"/"+xmlElement.getAttribute("img")+"' alt='"+xmlElement.getAttribute("title")+"' />"
+					cell.innerHTML = "<img src='"+badgerRoot+"/"+xmlElement.getAttribute("img")+"' title='"+xmlElement.getAttribute("title")+"' />&nbsp;";
 				}
 				// decode content
-				cell.innerHTML = URLDecode(cell.innerHTML) + "&nbsp;";
-				
+				cell.innerHTML = URLDecode(cell.innerHTML) + "&nbsp;";				
 				// add cell
 				newRow.appendChild(cell);			
 			}		
@@ -218,8 +231,6 @@ function dgInsertData(objXHR) {
 	$('dgDivScroll').className = "";
 	
 }
-
-
 
 // Row Handling
 function activateRow(objRow) {
@@ -543,13 +554,13 @@ function saveDataGridParameter() {
 	var strParameter = serializeParameter();
 	
 	if( strParameter.indexOf("id="+dgUniqueId)==-1 ) {
-		strParameter = "id="+dgUniqueId+"&"+strParameter
+		strParameter = "id="+dgUniqueId+"&"+strParameter;
 	}	
 	
 	var myAjax = new Ajax.Request(
 	strUrl, {
 		method: 'post',
-		parameters: strParameter ,
+		parameters: strParameter
 	}); 
 }
 
