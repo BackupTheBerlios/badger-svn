@@ -37,8 +37,8 @@ function initDataGrid(strParameter) {
 
 // retrieve data from server, define callback-function
 function loadData() {
-	// Base Grid Url + Parameter	
-	strUrl = dgSourceXML + "&" + serializeParameter();
+	// Base Grid Url + Parameter
+	strUrl = dgSourceXML + "&" + serializeParameter() + "&sf=" + dgColumnOrder;
 
 	// get selected rows, so that we can restore selection after reloading
 	arrSelectedRows = dgGetAllIds();
@@ -63,6 +63,7 @@ function loadData() {
 	} else {
 		$('dgFilterStatus').style.visibility = "hidden";
 	}	
+
 }
 
 // delete data
@@ -221,7 +222,6 @@ function dgInsertData(objXHR) {
 	}
 	// hide loading image
 	$('dgDivScroll').className = "";
-	
 }
 
 function addSeparatorRow(dgData) {
