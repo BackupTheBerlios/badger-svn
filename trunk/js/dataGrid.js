@@ -47,7 +47,7 @@ function loadData() {
 	var myAjax = new Ajax.Request(
 		strUrl, {
 			method: 'post',
-			parameter: serializeParameter() + "&sf=" + dgColumnOrder,
+			parameters: serializeParameter() + "&sf=" + dgColumnOrder,
 			onComplete: dgInsertData,
 			onFailure: dgError
 		}); 
