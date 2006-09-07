@@ -533,6 +533,7 @@ class Account extends DataGridHandler {
 		
 		if (isset($this->order[0]) && $this->order[0]['key'] == 'valutaDate') {
 			$firstOrderValutaDate = true;
+			$orderCompareNumber = ($this->order[0]['dir'] == 'asc' ? -1 : 1);
 		} else {
 			$firstOrderValutaDate = false;
 		}
@@ -555,7 +556,7 @@ class Account extends DataGridHandler {
 			if (
 				$firstOrderValutaDate
 				&& $todayMarkerSet === false
-				&& Date::compare($now, $currentTransaction->getValutaDate()) < 0
+				&& Date::compare($now, $currentTransaction->getValutaDate()) == $orderCompareNumber
 			) {
 				$result[$currResultIndex]['transactionId'] = array (
 					'marker' => 'today',
