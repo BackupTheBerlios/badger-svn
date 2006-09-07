@@ -146,16 +146,7 @@ function dgInsertData(objXHR) {
 			
 			// add separator
 			if (xmlCells[0].getAttribute("marker")) {
-				newRow = document.createElement("tr");
-				newRow.id="separator";
-				newRow.className = "dgRowSeparator";				
-				newCell = document.createElement("td");
-				newCell.colSpan = dgColumnOrder.length+2;
-				newCell.style.height = "5px"; //overwrite css style
-				newCell.style.width = "100%"; 
-				newRow.appendChild(newCell);
-								
-				dgData.appendChild(newRow);
+				addSeparatorRow(dgData);
 			}
 			
 			//define a new row
@@ -232,6 +223,30 @@ function dgInsertData(objXHR) {
 	$('dgDivScroll').className = "";
 	
 }
+
+function addSeparatorRow(dgData) {
+	newRow = document.createElement("tr");
+	newRow.id = "separator";
+	newRow.className = "dgRowSeparator";	
+
+	checkTD = document.createElement("td");
+	checkTD.style.width = "25px";
+	checkTD.style.height = "5px";
+	newRow.appendChild(checkTD);	
+
+	for (i=0; i<dgColumnOrder.length; i++) {
+		cell = document.createElement("td");
+		cell.style.width = dgHeaderSize[i] + "px";
+		cell.style.height = "5px"; //overwrite css style
+		newRow.appendChild(cell);						
+	}
+	dgData.appendChild(newRow);
+	
+	lastTD = document.createElement("td");
+	lastTD.style.height = "5px";
+	newRow.appendChild(lastTD);
+}
+
 
 // Row Handling
 function activateRow(objRow) {
