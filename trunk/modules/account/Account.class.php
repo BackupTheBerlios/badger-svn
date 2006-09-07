@@ -563,6 +563,15 @@ class Account extends DataGridHandler {
 			} else {
 				$parentCategory = null;
 			}
+			
+			if ($parentCategory) {
+				$concatCategoryTitle = $parentCategory->getTitle() . ' - ';
+			} else {
+				$concatCategoryTitle = '';
+			}
+			if ($category) {
+				$concatCategoryTitle .= $category->getTitle();
+			}
 
 			$result[$currResultIndex] = array();
 			if (
@@ -632,7 +641,7 @@ class Account extends DataGridHandler {
 						break;
 					
 					case 'concatCategoryTitle':
-						$result[$currResultIndex]['concatCategoryTitle'] = (($parentCategory) ? $parentCategory->getTitle() . ' - ' : '') . (($category) ? $category->getTitle() : '');
+						$result[$currResultIndex]['concatCategoryTitle'] = $concatCategoryTitle;
 						break;
 					
 					case 'sum':
