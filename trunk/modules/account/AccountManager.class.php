@@ -120,7 +120,7 @@ class AccountManager extends DataGridHandler {
 	 * 
 	 * @return array A list of all field names.
 	 */
-	public function getFieldNames() {
+	public function getAllFieldNames() {
 		return $this->fieldNames;
 	}
 	
@@ -146,6 +146,10 @@ class AccountManager extends DataGridHandler {
 		return $fieldSQLNames[$fieldName];    	
 	}
 
+	public function getIdFieldName() {
+		return 'accountId';
+	}
+
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -166,17 +170,35 @@ class AccountManager extends DataGridHandler {
 		while($this->fetchNextAccount());
 		
 		$result = array();
-		
+		$currResultIndex = 0;
+				
 		foreach($this->accounts as $currentAccount){
 			$classBalance = ($currentAccount->getBalance()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
 
-			$result[] = array (
-				'accountId' => $currentAccount->getId(),
-				'currency' => is_null($tmp = $currentAccount->getCurrency()) ? '' : $tmp->getSymbol(),
-				'title' => $currentAccount->getTitle(),
-				'balance' => "<span class='$classBalance'>" . $currentAccount->getBalance()->getFormatted() . '</span>'
-			);
-		}
+			$result[$currResultIndex] = array();
+			$result[$currResultIndex]['accountId'] = $currentAccount->getId(); 
+
+			foreach ($this->selectedFields as $selectedField) {
+				switch ($selectedField) {
+					case 'currency':
+						$result[$currResultIndex]['currency'] = is_null($tmp = $currentAccount->getCurrency()) ? '' : $tmp->getSymbol();
+						break;
+					
+					case 'title':
+						$result[$currResultIndex]['title'] = $currentAccount->getTitle();
+						break;
+						
+					case 'balance':
+						$result[$currResultIndex]['balance'] = array (
+							'class' => $classBalance,
+							'content' => $currentAccount->getBalance()->getFormatted()
+						);
+						break;
+				} //switch
+			} //foreach selectedFields 
+			
+			$currResultIndex++;
+		} //foreach accounts
 		
 		return $result;
 	}

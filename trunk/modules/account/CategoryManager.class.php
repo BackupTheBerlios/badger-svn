@@ -123,7 +123,7 @@ class CategoryManager extends DataGridHandler {
 	 * 
 	 * @return array A list of all field names.
 	 */
-	public function getFieldNames() {
+	public function getAllFieldNames() {
 		return $this->fieldNames;
 	}
 	
@@ -151,6 +151,10 @@ class CategoryManager extends DataGridHandler {
 		return $fieldTypes[$fieldName];    	
 	}
 
+	public function getIdFieldName() {
+		return 'categoryId';
+	}
+
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -168,19 +172,12 @@ class CategoryManager extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		global $badgerDb;
-
-		$us = new UserSettings($badgerDb);
-		$tpl = new TemplateEngine($us, BADGER_ROOT);
-		$widgets = new WidgetEngine($tpl);
-		
-		$currentLanguage = $us->getProperty('badgerLanguage');
-
 		while ($this->fetchNextCategory());
 		
 		$this->sortCategories();
 		
 		$result = array();
+		$currResultIndex = 0;
 		
 		foreach($this->categories as $currentCategory){
 			$parent = $currentCategory->getParent();
@@ -197,21 +194,44 @@ class CategoryManager extends DataGridHandler {
 			
 			if ($currentCategory->getOutsideCapital()) {
 				$image = "Account/$currentLanguage/outside_capital.png";
-				$tooltip = 'title="' . getBadgerTranslation2('CategoryManager', 'outsideCapital') . '"';
+				$tooltip = getBadgerTranslation2('CategoryManager', 'outsideCapital');
 			} else {
 				$image = "Account/$currentLanguage/own_capital.png";
-				$tooltip = 'title="' . getBadgerTranslation2('CategoryManager', 'ownCapital') . '"';
+				$tooltip = getBadgerTranslation2('CategoryManager', 'ownCapital');
 			}
 			
-			$result[] = array (
-				'categoryId' => $currentCategory->getId(),
-				'title' => $title,
-				'description' => $currentCategory->getDescription(),
-				'outsideCapital' => $widgets->addImage($image, $tooltip),
-				'parentId' => $parentId,
-				'parentTitle' => $parentTitle
-			);
-		}
+			$result[$currResultIndex] = array();
+			$result[$currResultIndex]['categoryId'] = $currentCategory->getId(); 
+
+			foreach ($this->selectedFields as $selectedField) {
+				switch ($selectedField) {
+					case 'title':
+						$result[$currResultIndex]['title'] = $title;
+						break;
+					
+					case 'description':
+						$result[$currResultIndex]['description'] = $currentCategory->getDescription();
+						break;
+					
+					case 'outsideCapital':
+						$result[$currResultIndex]['outsideCapital'] = array (
+							'img' => $image,
+							'title' => $tooltip
+						);
+						break;
+					
+					case 'parentId':
+						$result[$currResultIndex]['parentId'] = $parentId;
+						break;
+					
+					case 'parentTitle':
+						$result[$currResultIndex]['parentTitle'] = $parentTitle;
+						break;
+				} //switch
+			} //foreach selectedFields
+			
+			$currResultIndex++;
+		} //foreach categories
 		
 		return $result;
 	}

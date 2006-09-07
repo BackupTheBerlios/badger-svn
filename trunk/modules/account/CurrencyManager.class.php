@@ -115,7 +115,7 @@ class CurrencyManager extends DataGridHandler {
 	 * 
 	 * @return array A list of all field names.
 	 */
-	public function getFieldNames() {
+	public function getAllFieldNames() {
 		return $this->fieldNames;
 	}
 	
@@ -140,6 +140,10 @@ class CurrencyManager extends DataGridHandler {
 		return $fieldTypes[$fieldName];    	
 	}
 
+	public function getIdFieldName() {
+		return 'currencyId';
+	}
+
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -160,14 +164,26 @@ class CurrencyManager extends DataGridHandler {
 		while($this->fetchNextCurrency());
 		
 		$result = array();
+		$currResultIndex = 0;
 		
 		foreach($this->currencies as $currentCurrency){
-			$result[] = array (
-				'currencyId' => $currentCurrency->getId(),
-				'symbol' => $currentCurrency->getSymbol(),
-				'longName' => $currentCurrency->getLongName()
-			);
-		}
+			$result[$currResultIndex] = array();
+			$result[$currResultIndex]['currencyId'] = $currentCurrency->getId(); 
+
+			foreach ($this->selectedFields as $selectedField) {
+				switch ($selectedField) {
+					case 'symbol':
+						$result[$currResultIndex]['symbol'] = $currentCurrency->getSymbol();
+						break;
+					
+					case 'longName':
+						$result[$currResultIndex]['longName'] = $currentCurrency->getLongName();
+						break;
+				} //switch
+			} //foreach selectedFields
+			
+			$currResultIndex++;
+		} //foreach currencies
 		
 		return $result;
 	}

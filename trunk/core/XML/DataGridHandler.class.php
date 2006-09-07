@@ -41,6 +41,8 @@ abstract class DataGridHandler {
 	 */
 	protected $filter = array();
 	
+	protected $selectedFields = array();
+	
 	/**
 	 * Initializes the DB object.
 	 * 
@@ -75,6 +77,8 @@ abstract class DataGridHandler {
 	 * @return The SQL name of $fieldName.
 	 */
 	public abstract function getFieldSQLName($fieldName);
+	
+	public abstract function getIdFieldName();
 	
 	/**
 	 * Sets the order to return the results.
@@ -115,7 +119,7 @@ abstract class DataGridHandler {
 			if(!$this->hasField($val['key'])){
 				throw new BadgerException('DataGridHandler', 'orderIllegalField', $val['key']);
 			}
-			if(strtolower($val['dir'])  != 'asc' and strtolower($val['dir'])  != 'desc'){
+			if(strtolower($val['dir'])  != 'asc' && strtolower($val['dir'])  != 'desc'){
 				throw new BadgerException('DataGridHandler', 'orderIllegalDirection', $val['dir']);
 			}
 			
@@ -187,13 +191,33 @@ abstract class DataGridHandler {
 		
 	}
 	
+	public function setSelectedFields($fields) {
+		$this->selectedFields = array();
+		
+		$this->selectedFields[0] = $this->getIdFieldName();
+
+		foreach ($fields as $field) {
+			if (!$this->hasField($field)) {
+				throw new BadgerException('DataGridHandler', 'illegalFieldSelected', $field);
+			}
+			
+			if ($field != $this->getIdFieldName()) {
+				$this->selectedFields[] = $field;
+			}
+		}
+	}
+
+	public function getFieldNames() {
+		return $this->selectedFields;
+	}
+	
 	/**
 	 * Returns all valid field names.
 	 * 
 	 * @return array A list of all field names.
 	 */
-	public abstract function getFieldNames();
-	
+	public abstract function getAllFieldNames();
+
 	/**
 	 * Returns all fields in an array.
 	 * 

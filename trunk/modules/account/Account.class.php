@@ -48,6 +48,7 @@ class Account extends DataGridHandler {
 			'categoryTitle',
 			'parentCategoryId',
 			'parentCategoryTitle',
+			'concatCategoryTitle',
 			'sum'
 		),
 		'planned' => array (
@@ -391,6 +392,7 @@ class Account extends DataGridHandler {
 			'categoryTitle' => 'string',
 			'parentCategoryId' => 'integer',
 			'parentCategoryTitle' => 'string',
+			'concatCategoryTitle' => 'string',
 			'repeatUnit' => 'string',
 			'repeatFrequency' => 'integer',
 			'exceptional' => 'boolean',
@@ -405,12 +407,7 @@ class Account extends DataGridHandler {
 		return $fieldTypes[$fieldName];    	
 	}
 
-	/**
-	 * Returns all valid field names.
-	 * 
-	 * @return array A list of all field names.
-	 */
-	public function getFieldNames() {
+	public function getAllFieldNames() {
 		return $this->fieldNames[$this->type];
 	}
 
@@ -436,6 +433,7 @@ class Account extends DataGridHandler {
 				'categoryTitle' => 'c.title',
 				'parentCategoryId' => 'pc.category_id',
 				'parentCategoryTitle' => 'pc.title',
+				'concatCategoryTitle' => 'CONCAT(IF(pc.title NOT IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
 				'sum' => Account::TABLE_PLACEHOLDER . '.__SUM__'
 			),
 			'planned' => array (
@@ -478,6 +476,19 @@ class Account extends DataGridHandler {
 		return $fieldSQLNames[$this->type][$fieldName];    	
 	}
 	
+	public function getIdFieldName() {
+		switch ($this->type) {
+			case 'transaction':
+				return 'transactionId';
+			
+			case 'planned':
+				return 'plannedTransactionId';
+			
+			case 'finished':
+				return 'transactionId';
+		}
+	}
+	
 	/**
 	 * Returns all fields in an array.
 	 * 
@@ -495,116 +506,298 @@ class Account extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
-		global $badgerDb;
-
-		$us = new UserSettings($badgerDb);
-		$tpl = new TemplateEngine($us, BADGER_ROOT);
-		$widgets = new WidgetEngine($tpl);
-		
-		$currentLanguage = $us->getProperty('badgerLanguage');
-		
-		$result = array();
-
 		switch ($this->type) {
 			case 'transaction':
-				$this->fetchTransactions();
-
-				$sum = new Amount();
-		
-				foreach($this->finishedTransactions as $currentTransaction){
-					$sum->add($currentTransaction->getAmount());
-					
-					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-					$classSum = ($sum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
-
-					$category = $currentTransaction->getCategory();
-					if (!is_null($category)) {
-						$parentCategory = $category->getParent();
-					} else {
-						$parentCategory = null;
-					}
-
-					$result[] = array (
-						'transactionId' => $currentTransaction->getId(),
-						'type' => $widgets->addImage($currentTransaction->getType() == 'FinishedTransaction' ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png', 'title="' . getBadgerTranslation2('Account', $currentTransaction->getType()) . '"'), 
-						'title' => $currentTransaction->getTitle(),
-						'description' => $currentTransaction->getDescription(),
-						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
-						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
-						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
-						'transactionPartner' => $currentTransaction->getTransactionPartner(),
-						'categoryId' => ($category) ? $category->getId() : '',
-						'categoryTitle' => ($category) ? $category->getTitle() : '',
-						'parentCategoryId' => ($parentCategory) ? $parentCategory->getId() : '',
-						'parentCategoryTitle' => ($parentCategory) ? $parentCategory->getTitle() : '',
-						'sum' => "<span class='$classSum'>" . $sum->getFormatted() . '</span>'
-					);
-				}
-				break;
+				return $this->getAllTransaction();
 			
 			case 'finished':
-				while ($this->fetchNextFinishedTransaction());
-				
-				foreach($this->finishedTransactions as $currentTransaction){
-					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-
-					$category = $currentTransaction->getCategory();
-					if (!is_null($category)) {
-						$parentCategory = $category->getParent();
-					} else {
-						$parentCategory = null;
-					}
-
-					$result[] = array (
-						'finishedTransactionId' => $currentTransaction->getId(),
-						'title' => $currentTransaction->getTitle(),
-						'description' => $currentTransaction->getDescription(),
-						'valutaDate' => ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '',
-						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
-						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
-						'transactionPartner' => $currentTransaction->getTransactionPartner(),
-						'categoryId' => ($category) ? $category->getId() : '',
-						'categoryTitle' => ($category) ? $category->getTitle() : '',
-						'parentCategoryId' => ($parentCategory) ? $parentCategory->getId() : '',
-						'parentCategoryTitle' => ($parentCategory) ? $parentCategory->getTitle() : '',
-						'exceptional' => is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp,
-						'periodical' => is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp
-					);
-				}
-				break;
+				return $this->getAllFinished();
 			
 			case 'planned':
-				while ($this->fetchNextPlannedTransaction());
-		
-				foreach($this->plannedTransactions as $currentTransaction){
-					$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-
-					$category = $currentTransaction->getCategory();
-					if (!is_null($category)) {
-						$parentCategory = $category->getParent();
-					} else {
-						$parentCategory = null;
-					}
-
-					$result[] = array (
-						'plannedTransactionId' => 'p' . $currentTransaction->getId() . '_X',
-						'title' => $currentTransaction->getTitle(),
-						'description' => $currentTransaction->getDescription(),
-						'amount' => "<span class='$classAmount'>" . $currentTransaction->getAmount()->getFormatted() . '</span>',
-						'outsideCapital' => is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp,
-						'transactionPartner' => $currentTransaction->getTransactionPartner(),
-						'beginDate' => $currentTransaction->getBeginDate()->getFormatted(),
-						'endDate' => ($tmp = $currentTransaction->getEndDate()) ? $tmp->getFormatted() : '',
-						'repeatUnit' => getBadgerTranslation2('Account', $currentTransaction->getRepeatUnit()),
-						'repeatFrequency' => $currentTransaction->getRepeatFrequency(),
-						'categoryId' => ($category) ? $category->getId() : '',
-						'categoryTitle' => ($category) ? $category->getTitle() : '',
-						'parentCategoryId' => ($parentCategory) ? $parentCategory->getId() : '',
-						'parentCategoryTitle' => ($parentCategory) ? $parentCategory->getTitle() : ''
-					);
-				}
-				break;
+				return $this->getAllPlanned();
 		}
+	}
+
+	private function getAllTransaction() {
+		$result = array();
+		$currResultIndex = 0;
+
+		$this->fetchTransactions();
+
+		$sum = new Amount();
+		
+		$now = new Date();
+		$now->setHour(0);
+		$now->setMinute(0);
+		$now->setSecond(0);
+		
+		if (isset($this->order[0]) && $this->order[0]['key'] == 'valutaDate') {
+			$firstOrderValutaDate = true;
+		} else {
+			$firstOrderValutaDate = false;
+		}
+		$todayMarkerSet = false;
+
+		foreach($this->finishedTransactions as $currentTransaction){
+			$sum->add($currentTransaction->getAmount());
+			
+			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+			$classSum = ($sum->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount';
+
+			$category = $currentTransaction->getCategory();
+			if (!is_null($category)) {
+				$parentCategory = $category->getParent();
+			} else {
+				$parentCategory = null;
+			}
+
+			$result[$currResultIndex] = array();
+			if (
+				$firstOrderValutaDate
+				&& $todayMarkerSet === false
+				&& Date::compare($now, $currentTransaction->getValutaDate()) < 0
+			) {
+				$result[$currResultIndex]['transactionId'] = array (
+					'marker' => 'today',
+					'content' => $currentTransaction->getId() 
+				);
+				$todayMarkerSet = true;
+			} else {
+				$result[$currResultIndex]['transactionId'] = $currentTransaction->getId(); 
+			}
+
+			foreach ($this->selectedFields as $selectedField) {
+				switch ($selectedField) {
+					case 'type':
+						$result[$currResultIndex]['type'] = array (
+							'img' => (($currentTransaction->getType() == 'FinishedTransaction') ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png'),
+							'title' => getBadgerTranslation2('Account', $currentTransaction->getType())
+						);
+						break;
+					
+					case 'title':
+						$result[$currResultIndex]['title'] = $currentTransaction->getTitle();
+						break;
+					
+					case 'description':
+						$result[$currResultIndex]['description'] = $currentTransaction->getDescription();
+						break;
+					
+					case 'valutaDate':
+						$result[$currResultIndex]['valutaDate'] = ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '';
+						break;
+					
+					case 'amount':
+						$result[$currResultIndex]['amount'] = array (
+							'class' => $classAmount,
+							'content' => $currentTransaction->getAmount()->getFormatted()
+						);
+						break;
+						
+					case 'outsideCapital':
+						$result[$currResultIndex]['outsideCapital'] = is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp;
+						break;
+					
+					case 'transactionPartner':
+						$result[$currResultIndex]['transactionPartner'] = $currentTransaction->getTransactionPartner();
+						break;
+					
+					case 'categoryId':
+						$result[$currResultIndex]['categoryId'] = ($category) ? $category->getId() : '';
+						break;
+					
+					case 'categoryTitle':
+						$result[$currResultIndex]['categoryTitle'] = ($category) ? $category->getTitle() : '';
+						break;
+					
+					case 'parentCategoryId':
+						$result[$currResultIndex]['parentCategoryId'] = ($parentCategory) ? $parentCategory->getId() : '';
+						break;
+						
+					case 'parentCategoryTitle':
+						$result[$currResultIndex]['parentCategoryTitle'] = ($parentCategory) ? $parentCategory->getTitle() : '';
+						break;
+					
+					case 'concatCategoryTitle':
+						$result[$currResultIndex]['concatCategoryTitle'] = (($parentCategory) ? $parentCategory->getTitle() . ' - ' : '') . (($category) ? $category->getTitle() : '');
+						break;
+					
+					case 'sum':
+						$result[$currResultIndex]['sum'] = array (
+							'class' => $classSum,
+							'content' => $sum->getFormatted()
+						);
+						break;
+				} //switch
+			} //foreach selectedFields
+			
+			$currResultIndex++;
+		} //foreach finishedTransactions
+
+		return $result;		
+	}
+	
+	private function getAllFinished() {
+		$result = array();
+		$currResultIndex = 0;
+
+		while ($this->fetchNextFinishedTransaction());
+		
+		foreach($this->finishedTransactions as $currentTransaction){
+			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+
+			$category = $currentTransaction->getCategory();
+			if (!is_null($category)) {
+				$parentCategory = $category->getParent();
+			} else {
+				$parentCategory = null;
+			}
+
+			$result[$currResultIndex] = array();
+			$result[$currResultIndex]['finishedTransactionId'] = $currentTransaction->getId(); 
+
+			foreach ($this->selectedFields as $selectedField) {
+				switch ($selectedField) {
+					case 'title':
+						$result[$currResultIndex]['title'] = $currentTransaction->getTitle();
+						break;
+					
+					case 'description':
+						$result[$currResultIndex]['description'] = $currentTransaction->getDescription();
+						break;
+				
+					case 'valutaDate':
+						$result[$currResultIndex]['valutaDate'] = ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '';
+						break;
+						
+					case 'amount':
+						$result[$currResultIndex]['amount'] = array (
+							'class' => $classAmount,
+							'content' => $currentTransaction->getAmount()->getFormatted()
+						);
+						break;
+					
+					case 'outsideCapital':
+						$result[$currResultIndex]['outsideCapital'] = is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp;
+						break;
+					
+					case 'transactionPartner':
+						$result[$currResultIndex]['transactionPartner'] = $currentTransaction->getTransactionPartner();
+						break;
+						
+					case 'categoryId':
+						$result[$currResultIndex]['categoryId'] = ($category) ? $category->getId() : '';
+						break;
+					
+					case 'categoryTitle':
+						$result[$currResultIndex]['categoryTitle'] = ($category) ? $category->getTitle() : '';
+						break;
+					
+					case 'parentCategoryId':
+						$result[$currResultIndex]['parentCategoryId'] = ($parentCategory) ? $parentCategory->getId() : '';
+						break;
+					
+					case 'parentCategoryTitle':
+						$result[$currResultIndex]['parentCategoryTitle'] = ($parentCategory) ? $parentCategory->getTitle() : '';
+						break;
+					
+					case 'exceptional':
+						$result[$currResultIndex]['exceptional'] = is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp;
+						break;
+					
+					case 'periodical':
+						$result[$currResultIndex]['periodical'] = is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp;
+						break;
+				} //switch
+			} //foreach selectedFields
+			
+			$currResultIndex++;
+		} //foreach finishedTransactions
+		
+		return $result;
+	}
+
+	private function getAllPlanned() {
+		$result = array();
+		$currResultIndex = 0;
+
+		while ($this->fetchNextPlannedTransaction());
+
+		foreach($this->plannedTransactions as $currentTransaction){
+			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+
+			$category = $currentTransaction->getCategory();
+			if (!is_null($category)) {
+				$parentCategory = $category->getParent();
+			} else {
+				$parentCategory = null;
+			}
+
+			$result[$currResultIndex] = array();
+			$result[$currResultIndex]['plannedTransactionId'] = 'p' . $currentTransaction->getId() . '_X';
+
+			foreach ($this->selectedFields as $selectedField) {
+				switch ($selectedField) {
+					case 'title':
+						$result[$currResultIndex]['title'] = $currentTransaction->getTitle();
+						break;
+					
+					case 'description':
+						$result[$currResultIndex]['description'] = $currentTransaction->getDescription();
+						break;
+				
+					case 'amount':
+						$result[$currResultIndex]['amount'] = array (
+							'class' => $classAmount,
+							'content' => $currentTransaction->getAmount()->getFormatted()
+						);
+						break;
+					
+					case 'outsideCapital':
+						$result[$currResultIndex]['outsideCapital'] = is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp;
+						break;
+					
+					case 'transactionPartner':
+						$result[$currResultIndex]['transactionPartner'] = $currentTransaction->getTransactionPartner();
+						break;
+						
+					case 'beginDate':
+						$result[$currResultIndex]['beginDate'] = $currentTransaction->getBeginDate()->getFormatted();
+						break;
+						
+					case 'endDate':
+						$result[$currResultIndex]['endDate'] = ($tmp = $currentTransaction->getEndDate()) ? $tmp->getFormatted() : '';
+						break;
+						
+					case 'repeatUnit':
+						 $result[$currResultIndex]['repeatUnit'] = getBadgerTranslation2('Account', $currentTransaction->getRepeatUnit());
+						 break;
+					
+					case 'repeatFrequency':
+						$result[$currResultIndex]['repeatFrequency'] = $currentTransaction->getRepeatFrequency();
+						break;
+						
+					case 'categoryId':
+						$result[$currResultIndex]['categoryId'] = ($category) ? $category->getId() : '';
+						break;
+					
+					case 'categoryTitle':
+						$result[$currResultIndex]['categoryTitle'] = ($category) ? $category->getTitle() : '';
+						break;
+					
+					case 'parentCategoryId':
+						$result[$currResultIndex]['parentCategoryId'] = ($parentCategory) ? $parentCategory->getId() : '';
+						break;
+					
+					case 'parentCategoryTitle':
+						$result[$currResultIndex]['parentCategoryTitle'] = ($parentCategory) ? $parentCategory->getTitle() : '';
+						break;
+					
+				} //switch
+			} //foreach selectedFields
+			
+			$currResultIndex++;
+		} //foreach plannedTransactions
 		
 		return $result;
 	}

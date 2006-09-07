@@ -136,9 +136,16 @@ while (isset($_GET["fk$i"]) && isset($_GET["fo$i"]) && isset($_GET["fv$i"])) {
 	$i++;
 }
 
+if (isset($_GET['sf'])) {
+	$selectedFields = explode(',', unescaped($_GET, 'sf'));
+} else {
+	$selectedFields = $handler->getAllFieldNames();
+}
+
 //Prepare Handler
 $handler->setOrder($order);
 $handler->setFilter($filter);
+$handler->setSelectedFields($selectedFields);
 
 //Get data
 $rows = $handler->getAll();

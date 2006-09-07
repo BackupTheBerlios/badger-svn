@@ -177,8 +177,24 @@ class DataGridXML {
 		foreach ($this->rows as $row) {
 			$result .= "<row>";
 			foreach ($row as $field) {
-				$field = urlencode($field);
-				$result .= "<cell>$field</cell>";
+				if (!is_array($field)) {
+					$field = urlencode($field);
+					$result .= "<cell>$field</cell>";
+				} else {
+					$result .= '<cell ';
+					foreach ($field as $attrName => $attrVal) {
+						if ($attrName != 'content') {
+							$attrVal = urlencode($attrVal);
+							$result .= "$attrName=\"$attrVal\" ";
+						}
+					}
+					if (isset($field['content'])) {
+						$content = urlencode($field['content']);
+					} else {
+						$content = '';
+					}
+					$result .= ">$content</cell>";
+				}
 			}
 			$result .= "</row>";
 		}
@@ -188,27 +204,5 @@ class DataGridXML {
 		
 		return $result;
 	}
-	
-	/**
-	 * Replaces non-numeric indices by numeric ones. Handles nested arrays correctly.
-	 * 
-	 * Non-linear ordered arrays are reordered.
-	 * 
-	 * @param array $array The array with (possible) non-numeric idices
-	 * @return array The input array with numeric indices.
-	 */
-	private function removeNonNumericIndices($array) {
-		$result = array();
-		
-		foreach ($array as $val) {
-			if (!is_array($val)) {
-				$result[] = $val;
-			} else {
-				$result[] = $this->removeNonNumericIndices($val);
-			}
-		}
-		
-		return $result;
-	} 
 }
 ?>
