@@ -42,7 +42,7 @@ require_once BADGER_ROOT . '/core/Amount.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 
 //q parameter is mandatory
-if (!isset($_GET['q'])){
+if (!isset($_REQUEST['q'])){
 	echo 'Missing Parameter q';
 	exit;
 }
@@ -53,7 +53,7 @@ $logger->log('getDataGridXML: REQUEST_URI: ' . $_SERVER['REQUEST_URI']);
 
 //Unknown DataGridHandler if no result
 try{
-	$handlerData = $dgr->getHandler($_GET['q']);
+	$handlerData = $dgr->getHandler($_REQUEST['q']);
 } catch (BadgerException $ex){
 	echo 'Unknown DataGridHandler';
 	exit;		
@@ -63,8 +63,8 @@ try{
 require_once BADGER_ROOT . $handlerData['path'];
 
 //Pass query parameters, if available
-if (isset($_GET['qp'])) {
-	$param = unescaped($_GET, 'qp');
+if (isset($_REQUEST['qp'])) {
+	$param = unescaped($_REQUEST, 'qp');
 	$handler = new $handlerData['class']($badgerDb, $param);
 } else {
 	$handler = new $handlerData['class']($badgerDb);
@@ -74,12 +74,12 @@ $order = array();
 
 //Filter order parameters to valid entries
 for ($i = 0; $i <= 2; $i++) {
-	if (isset($_GET["ok$i"])) {
-		if ($handler->hasField(unescaped($_GET, "ok$i"))) {
-			$order[$i]['key'] = unescaped($_GET, "ok$i");
+	if (isset($_REQUEST["ok$i"])) {
+		if ($handler->hasField(unescaped($_REQUEST, "ok$i"))) {
+			$order[$i]['key'] = unescaped($_REQUEST, "ok$i");
 
-			if (isset($_GET["od$i"])) {
-				switch ($_GET["od$i"]) {
+			if (isset($_REQUEST["od$i"])) {
+				switch ($_REQUEST["od$i"]) {
 					case 'a':
 					default:
 						$order[$i]['dir'] = 'asc';
@@ -95,7 +95,7 @@ for ($i = 0; $i <= 2; $i++) {
 			}
 		} else {
 			//unknown order key
-			echo 'Unknown order key: ' . $_GET["ok$i"];
+			echo 'Unknown order key: ' . $_REQUEST["ok$i"];
 			exit;
 		}
 	} else {
@@ -108,36 +108,36 @@ $filter = array();
 $i = 0;
 
 //Filter filter parameters to valid enties
-while (isset($_GET["fk$i"]) && isset($_GET["fo$i"]) && isset($_GET["fv$i"])) {
-	if ($handler->hasField(unescaped($_GET, "fk$i"))) {
-		$filter[$i]['key'] = unescaped($_GET, "fk$i");
+while (isset($_REQUEST["fk$i"]) && isset($_REQUEST["fo$i"]) && isset($_REQUEST["fv$i"])) {
+	if ($handler->hasField(unescaped($_REQUEST, "fk$i"))) {
+		$filter[$i]['key'] = unescaped($_REQUEST, "fk$i");
 		
-		if (isLegalOperator(unescaped($_GET, "fo$i"))) {
-			$filter[$i]['op'] = unescaped($_GET, "fo$i");
+		if (isLegalOperator(unescaped($_REQUEST, "fo$i"))) {
+			$filter[$i]['op'] = unescaped($_REQUEST, "fo$i");
 			
 			try {
-				$filter[$i]['val'] = transferType($handler->getFieldType(unescaped($_GET, "fk$i")), unescaped($_GET, "fv$i"));
+				$filter[$i]['val'] = transferType($handler->getFieldType(unescaped($_REQUEST, "fk$i")), unescaped($_REQUEST, "fv$i"));
 			} catch (TransferException $ex) {
 				//Untransferable Data Type
-				echo 'Illegal filter value: ' . $_GET["fv$i"];
+				echo 'Illegal filter value: ' . $_REQUEST["fv$i"];
 				exit;
 			}
 		} else {
 			//illegal filter operator
-			echo 'Illegal filter operator: ' . $_GET["fo$i"];
+			echo 'Illegal filter operator: ' . $_REQUEST["fo$i"];
 			exit;
 		}
 	} else {
 		//unknown filter key
-		echo 'Unknown filter key: ' . $_GET["fk$i"];
+		echo 'Unknown filter key: ' . $_REQUEST["fk$i"];
 		exit;
 	}
 
 	$i++;
 }
 
-if (isset($_GET['sf'])) {
-	$selectedFields = explode(',', unescaped($_GET, 'sf'));
+if (isset($_REQUEST['sf'])) {
+	$selectedFields = explode(',', unescaped($_REQUEST, 'sf'));
 } else {
 	$selectedFields = $handler->getAllFieldNames();
 }
