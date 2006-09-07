@@ -195,4 +195,17 @@ function nextByKey(&$array, &$key) {
 	
 	return $result;
 }
+
+function getRelativeTplPath($path) {
+	global $us;
+	
+	$currentTemplate = $us->getProperty('badgerTemplate');
+	
+	$filename = BADGER_ROOT . "/tpl/$currentTemplate/$path";
+	if (!file_exists($filename)) {
+		$currentTemplate = 'Standard';
+	}
+	
+	return "tpl/$currentTemplate/$path";
+}
 ?>

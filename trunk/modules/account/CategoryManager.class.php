@@ -172,12 +172,16 @@ class CategoryManager extends DataGridHandler {
 	 * @return array A list of all fields.
 	 */
 	public function getAll() {
+		global $us;
+		
 		while ($this->fetchNextCategory());
 		
 		$this->sortCategories();
 		
 		$result = array();
 		$currResultIndex = 0;
+		
+		$currentLanguage = $us->getProperty('badgerLanguage');
 		
 		foreach($this->categories as $currentCategory){
 			$parent = $currentCategory->getParent();
@@ -215,7 +219,7 @@ class CategoryManager extends DataGridHandler {
 					
 					case 'outsideCapital':
 						$result[$currResultIndex]['outsideCapital'] = array (
-							'img' => $image,
+							'img' => getRelativeTplPath($image),
 							'title' => $tooltip
 						);
 						break;

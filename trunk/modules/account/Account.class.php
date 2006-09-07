@@ -570,7 +570,7 @@ class Account extends DataGridHandler {
 				switch ($selectedField) {
 					case 'type':
 						$result[$currResultIndex]['type'] = array (
-							'img' => (($currentTransaction->getType() == 'FinishedTransaction') ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png'),
+							'img' => getRelativeTplPath(($currentTransaction->getType() == 'FinishedTransaction') ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png'),
 							'title' => getBadgerTranslation2('Account', $currentTransaction->getType())
 						);
 						break;
