@@ -22,12 +22,12 @@ $am = new AccountManager($badgerDb);
 $curMan = new CurrencyManager($badgerDb);
 
 if (isset($_GET['action'])) {
-	switch ($_GET['action']) {
+	switch (getGPC($_GET, 'action')) {
 		case 'delete':
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
-				$IDs = explode(",",$_GET['ID']);
+				$IDs = getGPC($_GET, 'ID', 'integerList');
 				
 				//check if we can delete this item
 				foreach($IDs as $ID){
@@ -84,7 +84,7 @@ function printFrontend() {
 	echo $widgets->addToolTipLayer();
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
-		$ID = $_GET['ID'];
+		$ID = getGPC($_GET, 'ID', 'integer');
 		$account = $am->getAccountById($ID);
 		$titleValue = $account->getTitle();
 		$descriptionValue = $account->getDescription();
@@ -142,15 +142,16 @@ function updateRecord() {
 	global $us;
 	
 	if (isset($_POST['hiddenID'])) {
-		switch ($_POST['hiddenID']) {
+		switch (getGPC($_POST, 'hiddenID')) {
 		case 'new':
 			//add new record
 			$ID = $am->addAccount(
-				$_POST['title'],
-				$curMan->getCurrencyById($_POST['currency']),
-				$_POST['description'],
-				new Amount($_POST['lowerLimit'] , true),
-				new Amount($_POST['upperLimit'] , true));
+				getGPC($_POST, 'title'),
+				$curMan->getCurrencyById(getGPC($_POST, 'currency', 'integer')),
+				getGPC($_POST, 'description'),
+				getGPC($_POST, 'lowerLimit', 'AmountFormatted'),
+				getGPC($_POST, 'upperLimit', 'AmountFormatted')
+			);
 			
 			$naviId = addToNavi(
 				$us->getProperty('accountNaviParent'),
@@ -162,20 +163,19 @@ function updateRecord() {
 			);
 			$us->setProperty('accountNaviId_' . $ID->getId(), $naviId);
 			$us->setProperty('accountNaviNextPosition', $us->getProperty('accountNaviNextPosition') + 1);
-			addTranslation('Navigation', 'Account' . $ID->getId(), $_POST['title'], $_POST['title']);
+			addTranslation('Navigation', 'Account' . $ID->getId(), getGPC($_POST, 'title'), getGPC($_POST, 'title'));
 			break;
 			
 		default:
 			//update record
-			$account = $am->getAccountById($_POST['hiddenID']);
-			$account->setTitle($_POST['title']);
-			$account->setDescription($_POST['description']);
-			//print("<br/>".$curMan->getCurrencyById($_POST['currency'])->getLongName()."<br/>");
-			$account->setCurrency($curMan->getCurrencyById($_POST['currency']));
-			$account->setLowerLimit(new Amount( $_POST['lowerLimit'], true));
-			$account->setUpperLimit(new Amount( $_POST['upperLimit'], true));
+			$account = $am->getAccountById(getGPC($_POST, 'hiddenID', 'integer'));
+			$account->setTitle(getGPC($_POST, 'title'));
+			$account->setDescription(getGPC($_POST, 'description'));
+			$account->setCurrency($curMan->getCurrencyById(getGPC($_POST, 'currency', 'integer')));
+			$account->setLowerLimit(getGPC($_POST, 'lowerLimit', 'AmountFormatted'));
+			$account->setUpperLimit(getGPC($_POST, 'upperLimit', 'AmountFormatted'));
 
-			modifyTranslation('Navigation', 'Account' . $account->getId(), $_POST['title'], $_POST['title']);
+			modifyTranslation('Navigation', 'Account' . $account->getId(), getGPC($_POST, 'title'), getGPC($_POST, 'title'));
 		}
 		//REDIRECT
 		header("Location: $redirectPageAfterSave");

@@ -23,11 +23,11 @@ require_once BADGER_ROOT . '/includes/fileHeaderBackEnd.inc.php';
 $strParameter = "";
 foreach($_POST as $key => $value) {
 	if($key!="_") {
-		$strParameter .= $key . "=" . $value . "&";
+		$strParameter .= $key . "=" . getGPC($_POST, $key) . "&";
 	}
 }
 
-$us->setProperty('dgParameter'.$_POST['id'], $strParameter);
+$us->setProperty('dgParameter'.getGPC($_POST, 'id'), $strParameter);
 
 
 ?>

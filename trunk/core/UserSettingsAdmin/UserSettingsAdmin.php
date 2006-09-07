@@ -28,11 +28,11 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 	// is something written in the change password fields?
 	if (
 		(
-			(isset($_POST['OldPassword']) && $_POST['OldPassword']=="")
+			(isset($_POST['OldPassword']) && getGPC($_POST, 'OldPassword') == "")
 			&&
-			(isset($_POST['NewPassword']) && $_POST['NewPassword']=="")
+			(isset($_POST['NewPassword']) && getGPC($_POST, 'NewPassword') == "")
 			&&
-			(isset($_POST['NewPasswordConfirm']) && $_POST['NewPasswordConfirm']=="")
+			(isset($_POST['NewPasswordConfirm']) && get($_POST, 'NewPasswordConfirm') == "")
 		)
 	)
 	{
@@ -43,29 +43,25 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		$validation_change_password = true;
 		$validation_change_password_errors = "";
 		
-		if( md5($_POST['OldPassword']) != $us->getProperty('badgerPassword')){
+		if( md5(getGPC($_POST, 'OldPassword')) != $us->getProperty('badgerPassword')){
 			$validation_change_password = false;
 			$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_old_password_not_correct')."<br>";
 		};
 		
-		if( $_POST['NewPassword'] != $_POST['NewPasswordConfirm']){
+		if( getGPC($_POST, 'NewPassword') != getGPC($_POST, 'NewPasswordConfirm')){
 			$validation_change_password = false;
 			$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_confirm_failed')."<br>";
 		};
 		
-		if( $_POST['NewPassword'] == ""){
+		if( getGPC($_POST, 'NewPassword') == ""){
 			$validation_change_password = false;
 			$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_empty_password')."<br>";
 		};
 		
-		if( $_POST['NewPassword'] == "badger"){
+		if( getGPC($_POST, 'NewPassword') == "badger"){
 			$validation_change_password = false;
 			$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_standard_password')."<br>";
 		};
-	
-		//if($validation_change_password == true){
-		//	$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
-		//};
 	};
 	
 	
@@ -80,15 +76,15 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		&&
 		$change_password == false
 	)){
-		$us->setProperty('badgerTemplate',$_POST['Template']);
-		$us->setProperty('badgerLanguage',$_POST['Language']);
-		$us->setProperty('badgerDateFormat',$_POST['DateFormat']);
-		$us->setProperty('badgerMaxLoginAttempts',$_POST['MaximumLoginAttempts']);
-		$us->setProperty('badgerLockOutTime',$_POST['LockOutTime']);
-		$us->setProperty('badgerStartPage', $_POST['StartPage']);
-		$us->setProperty('badgerSessionTime', $_POST['SessionTime']);
+		$us->setProperty('badgerTemplate',getGPC($_POST, 'Template'));
+		$us->setProperty('badgerLanguage',getGPC($_POST, 'Language'));
+		$us->setProperty('badgerDateFormat',getGPC($_POST, 'DateFormat'));
+		$us->setProperty('badgerMaxLoginAttempts',getGPC($_POST, 'MaximumLoginAttempts', 'integer'));
+		$us->setProperty('badgerLockOutTime',getGPC($_POST, 'LockOutTime', 'integer'));
+		$us->setProperty('badgerStartPage', getGPC($_POST, 'StartPage'));
+		$us->setProperty('badgerSessionTime', getGPC($_POST, 'SessionTime', 'integer'));
 
-		if($_POST['Seperators'] == ".,"){
+		if(getGPC($_POST, 'Seperators') == ".,"){
 			$us->setProperty('badgerDecimalSeparator',",");
 			$us->setProperty('badgerThousandSeparator',".");
 		}else{
@@ -96,18 +92,16 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 			$us->setProperty('badgerThousandSeparator',",");
 		};
 		if($change_password == true){
-			$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
+			$us->setProperty('badgerPassword',md5(getGPC($_POST, 'NewPassword')));
 		};
 		
 
-		if (isset($_POST['futureCalcSpan']) && is_numeric($_POST['futureCalcSpan'])) {
-			$us->setProperty('amountFutureCalcSpan', $_POST['futureCalcSpan']);
+		if (isset($_POST['futureCalcSpan'])) {
+			$us->setProperty('amountFutureCalcSpan', getGPC($_POST, 'futureCalcSpan', 'integer'));
 		}
 
-		if (isset($_POST['autoExpandPlannedTransactions']) && $_POST['autoExpandPlannedTransactions']) {
-			$us->setProperty('autoExpandPlannedTransactions', true);
-		} else {
-			$us->setProperty('autoExpandPlannedTransactions', false);
+		if (isset($_POST['autoExpandPlannedTransactions'])) {
+			$us->setProperty('autoExpandPlannedTransactions', getGPC($_POST, 'autoExpandPlannedTransactions', 'checkbox'));
 		}
 	};
 	

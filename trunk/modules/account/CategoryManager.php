@@ -30,12 +30,12 @@ $order = array (
 $cm->setOrder($order);
 
 if (isset($_GET['action'])) {
-	switch ($_GET['action']) {
+	switch (getGPC($_GET, 'action')) {
 		case 'delete':
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
-				$IDs = explode(",",$_GET['ID']);
+				$IDs = getGPC($_GET, 'ID', 'integerList');
 							
 				//for all categories which should be deleted
 				foreach($IDs as $ID){
@@ -93,7 +93,7 @@ function printFrontend() {
 	
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
-		$ID = $_GET['ID'];
+		$ID = getGPC($_GET, 'ID', 'integer');
 		$pageTitle = getBadgerTranslation2 ('accountCategory','pageTitleEdit');
 		$category = $cm->getCategoryById($ID);
 		$titleValue = $category->getTitle();
@@ -175,40 +175,29 @@ function updateRecord() {
 	global $redirectPageAfterSave;
 	global $cm;
 	
-	switch ($_POST['hiddenID']) {
+	switch (getGPC($_POST, 'hiddenID')) {
 	case 'new':
 		//add new record
 		//check if $_POST['symbol'], $_POST['longName'] is set?????
 		
 		
 		
-		if(isset($_POST['outsideCapital']) && $_POST['outsideCapital'] == "on"){
-			$_POST['outsideCapital'] = 1;
-		}else{
-			$_POST['outsideCapital'] = 0;
-		};
-
-		$Cat = $cm->addCategory($_POST['title'], $_POST['description'], $_POST['outsideCapital']);
-		if(isset($_POST['parent']) && $_POST['parent'] != ""){
-			$Cat->setParent($cm->getCategoryById($_POST['parent']));
+		$Cat = $cm->addCategory(getGPC($_POST, 'title'), getGPC($_POST, 'description'), getGPC($_POST, 'outsideCapital', 'checkbox'));
+		if(isset($_POST['parent']) && getGPC($_POST, 'parent') != ""){
+			$Cat->setParent($cm->getCategoryById(getGPC($_POST, 'parent', 'integer')));
 		};
 		break;
 	default:
 		//update record
-		$Cat = $cm->getCategoryById($_POST['hiddenID']);
-		$Cat->setTitle($_POST['title']);
-		$Cat->setDescription($_POST['description']);
+		$Cat = $cm->getCategoryById(getGPC($_POST, 'hiddenID', 'integer'));
+		$Cat->setTitle(getGPC($_POST, 'title'));
+		$Cat->setDescription(getGPC($_POST, 'description'));
 		
-		if(isset($_POST['outsideCapital']) && $_POST['outsideCapital'] == "on"){
-			$_POST['outsideCapital'] = 1;
-		}else{
-			$_POST['outsideCapital'] = 0;
-		};
-		$Cat->setOutsideCapital($_POST['outsideCapital']);
+		$Cat->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
 		
-		if(isset($_POST['parent']) && $_POST['parent'] != ""){
-			$Cat->setParent($cm->getCategoryById($_POST['parent']));
-		};//elseif(isset($_POST['parent']) && $_POST['parent'] == ""){
+		if(isset($_POST['parent']) && getGPC($_POST, 'parent') != ""){
+			$Cat->setParent($cm->getCategoryById(getGPC($_POST, 'parent', 'integer')));
+		};//elseif(isset($_POST['parent']) && getGPC($_POST, 'parent') == ""){
 			//$Cat->setParent(null);
 		//};
 		

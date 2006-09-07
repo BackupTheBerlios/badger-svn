@@ -84,10 +84,10 @@ if (isset($_POST['Upload'])){
 			//open file
 			$fp = fopen($file_array['tmp_name'], "r");
 	 		//open selected parser
-	 		require_once(BADGER_ROOT . "/modules/csvImport/parser/" . $_POST["parserSelect"]);
+	 		require_once(BADGER_ROOT . "/modules/csvImport/parser/" . getGPC($_POST, 'parserSelect'));
 	 		//save last used parser
-	 		$us->setProperty("csvImportStandardParser", $_POST["parserSelect"]);
-	 		$accountId = $_POST["accountSelect"];
+	 		$us->setProperty("csvImportStandardParser", getGPC($_POST, "parserSelect"));
+	 		$accountId = getGPC($_POST, 'accountSelect', 'integer');
 	 		//save last used account
 	 		$us->setProperty("csvImportStandardAccount", $accountId);
 	 		
@@ -212,49 +212,37 @@ if (isset($_POST['btnSubmit'])){
 	//initalise array
 	$writeToDbArray = NULL;
 	//for all rows
-	for ($selectedTransactionNumber = 0; $selectedTransactionNumber < $_POST['tableRows']; $selectedTransactionNumber++) {
+	for ($selectedTransactionNumber = 0; $selectedTransactionNumber < getGPC($_POST, 'tableRows', 'integer'); $selectedTransactionNumber++) {
 		//reset tableRowArray
 		$tableRowArray = NULL;
 		// if the transaction was selected
 		if (isset($_POST["select" . $selectedTransactionNumber])){
 			// set periodical flag
-			if (isset ($_POST["periodical" . $selectedTransactionNumber])){
-				$periodical = true;
-			}else {
-				$periodical = false;
-			}
+			$periodical = getGPC($_POST, 'periodical' . $selectedTransactionNumber, 'checkbox');
 			// set periodical flag
-			if (isset ($_POST["exceptional" . $selectedTransactionNumber])){
-				$exceptional = true;
-			}else {
-				$exceptional = false;
-			}
-			if (isset ($_POST["outside" . $selectedTransactionNumber])){
-				$outside = true;
-			}else {
-				$outside = false;
-			}
+			$exceptional = getGPC($_POST, "exceptional" . $selectedTransactionNumber, 'checkbox');
+			$outside = getGPC($_POST, "outside" . $selectedTransactionNumber, 'checkbox');
 			//create array with one transaction
-			$amount1 = new Amount($_POST['amount' . $selectedTransactionNumber],true);
-			$valutaDate1 = new Date ($_POST['valutaDate' . $selectedTransactionNumber], true);
+			$amount1 = getGPC($_POST, 'amount' . $selectedTransactionNumber, 'AmountFormatted');
+			$valutaDate1 = getGPC($_POST, 'valutaDate' . $selectedTransactionNumber, 'DateFormatted');
 			$cm1 = new CategoryManager($badgerDb);
 			$transactionCategory = NULL;
 			#echo $_POST['categorySelect' . $selectedTransactionNumber];
-			if (!$_POST['categorySelect' . $selectedTransactionNumber] == NULL){
-				if ($_POST['categorySelect' . $selectedTransactionNumber] != "NULL"){
-					$transactionCategory = $cm1->getCategoryById($_POST['categorySelect' . $selectedTransactionNumber]);
+			if (!getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) == NULL){
+				if (getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) != "NULL"){
+					$transactionCategory = $cm1->getCategoryById(getGPC($_POST, 'categorySelect' . $selectedTransactionNumber, 'integer'));
 					#echo $transactionCategory;
 				}
 			}
 			#echo $transactionCategory;
 			$tableRowArray = array(
 				"categoryId" => $transactionCategory,
-				"account" => $_POST['account2Select' . $selectedTransactionNumber],
-				"title" => $_POST['title' . $selectedTransactionNumber], 
-				"description" => $_POST['description' . $selectedTransactionNumber],
+				"account" => getGPC($_POST, 'account2Select' . $selectedTransactionNumber, 'integer'),
+				"title" => getGPC($_POST, 'title' . $selectedTransactionNumber), 
+				"description" => getGPC($_POST, 'description' . $selectedTransactionNumber),
 				"valutaDate" => $valutaDate1,
 				"amount" => $amount1,
-				"transactionPartner" => $_POST['transactionPartner' . $selectedTransactionNumber],
+				"transactionPartner" => getGPC($_POST, 'transactionPartner' . $selectedTransactionNumber),
 				"periodical" => $periodical,
 				"exceptional" => $exceptional,
 				"outside" => $outside

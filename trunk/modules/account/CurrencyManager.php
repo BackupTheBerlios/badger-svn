@@ -22,12 +22,12 @@ $cm = new CurrencyManager($badgerDb);
 $am = new AccountManager($badgerDb);
 
 if (isset($_GET['action'])) {
-	switch ($_GET['action']) {
+	switch (getGPC($_GET, 'action')) {
 		case 'delete':
 			//background delete
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
-				$IDs = explode(",",$_GET['ID']);
+				$IDs = getGPC($_GET, 'ID', 'integerList');
 						
 				foreach($IDs as $ID){
 					//check if we can delete this item
@@ -82,7 +82,7 @@ function printFrontend() {
 	
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
-		$ID = $_GET['ID'];
+		$ID = getGPC($_GET, 'ID', 'integer');
 		$currency = $cm->getCurrencyById($ID);
 		$symbolValue = $currency->getSymbol();
 		$langnameValue = $currency->getLongName();				
@@ -118,17 +118,17 @@ function updateRecord() {
 	global $redirectPageAfterSave;
 	global $cm;
 	
-	switch ($_POST['hiddenID']) {
+	switch (getGPC($_POST, 'hiddenID')) {
 	case 'new':
 		//add new record
 		//check if $_POST['symbol'], $_POST['longName'] is set?????
-		$ID = $cm->addCurrency($_POST['symbol'], $_POST['longname']);
+		$ID = $cm->addCurrency(getGPC($_POST, 'symbol'), getGPC($_POST, 'longname'));
 		break;
 	default:
 		//update record
-		$currency = $cm->getCurrencyById($_POST['hiddenID']);
-		$currency->setSymbol($_POST['symbol']);
-		$currency->setLongName($_POST['longname']);
+		$currency = $cm->getCurrencyById(getGPC($_POST, 'hiddenID', 'integer'));
+		$currency->setSymbol(getGPC($_POST, 'symbol'));
+		$currency->setLongName(getGPC($_POST, 'longname'));
 		//$ID = $currency->getId();
 	}
 	//REDIRECT

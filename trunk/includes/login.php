@@ -32,22 +32,22 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 	$validation_change_password = true;
 	$validation_change_password_errors = "";
 	
-	if( md5($_POST['OldPassword']) != $us->getProperty('badgerPassword')){
+	if( md5(getGPC($_POST, 'OldPassword')) != $us->getProperty('badgerPassword')){
 		$validation_change_password = false;
 		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_old_password_not_correct')."<br>";
 	};
 	
-	if( $_POST['NewPassword'] != $_POST['NewPasswordConfirm']){
+	if( getGPC($_POST, 'NewPassword') != getGPC($_POST, 'NewPasswordConfirm')){
 		$validation_change_password = false;
 		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_confirm_failed')."<br>";
 	};
 	
-	if( $_POST['NewPassword'] == ""){
+	if( getGPC($_POST, 'NewPassword') == ""){
 		$validation_change_password = false;
 		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_empty_password')."<br>";
 	};
 	
-	if( $_POST['NewPassword'] == "badger"){
+	if( getGPC($_POST, 'NewPassword') == "badger"){
 		$validation_change_password = false;
 		$validation_change_password_errors = $validation_change_password_errors.getBadgerTranslation2('UserSettingsAdmin','error_standard_password')."<br>";
 	};
@@ -56,10 +56,10 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 		//new password is valid
 		
 		//change pw in usersettings
-		$us->setProperty('badgerPassword',md5($_POST['NewPassword']));
+		$us->setProperty('badgerPassword',md5(getGPC($_POST, 'NewPassword')));
 		
 		//set new valid session, with new password
-		set_session_var('password',md5($_POST['NewPassword']));
+		set_session_var('password',md5(getGPC($_POST, 'NewPassword')));
 		
 		//redirect 
 		header('Location: '.$_SERVER['PHP_SELF']);
@@ -85,7 +85,7 @@ if(isset($_POST['SubmitMandatoryChangePassword'])){
 };
 
 // If user is trying to logout, log him out
-if(isset($_GET['logout']) && $_GET['logout']==true){
+if(isset($_GET['logout']) && getGPC($_GET, 'logout', 'boolean') == true){
 	session_flush();
 	unset($_session['password']);
 };
@@ -96,10 +96,10 @@ $passwordcorrect = false;
 if (isset($_session['password']) && $readoutpassword == $_session['password']) {
 	$passwordcorrect = true;
 }
-elseif(isset($_POST['password']) && md5($_POST['password']) == $readoutpassword ) 		{
+elseif(isset($_POST['password']) && md5(getGPC($_POST, 'password')) == $readoutpassword ) 		{
 	$passwordcorrect = true;
 	//create session variable
-	set_session_var('password',md5($_POST['password']));
+	set_session_var('password',md5(getGPC($_POST, 'password')));
 	
 	if (!isset($_session['sessionTimeout']) || $_session['sessionTimeout'] != true) {
 		$url = getAbsoluteStartPage();
@@ -157,7 +157,7 @@ if( $locked_out_since != 0){
 					if($signature != "?"){
 						$signature = $signature . "&";
 					};
-				$signature = $signature . $key . "=" . $value;
+				$signature = $signature . $key . "=" . urlencode(getGPC($_GET, $key));
 				};
 			};
 		} else {
@@ -174,8 +174,12 @@ if( $locked_out_since != 0){
 //if so, ask user to change his password
 
 if (
-	isset($_POST['password']) && md5($_POST['password']) == $us->getProperty('badgerPassword') && md5($_POST['password']) == '7e59cb5b2f52c763bc846471fe5942e4'
-	|| (isset($_session['password']) && $_session['password'] == $us->getProperty('badgerPassword') && $_session['password'] == '7e59cb5b2f52c763bc846471fe5942e4')
+	isset($_POST['password']) 
+		&& md5(getGPC($_POST, 'password')) == $us->getProperty('badgerPassword') 
+		&& md5(getGPC($_POST, 'password')) == '7e59cb5b2f52c763bc846471fe5942e4'
+	|| (isset($_session['password'])
+		&& $_session['password'] == $us->getProperty('badgerPassword')
+		&& $_session['password'] == '7e59cb5b2f52c763bc846471fe5942e4')
 ) {
 	// Initialization
 
@@ -195,7 +199,7 @@ if (
 	
 	foreach( $_POST as $key=>$value ){
 		if($key != "password" && $key != "logout") {
-			$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
+			$HiddenField = $widgets->createField($key, "", getGPC($_POST, $key), "", true, 'hidden');
 			eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
 		};
 	};
@@ -233,7 +237,7 @@ if($passwordcorrect == false) {
 	set_session_var('number_of_login_attempts',$attempts + 1);
 	$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
 		
-	if(isset($_GET['logout']) && $_GET['logout'] == "true"){
+	if(isset($_GET['logout']) && getGPC($_GET, 'logout') == "true"){
 		$Action = getAbsoluteStartPage();
 	}else{
 		$Action = $_SERVER['PHP_SELF'];
@@ -259,7 +263,7 @@ if($passwordcorrect == false) {
 					}else{
 						$get_vars .= "&";
 					};
-				$get_vars .= $key . "=" . $value;
+				$get_vars .= $key . "=" . urlencode(getGPC($_GET, $key));
 				};
 			};
 		};
@@ -272,7 +276,7 @@ if($passwordcorrect == false) {
 
 		foreach( $_POST as $key=>$value ){
 			if($key != "password" && $key != "logout") {
-				$HiddenField = $widgets->createField($key, "", $value, "", true, 'hidden');
+				$HiddenField = $widgets->createField($key, "", getGPC($_POST, $key), "", true, 'hidden');
 				//eval("\$rows .=  \"".$tpl->getTemplate("Login/hiddenField")."\";");
 				eval("echo \"".$tpl->getTemplate("Login/hiddenField")."\";");
 			};
@@ -290,7 +294,7 @@ if($passwordcorrect == false) {
 	//echo $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','submit_button'), "submit", "Widgets/table_save.gif");
 	$SubmitButton = $widgets->createButton("submit", getBadgerTranslation2('UserSettingsAdmin','login_button'), "submit", "Widgets/accept.gif");
 		
-	if(isset($_POST['password']) && $_POST['password'] == ""){
+	if(isset($_POST['password']) && getGPC($_POST, 'password') == ""){
 		//print(getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />");
 		$Feedback .= getBadgerTranslation2('badger_login', 'empty_password')."<br /><br />";
 	}elseif(isset($_POST['password'])){
@@ -298,14 +302,14 @@ if($passwordcorrect == false) {
 		$Feedback .= getBadgerTranslation2('badger_login', 'wrong_password')."<br /><br />";
 	};
 	
-	if(isset($_GET['send_password']) && $_GET['send_password'] == "true"){
+	if(isset($_GET['send_password']) && getGPC($_GET, 'send_password') == "true"){
 		//print(getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>");
 		$Feedback .= getBadgerTranslation2('badger_login', 'ask_really_send')."<br/>";
 		//print("<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>");
 		$Feedback .= "<a href=\"".$_SERVER['PHP_SELF'].$signature."send_password=truetrue\">".getBadgerTranslation2('badger_login', 'ask_really_send_link')."</a><br/>";
 	};
 		
-	if(isset($_GET['send_password']) && $_GET['send_password'] == "truetrue"){
+	if(isset($_GET['send_password']) && getGPC($_GET, 'send_password') == "truetrue"){
 		//send an E-Mail with a new password to the email adress read from the user settings object
 		$newpassword = rand ( 0 , 16000 );
 		$newpassword = md5($newpassword);
@@ -318,7 +322,7 @@ if($passwordcorrect == false) {
 			$Feedback .= getBadgerTranslation2('badger_login', 'sent_password_failed')."<br/>";
 		};
 	};
-	if(isset($_GET['logout']) && $_GET['logout']==true){
+	if(isset($_GET['logout']) && getGPC($_GET, 'logout', 'boolean') == true){
 		//echo getBadgerTranslation2('badger_login', 'you_are_logout');
 		$Feedback .= getBadgerTranslation2('badger_login', 'you_are_logout');
 	};

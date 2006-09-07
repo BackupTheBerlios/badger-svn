@@ -16,7 +16,7 @@ require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 require_once BADGER_ROOT . '/modules/importExport/exportLogic.php';
 
 if (isset($_GET['mode'])) {
-	$mode = $_GET['mode'];
+	$mode = getGPC($_GET, 'mode');
 } else {
 	$mode = 'ask';
 }
@@ -112,7 +112,7 @@ function printInsert() {
 	$goToStartPageLinkText = getBadgerTranslation2('importExport', 'goToStartPageLinkText');
 	$goToStartPagePostLink = getBadgerTranslation2('importExport', 'goToStartPagePostLink');
 	
-	if (!isset($_POST['confirmUpload']) || $_POST['confirmUpload'] !== 'yes') {
+	if (!isset($_POST['confirmUpload']) || getGPC($_POST, 'confirmUpload') !== 'yes') {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoInsert');
 	} else if (!isset($_FILES['sqlDump']) || !is_uploaded_file($_FILES['sqlDump']['tmp_name'])) {
 		$insertMsg = getBadgerTranslation2('importExport', 'insertNoFile');

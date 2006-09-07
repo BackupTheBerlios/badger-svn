@@ -26,7 +26,7 @@ require_once(BADGER_ROOT . '/core/navi/NavigationFromDB.class.php');
 //require_once(BADGER_ROOT . '/core/UserSettings.class.php'); // sollte das nicht auch in die Includes??
 
 if (isset($_GET['part'])) {
-	$callerBadgerRoot = (isset($_GET['badger_root']))?$_GET['badger_root']:"";
+	$callerBadgerRoot = (isset($_GET['badger_root'])) ? getGPC($_GET, 'badger_root') : "";
 	
 	$navi = NavigationFromDB::getNavigation($callerBadgerRoot);
 	$naviObj = new StandardNavigation();
@@ -37,7 +37,7 @@ if (isset($_GET['part'])) {
 	//header('Expires: ' . date('r', time() + 24 * 60 * 60));
 	
 	
-	switch ($_GET['part']) {
+	switch (getGPC ($_GET, 'part')) {
 		case 'css':
 			header('Content-Type: text/css');			
 			echo $naviObj->getCSS();

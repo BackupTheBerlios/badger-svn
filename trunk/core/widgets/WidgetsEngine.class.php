@@ -87,7 +87,7 @@ function _jsVal_Language() {
 			if ($this->ToolTipLayerAdded) {
 				if($link=="") $link = "javascript:void(0)";
 				if($linkname=="") $linkname = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
-				return "<a href=\"".$link."\" class=\"ToolTip\" tabindex=\"-999\" onmouseover=\"return overlib('".$text."', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\">".$linkname."</a>\n";
+				return "<a href=\"".$link."\" class=\"ToolTip\" tabindex=\"-999\" onmouseover=\"return overlib('". escape4Attr($text) . "', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\">".$linkname."</a>\n";
 			} else 	{
 				throw new badgerException('widgetsEngine', 'ToolTipLayerNotAdded');
 			}
@@ -99,7 +99,7 @@ function _jsVal_Language() {
 	public function addToolTip($text, $imageSrc="Widgets/help.gif") {
 		if($this->ToolTipJSAdded) {
 			if ($this->ToolTipLayerAdded) {
-				$mouseEvents = "onmouseover=\"return overlib('$text', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\"";
+				$mouseEvents = "onmouseover=\"return overlib('" . escape4Attr($text) . "', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\"";
 				
 				//return image with tooltip
 				return $this->addImage($imageSrc, $mouseEvents);
@@ -120,7 +120,7 @@ function _jsVal_Language() {
 		$strDateField = ""; 
 
 		if($this->CalendarJSAdded) {
-			$strDateField = "<input type=\"text\" id=\"".$fieldname."\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"".$startdate."\" />\n"; 
+			$strDateField = "<input type=\"text\" id=\"".$fieldname."\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"" . escape4Attr($startdate) . "\" />\n"; 
 			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' tabindex=\"-999\"><img src=\"".BADGER_ROOT."/tpl/".$this->tpl->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
 			return $strDateField;
 		} else {
@@ -183,7 +183,7 @@ function _jsVal_Language() {
 			$this->inputIds[$fieldname]++;
 		}
 		
-		$output = "<input type='$type' id='$id' name='$fieldname' size='$size' class='$class' value='$value' $required $valCondition />";
+		$output = "<input type='$type' id='$id' name='$fieldname' size='$size' class='$class' value='" . escape4Attr($value) . "' $required $valCondition />";
 		if($description) {
 			$output .= "&nbsp;" . $this->addToolTip($description);
 		}
@@ -249,5 +249,5 @@ function _jsVal_Language() {
     	$this->tpl->addHeaderTag("	this.err_enter = '" . getBadgerTranslation2('jsVal', 'err_enter') . "';");
 		$this->tpl->addHeaderTag("}");
 		$this->tpl->addHeaderTag("</script>");
-	}	
+	}
 }

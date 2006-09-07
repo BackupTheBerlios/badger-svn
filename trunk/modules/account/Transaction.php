@@ -25,16 +25,16 @@ $am = new AccountManager($badgerDb);
 $catm = new CategoryManager($badgerDb);
 
 if (isset($_GET['action'])) {
-	switch ($_GET['action']) {
+	switch (getGPC($_GET, 'action')) {
 		case 'delete':
 			deleteRecord();		
 			break;
 			
 		case 'save':
-			$accountID = $_POST['hiddenAccID'];
+			$accountID = getGPC($_POST, 'hiddenAccID', 'integer');
 			if (isset($_POST['hiddenID'])) {
 				//add record, update record
-				updateRecord($accountID, $_POST['hiddenID'], $_POST['hiddenType']);							
+				updateRecord($accountID, getGPC($_POST, 'hiddenID'), getGPC($_POST, 'hiddenType'));							
 				$redirectPage = getRedirectPage($accountID);
 				header("Location: $redirectPage");
 			}
@@ -46,7 +46,7 @@ if (isset($_GET['action'])) {
 			
 			if (isset($_GET['accountID'])) {
 				// account was selected previously
-				$accountID = $_GET['accountID'];
+				$accountID = getGPC($_GET, 'accountID', 'integer');
 				$redirectPage = getRedirectPage($accountID);
 			} else {
 				// no account was selected previously
@@ -55,19 +55,21 @@ if (isset($_GET['action'])) {
 			}
 			
 			if (isset($_GET['ID'])) {
-				$ID = $_GET['ID'];
+				$ID = getGPC($_GET, 'ID');
 				
 				//check if ID is from planned or finished transaction
 				if(substr($ID, 0, 1) == "p") {
 					$pos = strpos($ID, "_");				
 					$ID = substr($ID, 1, $pos - 1);
+					settype($ID, 'integer');
 					printFrontendPlanned($accountID, $ID);
 				} else {
+					settype($ID, 'integer');
 					printFrontendFinished($accountID, $ID);
 				}
 			} else {
 				
-				switch($_GET['type']) {
+				switch(getGPC($_GET, 'type')) {
 				case 'finished':
 					printFrontendFinished($accountID, "new");
 					break;
@@ -86,11 +88,11 @@ if (isset($_GET['action'])) {
 function deleteRecord() {
 	global $am;
 	
-	if (isset($_GET['ID']) || isset($_GET['accountID'])) {
-		$IDs = explode(",",$_GET['ID']); 	
+	if (isset($_GET['ID']) && isset($_GET['accountID'])) {
+		$IDs = getGPC($_GET, 'ID', 'integerList'); 	
 					
 		//check if we can delete this item
-		$acc = $am->getAccountById($_GET['accountID']);
+		$acc = $am->getAccountById(getGPC($_GET, 'accountID', 'integer'));
 		
 		$processedPlannedTransactions = array();
 		
@@ -266,12 +268,6 @@ function printFrontendPlanned($AccountID, $ID) {
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 
-	if (isset($_GET['backTo'])) {
-		$backTo = $_GET['backTo'];
-	} else {
-		$backTo = '';
-	}
-	
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
 		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 213px;'");
@@ -331,8 +327,8 @@ function updateRecord($accountID, $ID, $transactionType) {
 	global $catm;
 	
 	$account = $am->getAccountById($accountID);
-	if (isset($_POST['category']) && $_POST['category']!="NULL") {
-		$category = $catm->getCategoryById($_POST['category']);
+	if (isset($_POST['category']) && getGPC($_POST, 'category') != "NULL") {
+		$category = $catm->getCategoryById(getGPC ($_POST, 'category', 'integer'));
 	} else {
 		$category = NULL;
 	}
@@ -340,67 +336,72 @@ function updateRecord($accountID, $ID, $transactionType) {
 	case 'new':
 		//add new record
 		switch ($transactionType) {
-		case 'planned':
-			$tmp = trim($_POST['endDate']);
-			$endDate = empty($tmp) ? null : new Date($tmp, true);
-		
-			$newPlannedTransaction = $account->addPlannedTransaction(
-					$_POST['title'],
-					new Amount($_POST['amount'], true),
-					$_POST['repeatUnit'],
-					$_POST['repeatFrequency'],
-					new Date($_POST['beginDate'], true),
-					$endDate, //= null,
-					$_POST['description'], // = null,
-					$_POST['transactionPartner'], // = null,
-					$category, // = null,
-					(isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false); // = null
-
-			transferFinishedTransactions($account, $newPlannedTransaction);
-			break;
+			case 'planned':
+				$tmp = trim(getGPC($_POST, 'endDate'));
+				$endDate = empty($tmp) ? null : new Date($tmp, true);
 			
-		case 'finished':
-			$ID = $account->addFinishedTransaction(
-				new Amount($_POST['amount'], true),
-				$_POST['title'], // = null,
-				$_POST['description'], // = null,
-				new Date($_POST['valutaDate'], true), // = null,
-				$_POST['transactionPartner'], // = null,
-				$category, // = null,
-				(isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false, // = null
-				(isset($_POST['exceptional']) && $_POST['exceptional']=="on")?true:false, // = null,
-				(isset($_POST['periodical']) && $_POST['periodical']=="on")?true:false); //= null 
-			break;
+				$newPlannedTransaction = $account->addPlannedTransaction(
+					getGPC($_POST, 'title'),
+					getGPC($_POST, 'amount', 'AmountFormatted'),
+					getGPC($_POST, 'repeatUnit'),
+					getGPC($_POST, 'repeatFrequency', 'integer'),
+					getGPC($_POST, 'beginDate', 'DateFormatted'),
+					$endDate, //= null,
+					getGPC($_POST, 'description'), // = null,
+					getGPC($_POST, 'transactionPartner'), // = null,
+					$category, // = null,
+					getGPC($_POST, 'outsideCapital', 'checkbox') // = null
+				);
+	
+				transferFinishedTransactions($account, $newPlannedTransaction);
+				break;
+				
+			case 'finished':
+				$ID = $account->addFinishedTransaction(
+					getGPC($_POST, 'amount', 'AmountFormatted'),
+					getGPC($_POST, 'title'), // = null,
+					getGPC($_POST, 'description'), // = null,
+					getGPC($_POST, 'valutaDate', 'DateFormatted'), // = null,
+					getGPC($_POST, 'transactionPartner'), // = null,
+					$category, // = null,
+					getGPC($_POST, 'outsideCapital', 'checkbox'), // = null
+					getGPC($_POST, 'exceptional', 'checkbox'), // = null,
+					getGPC($_POST, 'periodical', 'checkbox') //= null
+				); 
+				break;
 		}
 		break;
 	default:
 		//update record
+		
+		settype($ID, 'integer');
 		switch ($transactionType) {
-		case 'planned':
-			$transaction = $account->getPlannedTransactionById($ID);
-			$transaction->setTitle($_POST['title']);
-			$transaction->setDescription($_POST['description']);
-			$transaction->setBeginDate(new Date($_POST['beginDate'], true));
-			$transaction->setEndDate(($tmp = $_POST['endDate']) ? new Date($tmp, true) : null);
-			$transaction->setAmount(new Amount($_POST['amount'], true));
-			$transaction->setOutsideCapital((isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false);
-			$transaction->setTransactionPartner($_POST['transactionPartner']);
-			$transaction->setCategory($category);
-			$transaction->setRepeatUnit($_POST['repeatUnit']);
-	    	$transaction->setRepeatFrequency($_POST['repeatFrequency']);
-			break;
-		case 'finished':
-			$transaction = $account->getFinishedTransactionById($ID);
-			$transaction->setTitle($_POST['title']);
-			$transaction->setDescription($_POST['description']);
-			$transaction->setValutaDate(new Date($_POST['valutaDate'], true));
-			$transaction->setAmount(new Amount($_POST['amount'], true));
-			$transaction->setOutsideCapital((isset($_POST['outsideCapital']) && $_POST['outsideCapital']=="on")?true:false);
-			$transaction->setTransactionPartner($_POST['transactionPartner']);
-			$transaction->setCategory($category);
-			$transaction->setExceptional((isset($_POST['exceptional']) && $_POST['exceptional']=="on")?true:false ); //checkbox
-			$transaction->setPeriodical((isset($_POST['periodical']) && $_POST['periodical']=="on")?true:false ); //checkbox
-			break;
+			case 'planned':
+				$transaction = $account->getPlannedTransactionById($ID);
+				$transaction->setTitle(getGPC($_POST, 'title'));
+				$transaction->setDescription(getGPC($_POST, 'description'));
+				$transaction->setBeginDate(getGPC($_POST, 'beginDate', 'DateFormatted'));
+				$transaction->setEndDate(($tmp = getGPC($_POST, 'endDate')) ? new Date($tmp, true) : null);
+				$transaction->setAmount(getGPC($_POST, 'amount', 'AmountFormatted'));
+				$transaction->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
+				$transaction->setTransactionPartner(getGPC($_POST, 'transactionPartner'));
+				$transaction->setCategory($category);
+				$transaction->setRepeatUnit(getGPC($_POST, 'repeatUnit'));
+		    	$transaction->setRepeatFrequency(getGPC($_POST, 'repeatFrequency', 'integer'));
+				break;
+				
+			case 'finished':
+				$transaction = $account->getFinishedTransactionById($ID);
+				$transaction->setTitle(getGPC($_POST, 'title'));
+				$transaction->setDescription(getGPC($_POST, 'description'));
+				$transaction->setValutaDate(getGPC($_POST, 'valutaDate', 'DateFormatted'));
+				$transaction->setAmount(getGPC($_POST, 'amount', 'AmountFormatted'));
+				$transaction->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
+				$transaction->setTransactionPartner(getGPC($_POST, 'transactionPartner'));
+				$transaction->setCategory($category);
+				$transaction->setExceptional(getGPC($_POST, 'exceptional', 'checkbox')); //checkbox
+				$transaction->setPeriodical(getGPC($_POST, 'periodical', 'checkbox')); //checkbox
+				break;
 		}
 	}
 	//REDIRECT
@@ -438,7 +439,7 @@ function getIntervalUnitsArray(){
 
 function getRedirectPage($accountId) {
 	if (isset($_GET['backTo'])) {
-		if ($_GET['backTo'] === 'planned') {
+		if (getGPC($_GET, 'backTo') === 'planned') {
 			return 'AccountOverviewPlanned.php?accountID=' . $accountId;
 		}
 	}

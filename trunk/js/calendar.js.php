@@ -15,7 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderBackEnd.inc.php");
 //require_once(BADGER_ROOT . "/core/UserSettings.class.php"); // sollte das nicht auch in die Includes??
 
 header('Content-Type: text/javascript');
-$badgerRoot = $_GET['badgerRoot']; //we need this bagerRoot for images path
+$badgerRoot = getGPC($_GET, 'badgerRoot'); //we need this bagerRoot for images path
 
 $settings = new UserSettings($badgerDb);
 $badgerTemplate = $settings->getProperty("badgerTemplate");

@@ -33,6 +33,11 @@ function getGPC($array, $key, $type = 'string', $escaped = false) {
 			settype($val, 'float');
 			break;
 		
+		case 'bool':
+		case 'boolean':
+			settype($val, 'boolean');
+			break;
+		
 		case 'Amount':
 			$val = new Amount($val);
 			break;
@@ -208,4 +213,12 @@ function getRelativeTplPath($path) {
 	
 	return "tpl/$currentTemplate/$path";
 }
+
+function escape4Attr($string) {
+	return str_replace(
+		array ("'", '"'),
+		array ('&#39;', '&quot;'),
+		$string
+	);
+}	
 ?>

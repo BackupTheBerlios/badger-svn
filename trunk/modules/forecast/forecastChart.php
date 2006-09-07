@@ -22,47 +22,47 @@ $startDate= new Date();
 #end date aus forecast php übergeben
 #$endDate = new Date ("2006-02-15");
 if (isset($_GET['endDate'])) {
-	$endDate = new Date($_GET['endDate']);
+	$endDate = getGPC($_GET, 'endDate', 'Date');
 }
 # accountId aus forecast php übergeben
 #$accountId = 1;
 if (isset($_GET['account'])) {
-	$accountId = $_GET['account'];
+	$accountId = getGPC($_GET, 'account', 'integer');
 }
 // get pocketMoney1 from calling file
 $savingTarget = new Amount(0);
 if (isset($_GET['savingTarget'])) {
-	$savingTarget = new Amount($_GET['savingTarget']);
+	$savingTarget = getGPC($_GET, 'savingTarget', 'Amount');
 }
 
 // get pocketMoney1 from calling file
 #$pocketMoney1 = new Amount (25);
 if (isset($_GET['pocketMoney1'])) {
-	$pocketMoney1 = new Amount($_GET['pocketMoney1']);
+	$pocketMoney1 = getGPC($_GET, 'pocketMoney1', 'Amount');
 }
 // get pocketMoney2 from calling file
 #$pocketMoney2 = new Amount(55);
 if (isset($_GET['pocketMoney2'])) {
-	$pocketMoney2 = new Amount($_GET['pocketMoney2']);
+	$pocketMoney2 = getGPC($_GET, 'pocketMoney2', 'Amount');
 }
 //get graphs to be shown
 if (isset($_GET['showLowerLimit'])) {
-	$showLowerLimit = $_GET['showLowerLimit'];
+	$showLowerLimit = getGPC($_GET, 'showLowerLimit', 'boolean');
 }
 if (isset($_GET['showUpperLimit'])) {
-	$showUpperLimit = $_GET['showUpperLimit'];
+	$showUpperLimit = getGPC($_GET, 'showUpperLimit', 'boolean');
 }
 if (isset($_GET['showPlannedTransactions'])) {
-	$showPlannedTransactions = $_GET['showPlannedTransactions'];
+	$showPlannedTransactions = getGPC($_GET, 'showPlannedTransactions', 'boolean');
 }
 if (isset($_GET['showSavingTarget'])) {
-	$showSavingTarget = $_GET['showSavingTarget'];
+	$showSavingTarget = getGPC($_GET, 'showSavingTarget', 'boolean');
 }
 if (isset($_GET['showPocketMoney1'])) {
-	$showPocketMoney1 = $_GET['showPocketMoney1'];
+	$showPocketMoney1 = getGPC($_GET, 'showPocketMoney1', 'boolean');
 }
 if (isset($_GET['pocketMoney2'])) {
-	$showPocketMoney2 = $_GET['showPocketMoney2'];
+	$showPocketMoney2 = getGPC($_GET, 'showPocketMoney2', 'boolean');
 }
 
 //get daily amounts from db

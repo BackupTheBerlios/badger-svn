@@ -17,7 +17,7 @@ require_once BADGER_ROOT . '/modules/importExport/exportLogic.php';
 require_once BADGER_ROOT . '/core/urlTools.php';
 
 if (isset($_GET['mode'])) {
-	$action = $_GET['mode'];
+	$action = getGPC($_GET, 'mode');
 } else {
 	$action = 'displayProcedure';
 }

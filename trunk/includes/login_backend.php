@@ -18,11 +18,11 @@ if (isset($_session['password']) && $readoutpassword == $_session['password'])
 	{
 		$passwordcorrect = true;
 	}
-	elseif(isset($_POST['password']) && md5($_POST['password']) == $readoutpassword )
+	elseif(isset($_POST['password']) && md5(getGPC($_POST, 'password')) == $readoutpassword )
 		{
 			$passwordcorrect = true;
 			//create session variable
-			set_session_var('password',md5($_POST['password']));
+			set_session_var('password',md5(getGPC($_POST, 'password')));
 		};
 
 if($passwordcorrect != true){

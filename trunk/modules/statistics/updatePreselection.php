@@ -14,7 +14,7 @@ define('BADGER_ROOT', '../..');
 require_once BADGER_ROOT . '/includes/fileHeaderBackEnd.inc.php';
 
 if (isset($_GET['action'])) {
-	switch ($_GET['action']) {
+	switch (getGPC($_GET, 'action')) {
 		case 'select':
 			addSelection();
 			break;
@@ -39,7 +39,7 @@ function addSelection() {
 		$preselectedAccounts = $us->getProperty('statisticsPreselectedAccounts');
 	} catch (BadgerException $ex) {}
 		
-	$ids = explode(';', $_GET['id']);
+	$ids = getGPC($_GET, 'id', 'integerList');
 	
 	foreach ($ids as $id) {
 		if (!array_search((int) $id, $preselectedAccounts)) {
@@ -59,12 +59,12 @@ function delSelection() {
 		return;
 	}
 	
-	if ($_GET['id'] != 'all') {
+	if (getGPC($_GET, 'id') != 'all') {
 		try {
 			$preselectedAccounts = $us->getProperty('statisticsPreselectedAccounts');
 		} catch (BadgerException $ex) {}
 			
-		$ids = explode(';', $_GET['id']);
+		$ids = getGPC($_GET, 'id', 'integerList');
 		
 		foreach ($ids as $id) {
 			if ($key = array_search((int) $id, $preselectedAccounts)) {

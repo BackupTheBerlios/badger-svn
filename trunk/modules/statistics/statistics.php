@@ -22,9 +22,9 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 
 if (isset($_GET['mode'])) {
-	$mode = $_GET['mode'];
+	$mode = getGPC($_GET, 'mode');
 } else if (isset($_POST['mode'])) {
-	$mode =$_POST['mode'];
+	$mode = getGPC($_POST, 'mode');
 } else {
 	$mode = 'selectPage';
 }
@@ -172,13 +172,9 @@ function showTrendData() {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
-	$accountIds = explode(';', $_GET['accounts']);
-	foreach($accountIds as $key => $val) {
-		settype($accountIds[$key], 'integer');
-	}
-	
-	$startDate = new Date($_GET['startDate']);
-	$endDate = new Date($_GET['endDate']);
+	$accountIds = getGPC($_GET, 'accounts', 'integerList');
+	$startDate = getGPC($_GET, 'startDate', 'Date');
+	$endDate = getGPC($_GET, 'endDate', 'Date');
 	
 	$now = new Date();
 	$now->setHour(0);
@@ -387,20 +383,16 @@ function showCategoryData() {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
-	$accounts = explode(';', $_GET['accounts']);
-	foreach($accounts as $key => $val) {
-		settype($accounts[$key], 'integer');
-	}
+	$accounts = getGPC($_GET, 'accounts', 'integerList');
+	$startDate = getGPC($_GET, 'startDate', 'Date');
+	$endDate = getGPC($_GET, 'endDate', 'Date');
 	
-	$startDate = new Date($_GET['startDate']);
-	$endDate = new Date($_GET['endDate']);
-	
-	$type = $_GET['type'];
+	$type = getGPC($_GET, 'type');
 	if ($type !== 'o') {
 		$type = 'i';
 	}
 
-	if ($_GET['summarize'] !== 't') {
+	if (getGPC($_GET, 'summarize') !== 't') {
 		$summarize = false;
 	} else {
 		$summarize = true;

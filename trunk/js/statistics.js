@@ -21,7 +21,7 @@ function submitSelect() {
 	
 	for (i = 0; i < accountArray.length; i++) {
 		if (!first) {
-			accountIds += ";";
+			accountIds += ",";
 		} else {
 			first = false;
 		}
@@ -309,7 +309,7 @@ var statisticsBehaviour =  {
 						selectRow(checkbox[i].parentNode.parentNode);
 
 						if (!first) {
-							accountIds += ";";
+							accountIds += ",";
 						} else {
 							first = false;
 						}

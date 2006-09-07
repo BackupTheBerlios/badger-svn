@@ -17,7 +17,7 @@ require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 if (isset($_GET['accountID'])) {
-	$accountID=$_GET['accountID'];
+	$accountID = getGPC($_GET, 'accountID', 'integer');
 } else {
 	throw new badgerException('accountOverview', 'noAccountID', '');
 }
