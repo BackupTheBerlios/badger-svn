@@ -502,6 +502,7 @@ function addNewSortOrder(strSortColumn, strDirection) {
 
 function initSortOrder() {
 	if(arrURLParameter["ok0"]!=undefined && arrURLParameter["ok0"]!="") {
+		strSortingColumnActive = arrURLParameter["ok0"];
 		if(arrURLParameter["od0"]=="a") {
 			changeColumnSortImage(arrURLParameter["ok0"], "a");
 		} else {
