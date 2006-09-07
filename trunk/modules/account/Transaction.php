@@ -137,6 +137,7 @@ function printFrontendFinished($AccountID, $ID) {
 	echo $tpl->getHeader($pageTitle);
 	echo $widgets->addToolTipLayer();
 	
+	$now = new Date();
 	
 	if($ID!="new") {
 		$acc = $am->getAccountById($AccountID);
@@ -156,7 +157,7 @@ function printFrontendFinished($AccountID, $ID) {
 		//new: empty values
 		$titleValue = "";
 		$descriptionValue = "";
-		$valutaDateValue = "";
+		$valutaDateValue = $now->getFormatted();
 		$amountValue = "";
 		$transactionPartnerValue = "";
 		$outsideCapitalValue = "";
@@ -236,6 +237,8 @@ function printFrontendPlanned($AccountID, $ID) {
 	echo $tpl->getHeader($pageTitle);
 	echo $widgets->addToolTipLayer();
 	
+	$now = new Date();
+	
 	$transactionType = "planned";
 	if($ID!="new") {
 		$acc = $am->getAccountById($AccountID);		
@@ -255,7 +258,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		//new: empty values
 		$titleValue = "";
 		$descriptionValue = "";
-		$beginDateValue = "";
+		$beginDateValue = $now->getFormatted();
 		$endDateValue = "";
 		$amountValue = "";
 		$outsideCapitalValue = "";
