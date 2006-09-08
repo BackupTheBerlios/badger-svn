@@ -57,18 +57,20 @@ function getGPC($array, $key, $type = 'string', $escaped = false) {
 		case 'intList':
 		case 'integerList':
 			$arr = explode(',', $val);
-			foreach ($arr as $val) {
-				settype($val, 'integer');
-				$val[] = $val;
+			$val = array();
+			foreach ($arr as $elm) {
+				settype($elm, 'integer');
+				$val[] = $elm;
 			}
 			break;
 		
 		case 'floatList':
 		case 'doubleList':
 			$arr = explode(',', $val);
-			foreach ($arr as $val) {
-				settype($val, 'float');
-				$val[] = $val;
+			$val = array();
+			foreach ($arr as $elm) {
+				settype($elm, 'float');
+				$val[] = $elm;
 			}
 			break;
 		
