@@ -433,7 +433,7 @@ class Account extends DataGridHandler {
 				'categoryTitle' => 'c.title',
 				'parentCategoryId' => 'pc.category_id',
 				'parentCategoryTitle' => 'pc.title',
-				'concatCategoryTitle' => 'CONCAT(IF(pc.title NOT IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
+				'concatCategoryTitle' => 'CONCAT(IF(NOT pc.title IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
 				'sum' => Account::TABLE_PLACEHOLDER . '.__SUM__'
 			),
 			'planned' => array (
@@ -1990,7 +1990,6 @@ class Account extends DataGridHandler {
 					break;
 				
 				case 'categoryTitle':
-					//echo "<pre>a: " . $a->getCategory() . " b: " . $b->getCategory();
 					if ($a->getCategory() && $b->getCategory()) {
 						$tmp = strncasecmp($a->getCategory()->getTitle(), $b->getCategory()->getTitle(), 9999);
 					} else if ($a->getCategory()) {
@@ -2001,6 +2000,52 @@ class Account extends DataGridHandler {
 					//echo "tmp: $tmp</pre>";
 					break;
 				
+				case 'parentCategoryId':
+					if ($a->getCategory() && $a->getCategory()->getParent() && $b->getCategory() && $b->getCategory()->getParent()) {
+						$tmp = $a->getCategory()->getParent()->getId() - $b->getCategory()->getParent()->getId();
+					} else if ($a->getCategory() && $a->getCategory()->getParent()) {
+						$tmp = -1;
+					} else if ((!$a->getCategory() || !$a->getCategory()->getParent())) {
+						$tmp = 1;
+					}
+					break;
+				
+				case 'parentCategoryTitle':
+					if ($a->getCategory() && $a->getCategory()->getParent() && $b->getCategory() && $b->getCategory()->getParent()) {
+						$tmp = strncasecmp($a->getCategory()->getParent()->getTitle(), $b->getCategory()->getParent()->getTitle(), 9999);
+					} else if ($a->getCategory() && $a->getCategory()->getParent()) {
+						$tmp = -1;
+					} else if ($b->getCategory() && $b->getCategory()->getParent()) {
+						$tmp = 1;
+					}
+					//echo "tmp: $tmp</pre>";
+					break;
+				
+				case 'concatCategoryTitle':
+					$aTitle = '';
+					$bTitle = '';
+					if ($a->getCategory() && $a->getCategory()->getParent()) {
+						$aTitle = $a->getCategory()->getParent()->getTitle() . ' - ';
+					}
+					if ($a->getCategory()) {
+						$aTitle .= $a->getCategory()->getTitle();
+					}
+					if ($b->getCategory() && $b->getCategory()->getParent()) {
+						$bTitle = $b->getCategory()->getParent()->getTitle() . ' - ';
+					}
+					if ($b->getCategory()) {
+						$bTitle .= $b->getCategory()->getTitle();
+					}
+					if ($aTitle != '' && $bTitle != '') {
+						$tmp = strncasecmp($aTitle, $bTitle, 9999);
+					} else if ($aTitle != '') {
+						$tmp = -1;
+					} else if ($bTitle != '') {
+						$tmp = 1;
+					}
+					//echo "tmp: $tmp</pre>";
+					break;
+
 				case 'repeatUnit':
 					$tmp = $repeatUnits[$a->getRepeatUnit()] - $repeatUnits[$b->getRepeatUnit()];
 					break;

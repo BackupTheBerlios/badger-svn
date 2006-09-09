@@ -18,7 +18,6 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/includes/charts/charts.php';
 require_once BADGER_ROOT . '/core/Date/Span.php';
 require_once BADGER_ROOT . '/core/widgets/DataGrid.class.php';
-require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 
 if (isset($_GET['mode'])) {

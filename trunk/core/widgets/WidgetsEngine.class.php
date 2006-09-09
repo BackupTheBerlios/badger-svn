@@ -28,7 +28,9 @@ class WidgetEngine {
 	private $ToolTipJSAdded = false;
 	private $ToolTipLayerAdded = false;
 	private $AutoCompleteJSAdded = false;
-	private $CalendarJSAdded = false;	
+	private $CalendarJSAdded = false;
+	private $TwistieSectionJSAdded = false;
+	private $twistieSectionLastId = 0;
 	private $tpl;
 	private $settings;
 	private $writtenHeader = false;
@@ -71,6 +73,11 @@ function _jsVal_Language() {
 		$this->tpl->addJavaScript("js/SuggestFramework.js");
 		$this->tpl->addOnLoadEvent("initializeSuggestFramework();");
 		$this->AutoCompleteJSAdded = true;
+	}
+	
+	public function addTwistieSectionJS() {
+		$this->tpl->addJavaScript('js/twistieSection.js');
+		$this->TwistieSectionJSAdded = true;
 	}
 	
 	public function addToolTipLayer() {
@@ -134,6 +141,32 @@ function _jsVal_Language() {
 		} else {
 			throw new badgerException('widgetsEngine', 'AutoCompleteJSNotAdded'); 
 		}
+	}
+	
+	public function addTwistieSection($title, $innerHTML, $id = null, $startOpen = true) {
+		if (is_null($id)) {
+			$id = 'twistie' . ++$this->twistieSectionLastId;
+		}
+		
+		$result = "<div class='twistieClosed' id='{$id}Closed'";
+		if ($startOpen == true) {
+			$result .= ' style="display:none;"';
+		}
+		$result .= '>';
+		$result .= $this->addImage('widgets/twistie/arrow_out.png', "class=\"showTwistie\" onclick=\"showTwistie('$id');\"");
+		$result .= "&nbsp;$title</div>\n";
+		
+		$result .= "<fieldset id='{$id}Opened'";
+		if ($startOpen == false) {
+			$result .= ' style="display:none;"';
+		}
+		$result .= '><legend>';
+		$result .= $this->addImage('widgets/twistie/arrow_in.png', "class=\"hideTwistie\" onclick=\"hideTwistie('$id');\"");
+		$result .= "&nbsp;$title</legend>\n";
+		$result .= $innerHTML;
+		$result .= '</fieldset>';
+		
+		return $result;
 	}
 	
 	public function createLabel($field, $name, $mandatory=false) {

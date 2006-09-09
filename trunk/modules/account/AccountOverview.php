@@ -63,6 +63,7 @@ echo $tpl->getHeader($pageTitle);
 $legendFilter = getBadgerTranslation2('dataGrid', 'filterLegend');
 
 $datagGridFilterArray = $dataGrid->getFilterSelectArray();
+$datagGridDateFilterArray = $dataGrid->getDateFilterSelectArray();
 	
 $titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), false);
 $titleField = $widgets->createField("title", 30, "", "", false, "text", "");
@@ -70,7 +71,7 @@ $titleFilterOperator = $widgets->createSelectField("titleFilter", $datagGridFilt
 	
 $valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), false);
 $valutaDateField = $widgets->addDateField("valutaDate", "");
-$valutaDateFilterOperator = $widgets->createSelectField("valutaDateFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");
+$valutaDateFilterOperator = $widgets->createSelectField("valutaDateFilter", $datagGridDateFilterArray, "", "", false, "style='width: 95px;'");
 	
 $amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), false);
 $amountField = $widgets->createField("amount", 14, "", "", false, "text", "");

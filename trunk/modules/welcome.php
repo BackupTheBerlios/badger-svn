@@ -13,7 +13,10 @@
 define("BADGER_ROOT", "..");
 require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
-//require_once BADGER_ROOT . '/modules/account/accountCommon.php';
+require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
+
+handleOldFinishedTransactions(new AccountManager($badgerDb));
 
 $widgets = new WidgetEngine($tpl); 
 $tpl->addJavaScript("js/behaviour.js");

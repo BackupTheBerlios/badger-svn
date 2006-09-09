@@ -209,7 +209,7 @@ class DataGrid {
 		
 	}
 	
-	public function getFilterSelectArray() {
+	public static function getFilterSelectArray() {
 		$filterArray = array ();
 		
 		$filterArray["eq"] = "=";
@@ -222,6 +222,20 @@ class DataGrid {
 		$filterArray["bw"] = "begins with";
 		$filterArray["ew"] = "ends with";
 		$filterArray["ct"] = "contains";
+		
+		return $filterArray;
+	}
+	
+	public static function getDateFilterSelectArray() {
+		$filterArray = array ();
+		
+		//TODO Translation
+		$filterArray["eq"] = "equal to";
+		$filterArray["lt"] = "before";
+		$filterArray["le"] = "before or equal to";
+		$filterArray["gt"] = "after";
+		$filterArray["ge"] = "equal to or after";
+		$filterArray["ne"] = "not equal to";
 		
 		return $filterArray;
 	}
