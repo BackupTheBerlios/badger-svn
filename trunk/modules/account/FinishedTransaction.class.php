@@ -32,7 +32,7 @@ class FinishedTransaction {
 	private $badgerDb;
 	
 	/**
-	 * The Account this category belongs to.
+	 * The Account this transaction belongs to.
 	 * 
 	 * @var object Account
 	 */
@@ -489,6 +489,10 @@ class FinishedTransaction {
 	 */
     public function getSourcePlannedTransaction() {
     	return $this->sourcePlannedTransaction;
+    }
+    
+    public function getAccount() {
+    	return $this->account;
     }
 }
 ?>

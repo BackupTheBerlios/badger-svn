@@ -20,6 +20,7 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CurrencyManager.class.php';
 require_once BADGER_ROOT . '/modules/account/FinishedTransaction.class.php';
 require_once BADGER_ROOT . '/modules/account/PlannedTransaction.class.php';
+require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 /**
  * An (financial) Account.
@@ -79,6 +80,7 @@ class Account extends DataGridHandler {
 			'categoryTitle',
 			'parentCategoryId',
 			'parentCategoryTitle',
+			'concatCategoryTitle',
 			'exceptional',
 			'periodical'
 		)
@@ -453,7 +455,7 @@ class Account extends DataGridHandler {
 				'parentCategoryTitle' => 'pc.title'
 			),
 			'finished' => array (
-				'transactionId' => 'ft.transaction_id',
+				'finishedTransactionId' => 'ft.transaction_id',
 				'title' => 'ft.title',
 				'description' => 'ft.description',
 				'valutaDate' => 'ft.valuta_date',
@@ -464,6 +466,7 @@ class Account extends DataGridHandler {
 				'categoryTitle' => 'c.title',
 				'parentCategoryId' => 'pc.category_id',
 				'parentCategoryTitle' => 'pc.title',
+				'concatCategoryTitle' => 'CONCAT(IF(NOT pc.title IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
 				'exceptional' => 'ft.exceptional',
 				'periodical' => 'ft.periodical'
 			)
@@ -485,7 +488,7 @@ class Account extends DataGridHandler {
 				return 'plannedTransactionId';
 			
 			case 'finished':
-				return 'transactionId';
+				return 'finishedTransactionId';
 		}
 	}
 	
@@ -660,83 +663,9 @@ class Account extends DataGridHandler {
 	}
 	
 	private function getAllFinished() {
-		$result = array();
-		$currResultIndex = 0;
-
 		while ($this->fetchNextFinishedTransaction());
 		
-		foreach($this->finishedTransactions as $currentTransaction){
-			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-
-			$category = $currentTransaction->getCategory();
-			if (!is_null($category)) {
-				$parentCategory = $category->getParent();
-			} else {
-				$parentCategory = null;
-			}
-
-			$result[$currResultIndex] = array();
-			$result[$currResultIndex]['finishedTransactionId'] = $currentTransaction->getId(); 
-
-			foreach ($this->selectedFields as $selectedField) {
-				switch ($selectedField) {
-					case 'title':
-						$result[$currResultIndex]['title'] = $currentTransaction->getTitle();
-						break;
-					
-					case 'description':
-						$result[$currResultIndex]['description'] = $currentTransaction->getDescription();
-						break;
-				
-					case 'valutaDate':
-						$result[$currResultIndex]['valutaDate'] = ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '';
-						break;
-						
-					case 'amount':
-						$result[$currResultIndex]['amount'] = array (
-							'class' => $classAmount,
-							'content' => $currentTransaction->getAmount()->getFormatted()
-						);
-						break;
-					
-					case 'outsideCapital':
-						$result[$currResultIndex]['outsideCapital'] = is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp;
-						break;
-					
-					case 'transactionPartner':
-						$result[$currResultIndex]['transactionPartner'] = $currentTransaction->getTransactionPartner();
-						break;
-						
-					case 'categoryId':
-						$result[$currResultIndex]['categoryId'] = ($category) ? $category->getId() : '';
-						break;
-					
-					case 'categoryTitle':
-						$result[$currResultIndex]['categoryTitle'] = ($category) ? $category->getTitle() : '';
-						break;
-					
-					case 'parentCategoryId':
-						$result[$currResultIndex]['parentCategoryId'] = ($parentCategory) ? $parentCategory->getId() : '';
-						break;
-					
-					case 'parentCategoryTitle':
-						$result[$currResultIndex]['parentCategoryTitle'] = ($parentCategory) ? $parentCategory->getTitle() : '';
-						break;
-					
-					case 'exceptional':
-						$result[$currResultIndex]['exceptional'] = is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp;
-						break;
-					
-					case 'periodical':
-						$result[$currResultIndex]['periodical'] = is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp;
-						break;
-				} //switch
-			} //foreach selectedFields
-			
-			$currResultIndex++;
-		} //foreach finishedTransactions
-		
-		return $result;
+		return getAllFinishedTransactions($this->finishedTransactions, $this->selectedFields);
 	}
 
 	private function getAllPlanned() {
@@ -747,17 +676,17 @@ class Account extends DataGridHandler {
 
 		foreach($this->plannedTransactions as $currentTransaction){
 			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-
+	
 			$category = $currentTransaction->getCategory();
 			if (!is_null($category)) {
 				$parentCategory = $category->getParent();
 			} else {
 				$parentCategory = null;
 			}
-
+	
 			$result[$currResultIndex] = array();
 			$result[$currResultIndex]['plannedTransactionId'] = 'p' . $currentTransaction->getId() . '_X';
-
+	
 			foreach ($this->selectedFields as $selectedField) {
 				switch ($selectedField) {
 					case 'title':
@@ -1709,7 +1638,9 @@ class Account extends DataGridHandler {
 
 		$this->expandPlannedTransactions();
 		
-		uasort($this->finishedTransactions, array('Account', 'transactionCompare'));
+		$compare = new CompareTransaction($this->order);
+		
+		uasort($this->finishedTransactions, array($compare, 'compare'));
 		
 		$this->plannedDataExpanded = true;
 	}
@@ -1770,7 +1701,7 @@ class Account extends DataGridHandler {
 
 		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
-			FROM finished_transaction ft 
+			FROM finished_transaction ft
 				LEFT OUTER JOIN category c ON ft.category_id = c.category_id
 				LEFT OUTER JOIN category pc on c.parent_id = pc.category_id 
 			WHERE account_id = " .  $this->id . "\n";
@@ -1892,180 +1823,5 @@ class Account extends DataGridHandler {
 		
 		return false;
 	}
-
-	/**
-	 * Compares two transactions according to $this->order.
-	 * 
-	 * For use with usort type of sort functions.
-	 * 
-	 * @param $aa object The first FinishedTransaction object.
-	 * @param $bb object The second FinishedTransaction object.
-	 * 
-	 * @return integer -1 if $aa is smaller than $bb, 0 if they are equal, 1 if $aa is bigger than $bb.
-	 */
-	function transactionCompare($aa, $bb) {
-		$tmp = 0;
-
-		$default = 0;
-		
-		$repeatUnits = array (
-			'day' => 1,
-			'week' => 2,
-			'month' => 3,
-			'year' => 4
-		);
-
-		for ($run = 0; isset($this->order[$run]); $run++) {
-			if ($this->order[$run]['dir'] == 'asc') {
-				$a = $aa;
-				$b = $bb;
-				$default = -1;
-			} else {
-				$a = $bb;
-				$b = $aa;
-				$default = 1;
-			}
-			//echo "a: " . $a->getId() . "<br />";
-			
-			switch ($this->order[$run]['key']) {
-				case 'transactionId':
-				case 'plannedTransactionId':
-				case 'finishedTransactionId':
-					$tmp = $a->getId() - $b->getId();
-					break;
-				
-				case 'type':
-					$tmp = strncasecmp($a->getType(), $b->getType(), 9999);
-					break;
-
-				case 'title':
-					$tmp = strncasecmp($a->getTitle(), $b->getTitle(), 9999);
-					//echo $tmp;
-					break;
-				
-				case 'description':
-					$tmp = strncasecmp($a->getDescription(), $b->getDescription(), 9999);
-					break;
-					
-				case 'valutaDate':
-					if ($a->getValutaDate() && $b->getValutaDate()) {
-						$tmp = Date::compare($a->getValutaDate(), $b->getValutaDate());
-					} else if ($a->getValutaDate() && !$b->getValutaDate()) {
-						$tmp = 1;
-					} else if (!$a->getValutaDate() && $b->getValutaDate()) {
-						$tmp = -1;
-					}
-					break;
-				
-				case 'beginDate':
-					$tmp = Date::compare($a->getBeginDate(), $b->getBeginDate());
-					break;
-				
-				case 'endDate':
-					if ($a->getEndDate() && $b->getEndDate()) {
-						$tmp = Date::compare($a->getEndDate(), $b->getEndDate());
-					}
-					break;
-				
-				case 'amount':
-					$tmp = $a->getAmount()->compare($b->getAmount());
-					break;
-		
-				case 'outsideCapital':
-					$tmp = $a->getOutsideCapital()->sub($b->getOutsideCapital());
-					break;
-		
-				case 'transactionPartner':
-					$tmp = strncasecmp($a->getTransactionPartner(), $b->getTransactionPartner(), 9999);
-					break;
-				
-				case 'categoryId':
-					if ($a->getCategory() && $b->getCategory()) {
-						$tmp = $a->getCategory()->getId() - $b->getCategory()->getId();
-					} else if ($a->getCategory() && !$b->getCategory()) {
-						$tmp = -1;
-					} else if (!$a->getCategory() && $b->getCategory()) {
-						$tmp = 1;
-					}
-					break;
-				
-				case 'categoryTitle':
-					if ($a->getCategory() && $b->getCategory()) {
-						$tmp = strncasecmp($a->getCategory()->getTitle(), $b->getCategory()->getTitle(), 9999);
-					} else if ($a->getCategory()) {
-						$tmp = -1;
-					} else if ($b->getCategory()) {
-						$tmp = 1;
-					}
-					//echo "tmp: $tmp</pre>";
-					break;
-				
-				case 'parentCategoryId':
-					if ($a->getCategory() && $a->getCategory()->getParent() && $b->getCategory() && $b->getCategory()->getParent()) {
-						$tmp = $a->getCategory()->getParent()->getId() - $b->getCategory()->getParent()->getId();
-					} else if ($a->getCategory() && $a->getCategory()->getParent()) {
-						$tmp = -1;
-					} else if ((!$a->getCategory() || !$a->getCategory()->getParent())) {
-						$tmp = 1;
-					}
-					break;
-				
-				case 'parentCategoryTitle':
-					if ($a->getCategory() && $a->getCategory()->getParent() && $b->getCategory() && $b->getCategory()->getParent()) {
-						$tmp = strncasecmp($a->getCategory()->getParent()->getTitle(), $b->getCategory()->getParent()->getTitle(), 9999);
-					} else if ($a->getCategory() && $a->getCategory()->getParent()) {
-						$tmp = -1;
-					} else if ($b->getCategory() && $b->getCategory()->getParent()) {
-						$tmp = 1;
-					}
-					//echo "tmp: $tmp</pre>";
-					break;
-				
-				case 'concatCategoryTitle':
-					$aTitle = '';
-					$bTitle = '';
-					if ($a->getCategory() && $a->getCategory()->getParent()) {
-						$aTitle = $a->getCategory()->getParent()->getTitle() . ' - ';
-					}
-					if ($a->getCategory()) {
-						$aTitle .= $a->getCategory()->getTitle();
-					}
-					if ($b->getCategory() && $b->getCategory()->getParent()) {
-						$bTitle = $b->getCategory()->getParent()->getTitle() . ' - ';
-					}
-					if ($b->getCategory()) {
-						$bTitle .= $b->getCategory()->getTitle();
-					}
-					if ($aTitle != '' && $bTitle != '') {
-						$tmp = strncasecmp($aTitle, $bTitle, 9999);
-					} else if ($aTitle != '') {
-						$tmp = -1;
-					} else if ($bTitle != '') {
-						$tmp = 1;
-					}
-					//echo "tmp: $tmp</pre>";
-					break;
-
-				case 'repeatUnit':
-					$tmp = $repeatUnits[$a->getRepeatUnit()] - $repeatUnits[$b->getRepeatUnit()];
-					break;
-				
-				case 'repeatFrequency':
-					$tmp = $a->getRepeatFrequency() - $b->getRepeatFrequency();
-					break;
-				
-				case 'sum':
-					$tmp = 0;
-					break;
-			}
-			
-			if ($tmp != 0) {
-				return $tmp;
-			}
-		}
-
-	return $default;
-	}
-	
 }
 ?>

@@ -40,22 +40,18 @@ $tpl->addJavaScript("js/statistics2.js");
 
 $dataGrid = new DataGrid($tpl);
 $dataGrid->UniqueId = "Statistics2Test";
-$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=1";
+$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1,6";
 $dataGrid->headerName = array(
+	'Account',
 	getBadgerTranslation2('accountOverview', 'colValutaDate'),
 	getBadgerTranslation2('accountOverview', 'colTitle'), 
-	getBadgerTranslation2('accountOverview', 'colType'),
 	getBadgerTranslation2('accountOverview', 'colAmount'),
-	getBadgerTranslation2('accountOverview', 'colSum'),
 	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
-$dataGrid->columnOrder = array("valutaDate","title","type","amount","sum","concatCategoryTitle");  
+$dataGrid->columnOrder = array('accountTitle', "valutaDate","title","amount","concatCategoryTitle");  
 $dataGrid->height = "350px";
-$dataGrid->headerSize = array(90,350,39,80,120,200);
-$dataGrid->cellAlign = array("left","left","center","right","right","left");
+$dataGrid->headerSize = array(200, 90,350,80,200);
+$dataGrid->cellAlign = array('left', "left","left","right","left");
 $dataGrid->deleteRefreshType = "refreshDataGrid";
-$dataGrid->deleteAction = "Transaction.php?action=delete&accountID=1&ID=";
-$dataGrid->editAction = "Transaction.php?action=edit&accountID=1&ID=";
-$dataGrid->newAction = "Transaction.php?action=new&accountID=1";
 $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();
@@ -106,10 +102,10 @@ $filters['amount'] =
 	;
 $filters['outsideCapital'] =
 	'Source is '
-	. $widgets->createField("outsideCapital$FILTER_ID_MARKER", null, 'outside', '', false, 'radio')
+	. $widgets->createField("outsideCapital$FILTER_ID_MARKER", null, '1', '', false, 'radio')
 	. $widgets->createLabel("outsideCapital$FILTER_ID_MARKER", 'outside capital')
 	. '&nbsp;'
-	. $widgets->createField("outsideCapital$FILTER_ID_MARKER", null, 'inside', '', false, 'radio')
+	. $widgets->createField("outsideCapital$FILTER_ID_MARKER", null, '0', '', false, 'radio')
 	. $widgets->createLabel("outsideCapital$FILTER_ID_MARKER", 'inside capital')
 	;
 $filters['transactionPartner'] =
@@ -122,6 +118,23 @@ $filters['category'] =
 	'Category is '
 	. $widgets->createSelectField("categoryId$FILTER_ID_MARKER", getCategorySelectArray(), "", "", false, "style='width: 210px;'")
 	;
+$filters['exceptional'] =
+	'Transaction is '
+	. $widgets->createField("exceptional$FILTER_ID_MARKER", null, '1', '', false, 'radio')
+	. $widgets->createLabel("exceptional$FILTER_ID_MARKER", 'exceptional')
+	. '&nbsp;'
+	. $widgets->createField("exceptional$FILTER_ID_MARKER", null, '0', '', false, 'radio')
+	. $widgets->createLabel("exceptional$FILTER_ID_MARKER", 'not exceptional')
+	;
+$filters['periodical'] =
+	'Transaction is '
+	. $widgets->createField("periodical$FILTER_ID_MARKER", null, '1', '', false, 'radio')
+	. $widgets->createLabel("periodical$FILTER_ID_MARKER", 'periodical')
+	. '&nbsp;'
+	. $widgets->createField("periodical$FILTER_ID_MARKER", null, '0', '', false, 'radio')
+	. $widgets->createLabel("periodical$FILTER_ID_MARKER", 'not periodical')
+	;
+	
 
 $availableFilters = array (
 	'unselected' => 'Please choose a filter',
@@ -134,7 +147,9 @@ $availableFilters = array (
 	'outsideCapital' => 'Outside capital',
 	'transactionPartner' => 'Transaction partner',
 	'category' => 'Category',
-	'delete' => 'Delete Filter'
+	'exceptional' => 'Exceptional',
+	'periodical' => 'Periodical',
+	'delete' => '&lt;Delete Filter&gt;'
 );
 
 echo '<form id="mainform" name="mainform">';

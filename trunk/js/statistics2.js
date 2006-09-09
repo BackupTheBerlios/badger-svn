@@ -65,15 +65,29 @@ function applyFilterX() {
 					}
 					break;
 				
-				case "outsideCapital":
-					if ($F("outsideCapital" + currentId) != "") {
-						dgAddFilter("outsideCapital", "eq", $F("outsideCapital" + currentId) == "outside" ? 1 : 0);
-					}
-					break;
-				
 				case "category":
 					if (parseInt($F("categoryId" + currentId)) > 0) {
 						dgAddFilter("categoryId", "eq", parseInt($F("categoryId" + currentId)));
+					}
+					break;
+				
+				case "outsideCapital":
+				case "exceptional":
+				case "periodical":
+					var valTrue = $F(currentFilterType + currentId);
+					var valFalse = $F(currentFilterType + currentId + "_0"); 
+
+					var val = null;
+
+					if (valTrue == "1") {
+						val = 1;
+					}
+					if (valFalse == "0") {
+						val = 0;
+					}
+
+					if (val !== null) {
+						dgAddFilter(currentFilterType, "eq", val);
 					}
 					break;
 			} //switch
