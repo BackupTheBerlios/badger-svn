@@ -45,7 +45,7 @@ function getDailyAmount($account, $startDate, $endDate) {
 	$currentAmount = new Amount();
 	
 	//foreach transaction
-	while ($currentTransaction = $account->getNextTransaction()) {
+	while ($currentTransaction = $account->getNextFinishedTransaction()) {
 		if ($currentDate->after($endDate)) {
 			//we reached $endDAte
 			break;

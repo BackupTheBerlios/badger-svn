@@ -245,13 +245,17 @@ class AccountManager extends DataGridHandler {
 				}
 			}
 		}	
+		//Add condition to limit balance to transactions in the past and today
+		$today = new Date();
+
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, SUM(ft.amount) balance
+				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
+			WHERE ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL
 			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id
+				a.upper_limit, a.currency_id, a.last_calc_date
 			HAVING a.account_id = $accountId";
 		
 		$this->dbResult =& $this->badgerDb->query($sql);
@@ -382,13 +386,13 @@ class AccountManager extends DataGridHandler {
 		$today = new Date();
 
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, SUM(ft.amount) balance
+				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
 			WHERE ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL
 			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id \n";
+				a.upper_limit, a.currency_id, a.last_calc_date \n";
 		
 		$where = $this->getFilterSQL();
 		

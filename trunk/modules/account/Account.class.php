@@ -50,7 +50,11 @@ class Account extends DataGridHandler {
 			'parentCategoryId',
 			'parentCategoryTitle',
 			'concatCategoryTitle',
-			'sum'
+			'sum',
+			'balance',
+			'plannedTransactionId',
+			'exceptional',
+			'periodical'
 		),
 		'planned' => array (
 			'plannedTransactionId',
@@ -142,6 +146,10 @@ class Account extends DataGridHandler {
 	 */
 	private $targetFutureCalcDate;
 	
+	private $lastCalcDate;
+	
+	private static $plannedTransactionsExpanded = array();
+
 	/**
 	 * List of planned transactions.
 	 * 
@@ -183,6 +191,8 @@ class Account extends DataGridHandler {
 	 * @var bool
 	 */
 	private $finishedDataFetched = false;
+	
+	private $fetchOnlyFinishedData = false;
 	
 	/**
 	 * Has the query to planned transactions been executed?
@@ -241,13 +251,6 @@ class Account extends DataGridHandler {
 	private $dbResultPlanned;
 	
 	/**
-	 * The placeholder for the current table (ft or pt) in transaction type
-	 * 
-	 * @var string
-	 */
-	const TABLE_PLACEHOLDER = '__TABLE__'; 
-
-	/**
 	 * Creates an Account.
 	 * 
 	 * @param $badgerDb object The DB object.
@@ -298,6 +301,7 @@ class Account extends DataGridHandler {
 				$this->lowerLimit = new Amount($data['lower_limit']);
 				$this->upperLimit = new Amount($data['upper_limit']);
 				$this->balance = new Amount($data['balance']);
+				$this->lastCalcDate = new Date($data['last_calc_date']);
 				
 				if ($data['currency_id']) {
 					$currencyManager = new CurrencyManager($badgerDb);
@@ -312,6 +316,7 @@ class Account extends DataGridHandler {
 				$this->upperLimit = $upperLimit;
 				$this->currency = $currency;
 				$this->balance = new Amount(0);
+				$this->lastCalcDate = new Date('1000-01-01');
 			}
 		} else {
 			//called from getDataGridXML.php
@@ -340,6 +345,7 @@ class Account extends DataGridHandler {
 			$this->upperLimit = $tmpAccount->getUpperLimit();
 			$this->balance = $tmpAccount->getBalance();
 			$this->currency = $tmpAccount->getCurrency();
+			$this->lastCalcDate = $tmpAccount->getLastCalcDate();
 		}
 
 		//Get all properties
@@ -356,6 +362,8 @@ class Account extends DataGridHandler {
 		while ($res->fetchInto($row, DB_FETCHMODE_ASSOC)) {
 			$this->properties[$row['prop_key']] = $row['prop_value'];
 		}
+
+		$this->expandPlannedTransactions();
 	}
 	
 	/**
@@ -399,7 +407,8 @@ class Account extends DataGridHandler {
 			'repeatFrequency' => 'integer',
 			'exceptional' => 'boolean',
 			'periodical' => 'boolean',
-			'sum' => 'amount'
+			'sum' => 'amount',
+			'balance' => 'amount'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -423,20 +432,24 @@ class Account extends DataGridHandler {
 	public function getFieldSQLName($fieldName) {
 		$fieldSQLNames = array (
 			'transaction' => array (
-				'transactionId' => Account::TABLE_PLACEHOLDER . '.transaction_id',
-				'type' => Account::TABLE_PLACEHOLDER . '.__TYPE__',
-				'title' => Account::TABLE_PLACEHOLDER . '.title',
-				'description' => Account::TABLE_PLACEHOLDER . '.description',
-				'valutaDate' => Account::TABLE_PLACEHOLDER . '.valuta_date',
-				'amount' => Account::TABLE_PLACEHOLDER . '.amount',
-				'outsideCapital' => Account::TABLE_PLACEHOLDER . '.outside_capital',
-				'transactionPartner' => Account::TABLE_PLACEHOLDER . '.transaction_parter',
-				'categoryId' => Account::TABLE_PLACEHOLDER . '.category_id',
-				'categoryTitle' => 'c.title',
-				'parentCategoryId' => 'pc.category_id',
-				'parentCategoryTitle' => 'pc.title',
-				'concatCategoryTitle' => 'CONCAT(IF(NOT pc.title IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
-				'sum' => Account::TABLE_PLACEHOLDER . '.__SUM__'
+				'transactionId' => 'ft2.transaction_id',
+				'type' => 'ft2.__TYPE__',
+				'title' => 'ft2.title',
+				'description' => 'ft2.description',
+				'valutaDate' => 'ft2.valuta_date',
+				'amount' => 'ft2.amount',
+				'outsideCapital' => 'ft2.outside_capital',
+				'transactionPartner' => 'ft2.transaction_parter',
+				'categoryId' => 'ft2.category_id',
+				'categoryTitle' => 'ft2.category_title',
+				'parentCategoryId' => 'ft2.parent_category_id',
+				'parentCategoryTitle' => 'ft2.parent_category_title',
+				'concatCategoryTitle' => 'CONCAT(IF(NOT ft2.parent_category_title IS NULL, CONCAT(ft2.parent_category_title, \' - \'), \'\'), IF(ft2.category_title IS NULL, \'\', ft2.category_title))'					,
+				'sum' => 'ft2.__SUM__',
+				'balance' => 'ft2.balance',
+				'plannedTransactionId' => 'ft2.planned_transaction_id',
+				'exceptional' => 'ft2.exceptional',
+				'periodical' => 'ft2.periodical'
 			),
 			'planned' => array (
 				'plannedTransactionId' => 'pt.planned_transaction_id',
@@ -455,20 +468,20 @@ class Account extends DataGridHandler {
 				'parentCategoryTitle' => 'pc.title'
 			),
 			'finished' => array (
-				'finishedTransactionId' => 'ft.transaction_id',
-				'title' => 'ft.title',
-				'description' => 'ft.description',
-				'valutaDate' => 'ft.valuta_date',
-				'amount' => 'ft.amount',
-				'outsideCapital' => 'ft.outside_capital',
-				'transactionPartner' => 'ft.transaction_parter',
-				'categoryId' => 'ft.category_id',
-				'categoryTitle' => 'c.title',
-				'parentCategoryId' => 'pc.category_id',
-				'parentCategoryTitle' => 'pc.title',
-				'concatCategoryTitle' => 'CONCAT(IF(NOT pc.title IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
-				'exceptional' => 'ft.exceptional',
-				'periodical' => 'ft.periodical'
+				'finishedTransactionId' => 'ft2.transaction_id',
+				'title' => 'ft2.title',
+				'description' => 'ft2.description',
+				'valutaDate' => 'ft2.valuta_date',
+				'amount' => 'ft2.amount',
+				'outsideCapital' => 'ft2.outside_capital',
+				'transactionPartner' => 'ft2.transaction_parter',
+				'categoryId' => 'ft2.category_id',
+				'categoryTitle' => 'ft2.category_title',
+				'parentCategoryId' => 'ft2.category_id',
+				'parentCategoryTitle' => 'ft2.parent_category_title',
+				'concatCategoryTitle' => 'CONCAT(IF(NOT ft2.parent_category_title IS NULL, CONCAT(ft2.parent_category_title, \' - \'), \'\'), IF(ft2.category_title IS NULL, \'\', ft2.category_title))'					,
+				'exceptional' => 'ft2.exceptional',
+				'periodical' => 'ft2.periodical'
 			)
 		);
 	
@@ -559,6 +572,7 @@ class Account extends DataGridHandler {
 					$classSum = 'dgUnderMinAmount';
 				}
 			}
+			$classBalance = ($currentTransaction->getBalance()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
 
 			$category = $currentTransaction->getCategory();
 			if (!is_null($category)) {
@@ -652,6 +666,25 @@ class Account extends DataGridHandler {
 							'class' => $classSum,
 							'content' => $sum->getFormatted()
 						);
+						break;
+
+					case 'balance':
+						$result[$currResultIndex]['balance'] = array (
+							'class' => $classBalance,
+							'content' => $currentTransaction->getBalance()->getFormatted()
+						);
+						break;
+					
+					case 'plannedTransactionId':
+						$result[$currResultIndex]['plannedTransactionId'] = (is_null($tmp = $currentTransaction->getPlannedTransaction()) ? '' : $tmp->getId());
+						break; 
+
+					case 'exceptional':
+						$result[$currResultIndex]['exceptional'] = is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp;
+						break;
+					
+					case 'periodical':
+						$result[$currResultIndex]['periodical'] = is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp;
 						break;
 				} //switch
 			} //foreach selectedFields
@@ -1353,6 +1386,25 @@ class Account extends DataGridHandler {
 		$this->targetFutureCalcDate = $date;
 	}
 	
+	public function getLastCalcDate() {
+		return $this->lastCalcDate;
+	}
+	
+	protected function setLastCalcDate($date) {
+		$this->lastCalcDate = $date;
+		
+		$sql = "UPDATE account
+			SET last_calc_date = '" . $date->getDate() . "'
+			WHERE account_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+	}
+
 	/**
 	 * Expands the planned transactions.
 	 * 
@@ -1362,135 +1414,30 @@ class Account extends DataGridHandler {
 	 * 
 	 * @throws BadgerException If an illegal repeat unit is used.
 	 */
-	public function expandPlannedTransactions(){
-		$now = new Date();
-		$now->setHour(23);
-		$now->setMinute(59);
-		$now->setSecond(59);
-		
-		foreach($this->plannedTransactions as $currentTransaction){ 
-			$date = new Date($currentTransaction->getBeginDate());
-			$dayOfMonth = $date->getDay();
-			//While we have not reached targetFutureCalcDate
-			while(
-				$this->targetFutureCalcDate->after($date)
-				&& !$date->after(is_null($tmp = $currentTransaction->getEndDate()) ? new Date('9999-12-31') : $tmp)
-			){
-				$inRange = true;
-				//Check if there is one or more valutaDate filter and apply them
-				foreach ($this->filter as $currentFilter) {
-					if ($currentFilter['key'] == 'valutaDate') {
-						switch ($currentFilter['op']) {
-							case 'eq':
-								if (Date::compare($date, $currentFilter['val']) != 0) {
-									$inRange = false;
-								}
-								break;
-								
-							case 'lt':
-								if (Date::compare($date, $currentFilter['val']) >= 0) {
-									$inRange = false;
-								}
-								break;
-								
-							case 'le':
-								if (Date::compare($date, $currentFilter['val']) > 0) {
-									$inRange = false;
-								}
-								break;
-								
-							case 'gt':
-								if (Date::compare($date, $currentFilter['val']) <= 0) {
-									$inRange = false;
-								}
-								break;
-								
-							case 'ge':
-								if (Date::compare($date, $currentFilter['val']) < 0) {
-									$inRange = false;
-								}
-								break;
-								
-							case 'ne':
-								if (Date::compare($date, $currentFilter['val']) == 0) {
-									$inRange = false;
-								}
-								break;
-		
-							case 'bw':
-							case 'ew':
-							case 'ct': 	
-								if (strncasecmp($date->getFormatted(), $currentFilter['val']->getFormatted(), 9999) != 0) {
-									$inRange = false;
-								}
-			    				break;
-						}
-						
-						if (!$inRange) {
-							break;
-						}
-					}
-				}
+	public function expandPlannedTransactions() {
 
-				if(!($date->before($now)) && $inRange) {
-					$this->finishedTransactions[] = new FinishedTransaction(
-						$this->badgerDb,
-						$this,
-						'p' . $currentTransaction->getId() . '_' . $date->getDate(),
-						$currentTransaction->getTitle(),
-						$currentTransaction->getAmount(),
-						$currentTransaction->getDescription(),
-						new Date($date),
-						$currentTransaction->getTransactionPartner(),
-						$currentTransaction->getCategory(),
-						$currentTransaction->getOutsideCapital(),
-						false,
-						true,
-						$currentTransaction,
-						'PlannedTransaction'
-					);
+		if (
+			!isset(self::$plannedTransactionsExpanded[$this->id])
+			|| self::$plannedTransactionsExpanded[$this->id] === false
+		) {
+			self::$plannedTransactionsExpanded[$this->id] = true;
+			
+			$now = new Date();
+			$now->setHour(0);
+			$now->setMinute(0);
+			$now->setSecond(0);
+			
+			if ($this->lastCalcDate->before($now)) {		
+				$accountManager = new AccountManager($this->badgerDb);
+				$plannedAccount = $accountManager->getAccountById($this->id);
+				
+				while($currentPlannedTransaction = $plannedAccount->getNextPlannedTransaction()) {
+					$currentPlannedTransaction->expand($this->lastCalcDate, $this->targetFutureCalcDate);
 				}
-
-				//do the date calculation
-				switch ($currentTransaction->getRepeatUnit()){
-					case 'day': 
-						$date->addSeconds($currentTransaction->getRepeatFrequency() * 24 * 60 * 60);
-						break;
-						
-					case 'week':
-						$date->addSeconds($currentTransaction->getRepeatFrequency() * 7 * 24 * 60 * 60);
-						break;
-						
-					case 'month':
-						//Set the month
-						$date = new Date(Date_Calc::endOfMonthBySpan($currentTransaction->getRepeatFrequency(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
-						//And count back as far as the last valid day of this month
-						while($date->getDay() > $dayOfMonth){
-							$date->subtractSeconds(24 * 60 * 60);
-						}
-						break; 
-					
-					case 'year':
-						$newYear = $date->getYear() + $currentTransaction->getRepeatFrequency();
-						if (
-							$dayOfMonth == 29
-							&& $date->getMonth() == 2
-							&& !Date_Calc::isLeapYear($newYear)
-						) {
-							$date->setDay(28);
-						} else {
-							$date->setDay($dayOfMonth);
-						}
-						
-						$date->setYear($newYear);
-						break;
-					
-					default:
-						throw new BadgerException('Account', 'IllegalRepeatUnit', $currentTransaction->getRepeatUnit());
-						exit;
-				}
+				
+				$this->setLastCalcDate($now);
 			}
-		} 
+		}
 	}
 
 	/**
@@ -1516,6 +1463,7 @@ class Account extends DataGridHandler {
 	 */
 	public function getNextFinishedTransaction() {
 		if (!$this->allFinishedDataFetched) {
+			$this->fetchOnlyFinishedData = true;
 			$this->fetchNextFinishedTransaction();
 		}
 
@@ -1634,13 +1582,13 @@ class Account extends DataGridHandler {
 		}
 		while ($this->fetchNextFinishedTransaction());
 		
-		while ($this->fetchNextPlannedTransaction());
+		//while ($this->fetchNextPlannedTransaction());
 
-		$this->expandPlannedTransactions();
+		//$this->expandPlannedTransactions();
 		
-		$compare = new CompareTransaction($this->order);
+		//$compare = new CompareTransaction($this->order);
 		
-		uasort($this->finishedTransactions, array($compare, 'compare'));
+		//uasort($this->finishedTransactions, array($compare, 'compare'));
 		
 		$this->plannedDataExpanded = true;
 	}
@@ -1699,25 +1647,38 @@ class Account extends DataGridHandler {
 			return;
 		}
 
-		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
-				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
-			FROM finished_transaction ft
-				LEFT OUTER JOIN category c ON ft.category_id = c.category_id
-				LEFT OUTER JOIN category pc on c.parent_id = pc.category_id 
-			WHERE account_id = " .  $this->id . "\n";
+		$sqlPrepare = 'SET @balance = 0';
+		
+		$sql = "SELECT * FROM (
+					SELECT *, (@balance := @balance + ft1.amount) balance FROM (
+						SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
+							ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional,
+							ft.periodical, ft.planned_transaction_id, c.title category_title,
+							pc.category_id parent_category_id, pc.title parent_category_title
+						FROM finished_transaction ft
+							LEFT OUTER JOIN category c ON ft.category_id = c.category_id
+							LEFT OUTER JOIN category pc on c.parent_id = pc.category_id 
+						WHERE account_id = " .  $this->id;
+		if ($this->fetchOnlyFinishedData) {
+			$sql .= ' AND ft.planned_transaction_id IS NULL';
+		}
+		$sql .= "
+						ORDER BY ft.valuta_date ASC
+					) ft1
+				) ft2\n";
 		
 		$where = $this->getFilterSQL();
-		$where = preg_replace('/pc.category_id = ([0-9]+)/', '(pc.category_id = \1 OR c.category_id = \1)', $where);
+		$where = preg_replace('/ft2.category_id = ([0-9]+)/', '(ft2.category_id = \1 OR ft2.parent_category_id = \1)', $where);
 		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
-		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
-		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
+		$where = preg_replace('/ft2\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
+		$where = trim(preg_replace('/ft2\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
 		if($where) {
-			$sql .= " AND $where\n ";
+			$sql .= " WHERE $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
-		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__ (asc|desc),*/', '', $order);
-		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order));
+		$order = preg_replace('/ft2\.__SUM__ (asc|desc),*/', '', $order);
+		$order = trim(preg_replace('/ft2\.__TYPE__ (asc|desc),*/', '', $order));
 
 		if (substr($order, -1, 1) === ',') {
 			$order = substr($order, 0, strlen($order) - 1);
@@ -1727,16 +1688,17 @@ class Account extends DataGridHandler {
 			$sql .= " ORDER BY $order\n ";
 		}
 		
-		if ($this->type == 'transaction') {
-			$sql = str_replace(Account::TABLE_PLACEHOLDER, 'ft', $sql);
-		}
-		
 		//echo "<pre>$sql</pre>";
 		global $logger;
 		$logger->log('Account Finished SQL: ' . $sql);
 
+		$result = $this->badgerDb->query($sqlPrepare);
+		if (PEAR::isError($result)) {
+			//echo "SQL Error: " . $this->dbResultFinished->getMessage();
+			throw new BadgerException('Account', 'SQLError', $this->dbResultFinished->getMessage());
+		}
+
 		$this->dbResultFinished =& $this->badgerDb->query($sql);
-		
 		if (PEAR::isError($this->dbResultFinished)) {
 			//echo "SQL Error: " . $this->dbResultFinished->getMessage();
 			throw new BadgerException('Account', 'SQLError', $this->dbResultFinished->getMessage());
@@ -1761,7 +1723,8 @@ class Account extends DataGridHandler {
 
 		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.amount, 
 				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
-				pt.repeat_frequency, pt.category_id
+				pt.repeat_frequency, pt.category_id,  c.title category_title,
+				pc.category_id parent_category_id, pc.title parent_category_title
 			FROM planned_transaction pt
 				LEFT OUTER JOIN category c ON pt.category_id = c.category_id
 				LEFT OUTER JOIN category pc on c.parent_id = pc.category_id 
@@ -1771,20 +1734,20 @@ class Account extends DataGridHandler {
 
 		$where = $this->getFilterSQL();
 		//echo $where = $where . "\n" . $where;
-		$where = preg_replace('/pc.category_id = ([0-9]+)/', '(pc.category_id = \1 OR c.category_id = \1)', $where);
+		$where = preg_replace('/pt.category_id = ([0-9]+)/', '(pt.category_id = \1 OR pt.parent_category_id = \1)', $where);
 		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
-		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
-		$where = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
-		$where = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . "\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
+		$where = preg_replace('/pt\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
+		$where = preg_replace('/pt\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
+		$where = trim(preg_replace("/pt\.valuta_date[^\\n]+?(\$|\\n)/", "1=1\n", $where));
 		//echo $where;
 		if($where) {
 			$sql .= " AND $where\n ";
 		} 
 		
 		$order = $this->getOrderSQL();				
-		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__TYPE__ (asc|desc),*/', '', $order);
-		$order = preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.__SUM__ (asc|desc),*/', '', $order);
-		$order = trim(preg_replace('/' . Account::TABLE_PLACEHOLDER . '\.valuta_date (asc|desc),*/', '', $order));
+		$order = preg_replace('/pt\.__TYPE__ (asc|desc),*/', '', $order);
+		$order = preg_replace('/pt\.__SUM__ (asc|desc),*/', '', $order);
+		$order = trim(preg_replace('/pt\.valuta_date (asc|desc),*/', '', $order));
 		//global $logger;
 		
 		if (substr($order, -1, 1) === ',') {
@@ -1793,10 +1756,6 @@ class Account extends DataGridHandler {
 		
 		if($order) {
 			$sql .= " ORDER BY $order\n ";
-		}
-		
-		if ($this->type == 'transaction') {
-			$sql = str_replace(Account::TABLE_PLACEHOLDER, 'pt', $sql);
 		}
 		
 		//echo "<pre>$sql;</pre>";

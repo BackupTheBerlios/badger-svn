@@ -46,7 +46,7 @@ $dataGrid->headerName = array(
 	getBadgerTranslation2('accountOverview', 'colAmount'),
 	getBadgerTranslation2('accountOverview', 'colSum'),
 	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
-$dataGrid->columnOrder = array("valutaDate","title","type","amount","sum","concatCategoryTitle");  
+$dataGrid->columnOrder = array("valutaDate","title","type","amount","balance","concatCategoryTitle");  
 $dataGrid->height = "350px";
 $dataGrid->headerSize = array(90,350,39,80,120,200);
 $dataGrid->cellAlign = array("left","left","center","right","right","left");

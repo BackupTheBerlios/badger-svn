@@ -124,6 +124,8 @@ class FinishedTransaction {
 	 */
 	private $type;
 	
+	private $balance;
+	
 	/**
 	 * Creates a Finished Transaction.
 	 * 
@@ -173,14 +175,16 @@ class FinishedTransaction {
 			}
 			$this->exceptional = $data['exceptional'];
 			$this->periodical = $data['periodical'];
+			$this->balance = new Amount($data['balance']);
+			$this->type = 'FinishedTransaction';
 			if ($data['planned_transaction_id']) {
 				try {
 					$this->sourcePlannedTransaction = $account->getPlannedTransactionById($data['planned_transaction_id']);
+					$this->type = 'PlannedTransaction';
 				} catch (BadgerException $ex) {
 					$this->sourcePlannedTransaction = null;
 				}
 			}
-			$this->type = 'FinishedTransaction';
 		} else {
 			$this->id = $data;
 			$this->title = $title;
@@ -193,6 +197,7 @@ class FinishedTransaction {
 			$this->exceptional = $exceptional;
 			$this->periodical = $periodical;
 			$this->sourcePlannedTransaction = $sourcePlannedTransaction;
+			$this->balance = null;
 			$this->type = $type;
 		}
 	}
@@ -489,6 +494,14 @@ class FinishedTransaction {
 	 */
     public function getSourcePlannedTransaction() {
     	return $this->sourcePlannedTransaction;
+    }
+    
+    public function getPlannedTransaction() {
+    	return $this->getSourcePlannedTransaction();
+    }
+    
+    public function getBalance() {
+    	return $this->balance;
     }
     
     public function getAccount() {

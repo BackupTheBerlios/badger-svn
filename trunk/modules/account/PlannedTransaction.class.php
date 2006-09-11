@@ -524,5 +524,109 @@ class PlannedTransaction {
 	public function getType() {
 		return $this->type;
 	}
-}
+	
+	public function expand($lastCalcDate, $targetFutureCalcDate) {
+		$now = new Date();
+		$now->setHour(23);
+		$now->setMinute(59);
+		$now->setSecond(59);
+		
+		$date = new Date($this->beginDate);
+		$dayOfMonth = $date->getDay();
+		
+		$accountManager = new AccountManager($this->badgerDb);
+		$compareAccount = $accountManager->getAccountById($this->account->getId());
+		
+		$compareAccount->setFilter(array (
+			array (
+				'key' => 'plannedTransactionId',
+				'op' => 'eq',
+				'val' => $this->id
+			)
+		));
+		$compareAccount->setOrder(array (
+			array (
+				'key' => 'valutaDate',
+				'dir' => 'asc'
+			)
+		));
+		
+		$currentCompareTransaction = $compareAccount->getNextTransaction();
+		
+		$localEndDate = is_null($this->endDate) ? new Date('9999-12-31') : $this->endDate; 
+		//While we have not reached targetFutureCalcDate or endDate
+		while (
+			$targetFutureCalcDate->after($date)
+			&& !$date->after($localEndDate)
+		) {
+			if(
+				$date->after($lastCalcDate)
+				&& (
+					($currentCompareTransaction === false)
+					|| !$date->equals($currentCompareTransaction->getValutaDate())
+				)
+			) {
+				$this->account->addFinishedTransaction(
+					new Amount($this->amount),
+					$this->title,
+					$this->description,
+					new Date($date),
+					$this->transactionPartner,
+					$this->category,
+					$this->outsideCapital,
+					false,
+					true,
+					$this
+				);
+			}
+			
+			
+			while (
+				$currentCompareTransaction !== false
+				&& !$date->before($currentCompareTransaction->getValutaDate())
+			) {
+				$currentCompareTransaction = $compareAccount->getNextTransaction();
+			}
+
+			//do the date calculation
+			switch ($this->repeatUnit){
+				case 'day': 
+					$date->addSeconds($this->repeatFrequency * 24 * 60 * 60);
+					break;
+					
+				case 'week':
+					$date->addSeconds($this->repeatFrequency * 7 * 24 * 60 * 60);
+					break;
+					
+				case 'month':
+					//Set the month
+					$date = new Date(Date_Calc::endOfMonthBySpan($this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+					//And count back as far as the last valid day of this month
+					while($date->getDay() > $dayOfMonth){
+						$date->subtractSeconds(24 * 60 * 60);
+					}
+					break; 
+				
+				case 'year':
+					$newYear = $date->getYear() + $this->repeatFrequency;
+					if (
+						$dayOfMonth == 29
+						&& $date->getMonth() == 2
+						&& !Date_Calc::isLeapYear($newYear)
+					) {
+						$date->setDay(28);
+					} else {
+						$date->setDay($dayOfMonth);
+					}
+					
+					$date->setYear($newYear);
+					break;
+				
+				default:
+					throw new BadgerException('Account', 'IllegalRepeatUnit', $this->repeatUnit);
+					exit;
+			} //switch
+		} //while before futureTargetCalcDate and endDate 
+	} //function expand
+} //class PlannedTransaction
 ?>
