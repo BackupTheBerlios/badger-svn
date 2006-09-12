@@ -19,6 +19,7 @@ require_once BADGER_ROOT . '/includes/charts/charts.php';
 require_once BADGER_ROOT . '/core/Date/Span.php';
 require_once BADGER_ROOT . '/core/widgets/DataGrid.class.php';
 
+updateBalances();
 
 if (isset($_GET['mode'])) {
 	$mode = getGPC($_GET, 'mode');

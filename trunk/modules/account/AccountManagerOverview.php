@@ -17,6 +17,8 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
 $pageTitle = getBadgerTranslation2('accountAccount', 'pageTitleOverview');
 
+updateBalances();
+
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");

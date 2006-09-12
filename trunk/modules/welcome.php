@@ -16,6 +16,8 @@ require_once(BADGER_ROOT . "/core/widgets/DataGrid.class.php");
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 
+updateBalances();
+
 $widgets = new WidgetEngine($tpl); 
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");

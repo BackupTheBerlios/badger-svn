@@ -449,6 +449,14 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 
 }
 
+function updateBalances() {
+	global $badgerDb;
+	
+	$accountManager = new AccountManager($badgerDb);
+	
+	while ($accountManager->getNextAccount());
+}
+
 function getTargetFutureCalcDate() {
 	global $us;
 	
