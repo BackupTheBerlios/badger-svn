@@ -3,49 +3,54 @@
 <table>
   <tr>
     <td>$AccountLabel</td>
-    <td>$hiddenAccID </td>
+    <td>$hiddenAccID</td>
   </tr>
   <tr>
-    <td>$titleLabel </td>
-    <td>$titleField </td>
+    <td>$titleLabel</td>
+    <td>$titleField</td>
   </tr>
   <tr>
-    <td>$descriptionLabel </td>
-    <td>$descriptionField </td>
+    <td>$descriptionLabel</td>
+    <td>$descriptionField</td>
   </tr>
   <tr>
-    <td>$beginDateLabel </td>
-    <td>$beginDateField </td>
+    <td>$beginDateLabel</td>
+    <td>$beginDateField</td>
   </tr>  
   <tr>
-    <td>$endDateLabel </td>
-    <td>$endDateField </td>
+    <td>$endDateLabel</td>
+    <td>$endDateField</td>
   </tr>  
   <tr>
-    <td>$amountLabel </td>
-    <td>$amountField  </td>
+    <td>$amountLabel</td>
+    <td>$amountField</td>
   </tr>
    <tr>
-    <td>$outsideCapitalLabel </td>
-    <td>$outsideCapitalField  $outsideToolTip</td>
+    <td>$outsideCapitalLabel</td>
+    <td>$outsideCapitalField $outsideToolTip</td>
   </tr>
   <tr>
-    <td>$transactionPartnerLabel </td>
-    <td>$transactionPartnerField  </td>
+    <td>$transactionPartnerLabel</td>
+    <td>$transactionPartnerField</td>
   </tr>
   <tr>
-    <td>$categoryLabel </td>
-    <td>$categoryField  </td>
+    <td>$categoryLabel</td>
+    <td>$categoryField</td>
   </tr>
   <tr>
-    <td>$repeatUnitLabel </td>
-    <td>$everyLabel $repeatFrequencyField. $repeatUnitField  </td>
+    <td>$repeatUnitLabel</td>
+    <td>$everyLabel $repeatFrequencyField. $repeatUnitField</td>
   </tr>
   <tr>
-    <td>$backBtn </td>
-    <td>$submitBtn </td>
+  	<td>$rangeLabel</td>
+  	<td>$rangeAllField $rangeAllLabel $rangeThisField $rangeThisLabel $rangePreviousField $rangePreviousLabel $rangeFollowingField $rangeFollowingLabel $rangeUnit</td>
+  </tr>
+  <tr>
+    <td>$backBtn</td>
+    <td>$submitBtn $deleteBtn</td>
   </tr>
 </table>
 $hiddenID
 $hiddenType
+$hiddenFinishedTransactionID
 </form>

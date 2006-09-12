@@ -393,7 +393,7 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->categories[$categoryId] = new Category(&$this->badgerDb, &$this, $categoryId, $title, $description, $outsideCapital);
+		$this->categories[$categoryId] = new Category($this->badgerDb, $this, $categoryId, $title, $description, $outsideCapital);
 		
 		return $this->categories[$categoryId];	
 	}
@@ -450,7 +450,7 @@ class CategoryManager extends DataGridHandler {
 
 			//echo "<pre>"; print_r($row); echo "</pre>";
 
-			$this->categories[$row['category_id']] = new Category(&$this->badgerDb, &$this, $row);
+			$this->categories[$row['category_id']] = new Category($this->badgerDb, $this, $row);
 			return $this->categories[$row['category_id']];
 		} else {
 			$this->allDataFetched = true;

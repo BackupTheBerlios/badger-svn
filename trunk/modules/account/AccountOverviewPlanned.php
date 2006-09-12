@@ -25,8 +25,6 @@ if (isset($_GET['accountID'])) {
 $am = new AccountManager($badgerDb);
 $account = $am->getAccountById($accountID);
 
-transferFormerFinishedTransactions($account);
-
 $pageTitle = getBadgerTranslation2 ('accountOverviewPlanned','pageTitle');
 $pageTitle .= ": ".$account->getTitle();
 

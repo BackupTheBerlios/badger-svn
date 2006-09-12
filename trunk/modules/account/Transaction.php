@@ -59,10 +59,10 @@ if (isset($_GET['action'])) {
 				
 				//check if ID is from planned or finished transaction
 				if(substr($ID, 0, 1) == "p") {
-					$pos = strpos($ID, "_");				
-					$ID = substr($ID, 1, $pos - 1);
-					settype($ID, 'integer');
-					printFrontendPlanned($accountID, $ID);
+					list($plannedTransactionId, $finishedTransactionId) = explode('_', substr($ID, 1));
+					settype($plannedTransactionId, 'integer');
+					settype($finishedTransactionId, 'integer');
+					printFrontendPlanned($accountID, $plannedTransactionId, $finishedTransactionId);
 				} else {
 					settype($ID, 'integer');
 					printFrontendFinished($accountID, $ID);
@@ -98,18 +98,20 @@ function deleteRecord() {
 		
 		foreach($IDs as $ID){
 			if(substr($ID,0,1)=="p") {
-				$pos = strpos($ID,"_");				
-				$ID = substr($ID,1,$pos-1);
+				list($plannedTransactionId, $finishedTransactionId) = explode('_', substr($ID, 1));
+				settype($plannedTransactionId, 'integer');
+				settype($finishedTransactionId, 'integer');
 
 				//Prevent try to delete one plannedTransaction several times if it was expanded to
 				//more than one occurence
-				if (array_key_exists($ID, $processedPlannedTransactions)) {
-					continue;
-				} else {
-					$processedPlannedTransactions[$ID] = true;
-				}
+//				if (array_key_exists($ID, $processedPlannedTransactions)) {
+//					continue;
+//				} else {
+//					$processedPlannedTransactions[$ID] = true;
+//				}
 
-				$acc->deletePlannedTransaction($ID);
+//				$acc->deletePlannedTransaction($ID);
+				$acc->deleteFinishedTransaction($finishedTransactionId);
 			} else {
 				$acc->deleteFinishedTransaction($ID);
 			}
@@ -210,6 +212,8 @@ function printFrontendFinished($AccountID, $ID) {
 	$periodicalField = $widgets->createField("periodical", 30, "on", "", false, "checkbox", $periodicalValue);
 	$periodicalToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "periodicalToolTip"));
 
+	$
+
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	if($redirectPage) {
@@ -220,7 +224,7 @@ function printFrontendFinished($AccountID, $ID) {
 	eval("echo \"".$tpl->getTemplate("Account/FinishedTransaction")."\";");
 }
 
-function printFrontendPlanned($AccountID, $ID) {
+function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransactionId = null) {
 	global $pageTitle;
 	global $tpl;
 	global $am;
@@ -240,9 +244,9 @@ function printFrontendPlanned($AccountID, $ID) {
 	$now = new Date();
 	
 	$transactionType = "planned";
-	if($ID!="new") {
+	if($plannedTransactionId != "new") {
 		$acc = $am->getAccountById($AccountID);		
-		$transaction = $acc->getPlannedTransactionById($ID);
+		$transaction = $acc->getPlannedTransactionById($plannedTransactionId);
 		
 		$titleValue = $transaction->getTitle();
 		$descriptionValue = $transaction->getDescription();
@@ -278,7 +282,7 @@ function printFrontendPlanned($AccountID, $ID) {
 		$AccountLabel = "";
 		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
 	}
-	$hiddenID = $widgets->createField("hiddenID", 20, $ID, "", false, "hidden");
+	$hiddenID = $widgets->createField("hiddenID", 20, $plannedTransactionId, "", false, "hidden");
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	
 	//Fields & Labels
@@ -313,11 +317,47 @@ function printFrontendPlanned($AccountID, $ID) {
 	$everyLabel = getBadgerTranslation2('intervalUnits', 'every');
 	$repeatFrequencyField = $widgets->createField("repeatFrequency", 1, $repeatFrequencyValue, "", true, "text", "");
 	
+	if (
+		!is_null($finishedTransactionId)
+		&& $finishedTransactionId != 'X'
+	) {
+		$hiddenFinishedTransactionID = $widgets->createField('hiddenFinishedTransactionID', 20, $finishedTransactionId, '', false, 'hidden');
+		$rangeLabel = getBadgerTranslation2('accountTransaction', 'range');
+		$rangeUnit = getBadgerTranslation2('accountTransaction', 'rangeUnit');
+		
+		$rangeAllField = $widgets->createField('range', null, 'all', '', false, 'radio', 'checked="checked"');
+		$rangeAllLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangeAll'));
+		$rangeThisField = $widgets->createField('range', null, 'this', '', false, 'radio');
+		$rangeThisLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangeThis'));
+		$rangePreviousField = $widgets->createField('range', null, 'previous', '', false, 'radio');
+		$rangePreviousLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangePrevious'));
+		$rangeFollowingField = $widgets->createField('range', null, 'following', '', false, 'radio');
+		$rangeFollowingLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangeFollowing'));
+		
+		//$deleteBtn = $widgets->createButton('deleteBtn', getBadgerTranslation2('dataGrid', 'delete'), 'submit', 'Widgets/cancel.gif', "accesskey='d'");
+		$deleteBtn = '';
+	} else {
+		$hiddenFinishedTransactionID = '';
+		$rangeLabel = '';
+		$rangeUnit = '';
+		$rangeAllField = $widgets->createField('range', 20, 'all', '', false, 'hidden');
+		$rangeAllLabel = '';
+		$rangeThisField = '';
+		$rangeThisLabel = '';
+		$rangePreviousField = '';
+		$rangePreviousLabel = '';
+		$rangeFollowingField = '';
+		$rangeFollowingLabel = '';
+		$deleteBtn = '';
+	}
+
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	if($redirectPage) {
 		$backBtn = $widgets->createButton("backBtn", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPage';return false;", "Widgets/back.gif");
-	} else { $backBtn=""; };
+	} else {
+		$backBtn = '';
+	}
 	
 	//add vars to template, print site
 	$pageHeading = getBadgerTranslation2('accountTransaction', 'headingTransactionPlanned');
@@ -325,9 +365,9 @@ function printFrontendPlanned($AccountID, $ID) {
 }
 
 function updateRecord($accountID, $ID, $transactionType) {
-	global $redirectPage;
 	global $am;
 	global $catm;
+	global $us;
 	
 	$account = $am->getAccountById($accountID);
 	if (isset($_POST['category']) && getGPC($_POST, 'category') != "NULL") {
@@ -356,7 +396,7 @@ function updateRecord($accountID, $ID, $transactionType) {
 					getGPC($_POST, 'outsideCapital', 'checkbox') // = null
 				);
 	
-				transferFinishedTransactions($account, $newPlannedTransaction);
+				$newPlannedTransaction->expand(new Date('1000-01-01'), getTargetFutureCalcDate());
 				break;
 				
 			case 'finished':
@@ -381,16 +421,43 @@ function updateRecord($accountID, $ID, $transactionType) {
 		switch ($transactionType) {
 			case 'planned':
 				$transaction = $account->getPlannedTransactionById($ID);
-				$transaction->setTitle(getGPC($_POST, 'title'));
-				$transaction->setDescription(getGPC($_POST, 'description'));
-				$transaction->setBeginDate(getGPC($_POST, 'beginDate', 'DateFormatted'));
-				$transaction->setEndDate(($tmp = getGPC($_POST, 'endDate')) ? new Date($tmp, true) : null);
-				$transaction->setAmount(getGPC($_POST, 'amount', 'AmountFormatted'));
-				$transaction->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
-				$transaction->setTransactionPartner(getGPC($_POST, 'transactionPartner'));
-				$transaction->setCategory($category);
-				$transaction->setRepeatUnit(getGPC($_POST, 'repeatUnit'));
-		    	$transaction->setRepeatFrequency(getGPC($_POST, 'repeatFrequency', 'integer'));
+
+				$range = getGPC($_POST, 'range');
+				if ($range == 'previous') {
+					$finishedTransaction = $account->getFinishedTransactionById(getGPC($_POST, 'hiddenFinishedTransactionID', 'integer'));
+					$transaction->setUpdateMode(PlannedTransaction::UPDATE_MODE_PREVIOUS, $finishedTransaction->getValutaDate());
+				} else if ($range == 'following') {
+					$finishedTransaction = $account->getFinishedTransactionById(getGPC($_POST, 'hiddenFinishedTransactionID', 'integer'));
+					$transaction->setUpdateMode(PlannedTransaction::UPDATE_MODE_FOLLOWING, $finishedTransaction->getValutaDate());
+				}
+				
+				if ($range != 'this') {
+					$transaction->setTitle(getGPC($_POST, 'title'));
+					$transaction->setDescription(getGPC($_POST, 'description'));
+					$transaction->setBeginDate(getGPC($_POST, 'beginDate', 'DateFormatted'));
+					$transaction->setEndDate(($tmp = getGPC($_POST, 'endDate')) ? new Date($tmp, true) : null);
+					$transaction->setAmount(getGPC($_POST, 'amount', 'AmountFormatted'));
+					$transaction->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
+					$transaction->setTransactionPartner(getGPC($_POST, 'transactionPartner'));
+					$transaction->setCategory($category);
+					$transaction->setRepeatUnit(getGPC($_POST, 'repeatUnit'));
+			    	$transaction->setRepeatFrequency(getGPC($_POST, 'repeatFrequency', 'integer'));
+
+					$transaction->deleteOldPlannedTransactions(new Date('9999-12-31'), true);					
+
+					$targetFutureCalcDate = getTargetFutureCalcDate();
+					$transaction->expand(new Date('1000-01-01'), $targetFutureCalcDate);
+				} else {
+					$transaction = $account->getFinishedTransactionById(getGPC($_POST, 'hiddenFinishedTransactionID', 'integer'));
+					$transaction->setTitle(getGPC($_POST, 'title'));
+					$transaction->setDescription(getGPC($_POST, 'description'));
+					$transaction->setAmount(getGPC($_POST, 'amount', 'AmountFormatted'));
+					$transaction->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
+					$transaction->setTransactionPartner(getGPC($_POST, 'transactionPartner'));
+					$transaction->setCategory($category);
+					$transaction->setPeriodical(false);
+					$transaction->setPlannedTransaction(null);
+				}
 				break;
 				
 			case 'finished':
@@ -407,9 +474,6 @@ function updateRecord($accountID, $ID, $transactionType) {
 				break;
 		}
 	}
-	//REDIRECT
-	header("Location: $redirectPage");
-
 }
 
 function getAccountsSelectArray() {

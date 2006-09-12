@@ -500,6 +500,25 @@ class FinishedTransaction {
     	return $this->getSourcePlannedTransaction();
     }
     
+    public function setPlannedTransaction($plannedTransaction) {
+    	if (is_null($plannedTransaction)) {
+    		$id = 'NULL';
+    	} else {
+    		$id = $plannedTransaction->getId();
+    	}
+    	
+		$sql = "UPDATE finished_transaction
+			SET planned_transaction_id = $id
+			WHERE finished_transaction_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
+		}
+    }
+    
     public function getBalance() {
     	return $this->balance;
     }

@@ -92,7 +92,8 @@ function printFrontend() {
 		$upperLimitValue = is_null($tmp = $account->getUpperLimit()) ? '' : $tmp->getFormatted();
 		$balanceValue = is_null($tmp = $account->getBalance()) ? '' : $tmp->getFormatted();
 		$currencyValue = $account->getCurrency()->getId();
-		$targetFutureCalcDateValue = is_null($account->getTargetFutureCalcDate()) ? '' : $tmp->getFormatted();;
+		$deleteOldPlannedTransactionsValue = ($account->getDeleteOldPlannedTransactions() == false ? 'checked="checked"' : '');
+		$csvParserValue = $account->getCsvParser();
 	} else {
 		//new: empty values
 		$ID = "new";
@@ -103,7 +104,8 @@ function printFrontend() {
 		$upperLimitValue = "";
 		$balanceValue = "";
 		$currencyValue = "";
-		$targetFutureCalcDateValue = "";
+		$deleteOldPlannedTransactionsValue = 'checked="checked"';
+		$csvParserValue = '';
 	}
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
@@ -121,11 +123,16 @@ function printFrontend() {
 	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", false, "text", "class='inputNumber'");
 
 	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), true);
-	
 	$currencies = getCurrencyArray('symbol');
-	
 	$currencyField = $widgets->createSelectField("currency", $currencies, $default=$currencyValue, "", false, "style='width: 213px;'");
+
+	$deleteOldPlannedTransactionsLabel = $widgets->createLabel('deleteOldPlannedTransactions', getBadgerTranslation2('accountAccount', 'deleteOldPlannedTransactions'), false);
+	$deleteOldPlannedTransactionsField = $widgets->createField('deleteOldPlannedTransactions', 30, 'on', getBadgerTranslation2('accountAccount', 'deleteOldPlannedTransactionsDescription'), false, 'checkbox', $deleteOldPlannedTransactionsValue);
 	
+	$csvParserLabel = $widgets->createLabel('csvParser', getBadgerTranslation2('accountAccount', 'csvParser'), false);
+	$csvParsers = getParsers(); 
+	$csvParserField = $widgets->createSelectField('csvParser', $csvParsers, $csvParserValue, '', false, "style='width: 213px;'");
+
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	$backBtn = $widgets->createButton("backBtn", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
@@ -150,7 +157,9 @@ function updateRecord() {
 				$curMan->getCurrencyById(getGPC($_POST, 'currency', 'integer')),
 				getGPC($_POST, 'description'),
 				getGPC($_POST, 'lowerLimit', 'AmountFormatted'),
-				getGPC($_POST, 'upperLimit', 'AmountFormatted')
+				getGPC($_POST, 'upperLimit', 'AmountFormatted'),
+				getGPC($_POST, 'csvParser'),
+				!getGPC($_POST, 'deleteOldPlannedTransactions', 'checkbox')
 			);
 			
 			$naviId = addToNavi(
@@ -164,6 +173,8 @@ function updateRecord() {
 			$us->setProperty('accountNaviId_' . $ID->getId(), $naviId);
 			$us->setProperty('accountNaviNextPosition', $us->getProperty('accountNaviNextPosition') + 1);
 			addTranslation('Navigation', 'Account' . $ID->getId(), getGPC($_POST, 'title'), getGPC($_POST, 'title'));
+			
+			$account = $ID;
 			break;
 			
 		default:
@@ -174,9 +185,14 @@ function updateRecord() {
 			$account->setCurrency($curMan->getCurrencyById(getGPC($_POST, 'currency', 'integer')));
 			$account->setLowerLimit(getGPC($_POST, 'lowerLimit', 'AmountFormatted'));
 			$account->setUpperLimit(getGPC($_POST, 'upperLimit', 'AmountFormatted'));
+			$account->setDeleteOldPlannedTransactions(!getGPC($_POST, 'deleteOldPlannedTransactions', 'checkbox'));
+			$account->setCsvParser(getGPC($_POST, 'csvParser'));
 
 			modifyTranslation('Navigation', 'Account' . $account->getId(), getGPC($_POST, 'title'), getGPC($_POST, 'title'));
 		}
+		
+		$account->expandPlannedTransactions(new Date('1000-01-01'));
+		
 		//REDIRECT
 		header("Location: $redirectPageAfterSave");
 	}	
@@ -202,4 +218,30 @@ function getCurrencyArray($sortBy){
 	};
 	
 	return $curs;
+}
+
+function getParsers() {
+	$baseDir = BADGER_ROOT . '/modules/csvImport/parser/';
+
+	$parsers = array();
+
+	$parserDir = dir($baseDir);
+	while (false !== ($parserFileName = $parserDir->read())) {
+		if (is_file($baseDir . $parserFileName)) {
+			$parserFile = fopen($baseDir . $parserFileName, "r");
+			while (!feof($parserFile)) {
+				$line = fgets($parserFile);
+				if (preg_match('/[\s]*\/\/[\s]*BADGER_REAL_PARSER_NAME[\s]+([^\n]+)/', $line, $match)) {
+					$parsers[$parserFileName] = $match[1];
+					break;
+				}
+			}
+			fclose($parserFile);
+		}
+	}
+	$parserDir->close();
+	
+	asort($parsers);
+
+	return $parsers;
 }

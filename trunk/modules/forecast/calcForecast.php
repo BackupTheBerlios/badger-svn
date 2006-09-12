@@ -56,10 +56,6 @@ if ($today->compare($today, $selectedDate) != 1){
 	
 	$errors = array();
 
-	$amTransfer = new AccountManager($badgerDb);
-	$accountTransfer = $amTransfer->getAccountById($account);
-	transferFormerFinishedTransactions($accountTransfer);
-		
 	$am1 = new AccountManager($badgerDb);
 	$currentAccount1 = $am1->getAccountById($account);
 	//if no graph was chosen

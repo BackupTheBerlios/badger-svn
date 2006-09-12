@@ -249,7 +249,8 @@ class AccountManager extends DataGridHandler {
 		$today = new Date();
 
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date
+				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date,
+				a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
@@ -321,7 +322,7 @@ class AccountManager extends DataGridHandler {
 	 * @throws BadgerException insertError If the account cannot be inserted.
 	 * @return object The new Account object.
 	 */
-	public function addAccount($title, $currency, $description = null, $lowerLimit = null, $upperLimit = null) {
+	public function addAccount($title, $currency, $description = null, $lowerLimit = null, $upperLimit = null, $csvParser = null, $deleteOldFinishedTransactions = null) {
 		$accountId = $this->badgerDb->nextId('account_ids');
 		
 		$sql = "INSERT INTO account
@@ -355,6 +356,13 @@ class AccountManager extends DataGridHandler {
 		}
 		$sql .= ")";
 		
+		if ($csvParser) {
+			$sql .= ", '" . $this->badgerDb->escapeSimple($csvParser) . "'";
+		}
+		
+		if (!is_null($deleteOldFinishedTransactions)) {
+			$sql .= ", " . $this->badgerDb->quoteSmart($deleteOldFinishedTransactions);
+		}
 		
 		$dbResult =& $this->badgerDb->query($sql);
 		
@@ -367,7 +375,7 @@ class AccountManager extends DataGridHandler {
 			throw new BadgerException('AccountManager', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->accounts[$accountId] = new Account(&$this->badgerDb, &$this, $accountId, $title, $description, $lowerLimit, $upperLimit, $currency);
+		$this->accounts[$accountId] = new Account($this->badgerDb, $this, $accountId, $title, $description, $lowerLimit, $upperLimit, $currency);
 		
 		return $this->accounts[$accountId];	
 	}
@@ -386,7 +394,8 @@ class AccountManager extends DataGridHandler {
 		$today = new Date();
 
 		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date
+				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date,
+				a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
@@ -428,7 +437,7 @@ class AccountManager extends DataGridHandler {
 		$row = false;
 		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->accounts[$row['account_id']] = new Account(&$this->badgerDb, &$this, $row);
+			$this->accounts[$row['account_id']] = new Account($this->badgerDb, $this, $row);
 			return $this->accounts[$row['account_id']];
 		} else {
 			$this->allDataFetched = true;

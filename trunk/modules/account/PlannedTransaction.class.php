@@ -50,6 +50,8 @@ class PlannedTransaction {
 	 * @var string
 	 */
 	private $title;
+	
+	private $originalTitle;
 
 	/**
 	 * The description of this transaction.
@@ -92,6 +94,8 @@ class PlannedTransaction {
 	 * @var object Date
 	 */
 	private $beginDate;
+	
+	private $beginDateLocked;
 
 	/**
 	 * The end date of this transaction.
@@ -99,6 +103,8 @@ class PlannedTransaction {
 	 * @var object Date
 	 */
 	private $endDate;
+	
+	private $endDateLocked;
 
 	/**
 	 * The repeat unit of this transaction.
@@ -124,6 +130,16 @@ class PlannedTransaction {
 	 * @var string
 	 */
 	private $type;
+	
+	private $updateMode;
+	
+	const UPDATE_MODE_ALL = 1;
+	const UPDATE_MODE_PREVIOUS = 2;
+	const UPDATE_MODE_FOLLOWING = 3;
+	
+	private $otherPlannedTransaction;
+	
+	private $updateSplitDate;
 	
 	/**
 	 * Creates a Planned Transaction.
@@ -193,6 +209,12 @@ class PlannedTransaction {
     		$this->repeatFrequency = $repeatFrequency;
     		$this->type = $type;
     	}
+    	
+    	$this->updateMode = self::UPDATE_MODE_ALL;
+    	$this->otherPlannedTransaction = null;
+    	$this->beginDateLocked = false;
+    	$this->endDateLocked = false;
+    	$this->originalTitle = $this->title; 
     }
     
 	/**
@@ -221,16 +243,7 @@ class PlannedTransaction {
  	public function setTitle($title) {
 		$this->title = $title;
 		
-		$sql = "UPDATE planned_transaction
-			SET title = '" . $this->badgerDb->escapeSimple($title) . "'
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET title = '" . $this->badgerDb->escapeSimple($title) . "'");
 	}
 	
 	/**
@@ -250,16 +263,7 @@ class PlannedTransaction {
  	public function setDescription($description) {
 		$this->description = $description;
 		
-		$sql = "UPDATE planned_transaction
-			SET description = '" . $this->badgerDb->escapeSimple($description) . "'
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET description = '" . $this->badgerDb->escapeSimple($description) . "'");
 	}
 	
 	/**
@@ -277,17 +281,10 @@ class PlannedTransaction {
  	 * @param $beginDate object The Date object with the begin date of this transaction.
  	 */
  	public function setBeginDate($beginDate) {
-		$this->beginDate = $beginDate;
-		
-		$sql = "UPDATE planned_transaction
-			SET begin_date = '" . $beginDate->getDate() . "'
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+		if (!$this->beginDateLocked) {
+			$this->beginDate = $beginDate;
+			
+			$this->doUpdate("SET begin_date = '" . $beginDate->getDate() . "'", false);
 		}
 	}
 	
@@ -306,24 +303,17 @@ class PlannedTransaction {
  	 * @param $endDate object The Date object with the end date of this transaction.
  	 */
  	public function setEndDate($endDate) {
-		$this->endDate = $endDate;
-		
-		if (!is_null($endDate)) {
-			$dateVal = "'" . $endDate->getDate() . "'";
-		} else {
-			$dateVal = 'NULL';
-		}
-
-		$sql = "UPDATE planned_transaction
-			SET end_date = $dateVal
-			WHERE planned_transaction_id = " . $this->id;
+ 		if (!$this->endDateLocked) {
+			$this->endDate = $endDate;
+			
+			if (!is_null($endDate)) {
+				$dateVal = "'" . $endDate->getDate() . "'";
+			} else {
+				$dateVal = 'NULL';
+			}
 	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+			$this->doUpdate("SET end_date = $dateVal", false);
+ 		}
 	}
 	
 	/**
@@ -343,16 +333,7 @@ class PlannedTransaction {
  	public function setAmount($amount) {
 		$this->amount = $amount;
 		
-		$sql = "UPDATE planned_transaction
-			SET amount = '" . $amount->get() . "'
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET amount = '" . $amount->get() . "'");
 	}
 	
 	/**
@@ -372,16 +353,7 @@ class PlannedTransaction {
  	public function setOutsideCapital($outsideCapital) {
 		$this->outsideCapital = $outsideCapital;
 		
-		$sql = "UPDATE planned_transaction
-			SET outside_capital = " . $this->badgerDb->quoteSmart($outsideCapital) . "
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET outside_capital = " . $this->badgerDb->quoteSmart($outsideCapital));
 	}
 	
 	/**
@@ -401,16 +373,7 @@ class PlannedTransaction {
  	public function setTransactionPartner($transactionPartner) {
 		$this->transactionPartner = $transactionPartner;
 		
-		$sql = "UPDATE planned_transaction
-			SET transaction_partner = '" . $this->badgerDb->escapeSimple($transactionPartner) . "'
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET transaction_partner = '" . $this->badgerDb->escapeSimple($transactionPartner) . "'");
 	}
 	
 	/**
@@ -436,16 +399,7 @@ class PlannedTransaction {
 			$catId = $category->getId();
 		}
 		
-		$sql = "UPDATE planned_transaction
-			SET category_id = $catId
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET category_id = $catId");
 	}
 
 	/**
@@ -465,16 +419,7 @@ class PlannedTransaction {
  	public function setRepeatUnit($repeatUnit) {
 		$this->repeatUnit = $repeatUnit;
 		
-		$sql = "UPDATE planned_transaction
-			SET repeat_unit = '" . $repeatUnit . "'
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET repeat_unit = '" . $repeatUnit . "'", false);
 	}
 
 	/**
@@ -494,16 +439,7 @@ class PlannedTransaction {
  	public function setRepeatFrequency($repeatFrequency) {
 		$this->repeatFrequency = $repeatFrequency;
 		
-		$sql = "UPDATE planned_transaction
-			SET repeat_frequency = " . $repeatFrequency . "
-			WHERE planned_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET repeat_frequency = " . $repeatFrequency, false);
 	}
     
     public static function sanitizeId($id) {
@@ -532,7 +468,6 @@ class PlannedTransaction {
 		$now->setSecond(59);
 		
 		$date = new Date($this->beginDate);
-		$dayOfMonth = $date->getDay();
 		
 		$accountManager = new AccountManager($this->badgerDb);
 		$compareAccount = $accountManager->getAccountById($this->account->getId());
@@ -559,6 +494,13 @@ class PlannedTransaction {
 			$targetFutureCalcDate->after($date)
 			&& !$date->after($localEndDate)
 		) {
+			while (
+				$currentCompareTransaction !== false
+				&& $date->after($currentCompareTransaction->getValutaDate())
+			) {
+				$currentCompareTransaction = $compareAccount->getNextTransaction();
+			}
+			
 			if(
 				$date->after($lastCalcDate)
 				&& (
@@ -581,52 +523,217 @@ class PlannedTransaction {
 			}
 			
 			
-			while (
-				$currentCompareTransaction !== false
-				&& !$date->before($currentCompareTransaction->getValutaDate())
-			) {
-				$currentCompareTransaction = $compareAccount->getNextTransaction();
-			}
+			$date = $this->nextOccurence($date);
 
-			//do the date calculation
-			switch ($this->repeatUnit){
-				case 'day': 
-					$date->addSeconds($this->repeatFrequency * 24 * 60 * 60);
-					break;
-					
-				case 'week':
-					$date->addSeconds($this->repeatFrequency * 7 * 24 * 60 * 60);
-					break;
-					
-				case 'month':
-					//Set the month
-					$date = new Date(Date_Calc::endOfMonthBySpan($this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
-					//And count back as far as the last valid day of this month
-					while($date->getDay() > $dayOfMonth){
-						$date->subtractSeconds(24 * 60 * 60);
-					}
-					break; 
-				
-				case 'year':
-					$newYear = $date->getYear() + $this->repeatFrequency;
-					if (
-						$dayOfMonth == 29
-						&& $date->getMonth() == 2
-						&& !Date_Calc::isLeapYear($newYear)
-					) {
-						$date->setDay(28);
-					} else {
-						$date->setDay($dayOfMonth);
-					}
-					
-					$date->setYear($newYear);
-					break;
-				
-				default:
-					throw new BadgerException('Account', 'IllegalRepeatUnit', $this->repeatUnit);
-					exit;
-			} //switch
 		} //while before futureTargetCalcDate and endDate 
+
+		if (!is_null($this->otherPlannedTransaction)) {
+			$this->otherPlannedTransaction->expand($lastCalcDate, $targetFutureCalcDate);
+		}
 	} //function expand
+	
+	private function nextOccurence($date) {
+		$dayOfMonth = $this->beginDate->getDay();
+		
+		//do the date calculation
+		switch ($this->repeatUnit){
+			case 'day': 
+				$date->addSeconds($this->repeatFrequency * 24 * 60 * 60);
+				break;
+				
+			case 'week':
+				$date->addSeconds($this->repeatFrequency * 7 * 24 * 60 * 60);
+				break;
+				
+			case 'month':
+				//Set the month
+				$date = new Date(Date_Calc::endOfMonthBySpan($this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+				//And count back as far as the last valid day of this month
+				while($date->getDay() > $dayOfMonth){
+					$date->subtractSeconds(24 * 60 * 60);
+				}
+				break; 
+			
+			case 'year':
+				$newYear = $date->getYear() + $this->repeatFrequency;
+				if (
+					$dayOfMonth == 29
+					&& $date->getMonth() == 2
+					&& !Date_Calc::isLeapYear($newYear)
+				) {
+					$date->setDay(28);
+				} else {
+					$date->setDay($dayOfMonth);
+				}
+				
+				$date->setYear($newYear);
+				break;
+			
+			default:
+				throw new BadgerException('Account', 'IllegalRepeatUnit', $this->repeatUnit);
+				exit;
+		} //switch
+		
+		return $date;
+	}
+
+	private function previousOccurence($date) {
+		$dayOfMonth = $this->beginDate->getDay();
+		
+		//do the date calculation
+		switch ($this->repeatUnit){
+			case 'day': 
+				$date->subtractSeconds($this->repeatFrequency * 24 * 60 * 60);
+				break;
+				
+			case 'week':
+				$date->subtractSeconds($this->repeatFrequency * 7 * 24 * 60 * 60);
+				break;
+				
+			case 'month':
+				//Set the month
+				$date = new Date(Date_Calc::endOfMonthBySpan(-$this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+				//And count back as far as the last valid day of this month
+				while($date->getDay() > $dayOfMonth){
+					$date->subtractSeconds(24 * 60 * 60);
+				}
+				break; 
+			
+			case 'year':
+				$newYear = $date->getYear() - $this->repeatFrequency;
+				if (
+					$dayOfMonth == 29
+					&& $date->getMonth() == 2
+					&& !Date_Calc::isLeapYear($newYear)
+				) {
+					$date->setDay(28);
+				} else {
+					$date->setDay($dayOfMonth);
+				}
+				
+				$date->setYear($newYear);
+				break;
+			
+			default:
+				throw new BadgerException('Account', 'IllegalRepeatUnit', $this->repeatUnit);
+				exit;
+		} //switch
+		
+		return $date;
+	}
+
+	public function deleteOldPlannedTransactions($upTo, $force = false) {
+		if (
+			$this->account->getDeleteOldPlannedTransactions()
+			|| $force
+		) {
+			$sql = "DELETE FROM finished_transaction
+					WHERE planned_transaction_id = " . $this->id . "
+						AND valuta_date <= '" . $upTo->getDate() . "'"
+			;
+	
+			$dbResult =& $this->badgerDb->query($sql);
+			
+			if (PEAR::isError($dbResult)) {
+				//echo "SQL Error: " . $dbResult->getMessage();
+				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+			}
+			
+			if (!is_null($this->otherPlannedTransaction)) {
+				$this->otherPlannedTransaction->deleteOldPlannedTransactions($upTo);
+			}
+		}
+	}
+
+	public function setUpdateMode($updateMode, $splitDate) {
+		$this->updateMode = $updateMode;
+		$this->updateSplitDate = $splitDate;
+	}
+	
+	private function doUpdate($sqlPart, $updateFinishedTransactions = true) {
+		$sql = "UPDATE planned_transaction\n$sqlPart\nWHERE planned_transaction_id = " . $this->id;
+
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+		}
+		
+		if ($updateFinishedTransactions) {
+			switch ($this->updateMode) {
+				case self::UPDATE_MODE_ALL:
+					break;
+				
+				case self::UPDATE_MODE_PREVIOUS:
+				case self::UPDATE_MODE_FOLLOWING:
+					$this->checkOtherPlannedTransaction();
+					break;
+			}
+		
+			$sql = "UPDATE finished_transaction\n$sqlPart\nWHERE planned_transaction_id = " . $this->id;
+			$dbResult =& $this->badgerDb->query($sql);
+			if (PEAR::isError($dbResult)) {
+				//echo "SQL Error: " . $dbResult->getMessage();
+				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+			}
+		}
+	}
+	
+	private function checkOtherPlannedTransaction() {
+		if (is_null($this->otherPlannedTransaction)) {
+			if ($this->updateMode == self::UPDATE_MODE_PREVIOUS) {
+				$title = $this->originalTitle
+					. ' ('
+					. getBadgerTranslation2('plannedTransaction', 'afterTitle')
+					. ' '
+					. $this->updateSplitDate->getFormatted()
+					. ')'
+				;
+				$beginDate = $this->nextOccurence($this->updateSplitDate);
+				$endDate = $this->endDate;
+				$cmpOperator = '>';
+				
+				$this->setEndDate($this->updateSplitDate);
+				$this->endDateLocked = true;
+			} else {
+				$title = $this->originalTitle
+					. ' ('
+					. getBadgerTranslation2('plannedTransaction', 'beforeTitle')
+					. ' '
+					. $this->updateSplitDate->getFormatted()
+					. ')'
+				;
+				$beginDate = $this->beginDate;
+				$endDate = $this->previousOccurence($this->updateSplitDate);
+				$cmpOperator = '<';
+				
+				$this->setBeginDate($this->updateSplitDate);
+				$this->beginDateLocked = true;
+			}
+			
+			$this->otherPlannedTransaction = $this->account->addPlannedTransaction(
+				$title,
+				$this->amount,
+				$this->repeatUnit,
+				$this->repeatFrequency,
+				$beginDate,
+				$endDate,
+				$this->description,
+				$this->transactionPartner,
+				$this->category,
+				$this->outsideCapital
+			);
+			
+			$sql = "DELETE FROM finished_transaction
+					WHERE planned_transaction_id = " . $this->id . "
+						AND valuta_date $cmpOperator '" . $this->updateSplitDate->getDate() . "'"
+			;
+			$dbResult =& $this->badgerDb->query($sql);
+			if (PEAR::isError($dbResult)) {
+				//echo "SQL Error: " . $dbResult->getMessage();
+				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+			}
+		}
+	}
 } //class PlannedTransaction
 ?>

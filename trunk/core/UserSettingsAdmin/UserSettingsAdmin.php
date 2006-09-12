@@ -32,7 +32,7 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 			&&
 			(isset($_POST['NewPassword']) && getGPC($_POST, 'NewPassword') == "")
 			&&
-			(isset($_POST['NewPasswordConfirm']) && get($_POST, 'NewPasswordConfirm') == "")
+			(isset($_POST['NewPasswordConfirm']) && getGPC($_POST, 'NewPasswordConfirm') == "")
 		)
 	)
 	{

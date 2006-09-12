@@ -48,8 +48,6 @@ function showSelectPage() {
 	global $us;
 	global $badgerDb;
 	
-	handleOldFinishedTransactions(new AccountManager($badgerDb));
-
 	$widgets = new WidgetEngine($tpl); 
 
 	$widgets->addCalendarJS();

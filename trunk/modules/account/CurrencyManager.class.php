@@ -312,7 +312,7 @@ class CurrencyManager extends DataGridHandler {
 			throw new BadgerException('CurrencyManager', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->currencies[$currencyId] = new Currency(&$this->badgerDb, &$this, $currencyId, $symbol, $longName);
+		$this->currencies[$currencyId] = new Currency($this->badgerDb, $this, $currencyId, $symbol, $longName);
 		
 		return $this->currencies[$currencyId];	
 	}
@@ -363,7 +363,7 @@ class CurrencyManager extends DataGridHandler {
 
 			//echo "<pre>"; print_r($row); echo "</pre>";
 
-			$this->currencies[$row['currency_id']] = new Currency(&$this->badgerDb, &$this, $row);
+			$this->currencies[$row['currency_id']] = new Currency($this->badgerDb, $this, $row);
 			return $this->currencies[$row['currency_id']];
 		} else {
 			$this->allDataFetched = true;

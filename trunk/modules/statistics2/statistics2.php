@@ -27,8 +27,6 @@ if (isset($_REQUEST['mode'])) {
 }
 */
 
-handleOldFinishedTransactions(new AccountManager($badgerDb));
-
 $widgets = new WidgetEngine($tpl); 
 
 $widgets->addCalendarJS();

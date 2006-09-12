@@ -148,6 +148,10 @@ class Account extends DataGridHandler {
 	
 	private $lastCalcDate;
 	
+	private $csvParser;
+	
+	private $deleteOldPlannedTransactions;
+
 	private static $plannedTransactionsExpanded = array();
 
 	/**
@@ -270,22 +274,15 @@ class Account extends DataGridHandler {
 		$description = null,
 		$lowerLimit = null,
 		$upperLimit = null,
-		$currency = null
+		$currency = null,
+		$csvParser = null,
+		$deleteOldPlannedTransactions = null
 	) {
 		global $us;
 		
 		$this->badgerDb = $badgerDb;
 		
-		$this->targetFutureCalcDate = new Date();
-		try {
-			$preCalc = $us->getProperty('amountFutureCalcSpan');
-			//Convert Months to seconds
-			$preCalc *= 30 * 24 * 60 * 60;
-		} catch (BadgerException $ex) {
-			//Default: One Year
-			$preCalc = 1 * 365 * 24 * 60 * 60;
-		}
-		$this->targetFutureCalcDate->addSeconds($preCalc);			
+		$this->targetFutureCalcDate = getTargetFutureCalcDate();			
 		
 		$this->type = 'transaction';
 
@@ -302,6 +299,8 @@ class Account extends DataGridHandler {
 				$this->upperLimit = new Amount($data['upper_limit']);
 				$this->balance = new Amount($data['balance']);
 				$this->lastCalcDate = new Date($data['last_calc_date']);
+				$this->csvParser = $data['csv_parser'];
+				$this->deleteOldPlannedTransactions = $data['delete_old_planned_transactions'];
 				
 				if ($data['currency_id']) {
 					$currencyManager = new CurrencyManager($badgerDb);
@@ -317,11 +316,13 @@ class Account extends DataGridHandler {
 				$this->currency = $currency;
 				$this->balance = new Amount(0);
 				$this->lastCalcDate = new Date('1000-01-01');
+				$this->csvParser = $csvParser;
+				$this->deleteOldPlannedTransactions = $deleteOldPlannedTransactions;
 			}
 		} else {
 			//called from getDataGridXML.php
-			$this->accountManager = new AccountManager(&$badgerDb);
-			
+			$this->accountManager = new AccountManager($badgerDb);
+
 			//Filter out given parameters
 			list($selectedId, $type, $targetDays) = explode(';', $accountManager . ';;');
 			settype($selectedId, 'integer');
@@ -337,7 +338,7 @@ class Account extends DataGridHandler {
 			
 			//copy account data
 			$tmpAccount = $this->accountManager->getAccountById($selectedId);
-			
+
 			$this->id = $tmpAccount->getId();
 			$this->title = $tmpAccount->getTitle();
 			$this->description = $tmpAccount->getDescription();
@@ -346,6 +347,8 @@ class Account extends DataGridHandler {
 			$this->balance = $tmpAccount->getBalance();
 			$this->currency = $tmpAccount->getCurrency();
 			$this->lastCalcDate = $tmpAccount->getLastCalcDate();
+			$this->csvParser = $tmpAccount->getCsvParser();
+			$this->deleteOldPlannedTransactions = $tmpAccount->getDeleteOldPlannedTransactions();
 		}
 
 		//Get all properties
@@ -590,6 +593,12 @@ class Account extends DataGridHandler {
 				$concatCategoryTitle .= $category->getTitle();
 			}
 
+			if ($currentTransaction->getType() == 'FinishedTransaction') {
+				$id = $currentTransaction->getId();
+			} else {
+				$id = 'p' . $currentTransaction->getPlannedTransaction()->getId() . '_' . $currentTransaction->getId();
+			}
+		
 			$result[$currResultIndex] = array();
 			if (
 				$firstOrderValutaDate
@@ -598,11 +607,11 @@ class Account extends DataGridHandler {
 			) {
 				$result[$currResultIndex]['transactionId'] = array (
 					'marker' => 'today',
-					'content' => $currentTransaction->getId() 
+					'content' => $id 
 				);
 				$todayMarkerSet = true;
 			} else {
-				$result[$currResultIndex]['transactionId'] = $currentTransaction->getId(); 
+				$result[$currResultIndex]['transactionId'] = $id; 
 			}
 
 			foreach ($this->selectedFields as $selectedField) {
@@ -808,11 +817,18 @@ class Account extends DataGridHandler {
 			}
 		}
 		
-		$sql = "SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
-				ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional, ft.periodical, ft.planned_transaction_id
-			FROM finished_transaction ft
-			WHERE finished_transaction_id = " .  $finishedTransactionId;
-		
+		$sql = "SELECT * FROM (
+					SELECT *, (@balance := @balance + ft1.amount) balance FROM (
+						SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
+							ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional,
+							ft.periodical, ft.planned_transaction_id
+						FROM finished_transaction ft
+						WHERE finished_transaction_id = $finishedTransactionId
+						ORDER BY ft.valuta_date ASC
+					) ft1
+				) ft2\n"
+		;
+				
 		//echo $sql . "\n";
 		
 		$this->dbResultFinished =& $this->badgerDb->query($sql);
@@ -982,7 +998,7 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction(&$this->badgerDb, &$this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital, $exceptional, $periodical);
+		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction($this->badgerDb, $this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital, $exceptional, $periodical);
 		
 		return $this->finishedTransactions[$finishedTransactionId];	
 	}
@@ -1156,8 +1172,8 @@ class Account extends DataGridHandler {
 		}
 		
 		$this->plannedTransactions[$plannedTransactionId] = new PlannedTransaction(
-			&$this->badgerDb,
-			&$this,
+			$this->badgerDb,
+			$this,
 			$plannedTransactionId,
 			$repeatUnit,
 			$repeatFrequency,
@@ -1405,6 +1421,44 @@ class Account extends DataGridHandler {
 		}
 	}
 
+	public function getCsvParser() {
+		return $this->csvParser;
+	}
+	
+	public function setCsvParser($csvParser) {
+		$this->csvParser = $csvParser;
+
+		$sql = "UPDATE account
+			SET csv_parser = '" . $this->badgerDb->escapeSimple($csvParser) . "'
+			WHERE account_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+	}
+	
+	public function getDeleteOldPlannedTransactions() {
+		return $this->deleteOldPlannedTransactions;
+	}
+	
+	public function setDeleteOldPlannedTransactions($deleteOldPlannedTransactions) {
+		$this->deleteOldPlannedTransactions = $deleteOldPlannedTransactions;
+		
+		$sql = "UPDATE account
+			SET delete_old_planned_transactions = " . $this->badgerDb->quoteSmart($deleteOldPlannedTransactions) . "
+			WHERE account_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+	}
+	
 	/**
 	 * Expands the planned transactions.
 	 * 
@@ -1414,30 +1468,40 @@ class Account extends DataGridHandler {
 	 * 
 	 * @throws BadgerException If an illegal repeat unit is used.
 	 */
-	public function expandPlannedTransactions() {
-
+	public function expandPlannedTransactions($startDate = null) {
 		if (
 			!isset(self::$plannedTransactionsExpanded[$this->id])
 			|| self::$plannedTransactionsExpanded[$this->id] === false
 		) {
 			self::$plannedTransactionsExpanded[$this->id] = true;
-			
+
 			$now = new Date();
 			$now->setHour(0);
 			$now->setMinute(0);
 			$now->setSecond(0);
 			
-			if ($this->lastCalcDate->before($now)) {		
+			if (
+				$this->lastCalcDate->before($now)
+				|| !is_null($startDate)
+			) {		
 				$accountManager = new AccountManager($this->badgerDb);
 				$plannedAccount = $accountManager->getAccountById($this->id);
 				
 				while($currentPlannedTransaction = $plannedAccount->getNextPlannedTransaction()) {
-					$currentPlannedTransaction->expand($this->lastCalcDate, $this->targetFutureCalcDate);
+					if (is_null($startDate)) {
+						$startDate = $this->lastCalcDate;
+					}
+
+					$currentPlannedTransaction->expand($startDate, $this->targetFutureCalcDate);
+					$currentPlannedTransaction->deleteOldPlannedTransactions($now);
 				}
 				
 				$this->setLastCalcDate($now);
 			}
+
+		self::$plannedTransactionsExpanded[$this->id] = false;
 		}
+
 	}
 
 	/**
@@ -1604,7 +1668,7 @@ class Account extends DataGridHandler {
 		$row = false;
 		
 		if($this->dbResultFinished->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->finishedTransactions[$row['finished_transaction_id']] = new FinishedTransaction(&$this->badgerDb, &$this, $row);
+			$this->finishedTransactions[$row['finished_transaction_id']] = new FinishedTransaction($this->badgerDb, $this, $row);
 			return $this->finishedTransactions[$row['finished_transaction_id']];
 		} else {
 			$this->allFinishedDataFetched = true;
@@ -1624,7 +1688,7 @@ class Account extends DataGridHandler {
 		$row = false;
 		
 		if($this->dbResultPlanned->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->plannedTransactions[$row['planned_transaction_id']] = new PlannedTransaction(&$this->badgerDb, &$this, $row);
+			$this->plannedTransactions[$row['planned_transaction_id']] = new PlannedTransaction($this->badgerDb, $this, $row);
 			return $this->plannedTransactions[$row['planned_transaction_id']];
 		} else {
 			$this->allPlannedDataFetched = true;
