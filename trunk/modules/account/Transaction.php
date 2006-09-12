@@ -89,7 +89,7 @@ function deleteRecord() {
 	global $am;
 	
 	if (isset($_GET['ID']) && isset($_GET['accountID'])) {
-		$IDs = getGPC($_GET, 'ID', 'integerList'); 	
+		$IDs = getGPC($_GET, 'ID', 'stringList'); 	
 					
 		//check if we can delete this item
 		$acc = $am->getAccountById(getGPC($_GET, 'accountID', 'integer'));
@@ -100,18 +100,21 @@ function deleteRecord() {
 			if(substr($ID,0,1)=="p") {
 				list($plannedTransactionId, $finishedTransactionId) = explode('_', substr($ID, 1));
 				settype($plannedTransactionId, 'integer');
-				settype($finishedTransactionId, 'integer');
 
-				//Prevent try to delete one plannedTransaction several times if it was expanded to
-				//more than one occurence
-//				if (array_key_exists($ID, $processedPlannedTransactions)) {
-//					continue;
-//				} else {
-//					$processedPlannedTransactions[$ID] = true;
-//				}
-
-//				$acc->deletePlannedTransaction($ID);
-				$acc->deleteFinishedTransaction($finishedTransactionId);
+				if ($finishedTransactionId == 'X') {
+					//Prevent try to delete one plannedTransaction several times if it was expanded to
+					//more than one occurence
+					if (array_key_exists($plannedTransactionId, $processedPlannedTransactions)) {
+						continue;
+					} else {
+						$processedPlannedTransactions[$plannedTransactionId] = true;
+					}
+	
+					$acc->deletePlannedTransaction($plannedTransactionId);
+				} else {
+					settype($finishedTransactionId, 'integer');
+					$acc->deleteFinishedTransaction($finishedTransactionId);
+				}
 			} else {
 				$acc->deleteFinishedTransaction($ID);
 			}

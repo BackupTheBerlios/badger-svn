@@ -74,6 +74,10 @@ function getGPC($array, $key, $type = 'string', $escaped = false) {
 			}
 			break;
 		
+		case 'stringList':
+			$val = explode(',', $val);
+			break;
+		
 		case 'string':
 		default:
 			

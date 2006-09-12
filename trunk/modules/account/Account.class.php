@@ -1070,7 +1070,6 @@ class Account extends DataGridHandler {
 				WHERE planned_transaction_id = $plannedTransactionId";
 				
 		$dbResult =& $this->badgerDb->query($sql);
-		
 		if (PEAR::isError($dbResult)) {
 			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
@@ -1078,6 +1077,14 @@ class Account extends DataGridHandler {
 		
 		if($this->badgerDb->affectedRows() != 1){
 			throw new BadgerException('Account', 'UnknownPlannedTransactionId', $plannedTransactionId);
+		}
+		
+		$sql = "DELETE FROM finished_transaction
+					WHERE planned_transaction_id = $plannedTransactionId";
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 	}
 	
