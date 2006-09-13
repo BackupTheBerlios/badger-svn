@@ -37,15 +37,12 @@ function initDataGrid(strParameter) {
 
 // retrieve data from server, define callback-function
 function loadData() {
-	// Base Grid Url + Parameter
-	strUrl = dgSourceXML;
-
 	// get selected rows, so that we can restore selection after reloading
 	arrSelectedRows = dgGetAllIds();
 	
 	// load data
 	var myAjax = new Ajax.Request(
-		strUrl, {
+		dgSourceXML, {
 			method: 'post',
 			parameters: serializeParameter() + "&sf=" + dgColumnOrder,
 			onComplete: dgInsertData,
