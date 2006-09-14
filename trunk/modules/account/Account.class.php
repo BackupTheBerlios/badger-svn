@@ -1500,7 +1500,7 @@ class Account extends DataGridHandler {
 					}
 
 					$currentPlannedTransaction->expand($startDate, $this->targetFutureCalcDate);
-					$currentPlannedTransaction->deleteOldPlannedTransactions($now);
+					$currentPlannedTransaction->deletePlannedTransactions(new Date('1000-01-01'), $now);
 				}
 				
 				$this->setLastCalcDate($now);

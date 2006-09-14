@@ -232,12 +232,14 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	global $tpl;
 	global $am;
 	global $redirectPage;
+	
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();
 	$widgets->addCalendarJS();
 	$widgets->addJSValMessages();
 
 	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addJavaScript('js/plannedTransaction.js');
 	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 
 	$widgets->addNavigationHead();
@@ -277,6 +279,8 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
+	
+	$backTo = $widgets->createField('backTo', 0, (isset($_GET['backTo']) ? getGPC($_GET, 'backTo') : ''), null, false, 'hidden');
 
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
@@ -328,13 +332,13 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 		$rangeLabel = getBadgerTranslation2('accountTransaction', 'range');
 		$rangeUnit = getBadgerTranslation2('accountTransaction', 'rangeUnit');
 		
-		$rangeAllField = $widgets->createField('range', null, 'all', '', false, 'radio', 'checked="checked"');
+		$rangeAllField = $widgets->createField('range', null, 'all', '', false, 'radio', 'checked="checked" onclick="checkBeginEndDate();"');
 		$rangeAllLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangeAll'));
-		$rangeThisField = $widgets->createField('range', null, 'this', '', false, 'radio');
+		$rangeThisField = $widgets->createField('range', null, 'this', '', false, 'radio', 'onclick="checkBeginEndDate();"');
 		$rangeThisLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangeThis'));
-		$rangePreviousField = $widgets->createField('range', null, 'previous', '', false, 'radio');
+		$rangePreviousField = $widgets->createField('range', null, 'previous', '', false, 'radio', 'onclick="checkBeginEndDate();"');
 		$rangePreviousLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangePrevious'));
-		$rangeFollowingField = $widgets->createField('range', null, 'following', '', false, 'radio');
+		$rangeFollowingField = $widgets->createField('range', null, 'following', '', false, 'radio', 'onclick="checkBeginEndDate();"');
 		$rangeFollowingLabel = $widgets->createLabel('range', getBadgerTranslation2('accountTransaction', 'rangeFollowing'));
 		
 		//$deleteBtn = $widgets->createButton('deleteBtn', getBadgerTranslation2('dataGrid', 'delete'), 'submit', 'Widgets/cancel.gif', "accesskey='d'");
@@ -446,10 +450,7 @@ function updateRecord($accountID, $ID, $transactionType) {
 					$transaction->setRepeatUnit(getGPC($_POST, 'repeatUnit'));
 			    	$transaction->setRepeatFrequency(getGPC($_POST, 'repeatFrequency', 'integer'));
 
-					$transaction->deleteOldPlannedTransactions(new Date('9999-12-31'), true);					
-
-					$targetFutureCalcDate = getTargetFutureCalcDate();
-					$transaction->expand(new Date('1000-01-01'), $targetFutureCalcDate);
+					$transaction->expandUpdate();
 				} else {
 					$transaction = $account->getFinishedTransactionById(getGPC($_POST, 'hiddenFinishedTransactionID', 'integer'));
 					$transaction->setTitle(getGPC($_POST, 'title'));

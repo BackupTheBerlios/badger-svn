@@ -96,6 +96,8 @@ class PlannedTransaction {
 	private $beginDate;
 	
 	private $beginDateLocked;
+	
+	private $originalBeginDate;
 
 	/**
 	 * The end date of this transaction.
@@ -105,6 +107,8 @@ class PlannedTransaction {
 	private $endDate;
 	
 	private $endDateLocked;
+	
+	private $originalEndDate;
 
 	/**
 	 * The repeat unit of this transaction.
@@ -115,12 +119,17 @@ class PlannedTransaction {
 	 */
 	private $repeatUnit;
 
+	private $originalRepeatUnit;
+
 	/**
 	 * The repeat frequency of this transaction.
 	 * 
 	 * @var integer
 	 */
 	private $repeatFrequency;
+	
+	private $originalRepeatFrequency;
+	
 	
 	/**
 	 * The type of this transaction.
@@ -214,7 +223,15 @@ class PlannedTransaction {
     	$this->otherPlannedTransaction = null;
     	$this->beginDateLocked = false;
     	$this->endDateLocked = false;
-    	$this->originalTitle = $this->title; 
+    	$this->originalTitle = $this->title;
+    	$this->originalBeginDate = new Date($this->beginDate);
+		if (!is_null($this->endDate)) {
+    		$this->originalEndDate = new Date($this->endDate);
+		} else {
+			$this->originalEndDate = null;
+		}
+    	$this->originalRepeatUnit = $this->repeatUnit;
+    	$this->originalRepeatFrequency = $this->repeatFrequency;
     }
     
 	/**
@@ -461,12 +478,7 @@ class PlannedTransaction {
 		return $this->type;
 	}
 	
-	public function expand($lastCalcDate, $targetFutureCalcDate) {
-		$now = new Date();
-		$now->setHour(23);
-		$now->setMinute(59);
-		$now->setSecond(59);
-		
+	public function expand($start, $end) {
 		$date = new Date($this->beginDate);
 		
 		$accountManager = new AccountManager($this->badgerDb);
@@ -489,20 +501,22 @@ class PlannedTransaction {
 		$currentCompareTransaction = $compareAccount->getNextTransaction();
 		
 		$localEndDate = is_null($this->endDate) ? new Date('9999-12-31') : $this->endDate; 
-		//While we have not reached targetFutureCalcDate or endDate
+		//While we have not reached end or endDate
 		while (
-			$targetFutureCalcDate->after($date)
+			!$end->before($date)
 			&& !$date->after($localEndDate)
 		) {
+echo 4;
 			while (
 				$currentCompareTransaction !== false
 				&& $date->after($currentCompareTransaction->getValutaDate())
 			) {
+echo 5;
 				$currentCompareTransaction = $compareAccount->getNextTransaction();
 			}
 			
 			if(
-				$date->after($lastCalcDate)
+				!$date->before($start)
 				&& (
 					($currentCompareTransaction === false)
 					|| !$date->equals($currentCompareTransaction->getValutaDate())
@@ -520,20 +534,23 @@ class PlannedTransaction {
 					true,
 					$this
 				);
-			}
-			
+			}			
 			
 			$date = $this->nextOccurence($date);
 
-		} //while before futureTargetCalcDate and endDate 
+		} //while before end and endDate 
 
 		if (!is_null($this->otherPlannedTransaction)) {
-			$this->otherPlannedTransaction->expand($lastCalcDate, $targetFutureCalcDate);
+			$this->otherPlannedTransaction->expand($start, $end);
 		}
 	} //function expand
 	
-	private function nextOccurence($date) {
-		$dayOfMonth = $this->beginDate->getDay();
+	private function nextOccurence($date, $start = null) {
+		if (is_null($start)) {
+			$start = $this->beginDate;
+		}
+		
+		$dayOfMonth = $start->getDay();
 		
 		//do the date calculation
 		switch ($this->repeatUnit){
@@ -550,6 +567,7 @@ class PlannedTransaction {
 				$date = new Date(Date_Calc::endOfMonthBySpan($this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
 				//And count back as far as the last valid day of this month
 				while($date->getDay() > $dayOfMonth){
+echo 6;
 					$date->subtractSeconds(24 * 60 * 60);
 				}
 				break; 
@@ -577,8 +595,12 @@ class PlannedTransaction {
 		return $date;
 	}
 
-	private function previousOccurence($date) {
-		$dayOfMonth = $this->beginDate->getDay();
+	private function previousOccurence($date, $start = null) {
+		if (is_null($start)) {
+			$start = $this->beginDate;
+		}
+		
+		$dayOfMonth = $start->getDay();
 		
 		//do the date calculation
 		switch ($this->repeatUnit){
@@ -595,6 +617,7 @@ class PlannedTransaction {
 				$date = new Date(Date_Calc::endOfMonthBySpan(-$this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
 				//And count back as far as the last valid day of this month
 				while($date->getDay() > $dayOfMonth){
+echo 7;
 					$date->subtractSeconds(24 * 60 * 60);
 				}
 				break; 
@@ -622,13 +645,128 @@ class PlannedTransaction {
 		return $date;
 	}
 
-	public function deleteOldPlannedTransactions($upTo, $force = false) {
+	public function expandUpdate() {
+		$targetFutureCalcDate = getTargetFutureCalcDate();
+
+		if ($this->updateMode != self::UPDATE_MODE_ALL) {
+			return;
+		}
+
+		if (
+			$this->originalRepeatUnit == $this->repeatUnit
+			&& $this->originalRepeatFrequency == $this->repeatFrequency
+		) {
+			if (!is_null($this->originalEndDate)) {
+				$originalEndDate = $this->originalEndDate;
+			} else {
+				$originalEndDate = new Date('9999-01-01');
+			}
+			if (!is_null($this->endDate)) {
+				$endDate = $this->endDate;
+			} else {
+				$endDate = new Date('9999-01-01');
+			}
+
+			$this->updateExpandedDates($this->originalBeginDate, $originalEndDate);
+
+			if ($this->originalBeginDate->before($this->beginDate)) {
+				$end = new Date($this->beginDate);
+				$end->subtractSeconds(24 * 60 * 60);
+	
+				$this->deletePlannedTransactions($this->originalBeginDate, $end, true);
+			} else if ($this->originalBeginDate->after($this->beginDate)) {
+				$this->expand($this->beginDate, $this->originalBeginDate);
+			}
+			
+			if ($originalEndDate->before($endDate)) {
+				if ($endDate->before($targetFutureCalcDate)) {
+					$this->expand($originalEndDate, $endDate);
+				} else {
+					$this->expand($originalEndDate, $targetFutureCalcDate);
+				}
+			} else if ($originalEndDate->after($endDate)) {
+				$start = new Date($endDate);
+				$start->addSeconds(24 * 60 * 60);
+				
+				$this->deletePlannedTransactions($start, $originalEndDate, true);
+			}
+		} else {
+			//repeat unit or frequency changed, discard all old entries and create from scratch
+			$this->deletePlannedTransactions(new Date('1000-01-01'), new Date('9999-12-31'), true);					
+
+			$this->expand(new Date('1000-01-01'), $targetFutureCalcDate);
+		}
+	}
+	
+	private function updateExpandedDates($start, $end) {
+		if ($this->beginDate->equals($this->originalBeginDate)) {
+			return;
+		}
+
+		$accountManager = new AccountManager($this->badgerDb);
+		$compareAccount = $accountManager->getAccountById($this->account->getId());
+		
+		$compareAccount->setFilter(array (
+			array (
+				'key' => 'plannedTransactionId',
+				'op' => 'eq',
+				'val' => $this->id
+			),
+			array (
+				'key' => 'valutaDate',
+				'op' => 'ge',
+				'val' => new Date($start)
+			),
+			array (
+				'key' => 'valutaDate',
+				'op' => 'le',
+				'val' => new Date($end)
+			)
+		));
+		$compareAccount->setOrder(array (
+			array (
+				'key' => 'valutaDate',
+				'dir' => 'asc'
+			)
+		));
+		
+		$date = new Date($this->beginDate);
+		$originalDate = new Date($this->originalBeginDate);
+		
+		$windowStart = $this->previousOccurence(new Date($originalDate), $this->originalBeginDate);
+		$windowEnd = $this->nextOccurence(new Date($originalDate), $this->originalBeginDate);
+		while(!$date->after($windowStart)) {
+echo 1;
+			$date = $this->nextOccurence($date);
+		}
+
+		while ($currentCompareTransaction = $compareAccount->getNextTransaction()) {
+echo 3;
+			while ($originalDate->before($currentCompareTransaction->getValutaDate())) {
+				$originalDate = $this->nextOccurence($originalDate, $this->originalBeginDate);
+				$date = $this->nextOccurence($date);
+echo 2;
+			}
+			
+			if ($originalDate->equals($currentCompareTransaction->getValutaDate())) {
+				$currentCompareTransaction->setValutaDate(new Date($date));
+			}
+
+		} //while compareTransactions 
+
+		if (!is_null($this->otherPlannedTransaction)) {
+			$this->otherPlannedTransaction->updateExpandedDates($start, $end);
+		}
+	}
+
+	public function deletePlannedTransactions($begin, $upTo, $force = false) {
 		if (
 			$this->account->getDeleteOldPlannedTransactions()
 			|| $force
 		) {
 			$sql = "DELETE FROM finished_transaction
 					WHERE planned_transaction_id = " . $this->id . "
+						AND valuta_date >= '" . $begin->getDate() . "'
 						AND valuta_date <= '" . $upTo->getDate() . "'"
 			;
 	
@@ -639,9 +777,9 @@ class PlannedTransaction {
 				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 			}
 			
-			if (!is_null($this->otherPlannedTransaction)) {
-				$this->otherPlannedTransaction->deleteOldPlannedTransactions($upTo);
-			}
+//			if (!is_null($this->otherPlannedTransaction)) {
+//				$this->otherPlannedTransaction->deletePlannedTransactions($begin, $upTo, $force);
+//			}
 		}
 	}
 
@@ -723,6 +861,8 @@ class PlannedTransaction {
 				$this->category,
 				$this->outsideCapital
 			);
+			
+			$this->otherPlannedTransaction->expand($beginDate, (is_null($endDate) ? getTargetFutureCalcDate() : $endDate));
 			
 			$sql = "DELETE FROM finished_transaction
 					WHERE planned_transaction_id = " . $this->id . "
