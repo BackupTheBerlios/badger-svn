@@ -11,6 +11,8 @@
 *
 * Parse .csv files from comdirect bank AG (Germany). Tested with a file from 14.09.2006
 **/
+// The next line determines the displayed name of this parser.
+// BADGER_REAL_PARSER_NAME .comdirect Bank AG
 /**
  * transform csv to array
  *
