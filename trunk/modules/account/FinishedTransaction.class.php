@@ -126,6 +126,10 @@ class FinishedTransaction {
 	
 	private $balance;
 	
+	private $transferalTransaction;
+	
+	private $transferalSource;
+	
 	/**
 	 * Creates a Finished Transaction.
 	 * 
@@ -154,7 +158,8 @@ class FinishedTransaction {
 		$exceptional = null,
 		$periodical = null,
 		$sourcePlannedTransaction = null,
-		$type = 'FinishedTransaction'
+		$type = 'FinishedTransaction',
+		$transferalTransaction = null
 	) {
 		$this->badgerDb = $badgerDb;
 		$this->account = $account;
@@ -176,13 +181,31 @@ class FinishedTransaction {
 			$this->exceptional = $data['exceptional'];
 			$this->periodical = $data['periodical'];
 			$this->balance = new Amount($data['balance']);
-			$this->type = 'FinishedTransaction';
+			$this->transferalSource = $data['transferal_source'];
+			if (!$data['transferal_transaction_id']) {
+				$this->type = 'FinishedTransaction';
+			} else {
+				$this->type = 'FinishedTransferalTransaction';
+			}
 			if ($data['planned_transaction_id']) {
 				try {
 					$this->sourcePlannedTransaction = $account->getPlannedTransactionById($data['planned_transaction_id']);
-					$this->type = 'PlannedTransaction';
+					$this->type = $this->sourcePlannedTransaction->getType();
 				} catch (BadgerException $ex) {
 					$this->sourcePlannedTransaction = null;
+				}
+			}
+			if ($data['transferal_transaction_id']) {
+				if (!is_null($title) && $data['transferal_transaction_id'] == $title->getId()) {
+					$this->transferalTransaction = $title;
+				} else {
+					$accountManager = new AccountManager($badgerDb);
+					try {
+						$transferalAccount = $accountManager->getAccountByFinishedTransactionId($data['transferal_transaction_id']);
+						$this->transferalTransaction = $transferalAccount->getFinishedTransactionById($data['transferal_transaction_id'], $this);
+					} catch (BadgerException $ex) {
+						$this->transferalTransaction = null;
+					}
 				}
 			}
 		} else {
@@ -199,8 +222,11 @@ class FinishedTransaction {
 			$this->sourcePlannedTransaction = $sourcePlannedTransaction;
 			$this->balance = null;
 			$this->type = $type;
-		}
-	}
+			$this->transferalTransaction = $transferalTransaction;
+			$this->transferalSource = null;
+			
+		} //if database output given
+	} //function __construct
 	
 	/**
 	 * Returns the id.
@@ -228,16 +254,7 @@ class FinishedTransaction {
 	public function setTitle($title) {
 		$this->title = $title;
 		
-		$sql = "UPDATE finished_transaction
-			SET title = '" . $this->badgerDb->escapeSimple($title) . "'
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET title = '" . $this->badgerDb->escapeSimple($title) . "'");
 	}
 	
 	/**
@@ -257,16 +274,7 @@ class FinishedTransaction {
 	public function setDescription($description) {
 		$this->description = $description;
 		
-		$sql = "UPDATE finished_transaction
-			SET description = '" . $this->badgerDb->escapeSimple($description) . "'
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET description = '" . $this->badgerDb->escapeSimple($description) . "'");
 	}
 	
 	/**
@@ -286,16 +294,7 @@ class FinishedTransaction {
 	public function setValutaDate($valutaDate) {
 		$this->valutaDate = $valutaDate;
 		
-		$sql = "UPDATE finished_transaction
-			SET valuta_date = '" . $valutaDate->getDate() . "'
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET valuta_date = '" . $valutaDate->getDate() . "'");
 	}
 	
 	/**
@@ -315,16 +314,7 @@ class FinishedTransaction {
 	public function setAmount($amount) {
 		$this->amount = $amount;
 		
-		$sql = "UPDATE finished_transaction
-			SET amount = '" . $amount->get() . "'
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET amount = '" . $amount->get() . "'", false);
 	}
 	
 	/**
@@ -344,16 +334,7 @@ class FinishedTransaction {
 	public function setOutsideCapital($outsideCapital) {
 		$this->outsideCapital = $outsideCapital;
 		
-		$sql = "UPDATE finished_transaction
-			SET outside_capital = " . $this->badgerDb->quoteSmart($outsideCapital) . "
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET outside_capital = " . $this->badgerDb->quoteSmart($outsideCapital));
 	}
 	
 	/**
@@ -373,16 +354,7 @@ class FinishedTransaction {
 	public function setTransactionPartner($transactionPartner) {
 		$this->transactionPartner = $transactionPartner;
 		
-		$sql = "UPDATE finished_transaction
-			SET transaction_partner = '" . $this->badgerDb->escapeSimple($transactionPartner) . "'
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET transaction_partner = '" . $this->badgerDb->escapeSimple($transactionPartner) . "'");
 	}
 	
 	/**
@@ -408,16 +380,7 @@ class FinishedTransaction {
 			$catId = $category->getId();
 		}
 		
-		$sql = "UPDATE finished_transaction
-			SET category_id = $catId
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET category_id = $catId");
 	}
 	
 	/**
@@ -446,16 +409,7 @@ class FinishedTransaction {
 	public function setExceptional($exceptional) {
 		$this->exceptional = $exceptional;
 		
-		$sql = "UPDATE finished_transaction
-			SET exceptional = " . $this->badgerDb->quoteSmart($exceptional) . "
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET exceptional = " . $this->badgerDb->quoteSmart($exceptional));
 	}
 	
 	/**
@@ -475,16 +429,7 @@ class FinishedTransaction {
 	public function setPeriodical($periodical) {
 		$this->periodical = $periodical;
 		
-		$sql = "UPDATE finished_transaction
-			SET periodical = " . $this->badgerDb->quoteSmart($periodical) . "
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+		$this->doUpdate("SET periodical = " . $this->badgerDb->quoteSmart($periodical));
 	}
 	
 	/**
@@ -501,23 +446,64 @@ class FinishedTransaction {
     }
     
     public function setPlannedTransaction($plannedTransaction) {
-    	if (is_null($plannedTransaction)) {
+    	$this->sourcePlannedTransaction = $plannedTransaction;
+    
+		if (is_null($plannedTransaction)) {
     		$id = 'NULL';
+    		$updateTransferal = true;
     	} else {
     		$id = $plannedTransaction->getId();
+    		$updateTransferal = false;
     	}
-    	
-		$sql = "UPDATE finished_transaction
-			SET planned_transaction_id = $id
-			WHERE finished_transaction_id = " . $this->id;
-	
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('FinishedTransaction', 'SQLError', $dbResult->getMessage());
-		}
+
+		$this->doUpdate("SET planned_transaction_id = $id", $updateTransferal);
     }
+
+	public function getTransferalTransaction() {
+		return $this->transferalTransaction;
+	}
+	
+	public function setTransferalTransaction($transferalTransaction) {
+		$this->transferalTransaction = $transferalTransaction;
+		
+		if (is_null($transferalTransaction)) {
+			$id = 'NULL';
+		} else {
+			$id = $transferalTransaction->getId();
+		}
+		
+		$this->doUpdate("SET transferal_transaction_id = $id", false);
+	}
+	
+	public function addTransferalTransaction($transferalAccount, $transferalAmount) {
+		$this->setTransferalTransaction($transferalAccount->addFinishedTransaction(
+			$transferalAmount,
+			$this->title,
+			$this->description,
+			$this->valutaDate,
+			$this->transactionPartner,
+			$this->category,
+			$this->outsideCapital,
+			$this->exceptional,
+			$this->periodical,
+			null,
+			null,
+			null,
+			$this
+		));
+		
+		$this->setTransferalSource(true);
+	}
+	
+	public function getTransferalSource() {
+		return $this->transferalSource;
+	}
+	
+	public function setTransferalSource($transferalSource) {
+		$this->transferalSource = $transferalSource;
+		
+		$this->doUpdate("SET transferal_source = " . $this->badgerDb->quoteSmart($transferalSource), false);
+	}
     
     public function getBalance() {
     	return $this->balance;
@@ -525,6 +511,23 @@ class FinishedTransaction {
     
     public function getAccount() {
     	return $this->account;
+    }
+    
+    private function doUpdate($sqlPart, $updateTransferal = true) {
+		$sql = "UPDATE finished_transaction\n$sqlPart\nWHERE finished_transaction_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('FinishedTransaction', 'SQLError', "SQL: $sql\n" . $dbResult->getMessage());
+		}
+		
+		if (
+			$updateTransferal
+			&& !(is_null($this->transferalTransaction))
+		) {
+			$this->transferalTransaction->doUpdate($sqlPart, false);
+		}
     }
 }
 ?>

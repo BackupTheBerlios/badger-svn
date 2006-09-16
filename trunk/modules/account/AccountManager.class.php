@@ -252,7 +252,6 @@ class AccountManager extends DataGridHandler {
 				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date,
 				a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
-				INNER JOIN currency c ON a.currency_id = c.currency_id
 				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
 			WHERE ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL
 			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
@@ -380,6 +379,60 @@ class AccountManager extends DataGridHandler {
 		return $this->accounts[$accountId];	
 	}
 	
+	public function getAccountByFinishedTransactionId($finishedTransactionId) {
+		settype($finishedTransactionId, 'integer');
+
+		//Add condition to limit balance to transactions in the past and today
+		$today = new Date();
+
+		$sql = "SELECT ft.account_id
+			FROM finished_transaction ft
+			WHERE ft.finished_transaction_id = $finishedTransactionId";
+		
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($this->dbResult)) {
+			//echo "SQL Error: " . $this->dbResult->getMessage();
+			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
+		}
+		
+		$row = false;
+		
+		if ($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+			$accountId = $row['account_id'];
+			
+			return $this->getAccountById($accountId);
+		} else {
+			throw new BadgerException('AccountManager', 'UnknownFinishedTransactionId', $finishedTransactionId);
+		}
+	}
+
+	public function getAccountByPlannedTransactionId($plannedTransactionId) {
+		settype($plannedTransactionId, 'integer');
+
+		//Add condition to limit balance to transactions in the past and today
+		$today = new Date();
+
+		$sql = "SELECT pt.account_id
+			FROM planned_transaction pt
+			WHERE pt.planned_transaction_id = $finishedTransactionId";
+		
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($this->dbResult)) {
+			//echo "SQL Error: " . $this->dbResult->getMessage();
+			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
+		}
+		
+		$row = false;
+		
+		if ($dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+			$accountId = $row['account_id'];
+			
+			return $this->getAccountById($accountId);
+		} else {
+			throw new BadgerException('AccountManager', 'UnknownPlannedTransactionId', $plannedTransactionId);
+		}
+	}
+
 	/**
 	 * Prepares and executes the SQL query.
 	 * 
@@ -436,7 +489,7 @@ class AccountManager extends DataGridHandler {
 
 		$row = false;
 		
-		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)){
+		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
 			$this->accounts[$row['account_id']] = new Account($this->badgerDb, $this, $row);
 			return $this->accounts[$row['account_id']];
 		} else {

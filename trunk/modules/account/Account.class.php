@@ -593,10 +593,36 @@ class Account extends DataGridHandler {
 				$concatCategoryTitle .= $category->getTitle();
 			}
 
-			if ($currentTransaction->getType() == 'FinishedTransaction') {
+			if (
+				$currentTransaction->getType() == 'FinishedTransaction'
+				|| $currentTransaction->getType() == 'FinishedTransferalTransaction'
+			) {
 				$id = $currentTransaction->getId();
 			} else {
 				$id = 'p' . $currentTransaction->getPlannedTransaction()->getId() . '_' . $currentTransaction->getId();
+			}
+			
+			switch ($currentTransaction->getType()) {
+				case 'FinishedTransaction':
+					$typeImg = 'Account/finished_transaction.png';
+					$typeText = getBadgerTranslation2('Account', 'FinishedTransaction');
+					break;
+				
+				case 'FinishedTransferalTransaction':
+					if ($currentTransaction->getTransferalSource()) {
+						$typeImg = 'Account/finished_transferal_source_transaction.png';
+						$typeText = getBadgerTranslation2('Account', 'FinishedTransferalSourceTransaction');
+					} else {
+						$typeImg = 'Account/finished_transferal_target_transaction.png';
+						$typeText = getBadgerTranslation2('Account', 'FinishedTransferalTargetTransaction');
+					}
+					break;
+				
+				case 'PlannedTransaction':
+				case 'PlannedTransferalTransaction':
+					$typeImg = 'Account/planned_transaction.png';
+					$typeText = getBadgerTranslation2('Account', 'PlannedTransaction');
+					break;
 			}
 		
 			$result[$currResultIndex] = array();
@@ -618,8 +644,8 @@ class Account extends DataGridHandler {
 				switch ($selectedField) {
 					case 'type':
 						$result[$currResultIndex]['type'] = array (
-							'img' => getRelativeTplPath(($currentTransaction->getType() == 'FinishedTransaction') ? 'Account/finished_transaction.png' : 'Account/planned_transaction.png'),
-							'title' => getBadgerTranslation2('Account', $currentTransaction->getType())
+							'img' => getRelativeTplPath($typeImg),
+							'title' => $typeText
 						);
 						break;
 					
@@ -802,14 +828,14 @@ class Account extends DataGridHandler {
 	 * @throws BadgerException If $finishedTransactionId is unknown to the DB.
 	 * @return object FinishedTransaction object of the finished transaction identified by $finishedTransactionId.
 	 */
-	public function getFinishedTransactionById($finishedTransactionId){
+	public function getFinishedTransactionById($finishedTransactionId, $transferalTransaction = null){
 		settype($finishedTransactionId, 'integer');
 
 		if ($this->finishedDataFetched) {
 			if (isset($this->finishedTransactions[$finishedTransactionId])) {
 				return $this->finishedTransactions[$finishedTransactionId];
 			}
-			while ($currentTransaction = $this->fetchNextFinishedTransaction()) {
+			while ($currentTransaction = $this->fetchNextFinishedTransaction($transferalTransaction)) {
 				if ($currentTransaction->getId() === $finishedTransactionId) {
 					
 					return $currentTransaction;
@@ -821,7 +847,8 @@ class Account extends DataGridHandler {
 					SELECT *, (@balance := @balance + ft1.amount) balance FROM (
 						SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 							ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional,
-							ft.periodical, ft.planned_transaction_id
+							ft.periodical, ft.planned_transaction_id, ft.transferal_transaction_id, 
+							ft.transferal_source
 						FROM finished_transaction ft
 						WHERE finished_transaction_id = $finishedTransactionId
 						ORDER BY ft.valuta_date ASC
@@ -841,7 +868,7 @@ class Account extends DataGridHandler {
 		$tmp = $this->finishedDataFetched;
 		$this->finishedDataFetched = true;
 		
-		$currentTransaction = $this->fetchNextFinishedTransaction();
+		$currentTransaction = $this->fetchNextFinishedTransaction($transferalTransaction);
 		
 		$this->finishedDataFetched = $tmp;
 		
@@ -862,11 +889,13 @@ class Account extends DataGridHandler {
 	public function deleteFinishedTransaction($finishedTransactionId){
 		settype($finishedTransactionId, 'integer');
 
-		if(isset($this->finishedTransactions[$finishedTransactionId])){
-			unset($this->finishedTransactions[$finishedTransactionId]);
-		}
 		$sql= "DELETE FROM finished_transaction
 				WHERE finished_transaction_id = $finishedTransactionId";
+		
+		if (!is_null($tmp = $this->finishedTransactions[$finishedTransactionId]->getTransferalTransaction())) {
+			$sql .= " OR finished_transaction_id = " . $tmp->getId();
+		}		
+		
 				
 		$dbResult =& $this->badgerDb->query($sql);
 		
@@ -875,8 +904,12 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($this->badgerDb->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() < 1){
 			throw new BadgerException('Account', 'UnknownFinishedTransactionId', $finishedTransactionId);
+		}
+
+		if(isset($this->finishedTransactions[$finishedTransactionId])){
+			unset($this->finishedTransactions[$finishedTransactionId]);
 		}
 	}
 	
@@ -903,7 +936,10 @@ class Account extends DataGridHandler {
 		$outsideCapital = null,
 		$exceptional = null,
 		$periodical = null,
-		$plannedTransaction = null
+		$plannedTransaction = null,
+		$transferalAccount = null,
+		$transferalAmount = null,
+		$transferalTransaction = null
 	) {
 		$finishedTransactionId = $this->badgerDb->nextId('finished_transaction_ids');
 		
@@ -998,9 +1034,70 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->finishedTransactions[$finishedTransactionId] = new FinishedTransaction($this->badgerDb, $this, $finishedTransactionId, $title, $amount, $description, $valutaDate, $transactionPartner, $category, $outsideCapital, $exceptional, $periodical);
+		if (is_null($plannedTransaction)) {
+			if (is_null($transferalAccount) && is_null($transferalTransaction)) {
+				$type = 'FinishedTransaction';
+			} else {
+				$type = 'FinishedTransferalTransaction';
+			}
+		} else {
+			if (is_null($transferalAccount) && is_null($transferalTransaction)) {
+				$type = 'PlannedTransaction';
+			} else {
+				$type = 'PlannedTransferalTransaction';
+			}
+		}
 		
-		return $this->finishedTransactions[$finishedTransactionId];	
+		$newTransaction = new FinishedTransaction(
+			$this->badgerDb,
+			$this,
+			$finishedTransactionId,
+			$title,
+			$amount,
+			$description,
+			$valutaDate,
+			$transactionPartner,
+			$category,
+			$outsideCapital,
+			$exceptional,
+			$periodical,
+			$plannedTransaction,
+			$type
+		);
+		$this->finishedTransactions[$finishedTransactionId] = $newTransaction;
+		
+		if ($transferalTransaction) {
+			$newTransaction->setTransferalTransaction($transferalTransaction);
+		} else {
+			if (!is_null($transferalAccount)) {
+				if (!is_null($plannedTransaction)) {
+					$transferalPlannedTransaction = $plannedTransaction->getTransferalTransaction();
+				} else {
+					$transferalPlannedTransaction = null;
+				}			
+			
+				$transferalTransaction = $transferalAccount->addFinishedTransaction(
+					$transferalAmount,
+					$title,
+					$description,
+					$valutaDate,
+					$transactionPartner,
+					$category,
+					$outsideCapital,
+					$exceptional,
+					$periodical,
+					$transferalPlannedTransaction,
+					null,
+					null,
+					$newTransaction
+				);				
+
+				$newTransaction->setTransferalTransaction($transferalTransaction);
+				$newTransaction->setTransferalSource(true);
+			}
+		}
+
+		return $newTransaction;	
 	}
 
 	/**
@@ -1669,13 +1766,18 @@ class Account extends DataGridHandler {
 	 * 
 	 * @return mixed The fetched FinishedTransaction object or false if there are no more.
 	 */
-	private function fetchNextFinishedTransaction() {
+	private function fetchNextFinishedTransaction($transferalTransaction = null) {
 		$this->fetchFinishedFromDB();
 
 		$row = false;
 		
 		if($this->dbResultFinished->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->finishedTransactions[$row['finished_transaction_id']] = new FinishedTransaction($this->badgerDb, $this, $row);
+			$this->finishedTransactions[$row['finished_transaction_id']] = new FinishedTransaction(
+				$this->badgerDb,
+				$this,
+				$row,
+				$transferalTransaction
+				);
 			return $this->finishedTransactions[$row['finished_transaction_id']];
 		} else {
 			$this->allFinishedDataFetched = true;
@@ -1724,7 +1826,8 @@ class Account extends DataGridHandler {
 					SELECT *, (@balance := @balance + ft1.amount) balance FROM (
 						SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
 							ft.outside_capital, ft.transaction_partner, ft.category_id, ft.exceptional,
-							ft.periodical, ft.planned_transaction_id, c.title category_title,
+							ft.periodical, ft.planned_transaction_id, ft.transferal_transaction_id, 
+							ft.transferal_source, c.title category_title,
 							pc.category_id parent_category_id, pc.title parent_category_title
 						FROM finished_transaction ft
 							LEFT OUTER JOIN category c ON ft.category_id = c.category_id

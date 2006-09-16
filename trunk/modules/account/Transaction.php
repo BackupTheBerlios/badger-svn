@@ -136,23 +136,41 @@ function printFrontendFinished($AccountID, $ID) {
 	$widgets->addCalendarJS();
 	$widgets->addJSValMessages();
 	$tpl->addJavaScript("js/prototype.js");
+	$tpl->addJavaScript('js/Transaction.js');
 	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
-	
-	$widgets->addNavigationHead();
-	echo $tpl->getHeader($pageTitle);
-	echo $widgets->addToolTipLayer();
 	
 	$now = new Date();
 	
+
 	if($ID!="new") {
 		$acc = $am->getAccountById($AccountID);
 		$transactionType = "finished";
 		$transaction = $acc->getFinishedTransactionById($ID);
 		
+		$backToIdField = $widgets->createField('backToId', 0, $AccountID, '', false, 'hidden');
+
+		if (is_null($transaction->getTransferalTransaction())) {
+				$transferalAmountValue = new Amount($transaction->getAmount());
+				$transferalAmountValue->mul(-1);
+				$transferalAmountValue = $transferalAmountValue->getFormatted();
+		} else {
+			if ($transaction->getTransferalSource()) {
+				$transferalAmountValue = $transaction->getTransferalTransaction()->getAmount()->getFormatted();
+			} else {
+				$transferalAmountValue = $transaction->getAmount()->getFormatted();
+				$AccountID = $transaction->getTransferalTransaction()->getAccount()->getId();
+				$ID = $transaction->getTransferalTransaction()->getId();
+				$transaction = $transaction->getTransferalTransaction();
+			}
+		}
+
 		$titleValue = $transaction->getTitle();
 		$descriptionValue = $transaction->getDescription();
 		$valutaDateValue = is_null($tmp = $transaction->getValutaDate()) ? '' : $tmp->getFormatted();
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
+		$negativeAmountValue = new Amount($tmp);
+		$negativeAmountValue->mul(-1);
+		$negativeAmountValue = $negativeAmountValue->getFormatted();
 		$outsideCapitalValue = ($transaction->getOutsideCapital()==true) ? 'checked' : '';
 		$transactionPartnerValue = $transaction->getTransactionPartner();
 		$categoryValue = is_null($tmp = $transaction->getCategory()) ? 'NULL' : $tmp->getId();
@@ -164,12 +182,43 @@ function printFrontendFinished($AccountID, $ID) {
 		$descriptionValue = "";
 		$valutaDateValue = $now->getFormatted();
 		$amountValue = "";
+		$negativeAmountValue = '';
 		$transactionPartnerValue = "";
 		$outsideCapitalValue = "";
 		$categoryValue = "NULL";
 		$exceptionalValue = false;
 		$periodicalValue = false;
+		$transferalAmountValue = '';
+		
+		$backToIdField = '';
+
 	}
+
+	$tpl->addHeaderTag("<script type='text/javascript'>var previousAmount = '$negativeAmountValue';</script>");
+	$widgets->addNavigationHead();
+	echo $tpl->getHeader($pageTitle);
+	echo $widgets->addToolTipLayer();
+	
+	if ($ID == 'new' || is_null($transaction->getTransferalTransaction())) {
+		$transferalLabel = $widgets->createLabel('transferalEnabled', getBadgerTranslation2('accountTransaction', 'transferalEnabled'), false);
+		$transferalField = $widgets->createField('transferalEnabled', 30, 'on', '', false, 'checkbox', "onclick='toggleTransferal();'");
+		
+		$transferalDataStyle = 'style="display: none;"';
+
+		$transferalAccountField = $widgets->createSelectField('transferalAccountId', getAccountsSelectArray($AccountID), '', '', false, "style='width: 213px;'");
+	} else {
+		$transferalLabel = '';
+		$transferalField = '';
+
+		$transferalDataStyle = '';
+		
+		$transferalAccountField = $transaction->getTransferalTransaction()->getAccount()->getTitle();
+	}
+
+	$transferalAccountLabel = $widgets->createLabel('transferalAccountId', getBadgerTranslation2('accountTransaction', 'transferalAccount'), false);
+	
+	$transferalAmountLabel = $widgets->createLabel('transferalAmount', getBadgerTranslation2('accountTransaction', 'transferalAmount'), false);
+	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);'");
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
@@ -195,7 +244,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$valutaDateField = $widgets->addDateField("valutaDate", $valutaDateValue);
 	
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
-	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
+	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "onchange='updateTransferalAmount();' onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);'");
 	
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
 	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false);
@@ -214,8 +263,6 @@ function printFrontendFinished($AccountID, $ID) {
 	$periodicalLabel = $widgets->createLabel("periodical", getBadgerTranslation2('accountTransaction', 'periodical'), false);
 	$periodicalField = $widgets->createField("periodical", 30, "on", "", false, "checkbox", $periodicalValue);
 	$periodicalToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "periodicalToolTip"));
-
-	$
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
@@ -239,7 +286,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$widgets->addJSValMessages();
 
 	$tpl->addJavaScript("js/prototype.js");
-	$tpl->addJavaScript('js/plannedTransaction.js');
+	$tpl->addJavaScript('js/Transaction.js');
 	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 
 	$widgets->addNavigationHead();
@@ -407,6 +454,20 @@ function updateRecord($accountID, $ID, $transactionType) {
 				break;
 				
 			case 'finished':
+				if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
+					$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
+					$transferalAmount = getGPC($_POST, 'transferalAmount', 'Amount');
+				} else {
+					$transferalAccount = null;
+					$transferalAmount = null;
+				}
+
+if ($transferalAccount instanceof Account) {
+	echo "account";
+} else {
+	echo "fuck";
+}
+
 				$ID = $account->addFinishedTransaction(
 					getGPC($_POST, 'amount', 'AmountFormatted'),
 					getGPC($_POST, 'title'), // = null,
@@ -416,7 +477,10 @@ function updateRecord($accountID, $ID, $transactionType) {
 					$category, // = null,
 					getGPC($_POST, 'outsideCapital', 'checkbox'), // = null
 					getGPC($_POST, 'exceptional', 'checkbox'), // = null,
-					getGPC($_POST, 'periodical', 'checkbox') //= null
+					getGPC($_POST, 'periodical', 'checkbox'), //= null
+					null,
+					$transferalAccount,
+					$transferalAmount
 				); 
 				break;
 		}
@@ -475,12 +539,22 @@ function updateRecord($accountID, $ID, $transactionType) {
 				$transaction->setCategory($category);
 				$transaction->setExceptional(getGPC($_POST, 'exceptional', 'checkbox')); //checkbox
 				$transaction->setPeriodical(getGPC($_POST, 'periodical', 'checkbox')); //checkbox
+
+				if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
+					$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
+
+					$transaction->addTransferalTransaction($transferalAccount, getGPC($_POST, 'transferalAmount', 'Amount'));
+				}
+				
+				if (!is_null($tmp = $transaction->getTransferalTransaction())) {
+					$tmp->setAmount(getGPC($_POST, 'transferalAmount', 'Amount'));
+				}
 				break;
 		}
 	}
 }
 
-function getAccountsSelectArray() {
+function getAccountsSelectArray($except = null) {
 	global $badgerDb;
 	$am = new AccountManager($badgerDb);
 	$order = array ( 
@@ -493,7 +567,9 @@ function getAccountsSelectArray() {
 
 	$Accounts = array();
 	while ($account = $am->getNextAccount()) { 
-		$Accounts[$account->getId()] = $account->getTitle();
+		if ($account->getId() != $except) {
+			$Accounts[$account->getId()] = $account->getTitle();
+		}
 	};
 	return $Accounts;
 }
@@ -509,8 +585,12 @@ function getIntervalUnitsArray(){
 };
 
 function getRedirectPage($accountId) {
-	if (isset($_GET['backTo'])) {
-		if (getGPC($_GET, 'backTo') === 'planned') {
+	if (isset($_REQUEST['backToId'])) {
+		$accountId = getGPC($_REQUEST, 'backToId', 'integer');
+	}
+
+	if (isset($_REQUEST['backTo'])) {
+		if (getGPC($_REQUEST, 'backTo') === 'planned') {
 			return 'AccountOverviewPlanned.php?accountID=' . $accountId;
 		}
 	}

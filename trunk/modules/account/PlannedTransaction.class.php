@@ -506,12 +506,10 @@ class PlannedTransaction {
 			!$end->before($date)
 			&& !$date->after($localEndDate)
 		) {
-echo 4;
 			while (
 				$currentCompareTransaction !== false
 				&& $date->after($currentCompareTransaction->getValutaDate())
 			) {
-echo 5;
 				$currentCompareTransaction = $compareAccount->getNextTransaction();
 			}
 			
@@ -567,7 +565,6 @@ echo 5;
 				$date = new Date(Date_Calc::endOfMonthBySpan($this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
 				//And count back as far as the last valid day of this month
 				while($date->getDay() > $dayOfMonth){
-echo 6;
 					$date->subtractSeconds(24 * 60 * 60);
 				}
 				break; 
@@ -617,7 +614,6 @@ echo 6;
 				$date = new Date(Date_Calc::endOfMonthBySpan(-$this->repeatFrequency, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
 				//And count back as far as the last valid day of this month
 				while($date->getDay() > $dayOfMonth){
-echo 7;
 					$date->subtractSeconds(24 * 60 * 60);
 				}
 				break; 
@@ -736,16 +732,13 @@ echo 7;
 		$windowStart = $this->previousOccurence(new Date($originalDate), $this->originalBeginDate);
 		$windowEnd = $this->nextOccurence(new Date($originalDate), $this->originalBeginDate);
 		while(!$date->after($windowStart)) {
-echo 1;
 			$date = $this->nextOccurence($date);
 		}
 
 		while ($currentCompareTransaction = $compareAccount->getNextTransaction()) {
-echo 3;
 			while ($originalDate->before($currentCompareTransaction->getValutaDate())) {
 				$originalDate = $this->nextOccurence($originalDate, $this->originalBeginDate);
 				$date = $this->nextOccurence($date);
-echo 2;
 			}
 			
 			if ($originalDate->equals($currentCompareTransaction->getValutaDate())) {

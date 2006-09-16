@@ -3,44 +3,57 @@
 <table>
   <tr>
     <td>$AccountLabel</td>
-    <td>$hiddenAccID </td>
+    <td>$hiddenAccID</td>
   </tr>
   <tr>
-    <td>$titleLabel </td>
-    <td>$titleField </td>
+    <td>$titleLabel</td>
+    <td>$titleField</td>
   </tr>
   <tr>
-    <td>$descriptionLabel </td>
-    <td>$descriptionField </td>
+    <td>$descriptionLabel</td>
+    <td>$descriptionField</td>
   </tr>
   <tr>
-    <td>$valutaDateLabel </td>
-    <td>$valutaDateField </td>
+    <td>$valutaDateLabel</td>
+    <td>$valutaDateField</td>
   </tr>
   <tr>
-    <td>$amountLabel </td>
-    <td>$amountField  </td>
+    <td>$amountLabel</td>
+    <td>$amountField</td>
   </tr>
   <tr>
-    <td>$outsideCapitalLabel </td>
+    <td>$outsideCapitalLabel</td>
     <td>$outsideCapitalField  $outsideToolTip</td>
   </tr>
   <tr>
-    <td>$transactionPartnerLabel </td>
-    <td>$transactionPartnerField  </td>
+    <td>$transactionPartnerLabel</td>
+    <td>$transactionPartnerField</td>
   </tr>
   <tr>
-    <td>$categoryLabel </td>
-    <td>$categoryField  </td>
+    <td>$categoryLabel</td>
+    <td>$categoryField</td>
   </tr>
   <tr>
-    <td>$exceptionalLabel </td>
-    <td>$exceptionalField $exceptionalToolTip </td>
+    <td>$exceptionalLabel</td>
+    <td>$exceptionalField $exceptionalToolTip</td>
   </tr>
   <tr>
-    <td>$periodicalLabel </td>
+    <td>$periodicalLabel</td>
     <td>$periodicalField  $periodicalToolTip</td>
   </tr>
+  <tr>
+  	<td>$transferalLabel</td>
+  	<td>$transferalField</td>
+  </tr>
+  <tr id="transferalAccountRow" $transferalDataStyle>
+  	<td>$transferalAccountLabel</td>
+  	<td>$transferalAccountField</td>
+  </tr>
+  <tr id="transferalAmountRow" $transferalDataStyle>
+  	<td>$transferalAmountLabel</td>
+  	<td>$transferalAmountField</td>
+  </tr>
+
   <tr>
     <td>$backBtn </td>
     <td>$submitBtn </td>
@@ -48,4 +61,5 @@
 </table>
 $hiddenID
 $hiddenType
+$backToIdField
 </form>
