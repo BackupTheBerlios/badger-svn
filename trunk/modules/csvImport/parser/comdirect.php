@@ -19,8 +19,6 @@
  * @param $fp filepointer, $accountId
  * @return array (categoryId, accountId, title, description, valutaDate, amount, transactionPartner)
  */
-
-/* filename: comdirect.php *********************************************************/
 function parseToArray($fp, $accountId){
         /**
          * count Rows of csv
@@ -62,6 +60,8 @@ function parseToArray($fp, $accountId){
                     $transactionArray = explode(";", $line);
                     //format date YY-MM-DD or YYYY-MM-DD
                   if (!empty ($transactionArray[1]) ) { // added, while ";"NoValidData";"  //jh ack as juergen
+                    $transactionArray[1] = str_replace("\"","",$transactionArray[1]);
+                    $transactionArray[1] = str_replace("\\","",$transactionArray[1]);                   
                     $valutaDate = explode(".", $transactionArray[1]); //Valuta Date
                     $valutaDate[4] = $valutaDate[2] . "-" . $valutaDate[1] . "-" . $valutaDate[0];
                     $valutaDate1 = new Date($valutaDate[4]);
@@ -73,6 +73,8 @@ function parseToArray($fp, $accountId){
 
                     $transactionPartner = $transactionArray[3];       
                     //format amount to usersettings
+                    $transactionArray[4] = str_replace("\"","",$transactionArray[4]);
+                    $transactionArray[4] = str_replace("\\","",$transactionArray[4]);                   
                     $transactionArray[4] = str_replace(".","", $transactionArray[4]);
                     $transactionArray[4] = str_replace(",",".",$transactionArray[4]);
                     $amount1 = new Amount($transactionArray[4]);
@@ -89,7 +91,7 @@ function parseToArray($fp, $accountId){
                        "valutaDate" => $valutaDate1,
                        "amount" => $amount1,
                        "transactionPartner" => $transactionPartner
-                    );
+                    ); //print_r($rowArray);
                   } // added, while ";"NoValidData";"  //jh ack as juergen
                 } else{
                     $noValidFile = 'true';
@@ -124,4 +126,4 @@ function parseToArray($fp, $accountId){
         }
 }
 
-?> 
+?>
