@@ -339,6 +339,15 @@ class AccountManager extends DataGridHandler {
 			$sql .= ", upper_limit";
 		}
 		
+		if($csvParser){
+			$sql .= ", csv_parser";
+		}
+		
+		if($deleteOldFinishedTransactions) {
+			$sql .= ", delete_old_planned_transactions";
+		}
+		
+		
 		$sql .= ")
 			VALUES ($accountId, '" . $this->badgerDb->escapeSimple($title) . "'," . $currency->getId();
 	
@@ -353,7 +362,6 @@ class AccountManager extends DataGridHandler {
 		if($upperLimit){
 			$sql .= ", '".  $upperLimit->get() . "'";
 		}
-		$sql .= ")";
 		
 		if ($csvParser) {
 			$sql .= ", '" . $this->badgerDb->escapeSimple($csvParser) . "'";
@@ -362,6 +370,7 @@ class AccountManager extends DataGridHandler {
 		if (!is_null($deleteOldFinishedTransactions)) {
 			$sql .= ", " . $this->badgerDb->quoteSmart($deleteOldFinishedTransactions);
 		}
+		$sql .= ")";
 		
 		$dbResult =& $this->badgerDb->query($sql);
 		
