@@ -42,6 +42,18 @@
     <td>$everyLabel $repeatFrequencyField. $repeatUnitField</td>
   </tr>
   <tr>
+  	<td>$transferalLabel</td>
+  	<td>$transferalField</td>
+  </tr>
+  <tr id="transferalAccountRow" $transferalDataStyle>
+  	<td>$transferalAccountLabel</td>
+  	<td>$transferalAccountField</td>
+  </tr>
+  <tr id="transferalAmountRow" $transferalDataStyle>
+  	<td>$transferalAmountLabel</td>
+  	<td>$transferalAmountField</td>
+  </tr>
+  <tr>
   	<td>$rangeLabel</td>
   	<td>$rangeAllField $rangeAllLabel $rangeThisField $rangeThisLabel $rangePreviousField $rangePreviousLabel $rangeFollowingField $rangeFollowingLabel $rangeUnit</td>
   </tr>
@@ -53,4 +65,5 @@
 $hiddenID
 $hiddenType
 $hiddenFinishedTransactionID
+$backToIdField
 </form>

@@ -226,5 +226,23 @@ function escape4Attr($string) {
 		array ('&#39;', '&quot;'),
 		$string
 	);
-}	
+}
+
+function showDebugTrace($argX = '') {
+	$i = 0;
+
+	echo '<pre>';
+	$debug = debug_backtrace();
+	foreach ($debug as $call) {
+		echo "$i: $argX function $call[function], args: ";
+		foreach ($call['args'] as $arg) {
+			echo "$arg, ";
+		}
+		echo "\n";
+		
+		$i++;
+	}
+	echo '</pre>';
+}
+
 ?>

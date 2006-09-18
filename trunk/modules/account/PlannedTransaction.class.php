@@ -150,6 +150,10 @@ class PlannedTransaction {
 	
 	private $updateSplitDate;
 	
+	private $transferalTransaction;
+	
+	private $transferalSource;
+	
 	/**
 	 * Creates a Planned Transaction.
 	 * 
@@ -180,7 +184,8 @@ class PlannedTransaction {
     	$transactionPartner = null,
     	$category = null,
     	$outsideCapital = null,
-    	$type = 'PlannedTransaction'
+    	$type = 'PlannedTransaction',
+		$transferalTransaction = null
     ) {
     	$CategoryManager = new CategoryManager($badgerDb);
     	
@@ -203,7 +208,25 @@ class PlannedTransaction {
     		}
     		$this->repeatUnit = $data['repeat_unit'];
     		$this->repeatFrequency = $data['repeat_frequency'];
-    		$this->type = 'PlannedTransaction';
+			$this->transferalSource = $data['transferal_source'];
+			if (!$data['transferal_transaction_id']) {
+				$this->type = 'FinishedTransaction';
+			} else {
+				$this->type = 'FinishedTransferalTransaction';
+			}
+			if ($data['transferal_transaction_id']) {
+				if (!is_null($repeatUnit) && ($data['transferal_transaction_id'] == $repeatUnit->getId())) {
+					$this->transferalTransaction = $repeatUnit;
+				} else {
+					$accountManager = new AccountManager($badgerDb);
+					try {
+						$transferalAccount = $accountManager->getAccountByPlannedTransactionId($data['transferal_transaction_id']);
+						$this->transferalTransaction = $transferalAccount->getPlannedTransactionById($data['transferal_transaction_id'], $this);
+					} catch (BadgerException $ex) {
+						$this->transferalTransaction = null;
+					}
+				}
+			}
     	} else {
     		$this->id = $data;
     		$this->title = $title;
@@ -217,6 +240,8 @@ class PlannedTransaction {
     		$this->repeatUnit = $repeatUnit;
     		$this->repeatFrequency = $repeatFrequency;
     		$this->type = $type;
+			$this->transferalTransaction = $transferalTransaction;
+			$this->transferalSource = null;
     	}
     	
     	$this->updateMode = self::UPDATE_MODE_ALL;
@@ -297,11 +322,15 @@ class PlannedTransaction {
  	 * 
  	 * @param $beginDate object The Date object with the begin date of this transaction.
  	 */
- 	public function setBeginDate($beginDate) {
+ 	public function setBeginDate($beginDate, $updateTransferal = true) {
 		if (!$this->beginDateLocked) {
 			$this->beginDate = $beginDate;
 			
-			$this->doUpdate("SET begin_date = '" . $beginDate->getDate() . "'", false);
+			$this->doUpdate("SET begin_date = '" . $beginDate->getDate() . "'", false, false);
+			
+			if ($updateTransferal && $this->transferalTransaction) {
+				$this->transferalTransaction->setBeginDate($beginDate, false);
+			}
 		}
 	}
 	
@@ -319,7 +348,7 @@ class PlannedTransaction {
  	 * 
  	 * @param $endDate object The Date object with the end date of this transaction.
  	 */
- 	public function setEndDate($endDate) {
+ 	public function setEndDate($endDate, $updateTransferal = true) {
  		if (!$this->endDateLocked) {
 			$this->endDate = $endDate;
 			
@@ -330,6 +359,10 @@ class PlannedTransaction {
 			}
 	
 			$this->doUpdate("SET end_date = $dateVal", false);
+
+			if ($updateTransferal && $this->transferalTransaction) {
+				$this->transferalTransaction->setEndDate($endDate, false);
+			}
  		}
 	}
 	
@@ -350,7 +383,7 @@ class PlannedTransaction {
  	public function setAmount($amount) {
 		$this->amount = $amount;
 		
-		$this->doUpdate("SET amount = '" . $amount->get() . "'");
+		$this->doUpdate("SET amount = '" . $amount->get() . "'", true, false);
 	}
 	
 	/**
@@ -433,10 +466,14 @@ class PlannedTransaction {
  	 * 
  	 * @param $repeatUnit string The repeat unit of this transaction.
  	 */
- 	public function setRepeatUnit($repeatUnit) {
+ 	public function setRepeatUnit($repeatUnit, $updateTransferal = true) {
 		$this->repeatUnit = $repeatUnit;
 		
-		$this->doUpdate("SET repeat_unit = '" . $repeatUnit . "'", false);
+		$this->doUpdate("SET repeat_unit = '" . $repeatUnit . "'", false, false);
+
+		if ($updateTransferal && $this->transferalTransaction) {
+			$this->transferalTransaction->setRepeatUnit($repeatUnit, false);
+		}
 	}
 
 	/**
@@ -453,10 +490,14 @@ class PlannedTransaction {
  	 * 
  	 * @param $repeatFrequency int The repeat frequency of this transaction.
  	 */
- 	public function setRepeatFrequency($repeatFrequency) {
+ 	public function setRepeatFrequency($repeatFrequency, $updateTransferal = true) {
 		$this->repeatFrequency = $repeatFrequency;
 		
-		$this->doUpdate("SET repeat_frequency = " . $repeatFrequency, false);
+		$this->doUpdate("SET repeat_frequency = " . $repeatFrequency, false, false);
+
+		if ($updateTransferal && $this->transferalTransaction) {
+			$this->transferalTransaction->setRepeatFrequency($repeatFrequency, false);
+		}
 	}
     
     public static function sanitizeId($id) {
@@ -478,7 +519,124 @@ class PlannedTransaction {
 		return $this->type;
 	}
 	
-	public function expand($start, $end) {
+    public function getAccount() {
+    	return $this->account;
+    }
+    
+	public function getTransferalTransaction() {
+		return $this->transferalTransaction;
+	}
+	
+	public function setTransferalTransaction($transferalTransaction) {
+		$this->transferalTransaction = $transferalTransaction;
+		
+		if (is_null($transferalTransaction)) {
+			$id = 'NULL';
+		} else {
+			$id = $transferalTransaction->getId();
+		}
+		
+		$this->doUpdate("SET transferal_transaction_id = $id", false, false);
+	}
+	
+	public function addTransferalTransaction($transferalAccount, $transferalAmount) {
+		$this->setTransferalTransaction($transferalAccount->addPlannedTransaction(
+			$this->title,
+			$transferalAmount,
+			$this->repeatUnit,
+			$this->repeatFrequency,
+			$this->beginDate,
+			$this->endDate,
+			$this->description,
+			$this->transactionPartner,
+			$this->category,
+			$this->outsideCapital,
+			null,
+			null,
+			$this
+		));
+		
+		$this->transferalTransaction->expand(new Date('1000-01-01'), getTargetFutureCalcDate(), false);
+		
+		$this->createTransferalConnections();
+
+		$this->setTransferalSource(true);
+	}
+	
+	private function createTransferalConnections() {
+		$accountManager = new AccountManager($this->badgerDb);
+		$thisAccount = $accountManager->getAccountById($this->account->getId());
+		$otherAccount = $accountManager->getAccountById($this->transferalTransaction->getAccount()->getId());
+		
+		$thisFilter = array (
+			array (
+				'key' => 'plannedTransactionId',
+				'op' => 'eq',
+				'val' => $this->id
+			)
+		);
+		$otherFilter = array (
+			array (
+				'key' => 'plannedTransactionId',
+				'op' => 'eq',
+				'val' => $this->transferalTransaction->getId()
+			)
+		);
+		
+		$order = array (
+			array (
+				'key' => 'valutaDate',
+				'dir' => 'asc'
+			)
+		);
+		
+		$thisAccount->setFilter($thisFilter);
+		$otherAccount->setFilter($otherFilter);
+		$thisAccount->setOrder($order);
+		$otherAccount->setOrder($order);
+		
+		while (
+			($currentThisTransaction = $thisAccount->getNextTransaction())
+			&& ($currentOtherTransaction = $otherAccount->getNextTransaction())
+		) {
+			while (
+				$currentThisTransaction
+				&& $currentOtherTransaction
+				&& $currentThisTransaction->getValutaDate()->before($currentOtherTransaction->getValutaDate())
+			) {
+				$currentThisTransaction = $thisAccount->getNextTransaction();
+			}
+
+			while (
+				$currentThisTransaction
+				&& $currentOtherTransaction
+				&& $currentOtherTransaction->getValutaDate()->before($currentThisTransaction->getValutaDate())
+			) {
+				$currentOtherTransaction = $otherAccount->getNextTransaction();
+			}
+			
+			if (
+				$currentThisTransaction
+				&& $currentOtherTransaction
+			) {
+				$currentThisTransaction->setTransferalTransaction($currentOtherTransaction);
+				$currentOtherTransaction->setTransferalTransaction($currentThisTransaction);
+			}
+		}
+		
+	}
+	
+	public function getTransferalSource() {
+		return $this->transferalSource;
+	}
+	
+	public function setTransferalSource($transferalSource) {
+		$this->transferalSource = $transferalSource;
+		
+		$this->doUpdate("SET transferal_source = " . $this->badgerDb->quoteSmart($transferalSource), true, false);
+	}
+    
+	public function expand($start, $end, $updateTransferal = true) {
 		$date = new Date($this->beginDate);
 		
 		$accountManager = new AccountManager($this->badgerDb);
@@ -520,7 +678,7 @@ class PlannedTransaction {
 					|| !$date->equals($currentCompareTransaction->getValutaDate())
 				)
 			) {
-				$this->account->addFinishedTransaction(
+				$newFinishedTransaction = $this->account->addFinishedTransaction(
 					new Amount($this->amount),
 					$this->title,
 					$this->description,
@@ -532,6 +690,14 @@ class PlannedTransaction {
 					true,
 					$this
 				);
+				
+				if ($updateTransferal && $this->transferalTransaction) {
+					$newFinishedTransaction->addTransferalTransaction(
+						$this->transferalTransaction->getAccount(),
+						$this->transferalTransaction->getAmount(),
+						$this->transferalTransaction
+					);
+				}
 			}			
 			
 			$date = $this->nextOccurence($date);
@@ -541,6 +707,7 @@ class PlannedTransaction {
 		if (!is_null($this->otherPlannedTransaction)) {
 			$this->otherPlannedTransaction->expand($start, $end);
 		}
+
 	} //function expand
 	
 	private function nextOccurence($date, $start = null) {
@@ -694,7 +861,7 @@ class PlannedTransaction {
 		}
 	}
 	
-	private function updateExpandedDates($start, $end) {
+	private function updateExpandedDates($start, $end, $updateTransferal = true) {
 		if ($this->beginDate->equals($this->originalBeginDate)) {
 			return;
 		}
@@ -747,12 +914,15 @@ class PlannedTransaction {
 
 		} //while compareTransactions 
 
-		if (!is_null($this->otherPlannedTransaction)) {
-			$this->otherPlannedTransaction->updateExpandedDates($start, $end);
+		if (
+			$updateTransferal
+			&& $this->transferalTransaction
+		) {
+			$this->transferalTransaction->updateExpandedDates($start, $end, false);
 		}
 	}
 
-	public function deletePlannedTransactions($begin, $upTo, $force = false) {
+	public function deletePlannedTransactions($begin, $upTo, $force = false, $updateTransferal = true) {
 		if (
 			$this->account->getDeleteOldPlannedTransactions()
 			|| $force
@@ -770,18 +940,28 @@ class PlannedTransaction {
 				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 			}
 			
-//			if (!is_null($this->otherPlannedTransaction)) {
-//				$this->otherPlannedTransaction->deletePlannedTransactions($begin, $upTo, $force);
-//			}
+			if (
+				$updateTransferal
+				&& $this->transferalTransaction
+			) {
+				$this->transferalTransaction->deletePlannedTransactions($begin, $upTo, $force, false);
+			}
 		}
 	}
 
-	public function setUpdateMode($updateMode, $splitDate) {
+	public function setUpdateMode($updateMode, $splitDate, $updateTransferal = true) {
 		$this->updateMode = $updateMode;
 		$this->updateSplitDate = $splitDate;
+
+//		if (
+//			$updateTransferal
+//			&& $this->transferalTransaction
+//		) {
+//			$this->transferalTransaction->setUpdateMode($updateMode, $splitDate, false);
+//		}
 	}
 	
-	private function doUpdate($sqlPart, $updateFinishedTransactions = true) {
+	private function doUpdate($sqlPart, $updateFinishedTransactions = true, $updateTransferal = true) {
 		$sql = "UPDATE planned_transaction\n$sqlPart\nWHERE planned_transaction_id = " . $this->id;
 
 		$dbResult =& $this->badgerDb->query($sql);
@@ -797,7 +977,7 @@ class PlannedTransaction {
 				
 				case self::UPDATE_MODE_PREVIOUS:
 				case self::UPDATE_MODE_FOLLOWING:
-					$this->checkOtherPlannedTransaction();
+					$this->checkOtherPlannedTransaction($updateTransferal);
 					break;
 			}
 		
@@ -808,9 +988,16 @@ class PlannedTransaction {
 				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 			}
 		}
+
+		if (
+			$updateTransferal
+			&& !(is_null($this->transferalTransaction))
+		) {
+			$this->transferalTransaction->doUpdate($sqlPart, $updateFinishedTransactions, false);
+		}
 	}
 	
-	private function checkOtherPlannedTransaction() {
+	private function checkOtherPlannedTransaction($updateTransferal = true) {
 		if (is_null($this->otherPlannedTransaction)) {
 			if ($this->updateMode == self::UPDATE_MODE_PREVIOUS) {
 				$title = $this->originalTitle
@@ -855,18 +1042,52 @@ class PlannedTransaction {
 				$this->outsideCapital
 			);
 			
-			$this->otherPlannedTransaction->expand($beginDate, (is_null($endDate) ? getTargetFutureCalcDate() : $endDate));
-			
-			$sql = "DELETE FROM finished_transaction
-					WHERE planned_transaction_id = " . $this->id . "
-						AND valuta_date $cmpOperator '" . $this->updateSplitDate->getDate() . "'"
+			$sql = "UPDATE finished_transaction
+					SET title = '" . $this->badgerDb->escapeSimple($title) . "', planned_transaction_id = " . $this->otherPlannedTransaction->getId() . "
+					WHERE valuta_date $cmpOperator '" . $this->updateSplitDate->getDate() . "'
+						AND planned_transaction_id = " . $this->id
 			;
 			$dbResult =& $this->badgerDb->query($sql);
 			if (PEAR::isError($dbResult)) {
 				//echo "SQL Error: " . $dbResult->getMessage();
-				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+				throw new BadgerException('PlannedTransaction', 'SQLError', "SQL: $sql\n" . $dbResult->getMessage());
 			}
-		}
-	}
+
+			if ($updateTransferal && $this->transferalTransaction) {
+				$otherTransferalTransaction = $this->transferalTransaction->getAccount()->addPlannedTransaction(
+					$title,
+					$this->transferalTransaction->getAmount(),
+					$this->repeatUnit,
+					$this->repeatFrequency,
+					$beginDate,
+					$endDate,
+					$this->description,
+					$this->transactionPartner,
+					$this->category,
+					$this->outsideCapital,
+					null,
+					null,
+					$this->otherPlannedTransaction
+				);
+				
+				$this->otherPlannedTransaction->setTransferalTransaction($otherTransferalTransaction);
+				
+				$this->otherPlannedTransaction->setTransferalSource($this->transferalSource);
+				$otherTransferalTransaction->setTransferalSource($this->transferalTransaction->getTransferalSource());
+
+				$sql = "UPDATE finished_transaction
+						SET title = '" . $this->badgerDb->escapeSimple($title) . "', planned_transaction_id = " . $this->otherPlannedTransaction->getTransferalTransaction()->getId() . "
+						WHERE valuta_date $cmpOperator '" . $this->updateSplitDate->getDate() . "'
+							AND planned_transaction_id = " . $this->transferalTransaction->getId()
+				;
+				$dbResult =& $this->badgerDb->query($sql);
+				if (PEAR::isError($dbResult)) {
+					//echo "SQL Error: " . $dbResult->getMessage();
+					throw new BadgerException('PlannedTransaction', 'SQLError', "SQL: $sql\n" . $dbResult->getMessage());
+
+				} //if SQL Error
+			} //if updateTransferal
+		} // if is_null(otherPlannedTransaction)
+	} //function checkOtherPlannedTransaction
 } //class PlannedTransaction
 ?>

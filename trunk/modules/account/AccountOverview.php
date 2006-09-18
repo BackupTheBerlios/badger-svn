@@ -95,8 +95,20 @@ $legend = getBadgerTranslation2('dataGrid', 'legend');
 $finishedTransactionText = getBadgerTranslation2('Account', 'finishedTransaction');
 $finishedTransactionImage = $widgets->addImage('Account/finished_transaction.png', 'title="' . $finishedTransactionText . '"');
 
+$finishedTransferalSourceTransactionText = getBadgerTranslation2('Account', 'FinishedTransferalSourceTransaction');
+$finishedTransferalSourceTransactionImage = $widgets->addImage('Account/finished_transferal_source_transaction.png', 'title="' . $finishedTransferalSourceTransactionText . '"');
+
+$finishedTransferalTargetTransactionText = getBadgerTranslation2('Account', 'FinishedTransferalTargetTransaction');
+$finishedTransferalTargetTransactionImage = $widgets->addImage('Account/finished_transferal_target_transaction.png', 'title="' . $finishedTransferalTargetTransactionText . '"');
+
 $plannedTransactionText = getBadgerTranslation2('Account', 'plannedTransaction');
 $plannedTransactionImage = $widgets->addImage('Account/planned_transaction.png', 'title="' . $plannedTransactionText . '"');
+
+$plannedTransferalSourceTransactionText = getBadgerTranslation2('Account', 'PlannedTransferalSourceTransaction');
+$plannedTransferalSourceTransactionImage = $widgets->addImage('Account/planned_transferal_source_transaction.png', 'title="' . $plannedTransferalSourceTransactionText . '"');
+
+$plannedTransferalTargetTransactionText = getBadgerTranslation2('Account', 'PlannedTransferalTargetTransaction');
+$plannedTransferalTargetTransactionImage = $widgets->addImage('Account/planned_transferal_target_transaction.png', 'title="' . $plannedTransferalTargetTransactionText . '"');
 
 eval('echo "' . $tpl->getTemplate('Account/AccountOverview') . '";');
 

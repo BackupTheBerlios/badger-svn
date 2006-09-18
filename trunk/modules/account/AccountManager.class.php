@@ -248,15 +248,15 @@ class AccountManager extends DataGridHandler {
 		//Add condition to limit balance to transactions in the past and today
 		$today = new Date();
 
-		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date,
-				a.csv_parser, a.delete_old_planned_transactions
+		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, a.upper_limit,
+				a.currency_id, (
+					SELECT SUM(ft.amount) 
+					FROM finished_transaction ft
+					WHERE a.account_id = ft.account_id
+						AND ft.valuta_date <= '" . $today->getDate() . "'
+				) balance, a.last_calc_date, a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
-				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
-			WHERE ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL
-			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, a.last_calc_date
-			HAVING a.account_id = $accountId";
+			WHERE a.account_id = $accountId";
 		
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
@@ -423,7 +423,7 @@ class AccountManager extends DataGridHandler {
 
 		$sql = "SELECT pt.account_id
 			FROM planned_transaction pt
-			WHERE pt.planned_transaction_id = $finishedTransactionId";
+			WHERE pt.planned_transaction_id = $plannedTransactionId";
 		
 		$dbResult =& $this->badgerDb->query($sql);
 		if (PEAR::isError($this->dbResult)) {
@@ -455,20 +455,20 @@ class AccountManager extends DataGridHandler {
 		//Add condition to limit balance to transactions in the past and today
 		$today = new Date();
 
-		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, SUM(ft.amount) balance, a.last_calc_date,
-				a.csv_parser, a.delete_old_planned_transactions
+		$sql = "SELECT a.account_id, a.currency_id, a.title, a.description, a.lower_limit, a.upper_limit,
+				a.currency_id, (
+					SELECT SUM( ft.amount ) 
+					FROM finished_transaction ft
+					WHERE a.account_id = ft.account_id
+						AND ft.valuta_date <= '" . $today->getDate() . "'
+				) balance, a.last_calc_date, a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
-				INNER JOIN currency c ON a.currency_id = c.currency_id
-				LEFT OUTER JOIN finished_transaction ft ON a.account_id = ft.account_id
-			WHERE ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL
-			GROUP BY a.account_id, a.currency_id, a.title, a.description, a.lower_limit, 
-				a.upper_limit, a.currency_id, a.last_calc_date \n";
+		";
 		
 		$where = $this->getFilterSQL();
 		
 		if($where) {
-			$sql .= "HAVING $where\n ";
+			$sql .= " WHERE $where\n ";
 		}
 		
 		$order = $this->getOrderSQL();				

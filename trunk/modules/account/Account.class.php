@@ -619,9 +619,18 @@ class Account extends DataGridHandler {
 					break;
 				
 				case 'PlannedTransaction':
-				case 'PlannedTransferalTransaction':
 					$typeImg = 'Account/planned_transaction.png';
 					$typeText = getBadgerTranslation2('Account', 'PlannedTransaction');
+					break;
+
+				case 'PlannedTransferalTransaction':
+					if ($currentTransaction->getTransferalSource()) {
+						$typeImg = 'Account/planned_transferal_source_transaction.png';
+						$typeText = getBadgerTranslation2('Account', 'PlannedTransferalSourceTransaction');
+					} else {
+						$typeImg = 'Account/planned_transferal_target_transaction.png';
+						$typeText = getBadgerTranslation2('Account', 'PlannedTransferalTargetTransaction');
+					}
 					break;
 			}
 		
@@ -835,12 +844,12 @@ class Account extends DataGridHandler {
 			if (isset($this->finishedTransactions[$finishedTransactionId])) {
 				return $this->finishedTransactions[$finishedTransactionId];
 			}
-			while ($currentTransaction = $this->fetchNextFinishedTransaction($transferalTransaction)) {
-				if ($currentTransaction->getId() === $finishedTransactionId) {
-					
-					return $currentTransaction;
-				}
-			}
+//			while ($currentTransaction = $this->fetchNextFinishedTransaction($transferalTransaction)) {
+//				if ($currentTransaction->getId() === $finishedTransactionId) {
+//					
+//					return $currentTransaction;
+//				}
+//			}
 		}
 		
 		$sql = "SELECT * FROM (
@@ -892,8 +901,11 @@ class Account extends DataGridHandler {
 		$sql= "DELETE FROM finished_transaction
 				WHERE finished_transaction_id = $finishedTransactionId";
 		
-		if (!is_null($tmp = $this->finishedTransactions[$finishedTransactionId]->getTransferalTransaction())) {
-			$sql .= " OR finished_transaction_id = " . $tmp->getId();
+		if (
+			!is_null($tmp = $this->getFinishedTransactionById($finishedTransactionId))
+			&& !is_null($tmp2 = $tmp->getTransferalTransaction())
+		) {
+			$sql .= " OR finished_transaction_id = " . $tmp2->getId();
 		}		
 		
 				
@@ -907,6 +919,8 @@ class Account extends DataGridHandler {
 		if($this->badgerDb->affectedRows() < 1){
 			throw new BadgerException('Account', 'UnknownFinishedTransactionId', $finishedTransactionId);
 		}
+
+		//We should clean up the TransferalTransaction out of the corresponding Account object, but this is complex
 
 		if(isset($this->finishedTransactions[$finishedTransactionId])){
 			unset($this->finishedTransactions[$finishedTransactionId]);
@@ -1107,23 +1121,23 @@ class Account extends DataGridHandler {
 	 * @throws BadgerException If $plannedTransactionId is unknown to the DB.
 	 * @return object PlannedTransaction object of the planned transaction identified by $plannedTransactionId.
 	 */
-	public function getPlannedTransactionById($plannedTransactionId){
+	public function getPlannedTransactionById($plannedTransactionId, $transferalTransaction = null){
 		$plannedTransactionId = PlannedTransaction::sanitizeId($plannedTransactionId);
 
 		if ($this->plannedDataFetched) {
 			if (isset($this->plannedTransactions[$plannedTransactionId])) {
 				return $this->plannedTransactions[$plannedTransactionId];
 			}
-			while ($currentTransaction = $this->fetchNextPlannedTransaction()) {
-				if ($currentTransaction->getId() === $plannedTransactionId) {
-					
-					return $currentTransaction;
-				}
-			}
+//			while ($currentTransaction = $this->fetchNextPlannedTransaction($transferalTransaction)) {
+//				if ($currentTransaction->getId() === $plannedTransactionId) {
+//					
+//					return $currentTransaction;
+//				}
+//			}
 		}	
 		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.amount, 
 				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
-				pt.repeat_frequency, pt.category_id
+				pt.repeat_frequency, pt.category_id, pt.transferal_transaction_id, pt.transferal_source
 			FROM planned_transaction pt 
 			WHERE planned_transaction_id = " .  $plannedTransactionId;
 		
@@ -1139,7 +1153,7 @@ class Account extends DataGridHandler {
 		$tmp = $this->plannedDataFetched;
 		$this->plannedDataFetched = true;
 		
-		$currentTransaction = $this->fetchNextPlannedTransaction();
+		$currentTransaction = $this->fetchNextPlannedTransaction($transferalTransaction);
 		
 		$this->plannedDataFetched = $tmp;
 		
@@ -1160,28 +1174,42 @@ class Account extends DataGridHandler {
 	public function deletePlannedTransaction($plannedTransactionId){
 		$plannedTransactionId = PlannedTransaction::sanitizeId($plannedTransactionId);
 
-		if(isset($this->plannedTransactions[$plannedTransactionId])){
-			unset($this->plannedTransactions[$plannedTransactionId]);
-		}
 		$sql= "DELETE FROM planned_transaction
 				WHERE planned_transaction_id = $plannedTransactionId";
 				
+		$transferalId = null;
+		if (
+			!is_null($tmp = $this->getPlannedTransactionById($plannedTransactionId))
+			&& !is_null($tmp2 = $tmp->getTransferalTransaction())
+		) {
+			$transferalId = $tmp2->getId();
+			$sql .= " OR planned_transaction_id = $transferalId";
+		}		
 		$dbResult =& $this->badgerDb->query($sql);
 		if (PEAR::isError($dbResult)) {
 			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($this->badgerDb->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() < 1){
 			throw new BadgerException('Account', 'UnknownPlannedTransactionId', $plannedTransactionId);
 		}
 		
 		$sql = "DELETE FROM finished_transaction
 					WHERE planned_transaction_id = $plannedTransactionId";
+		if (!is_null($transferalId)) {
+			$sql .= " OR planned_transaction_id = $transferalId";
+		}		
 		$dbResult =& $this->badgerDb->query($sql);
 		if (PEAR::isError($dbResult)) {
 			//echo "SQL Error: " . $dbResult->getMessage();
 			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		}
+
+		//We should clean up the TransferalTransaction out of the corresponding Account object, but this is complex
+		
+		if(isset($this->plannedTransactions[$plannedTransactionId])){
+			unset($this->plannedTransactions[$plannedTransactionId]);
 		}
 	}
 	
@@ -1211,7 +1239,10 @@ class Account extends DataGridHandler {
 		$description = null,
 		$transactionPartner = null,
 		$category = null,
-		$outsideCapital = null
+		$outsideCapital = null,
+		$transferalAccount = null,
+		$transferalAmount = null,
+		$transferalTransaction = null
 	) {
 		$plannedTransactionId = $this->badgerDb->nextId('planned_transaction_ids');
 		
@@ -1275,7 +1306,13 @@ class Account extends DataGridHandler {
 			throw new BadgerException('Account', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->plannedTransactions[$plannedTransactionId] = new PlannedTransaction(
+		if (is_null($transferalAccount) && is_null($transferalTransaction)) {
+			$type = 'PlannedTransaction';
+		} else {
+			$type = 'PlannedTransferalTransaction';
+		}
+
+		$newTransaction = new PlannedTransaction(
 			$this->badgerDb,
 			$this,
 			$plannedTransactionId,
@@ -1288,10 +1325,39 @@ class Account extends DataGridHandler {
 			$description,
 			$transactionPartner,
 			$category,
-			$outsideCapital
+			$outsideCapital,
+			$type
 		);
+		
+		$this->plannedTransactions[$plannedTransactionId] = $newTransaction;
 
-    	return $this->plannedTransactions[$plannedTransactionId];	
+		if ($transferalTransaction) {
+			$newTransaction->setTransferalTransaction($transferalTransaction);
+		} else {
+			if (!is_null($transferalAccount)) {
+			
+				$transferalTransaction = $transferalAccount->addPlannedTransaction(
+					$title,
+					$transferalAmount,
+					$repeatUnit,
+					$repeatFrequency,
+					$beginDate,
+					$endDate,
+					$description,
+					$transactionPartner,
+					$category,
+					$outsideCapital,
+					null,
+					null,
+					$newTransaction
+				);				
+
+				$newTransaction->setTransferalTransaction($transferalTransaction);
+				$newTransaction->setTransferalSource(true);
+			}
+		}
+
+    	return $newTransaction;	
 	}
 	
 	public function deleteAllTransactions() {
@@ -1300,28 +1366,14 @@ class Account extends DataGridHandler {
 	}
 	
 	public function deleteAllFinishedTransactions() {
-		$this->finishedTransactions = array();
-
-		$sql= "DELETE FROM finished_transaction
-				WHERE account_id = " . $this->id;
-				
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		while ($currentFinishedTransaction = $this->getNextFinishedTransaction()) {
+			$this->deleteFinishedTransaction($currentFinishedTransaction->getId());
 		}
 	}
 
 	public function deleteAllPlannedTransactions() {
-		$this->plannedTransactions = array();
-
-		$sql= "DELETE FROM planned_transaction
-				WHERE account_id = " . $this->id;
-				
-		$dbResult =& $this->badgerDb->query($sql);
-		
-		if (PEAR::isError($dbResult)) {
-			throw new BadgerException('Account', 'SQLError', $dbResult->getMessage());
+		while ($currentPlannedTransaction = $this->getNextPlannedTransaction()) {
+			$this->deletePlannedTransaction($currentPlannedTransaction->getId());
 		}
 	}
 
@@ -1791,13 +1843,18 @@ class Account extends DataGridHandler {
 	 * 
 	 * @return mixed The fetched PlannedTransaction object or false if there are no more.
 	 */
-	private function fetchNextPlannedTransaction() {
+	private function fetchNextPlannedTransaction($transferalTransaction = null) {
 		$this->fetchPlannedFromDB();
 
 		$row = false;
 		
 		if($this->dbResultPlanned->fetchInto($row, DB_FETCHMODE_ASSOC)){
-			$this->plannedTransactions[$row['planned_transaction_id']] = new PlannedTransaction($this->badgerDb, $this, $row);
+			$this->plannedTransactions[$row['planned_transaction_id']] = new PlannedTransaction(
+				$this->badgerDb,
+				$this,
+				$row,
+				$transferalTransaction
+			);
 			return $this->plannedTransactions[$row['planned_transaction_id']];
 		} else {
 			$this->allPlannedDataFetched = true;
@@ -1897,7 +1954,8 @@ class Account extends DataGridHandler {
 
 		$sql = "SELECT pt.planned_transaction_id, pt.title, pt.description, pt.amount, 
 				pt.outside_capital, pt.transaction_partner, pt.begin_date, pt.end_date, pt.repeat_unit, 
-				pt.repeat_frequency, pt.category_id,  c.title category_title,
+				pt.repeat_frequency, pt.category_id, pt.transferal_transaction_id, 
+				pt.transferal_source, c.title category_title,
 				pc.category_id parent_category_id, pc.title parent_category_title
 			FROM planned_transaction pt
 				LEFT OUTER JOIN category c ON pt.category_id = c.category_id

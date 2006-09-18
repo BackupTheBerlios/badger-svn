@@ -289,10 +289,6 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$tpl->addJavaScript('js/Transaction.js');
 	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 
-	$widgets->addNavigationHead();
-	echo $tpl->getHeader($pageTitle);
-	echo $widgets->addToolTipLayer();
-	
 	$now = new Date();
 	
 	$transactionType = "planned";
@@ -300,11 +296,32 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 		$acc = $am->getAccountById($AccountID);		
 		$transaction = $acc->getPlannedTransactionById($plannedTransactionId);
 		
+		$backToIdField = $widgets->createField('backToId', 0, $AccountID, '', false, 'hidden');
+
+		if (is_null($transaction->getTransferalTransaction())) {
+				$transferalAmountValue = new Amount($transaction->getAmount());
+				$transferalAmountValue->mul(-1);
+				$transferalAmountValue = $transferalAmountValue->getFormatted();
+		} else {
+			if ($transaction->getTransferalSource()) {
+				$transferalAmountValue = $transaction->getTransferalTransaction()->getAmount()->getFormatted();
+			} else {
+				$transferalAmountValue = $transaction->getAmount()->getFormatted();
+				$AccountID = $transaction->getTransferalTransaction()->getAccount()->getId();
+				$plannedTransactionId = $transaction->getId();
+				$ID = $transaction->getTransferalTransaction()->getId();
+				$transaction = $transaction->getTransferalTransaction();
+			}
+		}
+
 		$titleValue = $transaction->getTitle();
 		$descriptionValue = $transaction->getDescription();
 		$beginDateValue = is_null($tmp = $transaction->getBeginDate()) ? '' : $tmp->getFormatted();
 		$endDateValue = is_null($tmp = $transaction->getEndDate()) ? '' : $tmp->getFormatted();
 		$amountValue = is_null($tmp = $transaction->getAmount()) ? '' : $tmp->getFormatted();
+		$negativeAmountValue = new Amount($tmp);
+		$negativeAmountValue->mul(-1);
+		$negativeAmountValue = $negativeAmountValue->getFormatted();
 		$outsideCapitalValue = is_null($tmp = $transaction->getOutsideCapital()) ? '' : $tmp;
 		$transactionPartnerValue = $transaction->getTransactionPartner();
 		$categoryValue = is_null($tmp = $transaction->getCategory()) ? '' : $tmp->getId();
@@ -317,12 +334,42 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 		$beginDateValue = $now->getFormatted();
 		$endDateValue = "";
 		$amountValue = "";
+		$negativeAmountValue = '';
 		$outsideCapitalValue = "";
 		$transactionPartnerValue = "";		
 		$categoryValue = "";
 		$repeatUnitValue = "";
     	$repeatFrequencyValue = "1";
+		$transferalAmountValue = '';
+
+		$backToIdField = '';
 	}
+
+	$tpl->addHeaderTag("<script type='text/javascript'>var previousAmount = '$negativeAmountValue';</script>");
+	$widgets->addNavigationHead();
+	echo $tpl->getHeader($pageTitle);
+	echo $widgets->addToolTipLayer();
+	
+	if ($plannedTransactionId == 'new' || is_null($transaction->getTransferalTransaction())) {
+		$transferalLabel = $widgets->createLabel('transferalEnabled', getBadgerTranslation2('accountTransaction', 'transferalEnabled'), false);
+		$transferalField = $widgets->createField('transferalEnabled', 30, 'on', '', false, 'checkbox', "onclick='toggleTransferal();'");
+		
+		$transferalDataStyle = 'style="display: none;"';
+
+		$transferalAccountField = $widgets->createSelectField('transferalAccountId', getAccountsSelectArray($AccountID), '', '', false, "style='width: 213px;'");
+	} else {
+		$transferalLabel = '';
+		$transferalField = '';
+
+		$transferalDataStyle = '';
+		
+		$transferalAccountField = $transaction->getTransferalTransaction()->getAccount()->getTitle();
+	}
+
+	$transferalAccountLabel = $widgets->createLabel('transferalAccountId', getBadgerTranslation2('accountTransaction', 'transferalAccount'), false);
+	
+	$transferalAmountLabel = $widgets->createLabel('transferalAmount', getBadgerTranslation2('accountTransaction', 'transferalAmount'), false);
+	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);'");
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
@@ -437,6 +484,14 @@ function updateRecord($accountID, $ID, $transactionType) {
 				$tmp = trim(getGPC($_POST, 'endDate'));
 				$endDate = empty($tmp) ? null : new Date($tmp, true);
 			
+				if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
+					$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
+					$transferalAmount = getGPC($_POST, 'transferalAmount', 'AmountFormatted');
+				} else {
+					$transferalAccount = null;
+					$transferalAmount = null;
+				}
+
 				$newPlannedTransaction = $account->addPlannedTransaction(
 					getGPC($_POST, 'title'),
 					getGPC($_POST, 'amount', 'AmountFormatted'),
@@ -447,7 +502,9 @@ function updateRecord($accountID, $ID, $transactionType) {
 					getGPC($_POST, 'description'), // = null,
 					getGPC($_POST, 'transactionPartner'), // = null,
 					$category, // = null,
-					getGPC($_POST, 'outsideCapital', 'checkbox') // = null
+					getGPC($_POST, 'outsideCapital', 'checkbox'), // = null
+					$transferalAccount,
+					$transferalAmount
 				);
 	
 				$newPlannedTransaction->expand(new Date('1000-01-01'), getTargetFutureCalcDate());
@@ -456,17 +513,11 @@ function updateRecord($accountID, $ID, $transactionType) {
 			case 'finished':
 				if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
 					$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
-					$transferalAmount = getGPC($_POST, 'transferalAmount', 'Amount');
+					$transferalAmount = getGPC($_POST, 'transferalAmount', 'AmountFormatted');
 				} else {
 					$transferalAccount = null;
 					$transferalAmount = null;
 				}
-
-if ($transferalAccount instanceof Account) {
-	echo "account";
-} else {
-	echo "fuck";
-}
 
 				$ID = $account->addFinishedTransaction(
 					getGPC($_POST, 'amount', 'AmountFormatted'),
@@ -505,14 +556,29 @@ if ($transferalAccount instanceof Account) {
 				if ($range != 'this') {
 					$transaction->setTitle(getGPC($_POST, 'title'));
 					$transaction->setDescription(getGPC($_POST, 'description'));
-					$transaction->setBeginDate(getGPC($_POST, 'beginDate', 'DateFormatted'));
-					$transaction->setEndDate(($tmp = getGPC($_POST, 'endDate')) ? new Date($tmp, true) : null);
+					
+					if ($range == 'all' && isset($_POST['beginDate'])) {
+						$transaction->setBeginDate(getGPC($_POST, 'beginDate', 'DateFormatted'));						
+					}
+					if ($range == 'all' && isset($_POST['endDate']) && $tmp = getGPC($_POST, 'endDate')) {
+						$transaction->setEndDate(new Date($tmp, true));
+					}
 					$transaction->setAmount(getGPC($_POST, 'amount', 'AmountFormatted'));
 					$transaction->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
 					$transaction->setTransactionPartner(getGPC($_POST, 'transactionPartner'));
 					$transaction->setCategory($category);
 					$transaction->setRepeatUnit(getGPC($_POST, 'repeatUnit'));
 			    	$transaction->setRepeatFrequency(getGPC($_POST, 'repeatFrequency', 'integer'));
+
+					if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
+						$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
+	
+						$transaction->addTransferalTransaction($transferalAccount, getGPC($_POST, 'transferalAmount', 'AmountFormatted'));
+					}
+					
+					if (!is_null($tmp = $transaction->getTransferalTransaction())) {
+						$tmp->setAmount(getGPC($_POST, 'transferalAmount', 'AmountFormatted'));
+					}
 
 					$transaction->expandUpdate();
 				} else {
@@ -525,6 +591,16 @@ if ($transferalAccount instanceof Account) {
 					$transaction->setCategory($category);
 					$transaction->setPeriodical(false);
 					$transaction->setPlannedTransaction(null);
+
+					if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
+						$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
+	
+						$transaction->addTransferalTransaction($transferalAccount, getGPC($_POST, 'transferalAmount', 'AmountFormatted'));
+					}
+					
+					if (!is_null($tmp = $transaction->getTransferalTransaction())) {
+						$tmp->setAmount(getGPC($_POST, 'transferalAmount', 'AmountFormatted'));
+					}
 				}
 				break;
 				
@@ -543,11 +619,11 @@ if ($transferalAccount instanceof Account) {
 				if (getGPC($_POST, 'transferalEnabled', 'checkbox')) {
 					$transferalAccount = $am->getAccountById(getGPC($_POST, 'transferalAccountId', 'integer'));
 
-					$transaction->addTransferalTransaction($transferalAccount, getGPC($_POST, 'transferalAmount', 'Amount'));
+					$transaction->addTransferalTransaction($transferalAccount, getGPC($_POST, 'transferalAmount', 'AmountFormatted'));
 				}
 				
 				if (!is_null($tmp = $transaction->getTransferalTransaction())) {
-					$tmp->setAmount(getGPC($_POST, 'transferalAmount', 'Amount'));
+					$tmp->setAmount(getGPC($_POST, 'transferalAmount', 'AmountFormatted'));
 				}
 				break;
 		}

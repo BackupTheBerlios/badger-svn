@@ -182,32 +182,36 @@ class FinishedTransaction {
 			$this->periodical = $data['periodical'];
 			$this->balance = new Amount($data['balance']);
 			$this->transferalSource = $data['transferal_source'];
-			if (!$data['transferal_transaction_id']) {
-				$this->type = 'FinishedTransaction';
-			} else {
-				$this->type = 'FinishedTransferalTransaction';
-			}
+			$planned = false;
 			if ($data['planned_transaction_id']) {
 				try {
 					$this->sourcePlannedTransaction = $account->getPlannedTransactionById($data['planned_transaction_id']);
-					$this->type = $this->sourcePlannedTransaction->getType();
+					$planned = true;
 				} catch (BadgerException $ex) {
 					$this->sourcePlannedTransaction = null;
 				}
 			}
+			$transferal = false;
 			if ($data['transferal_transaction_id']) {
 				if (!is_null($title) && $data['transferal_transaction_id'] == $title->getId()) {
 					$this->transferalTransaction = $title;
+					$transferl = true;
 				} else {
 					$accountManager = new AccountManager($badgerDb);
 					try {
 						$transferalAccount = $accountManager->getAccountByFinishedTransactionId($data['transferal_transaction_id']);
 						$this->transferalTransaction = $transferalAccount->getFinishedTransactionById($data['transferal_transaction_id'], $this);
+						$transferal = true;
 					} catch (BadgerException $ex) {
 						$this->transferalTransaction = null;
 					}
 				}
 			}
+			$this->type =
+				($planned ? 'Planned' : 'Finished')
+				. ($transferal ? 'Transferal' : '')
+				. 'Transaction'
+			;
 		} else {
 			$this->id = $data;
 			$this->title = $title;
@@ -475,7 +479,7 @@ class FinishedTransaction {
 		$this->doUpdate("SET transferal_transaction_id = $id", false);
 	}
 	
-	public function addTransferalTransaction($transferalAccount, $transferalAmount) {
+	public function addTransferalTransaction($transferalAccount, $transferalAmount, $transferalPlannedTransaction = null) {
 		$this->setTransferalTransaction($transferalAccount->addFinishedTransaction(
 			$transferalAmount,
 			$this->title,
@@ -486,7 +490,7 @@ class FinishedTransaction {
 			$this->outsideCapital,
 			$this->exceptional,
 			$this->periodical,
-			null,
+			$transferalPlannedTransaction,
 			null,
 			null,
 			$this
