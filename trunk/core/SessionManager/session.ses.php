@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  session.ses.php
  Copyright (C) 2003 

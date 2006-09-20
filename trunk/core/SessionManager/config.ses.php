@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  config.ses.php
  Copyright (C) 2003
