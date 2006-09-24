@@ -1858,6 +1858,23 @@ class Account extends DataGridHandler {
 
 		$sqlPrepare = 'SET @balance = 0';
 		
+		$order = $this->getOrderSQL();				
+		$order = preg_replace('/ft2\.__SUM__ (asc|desc),*/', '', $order);
+		$order = trim(preg_replace('/ft2\.__TYPE__ (asc|desc),*/', '', $order));
+		if (substr($order, -1, 1) === ',') {
+			$order = substr($order, 0, strlen($order) - 1);
+		}
+		
+		$innerOrder = $order;
+		$innerOrder = preg_replace('/ft2\.balance (asc|desc),*/', '', $innerOrder);
+		$innerOrder = preg_replace('/ft2\.valuta_date (asc|desc),*/', '', $innerOrder);
+		$innerOrder = str_replace('ft2.', '', $innerOrder);
+		$innerOrder = trim($innerOrder);
+		if (substr($innerOrder, -1, 1) === ',') {
+			$innerOrder = substr($innerOrder, 0, strlen($innerOrder) - 1);
+		}
+		
+
 		$sql = "SELECT * FROM (
 					SELECT *, (@balance := @balance + ft1.amount) balance FROM (
 						SELECT ft.finished_transaction_id, ft.title, ft.description, ft.valuta_date, ft.amount, 
@@ -1873,9 +1890,14 @@ class Account extends DataGridHandler {
 			$sql .= ' AND ft.planned_transaction_id IS NULL';
 		}
 		$sql .= "
-						ORDER BY ft.valuta_date ASC
+						ORDER BY ft.valuta_date ASC";
+		if ($innerOrder) {
+			$sql .= ", $innerOrder";
+		}
+		$sql .= "
 					) ft1
-				) ft2\n";
+				) ft2
+		";
 		
 		$where = $this->getFilterSQL();
 		$where = preg_replace('/ft2.category_id = ([0-9]+)/', '(ft2.category_id = \1 OR ft2.parent_category_id = \1)', $where);
@@ -1886,14 +1908,6 @@ class Account extends DataGridHandler {
 			$sql .= " WHERE $where\n ";
 		} 
 		
-		$order = $this->getOrderSQL();				
-		$order = preg_replace('/ft2\.__SUM__ (asc|desc),*/', '', $order);
-		$order = trim(preg_replace('/ft2\.__TYPE__ (asc|desc),*/', '', $order));
-
-		if (substr($order, -1, 1) === ',') {
-			$order = substr($order, 0, strlen($order) - 1);
-		}
-
 		if($order) {
 			$sql .= " ORDER BY $order\n ";
 		}
