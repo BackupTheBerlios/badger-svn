@@ -936,7 +936,6 @@ class PlannedTransaction {
 			$dbResult =& $this->badgerDb->query($sql);
 			
 			if (PEAR::isError($dbResult)) {
-				//echo "SQL Error: " . $dbResult->getMessage();
 				throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
 			}
 			
@@ -966,8 +965,7 @@ class PlannedTransaction {
 
 		$dbResult =& $this->badgerDb->query($sql);
 		if (PEAR::isError($dbResult)) {
-			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('PlannedTransaction', 'SQLError', $dbResult->getMessage());
+			throw new BadgerException('PlannedTransaction', 'SQLError', "SQL: $sql\n" . $dbResult->getMessage());
 		}
 		
 		if ($updateFinishedTransactions) {
@@ -1064,11 +1062,10 @@ class PlannedTransaction {
 					$this->description,
 					$this->transactionPartner,
 					$this->category,
-					$this->outsideCapital,
-					null,
-					null,
-					$this->otherPlannedTransaction
+					$this->outsideCapital
 				);
+				
+				$otherTransferalTransaction->setTransferalTransaction($this->otherPlannedTransaction);
 				
 				$this->otherPlannedTransaction->setTransferalTransaction($otherTransferalTransaction);
 				
@@ -1082,7 +1079,6 @@ class PlannedTransaction {
 				;
 				$dbResult =& $this->badgerDb->query($sql);
 				if (PEAR::isError($dbResult)) {
-					//echo "SQL Error: " . $dbResult->getMessage();
 					throw new BadgerException('PlannedTransaction', 'SQLError', "SQL: $sql\n" . $dbResult->getMessage());
 
 				} //if SQL Error

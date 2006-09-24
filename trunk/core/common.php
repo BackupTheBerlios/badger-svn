@@ -229,6 +229,10 @@ function escape4Attr($string) {
 }
 
 function showDebugTrace($argX = '') {
+	if (!defined('DEBUG') || !DEBUG) {
+		return;
+	}
+	
 	$i = 0;
 
 	echo '<pre>';

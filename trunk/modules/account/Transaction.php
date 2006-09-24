@@ -308,7 +308,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 			} else {
 				$transferalAmountValue = $transaction->getAmount()->getFormatted();
 				$AccountID = $transaction->getTransferalTransaction()->getAccount()->getId();
-				$plannedTransactionId = $transaction->getId();
+				$plannedTransactionId = $transaction->getTransferalTransaction()->getId();
 				$ID = $transaction->getTransferalTransaction()->getId();
 				$transaction = $transaction->getTransferalTransaction();
 			}

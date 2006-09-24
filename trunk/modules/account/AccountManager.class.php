@@ -343,7 +343,7 @@ class AccountManager extends DataGridHandler {
 			$sql .= ", csv_parser";
 		}
 		
-		if($deleteOldFinishedTransactions) {
+		if(!is_null($deleteOldFinishedTransactions)) {
 			$sql .= ", delete_old_planned_transactions";
 		}
 		
@@ -376,7 +376,7 @@ class AccountManager extends DataGridHandler {
 		
 		if (PEAR::isError($dbResult)) {
 			//echo "SQL Error: " . $dbResult->getMessage();
-			throw new BadgerException('AccountManager', 'SQLError', $dbResult->getMessage());
+			throw new BadgerException('AccountManager', 'SQLError', "SQL: $sql\n" . $dbResult->getMessage());
 		}
 		
 		if($this->badgerDb->affectedRows() != 1){
