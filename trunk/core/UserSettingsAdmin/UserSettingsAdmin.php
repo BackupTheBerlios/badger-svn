@@ -93,6 +93,8 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		};
 		if($change_password == true){
 			$us->setProperty('badgerPassword',md5(getGPC($_POST, 'NewPassword')));
+			//set new valid session, with new password
+			set_session_var('password',md5(getGPC($_POST, 'NewPassword')));
 		};
 		
 
