@@ -638,6 +638,7 @@ class Account extends DataGridHandler {
 			if (
 				$firstOrderValutaDate
 				&& $todayMarkerSet === false
+				&& !is_null($currentTransaction->getValutaDate())
 				&& Date::compare($now, $currentTransaction->getValutaDate()) == $orderCompareNumber
 			) {
 				$result[$currResultIndex]['transactionId'] = array (
