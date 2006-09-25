@@ -136,7 +136,7 @@ class AccountManager extends DataGridHandler {
 			'accountId' => 'a.account_id',
 			'currency' => 'c.symbol',
 			'title' => 'a.title',
-			'balance' => 'SUM(ft.amount)'    	
+			'balance' => 'balance'    	
 		);
 	
 		if (!isset ($fieldSQLNames[$fieldName])){
@@ -463,6 +463,7 @@ class AccountManager extends DataGridHandler {
 						AND ft.valuta_date <= '" . $today->getDate() . "'
 				) balance, a.last_calc_date, a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
+				INNER JOIN currency c ON a.currency_id = c.currency_id
 		";
 		
 		$where = $this->getFilterSQL();
@@ -481,8 +482,7 @@ class AccountManager extends DataGridHandler {
 		$this->dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResult)) {
-			//echo "SQL Error: " . $this->dbResult->getMessage();
-			throw new BadgerException('AccountManager', 'SQLError', $this->dbResult->getMessage());
+			throw new BadgerException('AccountManager', 'SQLError', "SQL: $sql\n" . $this->dbResult->getMessage());
 		}
 		
 		$this->dataFetched = true; 	
