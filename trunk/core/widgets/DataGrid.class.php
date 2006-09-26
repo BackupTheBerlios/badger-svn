@@ -178,34 +178,35 @@ class DataGrid {
 		
 		$this->tpl->addJavaScript("js/dataGrid.js");
 		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
-		$this->tpl->addOnLoadEvent('dgUniqueId = "'. $this->UniqueId .'";');
-		$this->tpl->addOnLoadEvent('dgHeaderName = new Array("'.implode('","',$this->headerName).'");');
-		$this->tpl->addOnLoadEvent('dgColumnOrder = new Array("'.implode('","',$this->columnOrder).'");');
-		$this->tpl->addOnLoadEvent('dgHeaderSize = new Array('.implode(',',$this->headerSize).');');
-		$this->tpl->addOnLoadEvent('dgCellAlign = new Array("'.implode('","',$this->cellAlign).'");');
-		$this->tpl->addOnLoadEvent('dgNoRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
-		$this->tpl->addOnLoadEvent('dgDeleteMsg = "'. $this->deleteMsg .'";');
-		$this->tpl->addOnLoadEvent('dgDeleteRefreshType = "'. $this->deleteRefreshType .'";');
-		$this->tpl->addOnLoadEvent('dgDeleteAction = "'. $this->deleteAction .'";');
-		$this->tpl->addOnLoadEvent('dgEditAction = "'. $this->editAction .'";');
-		$this->tpl->addOnLoadEvent('dgNewAction = "'. $this->newAction .'";');
-		$this->tpl->addOnLoadEvent('dgSourceXML = "'.$this->sourceXML.'";');
-		$this->tpl->addOnLoadEvent('dgTplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
-		$this->tpl->addOnLoadEvent('dgLoadingMessage = "'.$this->LoadingMessage.'";');
-		//try {$strSortColumn = $us->getProperty('dgSortColumn'.$this->UniqueId); } catch(BadgerException $e) {$strSortColumn="";};
-		//try {$strSortOrder = $us->getProperty('dgSortOrder'.$this->UniqueId); } catch(BadgerException $e) {$strSortOrder="";};
-		//if($strSortColumn<>"" and $strSortOrder<>"") {
-		//	$this->tpl->addOnLoadEvent('addNewSortOrder("'. $strSortColumn .'", "'. $strSortOrder .'");');
-		//}
+		
+		$this->tpl->addOnLoadEvent('dataGrid = new classDataGrid();');
+		$this->tpl->addOnLoadEvent('dataGrid.uniqueId = "'. $this->UniqueId .'";');
+		$this->tpl->addOnLoadEvent('dataGrid.sourceXML = "'.$this->sourceXML.'";');
+
+		$this->tpl->addOnLoadEvent('dataGrid.headerName = new Array("'.implode('","',$this->headerName).'");');
+		$this->tpl->addOnLoadEvent('dataGrid.columnOrder = new Array("'.implode('","',$this->columnOrder).'");');
+		$this->tpl->addOnLoadEvent('dataGrid.headerSize = new Array('.implode(',',$this->headerSize).');');
+		$this->tpl->addOnLoadEvent('dataGrid.cellAlign = new Array("'.implode('","',$this->cellAlign).'");');
+		$this->tpl->addOnLoadEvent('dataGrid.noRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
+		$this->tpl->addOnLoadEvent('dataGrid.deleteMsg = "'. $this->deleteMsg .'";');
+		$this->tpl->addOnLoadEvent('dataGrid.deleteRefreshType = "'. $this->deleteRefreshType .'";');
+		$this->tpl->addOnLoadEvent('dataGrid.deleteAction = "'. $this->deleteAction .'";');
+		$this->tpl->addOnLoadEvent('dataGrid.editAction = "'. $this->editAction .'";');
+		$this->tpl->addOnLoadEvent('dataGrid.newAction = "'. $this->newAction .'";');
+
+		$this->tpl->addOnLoadEvent('dataGrid.tplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
+		$this->tpl->addOnLoadEvent('dataGrid.loadingMessage = "'.$this->LoadingMessage.'";');
+
 		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
 		if ( isset($dgParameter) ) {		
-				$this->tpl->addOnLoadEvent("initDataGrid('".$dgParameter."');");
+				$this->tpl->addOnLoadEvent("dataGrid.init('".$dgParameter."');");
 		}else {
-			$this->tpl->addOnLoadEvent("initDataGrid();");
-		}
-		$this->tpl->addOnLoadEvent('Behaviour.register(behaviour);');
+			$this->tpl->addOnLoadEvent("dataGrid.init();");
+		}	
+		
+		$this->tpl->addOnLoadEvent('Behaviour.register(dataGrid.behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
-		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dgKeyProcess, false);');
+		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dataGrid.KeyEvents, false);');
 		
 	}
 	
