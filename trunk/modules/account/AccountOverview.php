@@ -34,8 +34,7 @@ $tpl->addJavaScript("js/prototype.js");
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 
-$dataGrid = new DataGrid($tpl);
-$dataGrid->UniqueId = "Account$accountID";
+$dataGrid = new DataGrid($tpl,"Account$accountID");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID";
 $dataGrid->headerName = array(
 	getBadgerTranslation2('accountOverview', 'colValutaDate'),

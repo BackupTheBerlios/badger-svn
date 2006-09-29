@@ -22,9 +22,20 @@
 
 function classDataGrid() {
 	this.uniqueId = "";
+	this.htmlDiv = new Object();
 	this.sourceXML = "";
-	this.columnOrder = new Array();
 	this.headerName = new Array();
+	this.columnOrder = new Array();
+	this.headerSize = new Array();
+	this.cellAlign = new Array();
+	this.noRowSelectedMsg = "";
+	this.deleteMsg = "";
+	this.deleteRefreshType = "";
+	this.deleteAction = "";
+	this.editAction = "";
+	this.newAction = "";
+	this.tplPath = "";
+	this.loadingMessage = "";
 
 	this.mouseEventsDisabled = false;
 	
@@ -61,39 +72,38 @@ function classDataGrid() {
 	
 		// show loading message, image, hide old data
 		this.showMessageLayer('<span class="dgMessageHint"> '+this.loadingMessage+' </span>');
-		$('dgDivScroll').className ="dgDivScrollLoading";
-		$('dgTableData').style.visibility = "hidden"; 
+		$('dgDivScroll'+this.uniqueId).className ="dgDivScrollLoading";
+		$('dgTableData'+this.uniqueId).style.visibility = "hidden"; 
 		
 		// filter image in footer
 		if( this.arrURLParameter["fn"]>"0" && this.arrURLParameter["fn"]!=undefined) {
-			$('dgFilterStatus').style.visibility = "visible"; //filter active
+			$('dgFilterStatus'+this.uniqueId).style.visibility = "visible"; //filter active
 		} else {
-			$('dgFilterStatus').style.visibility = "hidden"; //filter inactive
+			$('dgFilterStatus'+this.uniqueId).style.visibility = "hidden"; //filter inactive
 		}	
 	}
 	
 	// displays the message from backend-object
 	this.handleDeleteResponse = function(objXHR) {
 		var allSelectedIds;
-		
-		if (objXHR.responseText=="") {			
-			switch (this.deleteRefreshType) {
+		if (objXHR.responseText=="") {
+			switch (this.dataGrid.deleteRefreshType) {
 			case 'refreshDataGrid': 
 				//refresh whole dataGrid				
-				this.loadData();
+				this.dataGrid.loadData();
 				break;
 			case 'refreshPage': 
 				//refresh whole page	
-				window.setTimeout("refreshPage()", 10);
+				window.setTimeout("this.dataGrid.refreshPage()", 10);
 				break;
 			default: 
 				// no refresh, delete rows in frontend
-				allSelectedIds = this.getAllIds();		    
+				allSelectedIds = this.dataGrid.getAllIds();		    
 				for (i=0; i<allSelectedIds.length; i++) {
 					Element.remove($(allSelectedIds[i]));
-					NumberOfRows = $("dgCount").innerHTML;
+					NumberOfRows = $("dgCount"+this.dataGrid.uniqueId).innerHTML;
 					NumberOfRows--;
-					$("dgCount").innerHTML = NumberOfRows;
+					$("dgCount"+this.dataGrid.uniqueId).innerHTML = NumberOfRows;
 				}
 			} //switch	
 		} else {
@@ -116,12 +126,12 @@ function classDataGrid() {
 			xmlRows = objXmlDoc.getElementsByTagName("row");
 			
 			//delete old table body if exists
-			if($("dgTableData").getElementsByTagName("tbody")[0]) {
-				Element.remove($("dgTableData").getElementsByTagName("tbody")[0])	
+			if($("dgTableData"+this.dataGrid.uniqueId).getElementsByTagName("tbody")[0]) {
+				Element.remove($("dgTableData"+this.dataGrid.uniqueId).getElementsByTagName("tbody")[0])	
 			}
 			//create new table body
 			dgTableDataBody = document.createElement("tbody");
-			dgData = $("dgTableData").appendChild(dgTableDataBody);
+			dgData = $("dgTableData"+this.dataGrid.uniqueId).appendChild(dgTableDataBody);
 		
 			//column assignment
 			//e.g. columnPosition['title'] is the first column in the xml-file;
@@ -149,14 +159,15 @@ function classDataGrid() {
 				//define a new row
 				newRow = document.createElement("tr");
 				newRow.className = "dgRow";
-				newRow.id = rowID;
+				newRow.id = this.dataGrid.uniqueId+rowID;
+				newRow.rowId = rowID;
 				
 				//add checkbox as the first cell
 				checkTD = document.createElement("td");
 				checkTD.style.width = "25px";
 				checkBox = document.createElement("input");
-				checkBox.id = "check" + rowID;
-				checkBox.name = "check" + rowID;
+				checkBox.id = "check"+this.dataGrid.uniqueId+rowID;
+				checkBox.name = "check"+this.dataGrid.uniqueId+rowID;
 				checkBox.type = "checkbox";
 				checkTD.appendChild(checkBox);
 				checkTD.innerHTML = checkTD.innerHTML + "&nbsp;";
@@ -202,31 +213,31 @@ function classDataGrid() {
 			//activate previous selected rows (after resorting)
 			for (i=0; i<this.dataGrid.arrSelectedRows.length; i++) {
 				if($(this.dataGrid.arrSelectedRows[i])) {
-					this.dataGrid.selectRow($(this.dataGrid.arrSelectedRows[i]));
+					this.dataGrid.selectRow($(this.dataGrid.uniqueId+this.dataGrid.arrSelectedRows[i]));
 				}
 			}		
 			// refresh row count
-			$("dgCount").innerHTML = xmlRows.length;
+			$("dgCount"+this.dataGrid.uniqueId).innerHTML = xmlRows.length;
 			
 			// hide loading message
 			this.dataGrid.hideMessageLayer();
 			
 			// display processed data
-			$('dgTableData').style.visibility = "visible";
+			$('dgTableData'+this.dataGrid.uniqueId).style.visibility = "visible";
 		} else {
-			$("dgCount").innerHTML = "0";
+			$("dgCount"+this.dataGrid.uniqueId).innerHTML = "0";
 			this.dataGrid.showMessageLayer('<span class="dgMessageError"> '+objXHR.responseText+' </span>');
 			this.dataGrid.deleteAllFilter();
 		}
 
 		// hide loading image
-		$('dgDivScroll').className = "";
+		$('dgDivScroll'+this.dataGrid.uniqueId).className = "";
 	}
 	
 
 	this.addSeparatorRow = function(dataGrid, dgData) {		
 		newRow = document.createElement("tr");
-		newRow.id = "separator";
+		newRow.id = this.dataGrid.uniqueId+"separator";
 		newRow.className = "dgRowSeparator";	
 	
 		checkTD = document.createElement("td");
@@ -252,7 +263,7 @@ function classDataGrid() {
 	this.activateRow = function (objRow) {
 		if (objRow.className == "dgRow") objRow.className = "dgRowActive";
 		if (objRow.className == "dgRowSelected") objRow.className = "dgRowSelectedActive";
-		$("check" + objRow.id).focus();
+		$("check"+objRow.id).focus();
 	}
 	this.deactivateRow = function (objRow) {
 		if (objRow.className == "dgRowActive") objRow.className = "dgRow";
@@ -279,7 +290,7 @@ function classDataGrid() {
 		location.href = location.href;
 	}
 
-	
+	//TODO: PROBLEM
 	//Key-Events of the Rows
 	this.KeyEvents = function (event) {
 		if (!event) event=window.event;
@@ -301,7 +312,7 @@ function classDataGrid() {
 					dataGrid.objRowActive = objNextRow;
 				}
 			} else {
-				dataGrid.objRowActive = $("dgTableData").getElementsByTagName("tr")[0];
+				dataGrid.objRowActive = $("dgTableData"+dataGrid.uniqueId).getElementsByTagName("tr")[0];
 				dataGrid.activateRow(dataGrid.objRowActive);
 			}			
 		}
@@ -349,8 +360,8 @@ function classDataGrid() {
 	//  - send a background delete request to the server
 	this.deleteRows = function () {
 		if(this.deleteAction) {		
-			dgData = $("dgTableData");	
-			checkbox = Form.getInputs("dgForm","checkbox");
+			dgData = $("dgTableData"+this.uniqueId);	
+			checkbox = Form.getInputs("dgForm"+this.uniqueId,"checkbox");
 			
 			allSelectedIds = this.getAllIds();	// get selected row ids
 			
@@ -377,7 +388,8 @@ function classDataGrid() {
 			strUrl, {
 				method: 'get',
 				onComplete: this.handleDeleteResponse,
-				onFailure: this.handleError
+				onFailure: this.handleError,
+				dataGrid: this
 				});
 	}
 	
@@ -395,11 +407,11 @@ function classDataGrid() {
 	
 	// get all ids from selected rows -> array
 	this.getAllIds = function () {
-		checkbox = Form.getInputs("dgForm","checkbox");
+		checkbox = Form.getInputs("dgForm"+this.uniqueId,"checkbox");
 		var allIDs = new Array;
 		for (i=0; i<checkbox.length; i++) {
 			if(checkbox[i].id.indexOf("check") != -1 ) {
-				if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.id);
+				if ($F(checkbox[i]) == "on") allIDs.push(checkbox[i].parentNode.parentNode.rowId);
 			}
 		}
 		return allIDs;
@@ -407,11 +419,11 @@ function classDataGrid() {
 	
 	// get all ids from selected rows -> array
 	this.getFirstId = function () {
-		checkbox = Form.getInputs("dgForm","checkbox");
+		checkbox = Form.getInputs("dgForm"+this.uniqueId, "checkbox");
 	
 		for (i=0; i<checkbox.length; i++) {
 			if(checkbox[i].id.indexOf("check") != -1 ) {
-				if ($F(checkbox[i]) == "on") return checkbox[i].parentNode.parentNode.id;
+				if ($F(checkbox[i]) == "on") return checkbox[i].parentNode.parentNode.rowId;
 			}
 		}
 	}
@@ -467,13 +479,13 @@ function classDataGrid() {
 	this.changeColumnSortImage = function (id, newstatus) {
 		switch(newstatus) {
 			case 'empty':
-				$("dgImg"+id).src = this.tplPath + "dropEmpty.gif";
+				$("dgImg"+this.uniqueId+id).src = this.tplPath + "dropEmpty.gif";
 				break;
 			case 'a':
-				$("dgImg"+id).src = this.tplPath + "dropDown.png";
+				$("dgImg"+this.uniqueId+id).src = this.tplPath + "dropDown.png";
 				break;
 			case 'd':
-				$("dgImg"+id).src = this.tplPath + "dropUp.png";
+				$("dgImg"+this.uniqueId+id).src = this.tplPath + "dropUp.png";
 				break;
 		}	
 	}
@@ -500,12 +512,12 @@ function classDataGrid() {
 	
 	//display a message in the dataGrid footer
 	this.showMessageLayer = function (strMessage) {
-		divMessage = $("dgMessage");
+		divMessage = $("dgMessage"+this.uniqueId);
 		divMessage.style.display = "inline";
 		divMessage.innerHTML = strMessage;
 	}
 	this.hideMessageLayer = function() {
-		divMessage = $("dgMessage");
+		divMessage = $("dgMessage"+this.uniqueId);
 		divMessage.style.display = "none";
 	}
 	
@@ -516,10 +528,10 @@ function classDataGrid() {
 	
 	this.saveDataGridParameter = function () {	
 		var strUrl = badgerRoot+"/core/widgets/DataGridSaveParameter.php";
-		var strParameter = serializeParameter();
+		var strParameter = this.serializeParameter();
 		
-		if( strParameter.indexOf("id="+dgUniqueId)==-1 ) {
-			strParameter = "id="+dgUniqueId+"&"+strParameter;
+		if( strParameter.indexOf("id="+this.uniqueId)==-1 ) {
+			strParameter = "id="+this.uniqueId+"&"+strParameter;
 		}	
 		
 		var myAjax = new Ajax.Request(
@@ -591,11 +603,13 @@ function classDataGrid() {
 		}
 	}
 	
+	//TODO: PROBLEM
 	//Mouse-Events
 	this.behaviour =  {
 		//Mouse-Events of the rows (selecting, activating)
 		'tr.dgRow' : function(element){
 			element.onmouseover = function(){
+				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
 				if (!dataGrid.mouseEventsDisabled) {
 					if(dataGrid.objRowActive) dataGrid.deactivateRow(dataGrid.objRowActive);
 					dataGrid.objRowActive = this;
@@ -606,6 +620,7 @@ function classDataGrid() {
 				if (!dataGrid.mouseEventsDisabled) dataGrid.deactivateRow(this);
 			}
 			element.onclick = function(){
+				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
 				if(this.className=="dgRowSelected" || this.className=="dgRowSelectedActive") {
 					dataGrid.deselectRow(this);
 				} else {
@@ -613,13 +628,15 @@ function classDataGrid() {
 				}
 			}
 			element.ondblclick = function(){
-				dataGrid.callEditEvent(this.id);
+				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
+				dataGrid.callEditEvent(this.rowId);
 			}
 		},
 		//Mouse-Events of the columns (sorting)
 		'td.dgColumn' : function(element){
 			element.onclick = function(){
-				id = this.id.replace("dgColumn","");
+				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
+				id = this.id.replace("dgColumn"+dataGrid.uniqueId,"");
 				dataGrid.addNewSortOrder(id);
 				dataGrid.loadData();
 			}
@@ -627,18 +644,19 @@ function classDataGrid() {
 		// checkbox in the dataGrid-Header, for (de-)selecting all
 		'#dgSelector' : function(element){
 			element.onclick = function(){
-				checkbox = Form.getInputs("dgForm","checkbox");
+				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
+				checkbox = Form.getInputs("dgForm"+dataGrid.uniqueId,"checkbox");
 				if($F(this)=="on") {
 					//select all checkboxes		
 					for (i=0; i<checkbox.length; i++) {
-						if(checkbox[i].id!="dgSelector") {
+						if(checkbox[i].id!="dgSelector"+dataGrid.uniqueId) {
 							dataGrid.selectRow(checkbox[i].parentNode.parentNode);
 						}
 					}
 				} else {
 					//deselect all checkboxes	
 					for (i=0; i<checkbox.length; i++) {
-						if(checkbox[i].id!="dgSelector") {
+						if(checkbox[i].id!="dgSelector"+dataGrid.uniqueId) {
 							dataGrid.deselectRow(checkbox[i].parentNode.parentNode);
 						}
 					}
@@ -650,10 +668,10 @@ function classDataGrid() {
 }
 
 
-	function URLDecode(strEncodeString) {
-		// Create a regular expression to search all +s in the string
-		var lsRegExp = /\+/g;
-		// Return the decoded string	  
-		return unescape(strEncodeString.replace(lsRegExp, " "));
-	}
+function URLDecode(strEncodeString) {
+	// Create a regular expression to search all +s in the string
+	var lsRegExp = /\+/g;
+	// Return the decoded string	  
+	return unescape(strEncodeString.replace(lsRegExp, " "));
+}
 

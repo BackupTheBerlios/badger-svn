@@ -20,8 +20,7 @@ $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
-$dataGrid = new DataGrid($tpl);
-$dataGrid->UniqueId = "CategoryManager";
+$dataGrid = new DataGrid($tpl, "CategoryManager");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CategoryManager";
 $dataGrid->headerName = array(getBadgerTranslation2('accountCategory', 'colparentTitle'),getBadgerTranslation2('accountCategory', 'colTitle'),getBadgerTranslation2('accountCategory', 'colDescription'),getBadgerTranslation2('accountCategory', 'colOutsideCapital'));
 $dataGrid->columnOrder = array("parentTitle","title","description","outsideCapital");

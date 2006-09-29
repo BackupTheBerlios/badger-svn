@@ -14,12 +14,12 @@
 }
 
 
-#dataGrid {
+div.dataGrid {
 	border: 1px solid #ececec;
 	width: 99.9%;
 	background-color: #ffffff;
 }
-#dgTableHead {
+table.dgTableHead {
 	table-layout: fixed;
 	background-color: #000000;
 	color: #ffffff;
@@ -27,7 +27,7 @@
 	width: 100%;
 	cursor: pointer;
 }
-#dgTableHead td {
+table.dgTableHead td {
 	overflow: hidden;
     padding: 2px 0px 2px 3px;
     margin: 0px;
@@ -37,7 +37,7 @@
     border-bottom: 1px solid #ECE9D8;
 }
 
-#dgDivScroll {
+div.dgDivScroll {
 	width: 100%;
 	overflow: auto;
 }
@@ -48,22 +48,22 @@ div.dgDivScrollLoading {
 	background-repeat: no-repeat;
 }
 
-#dgTableFoot {
+table.dgTableFoot {
 	width: 100%;
 	background-color: #ECE9D8;
 }
-#dgTableHead td {
+table.dgTableHead td {
 	overflow: hidden;
     margin: 0px;
     border-right: 1px solid #ECE9D8;
     border-bottom: 1px solid #ECE9D8;
 }
 
-#dgTableData {
+table.dgTableData {
 	table-layout: fixed;
 	width: 99.8%;
 }
-#dgTableData td {
+table.dgTableData td {
 	overflow: hidden;
     padding: 2px 0px 2px 4px;
     margin: 0px;

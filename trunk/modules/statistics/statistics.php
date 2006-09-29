@@ -59,8 +59,7 @@ function showSelectPage() {
 	
 	$tpl->addHeaderTag('<script type="text/javascript">var badgerHelpChapter = "Statistiken";</script>');
 		
-	$dataGrid = new DataGrid($tpl);
-	$dataGrid->UniqueId = "AccountManagerStatistic";
+	$dataGrid = new DataGrid($tpl, "AccountManagerStatistic");
 	$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
 	$dataGrid->headerName = array(
 		getBadgerTranslation2('statistics','accColTitle'), 

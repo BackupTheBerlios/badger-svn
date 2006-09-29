@@ -20,8 +20,7 @@ $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 
-$dataGrid = new DataGrid($tpl);
-$dataGrid->UniqueId = "CurrencyManager";
+$dataGrid = new DataGrid($tpl, "CurrencyManager");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";
 $dataGrid->headerName = array(getBadgerTranslation2('accountCurrency', 'colSymbol'),getBadgerTranslation2('accountCurrency', 'colLongName'));
 $dataGrid->columnOrder = array("symbol","longName");

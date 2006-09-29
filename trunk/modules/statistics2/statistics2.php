@@ -36,8 +36,7 @@ $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 $tpl->addJavaScript("js/statistics2.js");
 
-$dataGrid = new DataGrid($tpl);
-$dataGrid->UniqueId = "Statistics2Test";
+$dataGrid = new DataGrid($tpl, "Statistics2Test");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1,6";
 $dataGrid->headerName = array(
 	'Account',

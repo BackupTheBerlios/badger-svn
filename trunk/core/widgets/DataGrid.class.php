@@ -118,8 +118,11 @@ class DataGrid {
 	 * function function __construct($tpl)
 	 * @param object template engine
 	 */
-	public function __construct($tpl) {
+	public function __construct($tpl, $uniqueId) {
 		$this->tpl = $tpl;
+		$this->UniqueId = $uniqueId;
+		
+		// default values
 		$this->LoadingMessage = getBadgerTranslation2('dataGrid', 'LoadingMessage');
 		$this->deleteMsg = getBadgerTranslation2('dataGrid', 'deleteMsg');
 		$this->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
@@ -137,30 +140,30 @@ class DataGrid {
 		if($this->width) $this->width = ' style="width:'.$this->width.';" '; 
 		if($this->height) $this->height = ' style="height:'.$this->height.';" '; 
 		
-		$output = '<form id="dgForm"><div id="dataGrid" '.$this->width.'>
-					<table id="dgTableHead" cellpadding="2" cellspacing="0">
+		$output = '<form id="dgForm'.$this->UniqueId.'"><div id="dataGrid'.$this->UniqueId.'" '.$this->width.' class="dataGrid">
+					<table id="dgTableHead'.$this->UniqueId.'" cellpadding="2" class="dgTableHead" cellspacing="0">
 						<tr>
-							<td style="width: 25px"><input id="dgSelector" type="checkbox" /></td>';
+							<td style="width: 25px"><input id="dgSelector'.$this->UniqueId.'" type="checkbox" /></td>';
 			for ($i=0; $i < count($this->headerName); $i++) {
-				$output .= '<td class="dgColumn" id="dgColumn'.$this->columnOrder[$i].'" style="width: '.$this->headerSize[$i].'px">'.
+				$output .= '<td class="dgColumn" id="dgColumn'.$this->UniqueId.$this->columnOrder[$i].'" style="width: '.$this->headerSize[$i].'px">'.
 							$this->headerName[$i].'&nbsp;'.
-						   '<img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/dropEmpty.gif" id="dgImg'.$this->columnOrder[$i].'" /></td>';
+						   '<img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/dropEmpty.gif" id="dgImg'.$this->UniqueId.$this->columnOrder[$i].'" /></td>';
 			}
 		$output .= '		<td>&nbsp;</td>
 						</tr>
 					</table>';
 					
-		$output .= '<div id="dgDivScroll" '.$this->height.'>
-					<table id="dgTableData" cellpadding="2" cellspacing="0">
+		$output .= '<div id="dgDivScroll'.$this->UniqueId.'" class="dgDivScroll" '.$this->height.'>
+					<table id="dgTableData'.$this->UniqueId.'" class="dgTableData" cellpadding="2" cellspacing="0">
 						<tbody></tbody>
 					</table>
 					</div>
 							
-					<table id="dgTableFoot" cellpadding="2" cellspacing="0">						
+					<table id="dgTableFoot'.$this->UniqueId.'" class="dgTableFoot" cellpadding="2" cellspacing="0">						
 						<tr>
-							<td style="width: 110px"><span id="dgCount">0</span> '.$this->rowCounterName.'&nbsp;</td>
-							<td style="width: 23px"><span id="dgFilterStatus"><img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/filter.gif"></span></td>
-							<td><span id="dgMessage"></span></td>
+							<td style="width: 110px"><span id="dgCount'.$this->UniqueId.'">0</span> '.$this->rowCounterName.'&nbsp;</td>
+							<td style="width: 23px"><span id="dgFilterStatus'.$this->UniqueId.'"><img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/filter.gif"></span></td>
+							<td><span id="dgMessage'.$this->UniqueId.'" class="dgMessage"></span></td>
 						</tr>
 					</table>
 					</div></form>';
@@ -176,37 +179,37 @@ class DataGrid {
 		
 		$us = new UserSettings($badgerDb);
 		
-		$this->tpl->addJavaScript("js/dataGrid.js");
+		$this->tpl->addJavaScript('js/dataGrid.js');
 		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
 		
-		$this->tpl->addOnLoadEvent('dataGrid = new classDataGrid();');
-		$this->tpl->addOnLoadEvent('dataGrid.uniqueId = "'. $this->UniqueId .'";');
-		$this->tpl->addOnLoadEvent('dataGrid.sourceXML = "'.$this->sourceXML.'";');
-
-		$this->tpl->addOnLoadEvent('dataGrid.headerName = new Array("'.implode('","',$this->headerName).'");');
-		$this->tpl->addOnLoadEvent('dataGrid.columnOrder = new Array("'.implode('","',$this->columnOrder).'");');
-		$this->tpl->addOnLoadEvent('dataGrid.headerSize = new Array('.implode(',',$this->headerSize).');');
-		$this->tpl->addOnLoadEvent('dataGrid.cellAlign = new Array("'.implode('","',$this->cellAlign).'");');
-		$this->tpl->addOnLoadEvent('dataGrid.noRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
-		$this->tpl->addOnLoadEvent('dataGrid.deleteMsg = "'. $this->deleteMsg .'";');
-		$this->tpl->addOnLoadEvent('dataGrid.deleteRefreshType = "'. $this->deleteRefreshType .'";');
-		$this->tpl->addOnLoadEvent('dataGrid.deleteAction = "'. $this->deleteAction .'";');
-		$this->tpl->addOnLoadEvent('dataGrid.editAction = "'. $this->editAction .'";');
-		$this->tpl->addOnLoadEvent('dataGrid.newAction = "'. $this->newAction .'";');
-
-		$this->tpl->addOnLoadEvent('dataGrid.tplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
-		$this->tpl->addOnLoadEvent('dataGrid.loadingMessage = "'.$this->LoadingMessage.'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.' = new classDataGrid();');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.uniqueId = "'. $this->UniqueId .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.sourceXML = "'.$this->sourceXML.'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.headerName = new Array("'.implode('","',$this->headerName).'");');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.columnOrder = new Array("'.implode('","',$this->columnOrder).'");');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.headerSize = new Array('.implode(',',$this->headerSize).');');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.cellAlign = new Array("'.implode('","',$this->cellAlign).'");');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.noRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.deleteMsg = "'. $this->deleteMsg .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.deleteRefreshType = "'. $this->deleteRefreshType .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.deleteAction = "'. $this->deleteAction .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.editAction = "'. $this->editAction .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.newAction = "'. $this->newAction .'";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.tplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.loadingMessage = "'.$this->LoadingMessage.'";');
+		$this->tpl->addOnLoadEvent('$("dataGrid'.$this->UniqueId.'").obj = dataGrid'.$this->UniqueId.';');
+		//$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.htmlDiv = $("dataGrid'.$this->UniqueId.'");');
 
 		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
 		if ( isset($dgParameter) ) {		
-				$this->tpl->addOnLoadEvent("dataGrid.init('".$dgParameter."');");
+				$this->tpl->addOnLoadEvent("dataGrid".$this->UniqueId.".init('".$dgParameter."');");
 		}else {
-			$this->tpl->addOnLoadEvent("dataGrid.init();");
+			$this->tpl->addOnLoadEvent("dataGrid".$this->UniqueId.".init();");
 		}	
 		
-		$this->tpl->addOnLoadEvent('Behaviour.register(dataGrid.behaviour);');
+		$this->tpl->addOnLoadEvent('Behaviour.register(dataGrid'.$this->UniqueId.'.behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
-		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid"), \'keypress\', dataGrid.KeyEvents, false);');
+		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid'.$this->UniqueId.'"), \'keypress\', dataGrid'.$this->UniqueId.'.KeyEvents, false);');
 		
 	}
 	

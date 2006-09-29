@@ -1,8 +1,8 @@
-#dataGrid {
+div.dataGrid {
 	border: 1px solid #ececec;
 	background-color: #ffffff;
 }
-#dgTableHead {
+table.dgTableHead {
 	table-layout: fixed;
 	background-color: #000000;
 	color: #ffffff;
@@ -10,7 +10,7 @@
 	width: 100%;
 	cursor: pointer;
 }
-#dgTableHead td {
+table.dgTableHead td {
 	overflow: hidden;
     padding: 2px 0px 2px 3px;
     margin: 0px;
@@ -19,17 +19,17 @@
     border-right: 1px solid #ECE9D8;
     border-bottom: 1px solid #ECE9D8;
 }
-#dgDivScroll {
+div.dgDivScroll {
 	width: 100%;
 }
-#dgTableFoot {
+table.dgTableFoot {
 	display: none;
 }
-#dgTableData {
+table.dgTableData {
 	table-layout: fixed;
 	width: 99.8%;
 }
-#dgTableData td {
+table.dgTableData td {
 	overflow: hidden;
     padding: 2px 0px 2px 3px;
     margin: 0px;
