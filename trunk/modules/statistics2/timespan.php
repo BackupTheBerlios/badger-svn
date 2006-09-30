@@ -78,14 +78,14 @@ foreach($accountIds as $currentAccountId) {
 		switch ($type) {
 			case 'w':
 				$dateKey = $date->getYear() . '-' . sprintf('%02d', $date->getWeekOfYear());
-				$beginDate = Date_Calc::beginOfWeek($date->getDay(), $date->getMonth(), $date->getYear(), '%Y-%m-%d');
-				$endDate = Date_Calc::endOfWeek($date->getDay(), $date->getMonth(), $date->getYear(), '%Y-%m-%d');
+				$beginDate = new Date(Date_Calc::beginOfWeek($date->getDay(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+				$endDate = new Date(Date_Calc::endOfWeek($date->getDay(), $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
 				break;
 			
 			case 'm':
 				$dateKey = $date->getYear() . '-' . sprintf('%02d', $date->getMonth());
-				$beginDate = Date_Calc::beginOfMonth($date->getMonth(), $date->getYear(), '%Y-%m-%d');
-				$endDate = Date_Calc::endOfMonthBySpan(0, $date->getMonth(), $date->getYear(), '%Y-%m-%d');
+				$beginDate = new Date(Date_Calc::beginOfMonth($date->getMonth(), $date->getYear(), '%Y-%m-%d'));
+				$endDate = new Date(Date_Calc::endOfMonthBySpan(0, $date->getMonth(), $date->getYear(), '%Y-%m-%d'));
 				break;
 			
 			case 'q':
