@@ -16,8 +16,8 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 
 class MultipleAccounts extends DataGridHandler {
 	private $fieldNames	= array (
-		'finishedTransactionId',
-		'accountTitle',
+		'transactionId',
+		'type',
 		'title',
 		'description',
 		'valutaDate',
@@ -29,8 +29,12 @@ class MultipleAccounts extends DataGridHandler {
 		'parentCategoryId',
 		'parentCategoryTitle',
 		'concatCategoryTitle',
+		'sum',
+		'balance',
+		'plannedTransactionId',
 		'exceptional',
-		'periodical'
+		'periodical',
+		'accountTitle'
 	);
 	
 	private $accountManager = null;
@@ -38,6 +42,10 @@ class MultipleAccounts extends DataGridHandler {
 	private $accounts = array();
 	
 	private $transactions = array();
+	
+	private $dataFetched = false;
+	
+	private $currentTransaction = null;
 	
 	function __construct(&$badgerDb, $params = null) {
 		$this->badgerDb = $badgerDb;
@@ -54,6 +62,8 @@ class MultipleAccounts extends DataGridHandler {
 			$account->setType('finished');
 			$this->accounts[] = $account;
 		}
+		
+		$this->dataFetched = false;
     }
 
 	/**
@@ -76,8 +86,8 @@ class MultipleAccounts extends DataGridHandler {
 	 */
 	public function getFieldType($fieldName) {
 		$fieldTypes = array (
-			'finishedTransactionId' => 'integer',
-			'accountTitle' => 'string',
+			'transactionId' => 'integer',
+			'type' => 'string',
 			'title' => 'string',
 			'description' => 'string',
 			'valutaDate' => 'date',
@@ -90,7 +100,11 @@ class MultipleAccounts extends DataGridHandler {
 			'parentCategoryTitle' => 'string',
 			'concatCategoryTitle' => 'string',
 			'exceptional' => 'boolean',
-			'periodical' => 'boolean'
+			'periodical' => 'boolean',
+			'sum' => 'amount',
+			'balance' => 'amount',
+			'plannedTransactionId' => 'integer',
+			'accountTitle' => 'string'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -101,7 +115,7 @@ class MultipleAccounts extends DataGridHandler {
 	}
 
 	public function getIdFieldName() {
-		return 'finishedTransactionId';
+		return 'transactionId';
 	}
 	
 	public function getAllFieldNames() {
@@ -117,21 +131,25 @@ class MultipleAccounts extends DataGridHandler {
 	 */
 	public function getFieldSQLName($fieldName) {
 		$fieldSQLNames = array (
-			'finishedTransactionId' => 'ft.transaction_id',
-			'accountTitle' => 'NULL',
-			'title' => 'ft.title',
-			'description' => 'ft.description',
-			'valutaDate' => 'ft.valuta_date',
-			'amount' => 'ft.amount',
-			'outsideCapital' => 'ft.outside_capital',
-			'transactionPartner' => 'ft.transaction_parter',
-			'categoryId' => 'ft.category_id',
-			'categoryTitle' => 'c.title',
-			'parentCategoryId' => 'pc.category_id',
-			'parentCategoryTitle' => 'pc.title',
-			'concatCategoryTitle' => 'CONCAT(IF(NOT pc.title IS NULL, CONCAT(pc.title, \' - \'), \'\'), c.title)',
-			'exceptional' => 'ft.exceptional',
-			'periodical' => 'ft.periodical'
+			'transactionId' => 'ft2.transaction_id',
+			'type' => 'ft2.__TYPE__',
+			'title' => 'ft2.title',
+			'description' => 'ft2.description',
+			'valutaDate' => 'ft2.valuta_date',
+			'amount' => 'ft2.amount',
+			'outsideCapital' => 'ft2.outside_capital',
+			'transactionPartner' => 'ft2.transaction_parter',
+			'categoryId' => 'ft2.category_id',
+			'categoryTitle' => 'ft2.category_title',
+			'parentCategoryId' => 'ft2.parent_category_id',
+			'parentCategoryTitle' => 'ft2.parent_category_title',
+			'concatCategoryTitle' => 'CONCAT(IF(NOT ft2.parent_category_title IS NULL, CONCAT(ft2.parent_category_title, \' - \'), \'\'), IF(ft2.category_title IS NULL, \'\', ft2.category_title))'					,
+			'sum' => 'ft2.__SUM__',
+			'balance' => 'ft2.balance',
+			'plannedTransactionId' => 'ft2.planned_transaction_id',
+			'exceptional' => 'ft2.exceptional',
+			'periodical' => 'ft2.periodical',
+			'accountTitle' => 'ERROR'
 		);
 
 		if (!isset ($fieldSQLNames[$fieldName])){
@@ -142,6 +160,22 @@ class MultipleAccounts extends DataGridHandler {
 	}
 
 	public function getAll() {
+		$this->fetchTransactions();
+
+		return getAllTransactions($this->transactions, $this->selectedFields, $this->order, null, null);
+	}
+	
+	public function getNextTransaction() {
+		$this->fetchTransactions();
+		
+		return nextByKey($this->transactions, $this->currentTransaction);
+	}
+
+	private function fetchTransactions() {
+		if ($this->dataFetched) {
+			return;
+		}
+
 		foreach($this->accounts as $currentAccount) {
 			$newOrder = array();
 			foreach ($this->order as $currentOrder) {
@@ -159,7 +193,7 @@ class MultipleAccounts extends DataGridHandler {
 			}
 			$currentAccount->setFilter($newFilter);
 			
-			while($currentTransaction = $currentAccount->getNextFinishedTransaction()) {
+			while($currentTransaction = $currentAccount->getNextTransaction()) {
 				$this->transactions[] = $currentTransaction;
 			}
 		}
@@ -167,8 +201,6 @@ class MultipleAccounts extends DataGridHandler {
 		$compare = new CompareTransaction($this->order);
 		
 		uasort($this->transactions, array($compare, 'compare'));
-		
-		return getAllFinishedTransactions($this->transactions, $this->selectedFields);
 	}
 }
 ?>

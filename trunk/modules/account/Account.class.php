@@ -480,7 +480,7 @@ class Account extends DataGridHandler {
 				'transactionPartner' => 'ft2.transaction_parter',
 				'categoryId' => 'ft2.category_id',
 				'categoryTitle' => 'ft2.category_title',
-				'parentCategoryId' => 'ft2.category_id',
+				'parentCategoryId' => 'ft2.parent_category_id',
 				'parentCategoryTitle' => 'ft2.parent_category_title',
 				'concatCategoryTitle' => 'CONCAT(IF(NOT ft2.parent_category_title IS NULL, CONCAT(ft2.parent_category_title, \' - \'), \'\'), IF(ft2.category_title IS NULL, \'\', ft2.category_title))'					,
 				'exceptional' => 'ft2.exceptional',
@@ -538,52 +538,27 @@ class Account extends DataGridHandler {
 	}
 
 	private function getAllTransaction() {
-		$result = array();
-		$currResultIndex = 0;
-
 		$this->fetchTransactions();
 
-		$sum = new Amount();
+		return getAllTransactions($this->finishedTransactions, $this->selectedFields, $this->order, $this->upperLimit, $this->lowerLimit);
+	}
+	
+	private function getAllFinished() {
+		while ($this->fetchNextFinishedTransaction());
 		
-		$now = new Date();
-		$now->setHour(0);
-		$now->setMinute(0);
-		$now->setSecond(0);
-		
-		if (isset($this->order[0]) && $this->order[0]['key'] == 'valutaDate') {
-			$firstOrderValutaDate = true;
-			$orderCompareNumber = ($this->order[0]['dir'] == 'asc' ? -1 : 1);
-		} else {
-			$firstOrderValutaDate = false;
-		}
-		$todayMarkerSet = false;
-		
+		$result = array();
+		$currResultIndex = 0;
+	
 		foreach($this->finishedTransactions as $currentTransaction){
-			$sum->add($currentTransaction->getAmount());
-			
 			$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-			if ($sum->compare(0) >= 0) {
-				if ($sum->compare($this->upperLimit) <= 0) {
-					$classSum = 'dgPositiveAmount'; 
-				} else {
-					$classSum = 'dgOverMaxAmount';
-				}
-			} else {
-				if ($sum->compare($this->lowerLimit) >= 0) {
-					$classSum = 'dgNegativeAmount';
-				} else {
-					$classSum = 'dgUnderMinAmount';
-				}
-			}
-			$classBalance = ($currentTransaction->getBalance()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
-
+	
 			$category = $currentTransaction->getCategory();
 			if (!is_null($category)) {
 				$parentCategory = $category->getParent();
 			} else {
 				$parentCategory = null;
 			}
-			
+	
 			if ($parentCategory) {
 				$concatCategoryTitle = $parentCategory->getTitle() . ' - ';
 			} else {
@@ -592,71 +567,14 @@ class Account extends DataGridHandler {
 			if ($category) {
 				$concatCategoryTitle .= $category->getTitle();
 			}
-
-			if (
-				$currentTransaction->getType() == 'FinishedTransaction'
-				|| $currentTransaction->getType() == 'FinishedTransferalTransaction'
-			) {
-				$id = $currentTransaction->getId();
-			} else {
-				$id = 'p' . $currentTransaction->getPlannedTransaction()->getId() . '_' . $currentTransaction->getId();
-			}
-			
-			switch ($currentTransaction->getType()) {
-				case 'FinishedTransaction':
-					$typeImg = 'Account/finished_transaction.png';
-					$typeText = getBadgerTranslation2('Account', 'FinishedTransaction');
-					break;
-				
-				case 'FinishedTransferalTransaction':
-					if ($currentTransaction->getTransferalSource()) {
-						$typeImg = 'Account/finished_transferal_source_transaction.png';
-						$typeText = getBadgerTranslation2('Account', 'FinishedTransferalSourceTransaction');
-					} else {
-						$typeImg = 'Account/finished_transferal_target_transaction.png';
-						$typeText = getBadgerTranslation2('Account', 'FinishedTransferalTargetTransaction');
-					}
-					break;
-				
-				case 'PlannedTransaction':
-					$typeImg = 'Account/planned_transaction.png';
-					$typeText = getBadgerTranslation2('Account', 'PlannedTransaction');
-					break;
-
-				case 'PlannedTransferalTransaction':
-					if ($currentTransaction->getTransferalSource()) {
-						$typeImg = 'Account/planned_transferal_source_transaction.png';
-						$typeText = getBadgerTranslation2('Account', 'PlannedTransferalSourceTransaction');
-					} else {
-						$typeImg = 'Account/planned_transferal_target_transaction.png';
-						$typeText = getBadgerTranslation2('Account', 'PlannedTransferalTargetTransaction');
-					}
-					break;
-			}
-		
+	
 			$result[$currResultIndex] = array();
-			if (
-				$firstOrderValutaDate
-				&& $todayMarkerSet === false
-				&& !is_null($currentTransaction->getValutaDate())
-				&& Date::compare($now, $currentTransaction->getValutaDate()) == $orderCompareNumber
-			) {
-				$result[$currResultIndex]['transactionId'] = array (
-					'marker' => 'today',
-					'content' => $id 
-				);
-				$todayMarkerSet = true;
-			} else {
-				$result[$currResultIndex]['transactionId'] = $id; 
-			}
-
+			$result[$currResultIndex]['finishedTransactionId'] = $currentTransaction->getId(); 
+	
 			foreach ($this->selectedFields as $selectedField) {
 				switch ($selectedField) {
-					case 'type':
-						$result[$currResultIndex]['type'] = array (
-							'img' => getRelativeTplPath($typeImg),
-							'title' => $typeText
-						);
+					case 'accountTitle':
+						$result[$currResultIndex]['accountTitle'] = $currentTransaction->getAccount()->getTitle();
 						break;
 					
 					case 'title':
@@ -666,18 +584,18 @@ class Account extends DataGridHandler {
 					case 'description':
 						$result[$currResultIndex]['description'] = $currentTransaction->getDescription();
 						break;
-					
+				
 					case 'valutaDate':
 						$result[$currResultIndex]['valutaDate'] = ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '';
 						break;
-					
+						
 					case 'amount':
 						$result[$currResultIndex]['amount'] = array (
 							'class' => $classAmount,
 							'content' => $currentTransaction->getAmount()->getFormatted()
 						);
 						break;
-						
+					
 					case 'outsideCapital':
 						$result[$currResultIndex]['outsideCapital'] = is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp;
 						break;
@@ -685,7 +603,7 @@ class Account extends DataGridHandler {
 					case 'transactionPartner':
 						$result[$currResultIndex]['transactionPartner'] = $currentTransaction->getTransactionPartner();
 						break;
-					
+						
 					case 'categoryId':
 						$result[$currResultIndex]['categoryId'] = ($category) ? $category->getId() : '';
 						break;
@@ -697,7 +615,7 @@ class Account extends DataGridHandler {
 					case 'parentCategoryId':
 						$result[$currResultIndex]['parentCategoryId'] = ($parentCategory) ? $parentCategory->getId() : '';
 						break;
-						
+					
 					case 'parentCategoryTitle':
 						$result[$currResultIndex]['parentCategoryTitle'] = ($parentCategory) ? $parentCategory->getTitle() : '';
 						break;
@@ -706,24 +624,6 @@ class Account extends DataGridHandler {
 						$result[$currResultIndex]['concatCategoryTitle'] = $concatCategoryTitle;
 						break;
 					
-					case 'sum':
-						$result[$currResultIndex]['sum'] = array (
-							'class' => $classSum,
-							'content' => $sum->getFormatted()
-						);
-						break;
-
-					case 'balance':
-						$result[$currResultIndex]['balance'] = array (
-							'class' => $classBalance,
-							'content' => $currentTransaction->getBalance()->getFormatted()
-						);
-						break;
-					
-					case 'plannedTransactionId':
-						$result[$currResultIndex]['plannedTransactionId'] = (is_null($tmp = $currentTransaction->getPlannedTransaction()) ? '' : $tmp->getId());
-						break; 
-
 					case 'exceptional':
 						$result[$currResultIndex]['exceptional'] = is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp;
 						break;
@@ -736,14 +636,8 @@ class Account extends DataGridHandler {
 			
 			$currResultIndex++;
 		} //foreach finishedTransactions
-
-		return $result;		
-	}
-	
-	private function getAllFinished() {
-		while ($this->fetchNextFinishedTransaction());
 		
-		return getAllFinishedTransactions($this->finishedTransactions, $this->selectedFields);
+		return $result;
 	}
 
 	private function getAllPlanned() {
@@ -1901,7 +1795,8 @@ class Account extends DataGridHandler {
 		";
 		
 		$where = $this->getFilterSQL();
-		$where = preg_replace('/ft2.category_id = ([0-9]+)/', '(ft2.category_id = \1 OR ft2.parent_category_id = \1)', $where);
+		$where = preg_replace('/ft2\.parent_category_id = ([0-9]+)/', '(ft2.category_id = \1 OR ft2.parent_category_id = \1)', $where);
+		$where = preg_replace('/ft2\.parent_category_id != ([0-9]+)/', '((ft2.category_id IS NULL OR ft2.category_id != \1) AND (ft2.parent_category_id IS NULL OR ft2.parent_category_id != \1))', $where);
 		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
 		$where = preg_replace('/ft2\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = trim(preg_replace('/ft2\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where));
@@ -1956,7 +1851,8 @@ class Account extends DataGridHandler {
 //				AND pt.end_date > NOW()\n"; 	
 
 		$where = $this->getFilterSQL();
-		$where = preg_replace('/pt.category_id = ([0-9]+)/', '(pt.category_id = \1 OR pt.parent_category_id = \1)', $where);
+		$where = preg_replace('/pt\.parent_category_id = ([0-9]+)/', '(pt.category_id = \1 OR pt.parent_category_id = \1)', $where);
+		$where = preg_replace('/pt\.parent_category_id != ([0-9]+)/', '((pt.category_id IS NULL OR pt.category_id != \1) AND (pt.parent_category_id IS NULL OR pt.parent_category_id != \1))', $where);
 		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
 		$where = preg_replace('/pt\.__TYPE__[^\\n]+?(\$|\\n)/', "1=1\n", $where);
 		$where = preg_replace('/pt\.__SUM__[^\\n]+?(\$|\\n)/', "1=1\n", $where);

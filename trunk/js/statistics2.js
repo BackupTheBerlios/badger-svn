@@ -1,6 +1,9 @@
 var currentFilterId = 0;
+var currentFilterX;
+var baseFilterX;
+var graphAjax;
 
-function addFilterX() {
+function addFilterLineX() {
 	var filterLine = $("filterLineEmpty").innerHTML;
 	filterLine = filterLine.replace(/__FILTER_ID__/g, currentFilterId);
 	var newDiv = document.createElement("div");
@@ -25,7 +28,7 @@ function setFilterContent(id) {
 }
 
 function applyFilterX() {
-	dgDeleteAllFilter();
+	emptyFilterX();
 	
 	for (var currentId = 0; currentId < currentFilterId; currentId++) {
 		if ($("filterSelect" + currentId)) {
@@ -37,14 +40,14 @@ function applyFilterX() {
 				case "amount":
 				case "transactionPartner":
 					if ($F(currentFilterType + currentId) != "") {
-						dgAddFilter(currentFilterType, $F(currentFilterType + "Operator" + currentId), $F(currentFilterType + currentId));
+						addFilterX(currentFilterType, $F(currentFilterType + "Operator" + currentId), $F(currentFilterType + currentId));
 					}
 					break;
 				
 				case "valutaDateBetween":
 					if ($F("valutaDateStart" + currentId) != "" && $F("valutaDateEnd" + currentId) != "") {
-						dgAddFilter("valutaDate", "ge", $F("valutaDateStart" + currentId));
-						dgAddFilter("valutaDate", "le", $F("valutaDateEnd" + currentId));
+						addFilterX("valutaDate", "ge", $F("valutaDateStart" + currentId));
+						addFilterX("valutaDate", "le", $F("valutaDateEnd" + currentId));
 					}
 					break;
 				
@@ -61,13 +64,32 @@ function applyFilterX() {
 						agoString = agoString.replace(/mm/, month);
 						agoString = agoString.replace(/yyyy/, year);
 						agoString = agoString.replace(/yy/, year.substr(2, 2));
-						dgAddFilter("valutaDate", "ge", agoString);
+						addFilterX("valutaDate", "ge", agoString);
 					}
 					break;
 				
 				case "category":
-					if (parseInt($F("categoryId" + currentId)) > 0) {
-						dgAddFilter("categoryId", "eq", parseInt($F("categoryId" + currentId)));
+					if ($F("categoryOp" + currentId) || $F("categoryOp" + currentId + "_0")) {
+						var operator;
+						
+						if ($F("categoryOp" + currentId)) {
+							operator = "eq";
+						} else {
+							operator = "ne";
+						}
+						
+						if (parseInt($F("categoryId" + currentId)) != 0) {
+							var field;
+							var id;
+							if ($F("categoryId" + currentId).substr(0, 1) == '-') {
+								field = "parentCategoryId";
+								id = parseInt($F("categoryId" + currentId)) * -1;
+							} else {
+								field = "categoryId";
+								id = parseInt($F("categoryId" + currentId));
+							}
+							addFilterX(field, operator, id);
+						}
 					}
 					break;
 				
@@ -87,14 +109,215 @@ function applyFilterX() {
 					}
 
 					if (val !== null) {
-						dgAddFilter(currentFilterType, "eq", val);
+						addFilterX(currentFilterType, "eq", val);
 					}
 					break;
 			} //switch
 		} //if filterSelect
 	} //for currentId
 	
-	loadData();
-	saveDataGridParameter();
+	showGraph();
+	saveBaseFilter();
+	setDGResultAccounts(getSelectedAccountIds());
+	updateDGResult();
 }
-				
+
+function emptyFilterX() {
+	currentFilterX = new Array();
+}
+
+function addFilterX(field, operator, value) {
+	currentFilterX.push({
+		"field" : field,
+		"operator" : operator,
+		"value" : value
+	});
+}
+
+function saveBaseFilter() {
+	baseFilterX = currentFilterX.concat();
+}
+
+function resetBaseFilter() {
+	currentFilterX = baseFilterX.concat();
+}
+
+function getSelectedAccountIds() {
+	var accountIdArr = dataGridStatistics2Accounts.getAllIds();
+	var accountIds = "";
+	for (i = 0; i < accountIdArr.length; i++) {
+		accountIds += accountIdArr[i] + ",";
+	}
+	accountIds = accountIds.substr(0, accountIds.length - 1);
+	
+	return accountIds;
+}
+
+function setDGResultAccounts(accountIds) {
+	dataGridStatistics2Result.sourceXML = "../../core/XML/getDataGridXML.php?q=MultipleAccounts&qp=" + accountIds;
+}
+
+function updateDGResult() {
+	dataGridStatistics2Result.deleteAllFilter();
+
+	for (var i = 0; i < currentFilterX.length; i++) {
+		dataGridStatistics2Result.addFilter(currentFilterX[i]["field"], currentFilterX[i]["operator"], currentFilterX[i]["value"]);
+	}
+	
+	dataGridStatistics2Result.loadData();
+}
+
+function serializeParameterX() {
+	var result = "";
+	
+	for (var i = 0; i < currentFilterX.length; i++) {
+		result += "&fk" + i + "=" + encodeURI(currentFilterX[i]["field"])
+			+ "&fo" + i + "=" + encodeURI(currentFilterX[i]["operator"])
+			+ "&fv" + i + "=" + encodeURI(currentFilterX[i]["value"]);
+	}
+	
+	result = result.substr(1);
+	
+	return result;
+}
+
+function showGraph() {
+	var type;
+	if ($F("outputSelectionType")) {
+		showTrendGraph();
+	} else if ($F("outputSelectionType_0")) {
+		showCategoryGraph();
+	} else {
+		showTimespanGraph();
+	}
+}
+
+function showTrendGraph() {
+	var start;
+	var ticks;
+	
+	if ($F("outputSelectionTrendStart")) {
+		start = "0";
+	} else {
+		start = "b";
+	}
+	
+	if ($F("outputSelectionTrendTicks")) {
+		ticks = "s";
+	} else {
+		ticks = "h";
+	}
+	
+	loadGraph("trend.php?accounts=" + getSelectedAccountIds() + "&start=" + start + "&ticks=" + ticks + "&" + serializeParameterX());
+}
+
+function showCategoryGraph() {
+	var type;
+	var summarize;
+
+	if ($F("outputSelectionCategoryType")) {
+		type = "i";
+	} else {
+		type = "o";
+	}
+	
+	if ($F("outputSelectionCategorySummarize")) {
+		summarize = "t";
+	} else {
+		summarize = "f";
+	}
+	
+	loadGraph("category.php?accounts=" + getSelectedAccountIds() + "&type=" + type + "&summarize=" + summarize + "&" + serializeParameterX());
+}
+
+function showTimespanGraph() {
+	var type;
+	var summarize;
+	
+	if ($F("outputSelectionTimespanType")) {
+		type = "w";
+	} else if ($F("outputSelectionTimespanType_0")) {
+		type = "m";
+	} else if ($F("outputSelectionTimespanType_1")) {
+		type = "q";
+	} else {
+		type = "y";
+	}
+	
+	if ($F("outputSelectionTimespanSummarize")) {
+		summarize = "t";
+	} else {
+		summarize = "f";
+	}
+	
+	loadGraph("timespan.php?accounts=" + getSelectedAccountIds() + "&type=" + type + "&summarize=" + summarize + "&" + serializeParameterX());
+}
+
+function loadGraph(url) {
+	if (graphAjax) {
+		//How to do that?
+		//graphAjax.stop();
+	}
+	
+	graphAjax = new Ajax.Request(
+		url,
+		{
+			onComplete: displayGraph
+		}
+	);
+}
+
+function displayGraph(request) {
+	var graphArea = $("graphContent");
+	
+	graphArea.innerHTML = request.responseText;
+}
+
+function updateOutputSelection() {
+	var sourceName;
+	if ($F("outputSelectionType")) {
+		sourceName = "outputSelectionTrend";
+	} else if ($F("outputSelectionType_0")) {
+		sourceName = "outputSelectionCategory";
+	} else {
+		sourceName = "outputSelectionTimespan";
+	}
+	var source = $(sourceName).innerHTML;
+	
+	var target = $("outputSelectionContent");
+	target.innerHTML = source.replace(/__ACTIVE_OS__/g, "");
+}
+
+function reachThroughTrend(date, accountIds) {
+	setDGResultAccounts(accountIds);
+	resetBaseFilter();
+	addFilterX("valutaDate", "eq", date);
+	updateDGResult();
+}
+
+function reachThroughCategory(categoryId) {
+	var field;
+
+	if ($F("outputSelectionCategorySummarize")) {
+		field = "parentCategoryId";
+	} else {
+		field = "categoryId";
+	}
+	resetBaseFilter();
+	addFilterX(field, "eq", categoryId);
+	updateDGResult();
+}
+
+function reachThroughTimespan(begin, end, categoryId) {
+	var field;
+	if ($F("outputSelectionTimespanSummarize")) {
+		field = "parentCategoryId";
+	} else {
+		field = "categoryId";
+	}
+	resetBaseFilter();
+	addFilterX(field, "eq", categoryId);
+	addFilterX("valutaDate", "ge", begin);
+	addFilterX("valutaDate", "le", end);
+	updateDGResult();
+}

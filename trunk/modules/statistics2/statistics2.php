@@ -36,20 +36,34 @@ $tpl->addJavaScript("js/behaviour.js");
 $tpl->addJavaScript("js/prototype.js");
 $tpl->addJavaScript("js/statistics2.js");
 
-$dataGrid = new DataGrid($tpl, "Statistics2Test");
-$dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1,6";
-$dataGrid->headerName = array(
+$dgAccounts = new DataGrid($tpl, 'Statistics2Accounts');
+$dgAccounts->sourceXML = BADGER_ROOT . '/core/XML/getDataGridXML.php?q=AccountManager';
+$dgAccounts->headerName = array(
+	getBadgerTranslation2('statistics','accColTitle'), 
+	getBadgerTranslation2('statistics','accColBalance'), 
+	getBadgerTranslation2('statistics','accColCurrency'));
+$dgAccounts->columnOrder = array('title', 'balance', 'currency');  
+$dgAccounts->headerSize = array(160, 100, 75);
+$dgAccounts->cellAlign = array('left', 'right', 'left');
+$dgAccounts->width = '30em';
+$dgAccounts->height = '7em';
+$dgAccounts->initDataGridJS();
+
+
+$dgResult = new DataGrid($tpl, 'Statistics2Result');
+$dgResult->sourceXML = BADGER_ROOT . '/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1';
+$dgResult->headerName = array(
 	'Account',
 	getBadgerTranslation2('accountOverview', 'colValutaDate'),
 	getBadgerTranslation2('accountOverview', 'colTitle'), 
 	getBadgerTranslation2('accountOverview', 'colAmount'),
 	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
-$dataGrid->columnOrder = array('accountTitle', "valutaDate","title","amount","concatCategoryTitle");  
-$dataGrid->height = "350px";
-$dataGrid->headerSize = array(200, 90,350,80,200);
-$dataGrid->cellAlign = array('left', "left","left","right","left");
-$dataGrid->deleteRefreshType = "refreshDataGrid";
-$dataGrid->initDataGridJS();
+$dgResult->columnOrder = array('accountTitle', 'valutaDate', 'title', 'amount', 'concatCategoryTitle');  
+$dgResult->height = "350px";
+$dgResult->headerSize = array(200, 90,350,80,200);
+$dgResult->cellAlign = array('left', 'left', 'left', 'right', 'left');
+$dgResult->deleteRefreshType = 'refreshDataGrid';
+$dgResult->initDataGridJS();
 
 $widgets->addNavigationHead();
 
@@ -112,8 +126,14 @@ $filters['transactionPartner'] =
 	. $widgets->createField("transactionPartner$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;
 $filters['category'] =
-	'Category is '
-	. $widgets->createSelectField("categoryId$FILTER_ID_MARKER", getCategorySelectArray(), "", "", false, "style='width: 210px;'")
+	'Category '
+	. $widgets->createField("categoryOp$FILTER_ID_MARKER", null, 'eq', '', false, 'radio')
+	. $widgets->createLabel("categoryOp$FILTER_ID_MARKER", 'is')
+	. '&nbsp;'
+	. $widgets->createField("categoryOp$FILTER_ID_MARKER", null, 'ne', '', false, 'radio')
+	. $widgets->createLabel("categoryOp$FILTER_ID_MARKER", 'is not')
+	. '&nbsp;'
+	. $widgets->createSelectField("categoryId$FILTER_ID_MARKER", getCategorySelectArray(true), "", "", false, "style='width: 210px;'")
 	;
 $filters['exceptional'] =
 	'Transaction is '
@@ -149,8 +169,6 @@ $availableFilters = array (
 	'delete' => '&lt;Delete Filter&gt;'
 );
 
-echo '<form id="mainform" name="mainform">';
-
 echo $widgets->createField('dateFormat', null, $us->getProperty('badgerDateFormat'), null, false, 'hidden');
 
 $content = "<div style=\"float: left;\">";
@@ -162,20 +180,125 @@ foreach ($filters as $currentName => $currentFilter) {
 	echo "<div id='{$currentName}Empty' style='display:none;'>$currentFilter</div>";
 }
 
-$filterBox = '<div><div>Filters';
-$filterBox .= $widgets->createButton('addFilter', 'Add Filter', 'addFilterX();');
-$filterBox .= '</div>';
-$filterBox .= '<div id="filterContent" style="overflow: auto; height: 10em; border: 1px solid blue;">';
-$filterBox .= '</div>';
-$filterBox .= '<div>';
-$filterBox .= $widgets->createButton('applyFilter', 'Apply Filter', 'applyFilterX();');
-$filterBox .= '</div>';
-$filterBox .= '</div>';
+$filterBox = '<div>'
+	. '<div style="position: absolute; left: 52em; margin-top: 1.2em;">'
+	. $dgAccounts->writeDataGrid()
+	. '</div>'
+	. '<div>Filters'
+	. $widgets->createButton('addFilter', 'Add Filter', 'addFilterLineX();')
+	. '</div>'
+	. '<div id="filterContent" style="overflow: auto; height: 10em; border: 1px solid blue; width: 50em;">'
+	. '</div>'
+	. '</div>';
 
 echo $widgets->addTwistieSection('Input', $filterBox, null, true);
-echo '</form>';
 
-echo $widgets->addTwistieSection('Output', $dataGrid->writeDataGrid(), null, false);
+$ACTIVE_OS_MARKER = '__ACTIVE_OS__';
 
+echo '<div id="outputSelections" style="display:none;">';
+$outputSelectionTrend = '<div id="outputSelectionTrend" style="display: inline; vertical-align: top;">'
+	. '<fieldset style="display: inline; vertical-align: top;">'
+	. '<legend>Start Value</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, '0', '', false, 'radio', 'checked="checked"')
+	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", '0 (zero)')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, 'b', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", 'Balance')
+	. '</p>'
+	. '</fieldset>'
+	. '<fieldset style="display: inline; vertical-align: top;">'
+	. '<legend>Tick labels</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionTrendTicks$ACTIVE_OS_MARKER", null, 's', '', false, 'radio', 'checked="checked"')
+	. $widgets->createLabel("outputSelectionTrendTicks$ACTIVE_OS_MARKER", 'show')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTrendTicks$ACTIVE_OS_MARKER", null, 'h', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTrendTicks$ACTIVE_OS_MARKER", 'hide')
+	. '</p>'
+	. '</fieldset>'
+	. '</div>';	
+echo $outputSelectionTrend; 
+
+$outputSelectionCategory = '<div id="outputSelectionCategory">'
+	. '<fieldset style="display: inline; vertical-align: top;">'
+	. '<legend>Category Type</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionCategoryType$ACTIVE_OS_MARKER", null, 'i', '', false, 'radio', 'checked="checked"')
+	. $widgets->createLabel("outputSelectionCategoryType$ACTIVE_OS_MARKER", 'Input')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionCategoryType$ACTIVE_OS_MARKER", null, 'o', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionCategoryType$ACTIVE_OS_MARKER", 'Output')
+	. '</p>'
+	. '</fieldset>'
+	. '<fieldset style="display: inline; vertical-align: top;">'
+	. '<legend>Sub-Categories</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", null, 't', '', false, 'radio', 'checked="checked"')
+	. $widgets->createLabel("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", 'Summarize sub-categories')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", null, 'f', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", 'Don not summarize')
+	. '</p>'
+	. '</fieldset>'
+	. '</div>';
+echo $outputSelectionCategory;
+
+$outputSelectionTimespan = '<div id="outputSelectionTimespan">'
+	. '<fieldset style="display: inline; vertical-align: top;">'
+	. '<legend>Type</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'w', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Week')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'm', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Month')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'q', '', false, 'radio', 'checked="checked"')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Quarter')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'y', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Year')
+	. '</p>'
+	. '</fieldset>'
+	. '<fieldset style="display: inline; vertical-align: top;">'
+	. '<legend>Sub-Categories</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", null, 't', '', false, 'radio', 'checked="checked"')
+	. $widgets->createLabel("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", 'Summarize sub-categories')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", null, 'f', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", 'Don not summarize')
+	. '</p>'
+	. '</fieldset>'
+	. '</div>';
+echo $outputSelectionTimespan;
+echo '</div>';
+
+$outputSelectionContent = '<fieldset style="width: 8em; display: inline; vertical-align: top;">'
+	. '<legend>Graph Type</legend>'
+	. '<p>'
+	. $widgets->createField("outputSelectionType", null, 'Trend', '', false, 'radio', 'checked="checked" onchange="updateOutputSelection();"')
+	. $widgets->createLabel("outputSelectionType", 'Trend')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionType", null, 'Category', '', false, 'radio', 'onchange="updateOutputSelection();"')
+	. $widgets->createLabel("outputSelectionType", 'Category')
+	. '</p><p>'
+	. $widgets->createField("outputSelectionType", null, 'Timespan', '', false, 'radio', 'onchange="updateOutputSelection();"')
+	. $widgets->createLabel("outputSelectionType", 'Timespan')
+	. '</p>'
+	. '</fieldset>'
+	. "<div id='outputSelectionContent' style='display: inline; vertical-align: top;'>"
+	. str_replace($ACTIVE_OS_MARKER, '', $outputSelectionTrend)
+	. '</div>';
+
+echo $widgets->addTwistieSection('Output Selection', $outputSelectionContent, null, true);	
+echo '<div>';
+echo $widgets->createButton('applyFilter', 'Analyse', 'applyFilterX();');
+echo '</div>';
+
+echo $widgets->addTwistieSection('Graph', '<div id="graphContent"></div>', null, true);
+
+echo $widgets->addTwistieSection('Output', $dgResult->writeDataGrid(), null, true);
 eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 ?>

@@ -26,7 +26,7 @@ require_once BADGER_ROOT . '/core/Date/Span.php';
  * @return array Array of Amount objects corresponding to the balance of $account at each day between
  * $startDate and $endDate. The array keys are the dates as ISO-String (yyyy-mm-dd). 
  */
-function getDailyAmount($account, $startDate, $endDate) {
+function getDailyAmount($account, $startDate, $endDate, $isoDates = true, $startWithBalance = false) {
 
 	$account->setTargetFutureCalcDate($endDate);
 	$account->setOrder(array (array ('key' => 'valutaDate', 'dir' => 'asc')));
@@ -43,17 +43,28 @@ function getDailyAmount($account, $startDate, $endDate) {
 
 	$currentDate = new Date($startDate);
 	$currentAmount = new Amount();
+	$firstRun = true;
 	
 	//foreach transaction
-	while ($currentTransaction = $account->getNextFinishedTransaction()) {
+	while ($currentTransaction = $account->getNextTransaction()) {
 		if ($currentDate->after($endDate)) {
 			//we reached $endDAte
 			break;
 		}
+		
+		if ($firstRun && $startWithBalance) {
+			$currentAmount = new Amount($currentTransaction->getBalance());
+			$firstRun = false;
+		}
 
 		//fill all dates between last and this transaction with the old amount
 		while (is_null($tmp = $currentTransaction->getValutaDate()) ? false : $currentDate->before($tmp)) {
-			$result[$currentDate->getDate()] = new Amount($currentAmount);
+			if ($isoDates) {
+				$key = $currentDate->getDate();
+			} else {
+				$key = $currentDate->getTime();
+			}
+			$result[$key] = new Amount($currentAmount);
 			
 			$currentDate->addSeconds(24 * 60 * 60);
 			
@@ -68,7 +79,12 @@ function getDailyAmount($account, $startDate, $endDate) {
 	
 	//fill all dates after the last transaction with the newest amount
 	while (Date::compare($currentDate, $endDate) <= 0) {
-		$result[$currentDate->getDate()] = new Amount($currentAmount);
+		if ($isoDates) {
+			$key = $currentDate->getDate();
+		} else {
+			$key = $currentDate->getTime();
+		}
+		$result[$key] = new Amount($currentAmount);
 		
 		$currentDate->addSeconds(24 * 60 * 60);
 	}
@@ -126,7 +142,7 @@ function getSpendingMoney($accountId, $startDate) {
 	return $sum;
 }
 
-function getCategorySelectArray() {
+function getCategorySelectArray($includeSubCategories = false) {
 	global $badgerDb;
 	$cm = new CategoryManager($badgerDb);
 	$order = array (
@@ -152,12 +168,15 @@ function getCategorySelectArray() {
 	$cm->resetCategories();
 	
 	while ($cat = $cm->getNextCategory()) {
-		if(is_null($cat->getParent())){
+		if(is_null($cat->getParent())) {
 			$parentCats[$cat->getId()] = $cat->getTitle();
 			$children = $cat->getChildren();
 			//echo "<pre>"; print_r($children); echo "</pre>";
-			if($children){
-				foreach( $children as $key=>$value ){
+			if ($children) {
+				if ($includeSubCategories) {
+					$parentCats['-' . $cat->getId()] = $cat->getTitle() . ' ' . getBadgerTranslation2('accountCommon', 'includeSubCategories');
+				}
+				foreach ($children as $key => $value) {
 					$parentCats[$value->getId()] = " - " . $value->getTitle();
 				};
 			};
@@ -353,12 +372,43 @@ class CompareTransaction {
 	}
 }
 
-function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
+function getAllTransactions(&$finishedTransactions, $selectedFields, $order, $upperLimit, $lowerLimit) {
 	$result = array();
 	$currResultIndex = 0;
 
+	$sum = new Amount();
+	
+	$now = new Date();
+	$now->setHour(0);
+	$now->setMinute(0);
+	$now->setSecond(0);
+	
+	if (isset($order[0]) && $order[0]['key'] == 'valutaDate') {
+		$firstOrderValutaDate = true;
+		$orderCompareNumber = ($order[0]['dir'] == 'asc' ? -1 : 1);
+	} else {
+		$firstOrderValutaDate = false;
+	}
+	$todayMarkerSet = false;
+	
 	foreach($finishedTransactions as $currentTransaction){
+		$sum->add($currentTransaction->getAmount());
+		
 		$classAmount = ($currentTransaction->getAmount()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+		if ($sum->compare(0) >= 0) {
+			if ($upperLimit && $sum->compare($upperLimit) > 0) {
+				$classSum = 'dgOverMaxAmount';
+			} else {
+				$classSum = 'dgPositiveAmount'; 
+			}
+		} else {
+			if ($lowerLimit && $sum->compare($lowerLimit) < 0) {
+				$classSum = 'dgUnderMinAmount';
+			} else {
+				$classSum = 'dgNegativeAmount';
+			}
+		}
+		$classBalance = ($currentTransaction->getBalance()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
 
 		$category = $currentTransaction->getCategory();
 		if (!is_null($category)) {
@@ -366,7 +416,7 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 		} else {
 			$parentCategory = null;
 		}
-
+		
 		if ($parentCategory) {
 			$concatCategoryTitle = $parentCategory->getTitle() . ' - ';
 		} else {
@@ -376,13 +426,70 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 			$concatCategoryTitle .= $category->getTitle();
 		}
 
+		if (
+			$currentTransaction->getType() == 'FinishedTransaction'
+			|| $currentTransaction->getType() == 'FinishedTransferalTransaction'
+		) {
+			$id = $currentTransaction->getId();
+		} else {
+			$id = 'p' . $currentTransaction->getPlannedTransaction()->getId() . '_' . $currentTransaction->getId();
+		}
+		
+		switch ($currentTransaction->getType()) {
+			case 'FinishedTransaction':
+				$typeImg = 'Account/finished_transaction.png';
+				$typeText = getBadgerTranslation2('Account', 'FinishedTransaction');
+				break;
+			
+			case 'FinishedTransferalTransaction':
+				if ($currentTransaction->getTransferalSource()) {
+					$typeImg = 'Account/finished_transferal_source_transaction.png';
+					$typeText = getBadgerTranslation2('Account', 'FinishedTransferalSourceTransaction');
+				} else {
+					$typeImg = 'Account/finished_transferal_target_transaction.png';
+					$typeText = getBadgerTranslation2('Account', 'FinishedTransferalTargetTransaction');
+				}
+				break;
+			
+			case 'PlannedTransaction':
+				$typeImg = 'Account/planned_transaction.png';
+				$typeText = getBadgerTranslation2('Account', 'PlannedTransaction');
+				break;
+
+			case 'PlannedTransferalTransaction':
+				if ($currentTransaction->getTransferalSource()) {
+					$typeImg = 'Account/planned_transferal_source_transaction.png';
+					$typeText = getBadgerTranslation2('Account', 'PlannedTransferalSourceTransaction');
+				} else {
+					$typeImg = 'Account/planned_transferal_target_transaction.png';
+					$typeText = getBadgerTranslation2('Account', 'PlannedTransferalTargetTransaction');
+				}
+				break;
+		}
+	
 		$result[$currResultIndex] = array();
-		$result[$currResultIndex]['finishedTransactionId'] = $currentTransaction->getId(); 
+		if (
+			$firstOrderValutaDate
+			&& $todayMarkerSet === false
+			&& !is_null($currentTransaction->getValutaDate())
+			&& Date::compare($now, $currentTransaction->getValutaDate()) == $orderCompareNumber
+		) {
+			$result[$currResultIndex]['transactionId'] = array (
+				'marker' => 'today',
+				'content' => $id 
+			);
+			$todayMarkerSet = true;
+		} else {
+			$result[$currResultIndex]['transactionId'] = $id; 
+		}
 
 		foreach ($selectedFields as $selectedField) {
 			switch ($selectedField) {
-				case 'accountTitle':
-					$result[$currResultIndex]['accountTitle'] = $currentTransaction->getAccount()->getTitle();
+				case 'type':
+					$result[$currResultIndex]['type'] = array (
+						'img' => getRelativeTplPath($typeImg),
+						'title' => $typeText
+					);
 					break;
 				
 				case 'title':
@@ -392,18 +499,18 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 				case 'description':
 					$result[$currResultIndex]['description'] = $currentTransaction->getDescription();
 					break;
-			
+				
 				case 'valutaDate':
 					$result[$currResultIndex]['valutaDate'] = ($tmp = $currentTransaction->getValutaDate()) ? $tmp->getFormatted() : '';
 					break;
-					
+				
 				case 'amount':
 					$result[$currResultIndex]['amount'] = array (
 						'class' => $classAmount,
 						'content' => $currentTransaction->getAmount()->getFormatted()
 					);
 					break;
-				
+					
 				case 'outsideCapital':
 					$result[$currResultIndex]['outsideCapital'] = is_null($tmp = $currentTransaction->getOutsideCapital()) ? '' : $tmp;
 					break;
@@ -411,7 +518,7 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 				case 'transactionPartner':
 					$result[$currResultIndex]['transactionPartner'] = $currentTransaction->getTransactionPartner();
 					break;
-					
+				
 				case 'categoryId':
 					$result[$currResultIndex]['categoryId'] = ($category) ? $category->getId() : '';
 					break;
@@ -423,7 +530,7 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 				case 'parentCategoryId':
 					$result[$currResultIndex]['parentCategoryId'] = ($parentCategory) ? $parentCategory->getId() : '';
 					break;
-				
+					
 				case 'parentCategoryTitle':
 					$result[$currResultIndex]['parentCategoryTitle'] = ($parentCategory) ? $parentCategory->getTitle() : '';
 					break;
@@ -432,6 +539,24 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 					$result[$currResultIndex]['concatCategoryTitle'] = $concatCategoryTitle;
 					break;
 				
+				case 'sum':
+					$result[$currResultIndex]['sum'] = array (
+						'class' => $classSum,
+						'content' => $sum->getFormatted()
+					);
+					break;
+
+				case 'balance':
+					$result[$currResultIndex]['balance'] = array (
+						'class' => $classBalance,
+						'content' => $currentTransaction->getBalance()->getFormatted()
+					);
+					break;
+				
+				case 'plannedTransactionId':
+					$result[$currResultIndex]['plannedTransactionId'] = (is_null($tmp = $currentTransaction->getPlannedTransaction()) ? '' : $tmp->getId());
+					break; 
+
 				case 'exceptional':
 					$result[$currResultIndex]['exceptional'] = is_null($tmp = $currentTransaction->getExceptional()) ? '' : $tmp;
 					break;
@@ -439,14 +564,17 @@ function getAllFinishedTransactions(&$finishedTransactions, $selectedFields) {
 				case 'periodical':
 					$result[$currResultIndex]['periodical'] = is_null($tmp = $currentTransaction->getPeriodical()) ? '' : $tmp;
 					break;
+				
+				case 'accountTitle':
+					$result[$currResultIndex]['accountTitle'] = $currentTransaction->getAccount()->getTitle();
+					break;
 			} //switch
 		} //foreach selectedFields
 		
 		$currResultIndex++;
 	} //foreach finishedTransactions
-	
-	return $result;
 
+	return $result;		
 }
 
 function updateBalances() {
