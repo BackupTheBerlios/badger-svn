@@ -187,8 +187,10 @@ $filterBox = '<div>'
 	. '<div>Filters'
 	. $widgets->createButton('addFilter', 'Add Filter', 'addFilterLineX();')
 	. '</div>'
+	. '<form name="mainform" id="mainform">'
 	. '<div id="filterContent" style="overflow: auto; height: 10em; border: 1px solid blue; width: 50em;">'
 	. '</div>'
+	. '</form>'
 	. '</div>';
 
 echo $widgets->addTwistieSection('Input', $filterBox, null, true);

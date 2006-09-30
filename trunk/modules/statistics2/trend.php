@@ -174,6 +174,21 @@ foreach($accountIds as $currentAccountId) {
 	}
 }
 
+$dataAvailable = false;
+foreach($values as $ints) {
+	if (max($ints) != 0 || min($ints) != 0) {
+		$dataAvailable = true;
+		break;
+	}
+}
+
+if (!$dataAvailable) {
+	echo 'No transactions match your criteria';
+
+	require_once BADGER_ROOT . "/includes/fileFooter.php";
+	exit;
+}
+
 $xdata = array_keys($totals);
 $numDates = count($totals);
 
