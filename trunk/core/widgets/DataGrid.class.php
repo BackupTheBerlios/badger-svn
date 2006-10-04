@@ -153,7 +153,7 @@ class DataGrid {
 						</tr>
 					</table>';
 					
-		$output .= '<div class="dgDivScroll" '.$this->height.'>
+		$output .= '<div class="dgDivScroll" id="dgDivScroll'.$this->UniqueId.'" '.$this->height.'>
 					<table id="dgTableData'.$this->UniqueId.'" class="dgTableData" cellpadding="2" cellspacing="0">
 						<tbody></tbody>
 					</table>

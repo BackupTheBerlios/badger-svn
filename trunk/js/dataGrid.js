@@ -72,7 +72,7 @@ function classDataGrid() {
 	
 		// show loading message, image, hide old data
 		this.showMessageLayer('<span class="dgMessageHint"> '+this.loadingMessage+' </span>');
-		$('dgDivScroll'+this.uniqueId).className ="dgDivScrollLoading";
+		$('dgDivScroll'+this.uniqueId).className = "dgDivScrollLoading";
 		$('dgTableData'+this.uniqueId).style.visibility = "hidden"; 
 		
 		// filter image in footer
@@ -231,7 +231,7 @@ function classDataGrid() {
 		}
 
 		// hide loading image
-		$('dgDivScroll'+this.dataGrid.uniqueId).className = "";
+		$('dgDivScroll'+this.dataGrid.uniqueId).className = "dgDivScroll";
 	}
 	
 
