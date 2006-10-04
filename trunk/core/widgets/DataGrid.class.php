@@ -137,8 +137,8 @@ class DataGrid {
 	 * @return string complete dataGrid skeleton (without rows)
 	 */
 	public function writeDataGrid() {
-		if($this->width) $this->width = ' style="width:'.$this->width.';" '; 
-		if($this->height) $this->height = ' style="height:'.$this->height.';" '; 
+		if($this->width) $this->width = ' style="width: '.$this->width.';" '; 
+		if($this->height) $this->height = ' style="height: '.$this->height.';" '; 
 		
 		$output = '<form id="dgForm'.$this->UniqueId.'"><div id="dataGrid'.$this->UniqueId.'" '.$this->width.' class="dataGrid">
 					<table id="dgTableHead'.$this->UniqueId.'" cellpadding="2" class="dgTableHead" cellspacing="0">
@@ -153,7 +153,7 @@ class DataGrid {
 						</tr>
 					</table>';
 					
-		$output .= '<div id="dgDivScroll'.$this->UniqueId.'" class="dgDivScroll" '.$this->height.'>
+		$output .= '<div class="dgDivScroll" '.$this->height.'>
 					<table id="dgTableData'.$this->UniqueId.'" class="dgTableData" cellpadding="2" cellspacing="0">
 						<tbody></tbody>
 					</table>
