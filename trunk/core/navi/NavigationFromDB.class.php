@@ -59,12 +59,20 @@ class NavigationFromDB {
 				$menus[$menuId] = array();
 			}
 			
+			$iconFilename = BADGER_ROOT ."/tpl/".$settings->getProperty("badgerTemplate")."/Navigation/".$row['icon_url'];
+			if (!file_exists($iconFilename)) {
+				$iconFilename = BADGER_ROOT ."/tpl/Standard/Navigation/".$row['icon_url'];
+			}
+			if (!file_exists($iconFilename)) {
+				throw new BadgerException('NavigationFromDB', 'noIcon', BADGER_ROOT ."/tpl/".$settings->getProperty("badgerTemplate")."/Navigation/".$row['icon_url']);
+			}
+
 			//fill most of the fields
 			$menus[$menuId][] = array (
 				'type' => $itemTypes[$row['item_type']],
 				'name' => getBadgerTranslation2("Navigation", $row['item_name']),
 				'tooltip' => $row['tooltip'],
-				'icon' => BADGER_ROOT ."/tpl/".$settings->getProperty("badgerTemplate")."/Navigation/".$row['icon_url'],
+				'icon' => $iconFilename,
 				'command' => NavigationFromDB::replaceBadgerRoot($row['command'])
 			);
 			

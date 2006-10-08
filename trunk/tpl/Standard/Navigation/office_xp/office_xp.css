@@ -166,21 +166,3 @@ height and width of the icon image.
 	position: absolute; /* Do not alter this line! */
 	width: 16px;
 }
-
-.icon2 {
-	background-image: url(icon2.png);
-	background-repeat: no-repeat; /* Do not alter this line! */
-	height: 16px;
-	left: 4px;
-	position: absolute; /* Do not alter this line! */
-	width: 16px;
-}
-
-.icon3 {
-	background-image: url(icon3.png);
-	background-repeat: no-repeat; /* Do not alter this line! */
-	height: 16px;
-	left: 4px;
-	position: absolute; /* Do not alter this line! */
-	width: 16px;
-}

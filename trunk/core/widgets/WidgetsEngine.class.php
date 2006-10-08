@@ -246,7 +246,16 @@ function _jsVal_Language() {
 	}
 	
 	public function addImage($file, $addAttributes="") {
-		return "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/$file' border='0' $addAttributes />";
+		$filename = $this->tpl->getBadgerRoot() . '/tpl/' . $this->tpl->getThemeName() . "/$file";
+		if (!file_exists($filename)) {
+			//if none is existing -> try to get the standard one
+			$filename = $this->tpl->getBadgerRoot() . "/tpl/Standard/$file";
+		}
+		if (!file_exists($filename)) {
+			throw new badgerException('widgetEngine', 'noImage', $this->tpl->getBadgerRoot() . '/tpl/' . $this->tpl->getThemeName() . "/$file"); 
+		}
+
+		return "<img src='$filename' border='0' $addAttributes />";
 	}
 	
 	public function createSelectField($name, $options, $default="", $description="", $mandatory=false, $selectAdditional="") {	
