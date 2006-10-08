@@ -55,6 +55,7 @@ function _jsVal_Language() {
 		$format = str_replace("dd","d", $format);
 		$format = str_replace("mm","m", $format);
 		$format = str_replace("yyyy","Y", $format);
+		$format = str_replace("yy", "y", $format);
 		return date($format, time());
 	}
 	public function addToolTipJS() {
@@ -93,7 +94,7 @@ function _jsVal_Language() {
 		if($this->ToolTipJSAdded) {
 			if ($this->ToolTipLayerAdded) {
 				if($link=="") $link = "javascript:void(0)";
-				if($linkname=="") $linkname = "<img src='".$this->tpl->getBadgerRoot()."/tpl/".$this->tpl->getThemeName()."/Widgets/help.gif' border='0' />";
+				if($linkname=="") $linkname = $this->addImage('Widgets/help.gif');
 				return "<a href=\"".$link."\" class=\"ToolTip\" tabindex=\"-999\" onmouseover=\"return overlib('". escape4Attr($text) . "', DELAY, 700, CSSW3C, DIVCLASS, 'TTDiv', BODYCLASS, 'TTbodyText');\" onmouseout=\"return nd();\">".$linkname."</a>\n";
 			} else 	{
 				throw new badgerException('widgetsEngine', 'ToolTipLayerNotAdded');
@@ -128,7 +129,7 @@ function _jsVal_Language() {
 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" id=\"".$fieldname."\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"" . escape4Attr($startdate) . "\" />\n"; 
-			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' tabindex=\"-999\"><img src=\"".BADGER_ROOT."/tpl/".$this->tpl->getThemeName()."/Widgets/calendar/calendar.jpg\" border=\"0\"/></a>\n";
+			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' tabindex=\"-999\">" . $this->addImage('Widgets/calendar/calendar.jpg') . "</a>\n";
 			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine', 'CalendarJSNotAdded'); 
@@ -153,7 +154,7 @@ function _jsVal_Language() {
 			$result .= ' style="display:none;"';
 		}
 		$result .= '>';
-		$result .= $this->addImage('widgets/twistie/arrow_out.png', "class=\"showTwistie\" onclick=\"showTwistie('$id');\"");
+		$result .= $this->addImage('Widgets/twistie/arrow_out.png', "class=\"showTwistie\" onclick=\"showTwistie('$id');\"");
 		$result .= "&nbsp;$title</div>\n";
 		
 		$result .= "<fieldset id='{$id}Opened'";
@@ -161,7 +162,7 @@ function _jsVal_Language() {
 			$result .= ' style="display:none;"';
 		}
 		$result .= '><legend>';
-		$result .= $this->addImage('widgets/twistie/arrow_in.png', "class=\"hideTwistie\" onclick=\"hideTwistie('$id');\"");
+		$result .= $this->addImage('Widgets/twistie/arrow_in.png', "class=\"hideTwistie\" onclick=\"hideTwistie('$id');\"");
 		$result .= "&nbsp;$title</legend>\n";
 		$result .= $innerHTML;
 		$result .= '</fieldset>';
@@ -273,6 +274,20 @@ function _jsVal_Language() {
 			$selectField .= $this->addToolTip($description);
 		}
 		return $selectField;
+	}
+	
+	public function createTextarea($fieldname, $value='', $description = '', $required = false, $specialAttributes = '') {
+		//required
+		if ($required) $required = "required='required'";
+		
+		$output = "<textarea id='$fieldname' name='$fieldname' $required $specialAttributes>";
+		$output .= htmlentities($value);
+		$output .= '</textarea>';
+		if($description) {
+			$output .= "&nbsp;" . $this->addToolTip($description);
+		}
+		
+		return $output;
 	}
 	
 	function addNavigationHead() {

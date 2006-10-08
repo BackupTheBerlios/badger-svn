@@ -55,8 +55,8 @@
   </tr>
 
   <tr>
-    <td>$backBtn </td>
-    <td>$submitBtn </td>
+    <td>$backBtn</td>
+    <td>$submitBtn</td>
   </tr>
 </table>
 $hiddenID

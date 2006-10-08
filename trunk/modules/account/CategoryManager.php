@@ -139,10 +139,10 @@ function printFrontend() {
 	
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountCategory', 'title'), true);
-	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "style='width: 30ex;'");
 	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountCategory', 'description'), false);
-	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 5em;'");
 	
 	$parentLabel = $widgets->createLabel("parent", getBadgerTranslation2('accountCategory', 'parent'), false);
 	$parentCats = array(""=>getBadgerTranslation2('CategoryManager','no_parent'));
@@ -157,7 +157,7 @@ function printFrontend() {
 			$parentCats[$cat->getId()] = $cat->getTitle();
 		};
 	};
-	$parentField = $widgets->createSelectField("parent", $parentCats, $default=$parentId);
+	$parentField = $widgets->createSelectField("parent", $parentCats, $parentId, '', false, "style='width: 31ex;'");
 	
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountCategory', 'outsideCapital'), false);
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30,"on", "", false, "checkbox", $outsideCapitalValue);

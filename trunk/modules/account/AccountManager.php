@@ -114,24 +114,24 @@ function printFrontend() {
 	$pageHeading = $pageTitle;
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountAccount', 'title'), true);
-	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text",  "style='width: 30ex;'");
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountAccount', 'description'), false);
-	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 5em;'");
 	$lowerLimitLabel = $widgets->createLabel("lowerLimit", getBadgerTranslation2('accountAccount', 'lowerLimit'), false);
-	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "class='inputNumber'");
+	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "class='inputNumber' style='width: 30ex;'");
 	$upperLimitLabel = $widgets->createLabel("upperLimit", getBadgerTranslation2('accountAccount', 'upperLimit'), false);
-	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", false, "text", "class='inputNumber'");
+	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", false, "text", "class='inputNumber' style='width: 30ex;'");
 
 	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), true);
 	$currencies = getCurrencyArray('symbol');
-	$currencyField = $widgets->createSelectField("currency", $currencies, $default=$currencyValue, "", false, "style='width: 213px;'");
+	$currencyField = $widgets->createSelectField("currency", $currencies, $default=$currencyValue, "", false, "style='width: 31ex;'");
 
 	$deleteOldPlannedTransactionsLabel = $widgets->createLabel('deleteOldPlannedTransactions', getBadgerTranslation2('accountAccount', 'deleteOldPlannedTransactions'), false);
 	$deleteOldPlannedTransactionsField = $widgets->createField('deleteOldPlannedTransactions', 30, 'on', getBadgerTranslation2('accountAccount', 'deleteOldPlannedTransactionsDescription'), false, 'checkbox', $deleteOldPlannedTransactionsValue);
 	
 	$csvParserLabel = $widgets->createLabel('csvParser', getBadgerTranslation2('accountAccount', 'csvParser'), false);
 	$csvParsers = getParsers(); 
-	$csvParserField = $widgets->createSelectField('csvParser', $csvParsers, $csvParserValue, '', false, "style='width: 213px;'");
+	$csvParserField = $widgets->createSelectField('csvParser', $csvParsers, $csvParserValue, '', false, "style='width: 31ex;'");
 
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");

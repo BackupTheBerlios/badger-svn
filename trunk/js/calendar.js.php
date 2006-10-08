@@ -64,7 +64,14 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 	var startAt = 1;		// 0 - sunday ; 1 - monday -> Usereinstellung
 	var showWeekNumber = 1;	// 0 - don't show; 1 - show
 	var showToday = 1;		// 0 - don't show; 1 - show
-	var imgDir = '<?php echo $badgerRoot?>/tpl/<?php echo $badgerTemplate?>/Widgets/calendar/';
+	var imgDir = '<?php 
+		$imgDir = "$badgerRoot/tpl/$badgerTemplate/Widgets/calendar";
+		if (!file_exists($imgDir)) {
+			$imgDir = "$badgerRoot/tpl/Standard/Widgets/calendar";
+		}
+		
+	 echo $imgDir;
+	?>/';
 	var dayName = '';
 
 	var gotoString = '<?php echo getBadgerTranslation2("Calendar","gotoString")?>';

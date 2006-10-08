@@ -205,7 +205,7 @@ function printFrontendFinished($AccountID, $ID) {
 		
 		$transferalDataStyle = 'style="display: none;"';
 
-		$transferalAccountField = $widgets->createSelectField('transferalAccountId', getAccountsSelectArray($AccountID), '', '', false, "style='width: 213px;'");
+		$transferalAccountField = $widgets->createSelectField('transferalAccountId', getAccountsSelectArray($AccountID), '', '', false, "style='width: 31ex;'");
 	} else {
 		$transferalLabel = '';
 		$transferalField = '';
@@ -218,7 +218,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$transferalAccountLabel = $widgets->createLabel('transferalAccountId', getBadgerTranslation2('accountTransaction', 'transferalAccount'), false);
 	
 	$transferalAmountLabel = $widgets->createLabel('transferalAmount', getBadgerTranslation2('accountTransaction', 'transferalAmount'), false);
-	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);'");
+	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;'");
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
@@ -226,7 +226,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$transactionType = "finished";
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
-		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 213px;'");
+		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 31ex;'");
 	} else {
 		$AccountLabel = "";
 		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
@@ -235,26 +235,26 @@ function printFrontendFinished($AccountID, $ID) {
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
-	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "style='width: 30ex;'");
 	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), false);
-	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 5em;'");
 	
 	$valutaDateLabel = $widgets->createLabel("valutaDate", getBadgerTranslation2('accountTransaction', 'valutaDate'), true);
 	$valutaDateField = $widgets->addDateField("valutaDate", $valutaDateValue);
 	
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
-	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "onchange='updateTransferalAmount();' onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);'");
+	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "onchange='updateTransferalAmount();' onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;'");
 	
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
-	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false);
+	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false, 'text', "style='width: 30ex;'");
 	
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), false);
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", false, "checkbox", $outsideCapitalValue);
 	$outsideToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
 	
-	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false, "style='width: 213px;'");
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
+	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;'");
 	
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), false);
 	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", false, "checkbox", $exceptionalValue);
@@ -369,7 +369,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$transferalAccountLabel = $widgets->createLabel('transferalAccountId', getBadgerTranslation2('accountTransaction', 'transferalAccount'), false);
 	
 	$transferalAmountLabel = $widgets->createLabel('transferalAmount', getBadgerTranslation2('accountTransaction', 'transferalAmount'), false);
-	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);'");
+	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;'");
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
@@ -378,7 +378,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
-		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 213px;'");
+		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 31ex;'");
 	} else {
 		$AccountLabel = "";
 		$hiddenAccID = $widgets->createField("hiddenAccID", 20, $AccountID, "", false, "hidden");
@@ -388,10 +388,10 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
-	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "");	
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "style='width: 30ex;'");	
 	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), false);
-	$descriptionField = $widgets->createField("description", 30, $descriptionValue, "", false, "text", "");
+	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 4em;'");
 	
 	$beginDateLabel = $widgets->createLabel("beginDate", getBadgerTranslation2('accountTransaction', 'beginDate'), true);
 	$beginDateField = $widgets->addDateField("beginDate", $beginDateValue);
@@ -400,17 +400,17 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$endDateField = $widgets->addDateField("endDate", $endDateValue);
 
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
-	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "");
+	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "style='width: 30ex;'");
 
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
-	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false, "text", "");
+	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false, "text", "style='width: 30ex;'");
 
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountTransaction', 'outsideCapital'), false);
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30, "on", "", false, "checkbox", $outsideCapitalValue);
 	$outsideToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
 	
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 213px;'");
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;'");
 	
 	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
 	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", true, "style='width: 104px;'");

@@ -1,9 +1,9 @@
 <h1>$pageHeading</h1>
 
 <form method="post" name="mainform" id="mainform" accept-charset="ISO-8859-1" action="$FormAction?action=save">
-<fieldset style = "width: 18em;">
+<fieldset style="width: 25em;">
 	<legend>$legend</legend>
-		<table>
+		<table style="width: 100%;">
 		  <tr>
 		    <td>$titleLabel</td>
 		    <td>$titleField</td>
