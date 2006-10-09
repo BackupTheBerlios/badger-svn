@@ -17,12 +17,20 @@
  *  
  * @author Sepp
  */
+ require_once BADGER_ROOT . '/includes/fileHeaderBackEnd.inc.php';
+ 
 class DataGrid {
 	/**
 	 * TemplateEngine Object
 	 * @var object
 	 */
 	private $tpl;
+	
+	/**
+	 * WidgetEngine Object
+	 * @var object
+	 */
+	private $widgetEngine;
 	
 	/**
 	 * Loading Message in the footer of the dataGrid table
@@ -120,6 +128,7 @@ class DataGrid {
 	 */
 	public function __construct($tpl, $uniqueId) {
 		$this->tpl = $tpl;
+		$this->widgetEngine = new WidgetEngine($tpl); 
 		$this->UniqueId = $uniqueId;
 		
 		// default values
@@ -147,7 +156,8 @@ class DataGrid {
 			for ($i=0; $i < count($this->headerName); $i++) {
 				$output .= '<td class="dgColumn" id="dgColumn'.$this->UniqueId.$this->columnOrder[$i].'" style="width: '.$this->headerSize[$i].'px">'.
 							$this->headerName[$i].'&nbsp;'.
-						   '<img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/dropEmpty.gif" id="dgImg'.$this->UniqueId.$this->columnOrder[$i].'" /></td>';
+							$this->widgetEngine->addImage('Widgets/dataGrid/dropEmpty.gif', ' id="dgImg'.$this->UniqueId.$this->columnOrder[$i].'"') .
+						   '</td>';
 			}
 		$output .= '		<td>&nbsp;</td>
 						</tr>
@@ -162,7 +172,9 @@ class DataGrid {
 					<table id="dgTableFoot'.$this->UniqueId.'" class="dgTableFoot" cellpadding="2" cellspacing="0">						
 						<tr>
 							<td style="width: 110px"><span id="dgCount'.$this->UniqueId.'">0</span> '.$this->rowCounterName.'&nbsp;</td>
-							<td style="width: 23px"><span id="dgFilterStatus'.$this->UniqueId.'"><img src="'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/filter.gif"></span></td>
+							<td style="width: 23px"><span id="dgFilterStatus'.$this->UniqueId.'">' .
+							$this->widgetEngine->addImage('Widgets/dataGrid/filter.gif') .
+							'</span></td>
 							<td><span id="dgMessage'.$this->UniqueId.'" class="dgMessage"></span></td>
 						</tr>
 					</table>
