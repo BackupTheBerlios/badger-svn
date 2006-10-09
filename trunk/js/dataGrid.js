@@ -431,7 +431,7 @@ function classDataGrid() {
 	// change sort order and hide/show sort images
 	this.addNewSortOrder = function (strSortColumn, strDirection) {
 		// reset old sorting image
-		if(strSortingColumnActive) this.changeColumnSortImage(strSortingColumnActive, "empty");
+		if(this.strSortingColumnActive) this.changeColumnSortImage(this.strSortingColumnActive, "empty");
 			
 		if(strSortColumn==this.arrURLParameter["ok0"]) {
 			// click on the same column:  change sort direction
@@ -459,14 +459,14 @@ function classDataGrid() {
 				this.changeColumnSortImage(strSortColumn, "d");
 			}
 		}
-		strSortingColumnActive = strSortColumn;
+		this.strSortingColumnActive = strSortColumn;
 		
 		this.saveDataGridParameter();		
 	}
 	
 	this.initSortOrder = function () {
 		if(this.arrURLParameter["ok0"]!=undefined && this.arrURLParameter["ok0"]!="") {
-			strSortingColumnActive = this.arrURLParameter["ok0"];
+			this.strSortingColumnActive = this.arrURLParameter["ok0"];
 			if(this.arrURLParameter["od0"]=="a") {
 				this.changeColumnSortImage(this.arrURLParameter["ok0"], "a");
 			} else {
