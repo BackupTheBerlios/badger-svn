@@ -210,5 +210,13 @@ class Amount {
 			return bccomp($this->amount, $b);
 		}
 	}
+	
+	public function abs() {
+		if (bccomp($this->amount, 0) < 0) {
+			$this->amount = bcmul($this->amount, -1);
+		}
+		
+		return $this;
+	}
 }
 ?>

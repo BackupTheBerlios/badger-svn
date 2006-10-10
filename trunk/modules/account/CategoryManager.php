@@ -103,6 +103,7 @@ function printFrontend() {
 		}else{
 			$outsideCapitalValue = "";
 		};
+		$keywordsValue = $category->getKeywords();
 		if($category->getParent()) {
 			$parentValue = $category->getParent()->getTitle();
 			$parentId = $category->getParent()->getId();
@@ -117,6 +118,7 @@ function printFrontend() {
 		$titleValue = "";
 		$descriptionValue = "";
 		$outsideCapitalValue = "";
+		$keywordsValue = "";
 		$parentValue = "";
 		$parentId = "";
 	}
@@ -162,6 +164,9 @@ function printFrontend() {
 	$outsideCapitalLabel = $widgets->createLabel("outsideCapital", getBadgerTranslation2('accountCategory', 'outsideCapital'), false);
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30,"on", "", false, "checkbox", $outsideCapitalValue);
 	
+	$keywordsLabel = $widgets->createLabel('keywords', getBadgerTranslation2('accountCategory', 'keywordsLabel'), false);
+	$keywordsField = $widgets->createField('keywords', 30, $keywordsValue, getBadgerTranslation2('acountCategory', 'keywordsDescription'), false, 'text', "style='width: 30ex;'");
+	
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	$backBtn = $widgets->createButton("backBtn", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
@@ -182,7 +187,7 @@ function updateRecord() {
 		
 		
 		
-		$Cat = $cm->addCategory(getGPC($_POST, 'title'), getGPC($_POST, 'description'), getGPC($_POST, 'outsideCapital', 'checkbox'));
+		$Cat = $cm->addCategory(getGPC($_POST, 'title'), getGPC($_POST, 'description'), getGPC($_POST, 'outsideCapital', 'checkbox'), getGPC($_POST, 'keywords'));
 		if(isset($_POST['parent']) && getGPC($_POST, 'parent') != ""){
 			$Cat->setParent($cm->getCategoryById(getGPC($_POST, 'parent', 'integer')));
 		};
@@ -194,6 +199,8 @@ function updateRecord() {
 		$Cat->setDescription(getGPC($_POST, 'description'));
 		
 		$Cat->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
+		
+		$Cat->setKeywords(getGPC($_POST, 'keywords'));
 		
 		if(isset($_POST['parent']) && getGPC($_POST, 'parent') != ""){
 			$Cat->setParent($cm->getCategoryById(getGPC($_POST, 'parent', 'integer')));

@@ -235,16 +235,15 @@ class AccountManager extends DataGridHandler {
 	public function getAccountById($accountId){
 		settype($accountId, 'integer');
 
-		if ($this->dataFetched){
-			if (isset($this->accounts[$accountId])) {
-				return $this->accounts[$accountId];
+		if (isset($this->accounts[$accountId])) {
+			return $this->accounts[$accountId];
+		}
+		while ($currentAccount = $this->getNextAccount()) {
+			if ($currentAccount->getId() == $accountId) {
+				return $currentAccount;
 			}
-			while ($currentAccount = $this->getNextAccount()) {
-				if ($currentAccount->getId() == $accountId) {
-					return $currentAccount;
-				}
-			}
-		}	
+		}
+
 		//Add condition to limit balance to transactions in the past and today
 		$today = new Date();
 

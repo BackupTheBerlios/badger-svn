@@ -39,5 +39,8 @@
 	</td>
 	<td>
 		$tableSelectAccount
-	</td>	
+	</td>
+	<td>
+		$tableSelectMatchingTransaction
+	</td>
 </tr>

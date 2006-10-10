@@ -14,10 +14,12 @@
 	   		<th>$tableHeadExceptional $HeadExceptionalToolTip</th>
 	   		<th>$tableHeadOutside $HeadOutsideToolTip</th>
 	   		<th>$tableHeadAccount<br />$HeadAccountToolTip</th>
+	   		<th>$tableHeadMatching<br />$HeadMatchingToolTip</th>
 	   		</tr>
 	   		$tplOutput
    		</table>
 	</div>
 	$hiddenField 
+	$hiddenAccountId
 	$buttonSubmit 
 </form>

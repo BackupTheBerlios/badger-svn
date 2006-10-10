@@ -105,6 +105,10 @@ if( isset( $_POST['SubmitUserSettings'] ) ){
 		if (isset($_POST['autoExpandPlannedTransactions'])) {
 			$us->setProperty('autoExpandPlannedTransactions', getGPC($_POST, 'autoExpandPlannedTransactions', 'checkbox'));
 		}
+
+		$us->setProperty('matchingDateDelta', getGPC($_POST, 'matchingDateDelta', 'integer'));
+		$us->setProperty('matchingAmountDelta', getGPC($_POST, 'matchingAmountDelta', 'integer') / 100);
+		$us->setProperty('matchingTextSimilarity', getGPC($_POST, 'matchingTextSimilarity', 'integer') / 100);
 	};
 	
 } else {
@@ -215,6 +219,35 @@ $futureCalcSpanField = $widgets->createField('futureCalcSpan', 0, $preCalc, getB
 
 $autoExpandPlannedTransactionsLabel = $widgets->createLabel("autoExpandPlannedTransactions", getBadgerTranslation2('UserSettingsAdmin', 'autoExpandPlannedTransactionsName'), true);
 $autoExpandPlannedTransactionsField = $widgets->createField("autoExpandPlannedTransactions", 0, 1, getBadgerTranslation2('UserSettingsAdmin','autoExpandPlannedTransactionsDescription'), false, 'checkbox', $us->getProperty('autoExpandPlannedTransactions') ? 'checked="checked"' : '');
+
+try {
+	$matchingDateDelta = $us->getProperty('matchingDateDelta');
+} catch (BadgerException $ex) {
+	$matchingDateDelta = 5;
+}
+
+try {
+	$matchingAmountDelta = 100 * $us->getProperty('matchingAmountDelta');
+} catch (BadgerException $ex) {
+	$matchingAmountDelta = 10;
+}
+
+try {
+	$matchingTextSimilarity = 100 * $us->getProperty('matchingTextSimilarity');
+} catch (BadgerException $ex) {
+	$matchingTextSimilarity = 75;
+}
+
+$matchingHeading = getBadgerTranslation2('UserSettingsAdmin', 'matchingHeading');
+
+$matchingDateDeltaLabel = $widgets->createLabel('matchingDateDelta', getBadgerTranslation2('UserSettingsAdmin', 'matchingDateDeltaLabel'), true);
+$matchingDateDeltaField = $widgets->createField('matchingDateDelta', 0, $matchingDateDelta, getBadgerTranslation2('UserSettingsAdmin', 'matchingDateDeltaDescription'), true, 'text', 'style="width: 10em;"');
+
+$matchingAmountDeltaLabel = $widgets->createLabel('matchingAmountDelta', getBadgerTranslation2('UserSettingsAdmin', 'matchingAmountDeltaLabel'), true);
+$matchingAmountDeltaField = $widgets->createField('matchingAmountDelta', 0, $matchingAmountDelta, getBadgerTranslation2('UserSettingsAdmin', 'matchingAmountDeltaDescription'), true, 'text', 'style="width: 10em;"');
+
+$matchingTextSimilarityLabel = $widgets->createLabel('matchingTextSimilarity', getBadgerTranslation2('UserSettingsAdmin', 'matchingTextSimilarityLabel'), true);
+$matchingTextSimilarityField = $widgets->createField('matchingTextSimilarity', 0, $matchingTextSimilarity, getBadgerTranslation2('UserSettingsAdmin', 'matchingTextSimilarityDescription'), true, 'text', 'style="width: 10em;"');
 
 // Print Form for change of password 
 

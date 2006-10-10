@@ -44,6 +44,23 @@
 			</tr>
 		</table>
 	</fieldset>
+	<fieldset style="width: 30em;">
+		<legend>$matchingHeading</legend>
+		<table>
+			<tr>
+				<td>$matchingDateDeltaLabel</td>
+				<td style="text-align: right; white-space: nowrap;">$matchingDateDeltaField</td>
+			</tr>
+			<tr>
+				<td>$matchingAmountDeltaLabel</td>
+				<td style="text-align: right; white-space: nowrap;">$matchingAmountDeltaField</td>
+			</tr>
+			<tr>
+				<td>$matchingTextSimilarityLabel</td>
+				<td style="text-align: right; white-space: nowrap;">$matchingTextSimilarityField</td>
+			</tr>
+		</table>
+	</fieldset>
 	<br/>
 	<fieldset style="width: 30em;">
 		<legend>$PWFormLabel</legend>

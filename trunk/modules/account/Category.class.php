@@ -74,6 +74,8 @@ class Category {
 	 */
 	private $children;
 	
+	private $keywords;
+	
 	/**
 	 * Creates a Category.
 	 * 
@@ -92,7 +94,8 @@ class Category {
 		$title = null,
 		$description = null,
 		$outsideCapital = null,
-		$parent = null
+		$parent = null,
+		$keywords = null
 	) {
 		$this->badgerDb = $badgerDb;
 		$this->categoryManager = $categoryManager;
@@ -103,12 +106,14 @@ class Category {
 			$this->description = $data['description'];
 			$this->outsideCapital = $data['outside_capital'];
 			$this->parent = $data['parent_id'];
+			$this->keywords = $data['keywords'];
     	} else {
     		$this->id = $data;
     		$this->title = $title;
     		$this->description = $description;
     		$this->outsideCapital = $outsideCapital;
     		$this->parent = $parent;
+    		$this->keywords = $keywords;
     	}
 	}
 	
@@ -198,6 +203,25 @@ class Category {
 		
 		$sql = "UPDATE category
 			SET outside_capital = " . $this->badgerDb->quoteSmart($outsideCapital) . "
+			WHERE category_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
+		}
+	}
+
+	public function getKeywords() {
+		return $this->keywords;
+	}
+	
+ 	public function setKeywords($keywords) {
+		$this->keywords = $keywords;
+		
+		$sql = "UPDATE category
+			SET keywords = '" . $this->badgerDb->escapeSimple($keywords) . "'
 			WHERE category_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);
