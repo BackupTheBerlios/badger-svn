@@ -140,7 +140,7 @@ $valueTargets = array();
 $valueNames = array();
 
 if (is_null($displayStartDate) || is_null($displayEndDate)) {
-	echo 'No transactions match your criteria';
+	echo getBadgerTranslation2('statistics2Graph', 'noMatchingTransactions');
 
 	require_once BADGER_ROOT . "/includes/fileFooter.php";
 	exit;
@@ -183,7 +183,7 @@ foreach($values as $ints) {
 }
 
 if (!$dataAvailable) {
-	echo 'No transactions match your criteria';
+	echo getBadgerTranslation2('statistics2Graph', 'noMatchingTransactions');
 
 	require_once BADGER_ROOT . "/includes/fileFooter.php";
 	exit;

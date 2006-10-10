@@ -159,7 +159,7 @@ foreach($amounts as $currentAmounts) {
 }
 
 if (count($allKeys) == 0) {
-	echo 'No transactions match your criteria';
+	echo getBadgerTranslation2('statistics2Graph', 'noMatchingTransactions');
 
 	require_once BADGER_ROOT . "/includes/fileFooter.php";
 	exit;

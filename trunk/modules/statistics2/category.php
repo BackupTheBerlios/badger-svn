@@ -82,7 +82,7 @@ if ($amounts['none']->compare(0) == 0) {
 }
 
 if (count($amounts) == 0) {
-	echo 'No transactions match your criteria';
+	echo getBadgerTranslation2('statistics2Graph', 'noMatchingTransactions');
 
 	require_once BADGER_ROOT . "/includes/fileFooter.php";
 	exit;

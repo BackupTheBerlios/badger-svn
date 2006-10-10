@@ -234,10 +234,9 @@ class DataGrid {
 		$filterArray["gt"] = ">";
 		$filterArray["ge"] = ">=";
 		$filterArray["ne"] = "<>";
-		//TODO Translation
-		$filterArray["bw"] = "begins with";
-		$filterArray["ew"] = "ends with";
-		$filterArray["ct"] = "contains";
+		$filterArray["bw"] = getBadgerTranslation2('dataGridFilter', 'beginsWith');
+		$filterArray["ew"] = getBadgerTranslation2('dataGridFilter', 'endsWith');
+		$filterArray["ct"] = getBadgerTranslation2('dataGridFilter', 'contains');
 		
 		return $filterArray;
 	}
@@ -245,16 +244,14 @@ class DataGrid {
 	public static function getDateFilterSelectArray() {
 		$filterArray = array ();
 		
-		//TODO Translation
-		$filterArray["eq"] = "equal to";
-		$filterArray["lt"] = "before";
-		$filterArray["le"] = "before or equal to";
-		$filterArray["gt"] = "after";
-		$filterArray["ge"] = "equal to or after";
-		$filterArray["ne"] = "not equal to";
+		$filterArray["eq"] = getBadgerTranslation2('dataGridFilter', 'dateEqualTo');
+		$filterArray["lt"] = getBadgerTranslation2('dataGridFilter', 'dateBefore');
+		$filterArray["le"] = getBadgerTranslation2('dataGridFilter', 'dateBeforeEqual');
+		$filterArray["gt"] = getBadgerTranslation2('dataGridFilter', 'dateAfter');
+		$filterArray["ge"] = getBadgerTranslation2('dataGridFilter', 'dateAfterEqual');
+		$filterArray["ne"] = getBadgerTranslation2('dataGridFilter', 'dateNotEqual');
 		
 		return $filterArray;
 	}
-	
 }
 ?>

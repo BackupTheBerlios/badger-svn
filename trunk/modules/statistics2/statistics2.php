@@ -19,14 +19,6 @@ require_once BADGER_ROOT . '/core/widgets/DataGrid.class.php';
 
 $FILTER_ID_MARKER = '__FILTER_ID__';
 
-/*
-if (isset($_REQUEST['mode'])) {
-	$mode = getGPC($_REQUEST, 'mode');
-} else {
-	$mode = 'selectPage';
-}
-*/
-
 $widgets = new WidgetEngine($tpl); 
 
 $widgets->addCalendarJS();
@@ -53,7 +45,7 @@ $dgAccounts->initDataGridJS();
 $dgResult = new DataGrid($tpl, 'Statistics2Result');
 $dgResult->sourceXML = BADGER_ROOT . '/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1';
 $dgResult->headerName = array(
-	'Account',
+	getBadgerTranslation2('statistics2', 'colAccountName'),
 	getBadgerTranslation2('accountOverview', 'colValutaDate'),
 	getBadgerTranslation2('accountOverview', 'colTitle'), 
 	getBadgerTranslation2('accountOverview', 'colAmount'),
@@ -67,7 +59,7 @@ $dgResult->initDataGridJS();
 
 $widgets->addNavigationHead();
 
-echo $tpl->getHeader('TRANSLATE: Statistics2');
+echo $tpl->getHeader(getBadgerTranslation2('statistics2', 'pageTitle'));
 	
 $widgets->addToolTipLayer();
 
@@ -76,97 +68,97 @@ $datagGridDateFilterArray = DataGrid::getDateFilterSelectArray();
 
 $filters['unselected'] = '';
 $filters['title'] =
-	'Title is ' 
+	getBadgerTranslation2('statistics2', 'titleFilter') 
 	. $widgets->createSelectField("titleOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("title$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;
 $filters['description'] = 
-	'Description is '
+	getBadgerTranslation2('statistics2', 'descriptionFilter')
 	. $widgets->createSelectField("descriptionOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("description$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;
 $filters['valutaDate'] =
-	'Valuta date is '
+	getBadgerTranslation2('statistics2', 'valutaDateFilter')
 	. $widgets->createSelectField("valutaDateOperator$FILTER_ID_MARKER", $datagGridDateFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	.$widgets->addDateField("valutaDate$FILTER_ID_MARKER", "")
 	;
 $filters['valutaDateBetween'] =
-	'Valuta date is between '
+	getBadgerTranslation2('statistics2', 'valutaDateBetweenFilter')
 	. $widgets->addDateField("valutaDateStart$FILTER_ID_MARKER", "")
-	. ' and '
+	. getBadgerTranslation2('statistics2', 'valutaDateBetweenFilterConj')
 	. $widgets->addDateField("valutaDateEnd$FILTER_ID_MARKER", "")
-	. '(both inclusive)'
+	. getBadgerTranslation2('statistics2', 'valutaDateBetweenFilterInclusive')
 	;
 $filters['valutaDateAgo'] = 
-	'Valuta date at most '
+	getBadgerTranslation2('statistics2', 'valutaDateAgoFilter')
 	. $widgets->createField("valutaDateAgo$FILTER_ID_MARKER", 3, "", "", false, "integer", "")
-	. ' days ago'
+	. getBadgerTranslation2('statistics2', 'valutaDateAgoFilterDaysAgo')
 	;
 $filters['amount'] =
-	'Amount is '
+	getBadgerTranslation2('statistics2', 'amountFilter')
 	. $widgets->createSelectField("amountOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp'
 	. $widgets->createField("amount$FILTER_ID_MARKER", 3, "", "", false, "integer", "")
 	;
 $filters['outsideCapital'] =
-	'Source is '
+	getBadgerTranslation2('statistics2', 'outsideCapitalFilter')
 	. $widgets->createField("outsideCapital$FILTER_ID_MARKER", null, '1', '', false, 'radio')
-	. $widgets->createLabel("outsideCapital$FILTER_ID_MARKER", 'outside capital')
+	. $widgets->createLabel("outsideCapital$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'outsideCapitalFilterOutside'))
 	. '&nbsp;'
 	. $widgets->createField("outsideCapital$FILTER_ID_MARKER", null, '0', '', false, 'radio')
-	. $widgets->createLabel("outsideCapital$FILTER_ID_MARKER", 'inside capital')
+	. $widgets->createLabel("outsideCapital$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'outsideCapitalFilterInside'))
 	;
 $filters['transactionPartner'] =
-	'Transaction partner is '
+	getBadgerTranslation2('statistics2', 'transactionPartnerFilter')
 	. $widgets->createSelectField("transactionPartnerOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("transactionPartner$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;
 $filters['category'] =
-	'Category '
+	getBadgerTranslation2('statistics2', 'categoryFilter')
 	. $widgets->createField("categoryOp$FILTER_ID_MARKER", null, 'eq', '', false, 'radio')
-	. $widgets->createLabel("categoryOp$FILTER_ID_MARKER", 'is')
+	. $widgets->createLabel("categoryOp$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'categoryFilterIs'))
 	. '&nbsp;'
 	. $widgets->createField("categoryOp$FILTER_ID_MARKER", null, 'ne', '', false, 'radio')
-	. $widgets->createLabel("categoryOp$FILTER_ID_MARKER", 'is not')
+	. $widgets->createLabel("categoryOp$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'categoryFilterIsNot'))
 	. '&nbsp;'
 	. $widgets->createSelectField("categoryId$FILTER_ID_MARKER", getCategorySelectArray(true), "", "", false, "style='width: 210px;'")
 	;
 $filters['exceptional'] =
-	'Transaction is '
+	getBadgerTranslation2('statistics2', 'exceptionalFilter')
 	. $widgets->createField("exceptional$FILTER_ID_MARKER", null, '1', '', false, 'radio')
-	. $widgets->createLabel("exceptional$FILTER_ID_MARKER", 'exceptional')
+	. $widgets->createLabel("exceptional$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'exceptionalFilterExceptional'))
 	. '&nbsp;'
 	. $widgets->createField("exceptional$FILTER_ID_MARKER", null, '0', '', false, 'radio')
-	. $widgets->createLabel("exceptional$FILTER_ID_MARKER", 'not exceptional')
+	. $widgets->createLabel("exceptional$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'exceptionalFilterNotExceptional'))
 	;
 $filters['periodical'] =
-	'Transaction is '
+	getBadgerTranslation2('statistics2', 'periodicalFilter')
 	. $widgets->createField("periodical$FILTER_ID_MARKER", null, '1', '', false, 'radio')
-	. $widgets->createLabel("periodical$FILTER_ID_MARKER", 'periodical')
+	. $widgets->createLabel("periodical$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'periodicalFilterPeriodical'))
 	. '&nbsp;'
 	. $widgets->createField("periodical$FILTER_ID_MARKER", null, '0', '', false, 'radio')
-	. $widgets->createLabel("periodical$FILTER_ID_MARKER", 'not periodical')
+	. $widgets->createLabel("periodical$FILTER_ID_MARKER", getBadgerTranslation2('statistics2', 'periodicalFilterNotPeriodical'))
 	;
 	
 
 $availableFilters = array (
-	'unselected' => 'Please choose a filter',
-	'title' => 'Title',
-	'description' => 'Description',
-	'valutaDate' => 'Valuta date',
-	'valutaDateBetween' => 'Valuta date between',
-	'valutaDateAgo' => 'Valuta date last days',
-	'amount' => 'Amount',
-	'outsideCapital' => 'Outside capital',
-	'transactionPartner' => 'Transaction partner',
-	'category' => 'Category',
-	'exceptional' => 'Exceptional',
-	'periodical' => 'Periodical',
-	'delete' => '&lt;Delete Filter&gt;'
+	'unselected' => getBadgerTranslation2('statistics2', 'availableFiltersUnselected'),
+	'title' => getBadgerTranslation2('statistics2', 'availableFiltersTitle'),
+	'description' => getBadgerTranslation2('statistics2', 'availableFiltersDescription'),
+	'valutaDate' => getBadgerTranslation2('statistics2', 'availableFiltersValutaDate'),
+	'valutaDateBetween' => getBadgerTranslation2('statistics2', 'availableFiltersValutaDateBetween'),
+	'valutaDateAgo' => getBadgerTranslation2('statistics2', 'availableFiltersValutaDateAgo'),
+	'amount' => getBadgerTranslation2('statistics2', 'availableFiltersAmount'),
+	'outsideCapital' => getBadgerTranslation2('statistics2', 'availableFiltersOutsideCapital'),
+	'transactionPartner' => getBadgerTranslation2('statistics2', 'availableFiltersTransactionPartner'),
+	'category' => getBadgerTranslation2('statistics2', 'availableFiltersCategory'),
+	'exceptional' => getBadgerTranslation2('statistics2', 'availableFiltersExceptional'),
+	'periodical' => getBadgerTranslation2('statistics2', 'availableFiltersPeriodical'),
+	'delete' => getBadgerTranslation2('statistics2', 'availableFiltersDelete')
 );
 
 echo $widgets->createField('dateFormat', null, $us->getProperty('badgerDateFormat'), null, false, 'hidden');
@@ -184,8 +176,8 @@ $filterBox = '<div>'
 	. '<div style="position: absolute; left: 52em; margin-top: 1.2em;">'
 	. $dgAccounts->writeDataGrid()
 	. '</div>'
-	. '<div>Filters'
-	. $widgets->createButton('addFilter', 'Add Filter', 'addFilterLineX();')
+	. '<div>' . getBadgerTranslation2('statistics2', 'filterCaption')
+	. $widgets->createButton('addFilter', getBadgerTranslation2('statistics2', 'addFilterButton'), 'addFilterLineX();')
 	. '</div>'
 	. '<form name="mainform" id="mainform">'
 	. '<div id="filterContent" style="overflow: auto; height: 10em; border: 1px solid blue; width: 50em;">'
@@ -193,30 +185,34 @@ $filterBox = '<div>'
 	. '</form>'
 	. '</div>';
 
-echo $widgets->addTwistieSection('Input', $filterBox, null, true);
+echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionInput'), $filterBox, null, true);
 
 $ACTIVE_OS_MARKER = '__ACTIVE_OS__';
 
 echo '<div id="outputSelections" style="display:none;">';
 $outputSelectionTrend = '<div id="outputSelectionTrend" style="display: inline; vertical-align: top;">'
 	. '<fieldset style="display: inline; vertical-align: top;">'
-	. '<legend>Start Value</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValue')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, '0', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", '0 (zero)')
+	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValueZero'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, 'b', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", 'Balance')
+	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValueBalance'))
 	. '</p>'
 	. '</fieldset>'
 	. '<fieldset style="display: inline; vertical-align: top;">'
-	. '<legend>Tick labels</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionTrendTickLabels')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionTrendTicks$ACTIVE_OS_MARKER", null, 's', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionTrendTicks$ACTIVE_OS_MARKER", 'show')
+	. $widgets->createLabel("outputSelectionTrendTicks$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendTickLabelsShow'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionTrendTicks$ACTIVE_OS_MARKER", null, 'h', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionTrendTicks$ACTIVE_OS_MARKER", 'hide')
+	. $widgets->createLabel("outputSelectionTrendTicks$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendTickLabelsHide'))
 	. '</p>'
 	. '</fieldset>'
 	. '</div>';	
@@ -224,23 +220,27 @@ echo $outputSelectionTrend;
 
 $outputSelectionCategory = '<div id="outputSelectionCategory">'
 	. '<fieldset style="display: inline; vertical-align: top;">'
-	. '<legend>Category Type</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionCategoryType')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionCategoryType$ACTIVE_OS_MARKER", null, 'i', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionCategoryType$ACTIVE_OS_MARKER", 'Input')
+	. $widgets->createLabel("outputSelectionCategoryType$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionCategoryTypeInput'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionCategoryType$ACTIVE_OS_MARKER", null, 'o', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionCategoryType$ACTIVE_OS_MARKER", 'Output')
+	. $widgets->createLabel("outputSelectionCategoryType$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionCategoryTypeOutput'))
 	. '</p>'
 	. '</fieldset>'
 	. '<fieldset style="display: inline; vertical-align: top;">'
-	. '<legend>Sub-Categories</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionCategorySubCategories')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", null, 't', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", 'Summarize sub-categories')
+	. $widgets->createLabel("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionCategorySubCategoriesSummarize'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", null, 'f', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", 'Don not summarize')
+	. $widgets->createLabel("outputSelectionCategorySummarize$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionCategorySubCategoriesNoSummarize'))
 	. '</p>'
 	. '</fieldset>'
 	. '</div>';
@@ -248,29 +248,33 @@ echo $outputSelectionCategory;
 
 $outputSelectionTimespan = '<div id="outputSelectionTimespan">'
 	. '<fieldset style="display: inline; vertical-align: top;">'
-	. '<legend>Type</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionTimespanType')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'w', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Week')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTimespanTypeWeek'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'm', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Month')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTimespanTypeMonth'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'q', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Quarter')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTimespanTypeQuarter'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionTimespanType$ACTIVE_OS_MARKER", null, 'y', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", 'Year')
+	. $widgets->createLabel("outputSelectionTimespanType$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTimespanTypeYear'))
 	. '</p>'
 	. '</fieldset>'
 	. '<fieldset style="display: inline; vertical-align: top;">'
-	. '<legend>Sub-Categories</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionCategorySubCategories')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", null, 't', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", 'Summarize sub-categories')
+	. $widgets->createLabel("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionCategorySubCategoriesSummarize'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", null, 'f', '', false, 'radio')
-	. $widgets->createLabel("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", 'Don not summarize')
+	. $widgets->createLabel("outputSelectionTimespanSummarize$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionCategorySubCategoriesNoSummarize'))
 	. '</p>'
 	. '</fieldset>'
 	. '</div>';
@@ -278,29 +282,31 @@ echo $outputSelectionTimespan;
 echo '</div>';
 
 $outputSelectionContent = '<fieldset style="width: 8em; display: inline; vertical-align: top;">'
-	. '<legend>Graph Type</legend>'
+	. '<legend>'
+	. getBadgerTranslation2('statistics2', 'outputSelectionGraphType')
+	. '</legend>'
 	. '<p>'
 	. $widgets->createField("outputSelectionType", null, 'Trend', '', false, 'radio', 'checked="checked" onchange="updateOutputSelection();"')
-	. $widgets->createLabel("outputSelectionType", 'Trend')
+	. $widgets->createLabel("outputSelectionType", getBadgerTranslation2('statistics2', 'outputSelectionGraphTypeTrend'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionType", null, 'Category', '', false, 'radio', 'onchange="updateOutputSelection();"')
-	. $widgets->createLabel("outputSelectionType", 'Category')
+	. $widgets->createLabel("outputSelectionType", getBadgerTranslation2('statistics2', 'outputSelectionGraphTypeCategory'))
 	. '</p><p>'
 	. $widgets->createField("outputSelectionType", null, 'Timespan', '', false, 'radio', 'onchange="updateOutputSelection();"')
-	. $widgets->createLabel("outputSelectionType", 'Timespan')
+	. $widgets->createLabel("outputSelectionType", getBadgerTranslation2('statistics2', 'outputSelectionGraphTypeTimespan'))
 	. '</p>'
 	. '</fieldset>'
 	. "<div id='outputSelectionContent' style='display: inline; vertical-align: top;'>"
 	. str_replace($ACTIVE_OS_MARKER, '', $outputSelectionTrend)
 	. '</div>';
 
-echo $widgets->addTwistieSection('Output Selection', $outputSelectionContent, null, true);	
+echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionOutputSelection'), $outputSelectionContent, null, true);	
 echo '<div>';
-echo $widgets->createButton('applyFilter', 'Analyse', 'applyFilterX();');
+echo $widgets->createButton('applyFilter', getBadgerTranslation2('statistics2', 'analyzeButton'), 'applyFilterX();');
 echo '</div>';
 
-echo $widgets->addTwistieSection('Graph', '<div id="graphContent"></div>', null, true);
+echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionGraph'), '<div id="graphContent"></div>', null, true);
 
-echo $widgets->addTwistieSection('Output', $dgResult->writeDataGrid(), null, true);
+echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionOutput'), $dgResult->writeDataGrid(), null, true);
 eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 ?>
