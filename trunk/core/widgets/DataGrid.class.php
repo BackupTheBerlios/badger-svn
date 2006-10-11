@@ -194,31 +194,30 @@ class DataGrid {
 		$this->tpl->addJavaScript('js/dataGrid.js');
 		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
 		
-		$this->tpl->addOnLoadEvent('var dataGrid'.$this->UniqueId.' = new classDataGrid();');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.uniqueId = "'. $this->UniqueId .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.sourceXML = "'.$this->sourceXML.'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.headerName = new Array("'.implode('","',$this->headerName).'");');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.columnOrder = new Array("'.implode('","',$this->columnOrder).'");');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.headerSize = new Array('.implode(',',$this->headerSize).');');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.cellAlign = new Array("'.implode('","',$this->cellAlign).'");');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.noRowSelectedMsg = "'. $this->noRowSelectedMsg .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.deleteMsg = "'. $this->deleteMsg .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.deleteRefreshType = "'. $this->deleteRefreshType .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.deleteAction = "'. $this->deleteAction .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.editAction = "'. $this->editAction .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.newAction = "'. $this->newAction .'";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.tplPath = "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/";');
-		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.loadingMessage = "'.$this->LoadingMessage.'";');
+		$this->tpl->addOnLoadEvent('var dataGrid'.$this->UniqueId.' = new DataGrid( {');
+		$this->tpl->addOnLoadEvent('  uniqueId: "'. $this->UniqueId .'",');
+		$this->tpl->addOnLoadEvent('  sourceXML: "'.$this->sourceXML.'",');
+		$this->tpl->addOnLoadEvent('  headerName: new Array("'.implode('","',$this->headerName).'"),');
+		$this->tpl->addOnLoadEvent('  columnOrder: new Array("'.implode('","',$this->columnOrder).'"),');
+		$this->tpl->addOnLoadEvent('  headerSize: new Array('.implode(',',$this->headerSize).'),');
+		$this->tpl->addOnLoadEvent('  cellAlign: new Array("'.implode('","',$this->cellAlign).'"),');
+		$this->tpl->addOnLoadEvent('  noRowSelectedMsg: "'. $this->noRowSelectedMsg .'",');
+		$this->tpl->addOnLoadEvent('  deleteMsg: "'. $this->deleteMsg .'",');
+		$this->tpl->addOnLoadEvent('  deleteRefreshType: "'. $this->deleteRefreshType .'",');
+		$this->tpl->addOnLoadEvent('  deleteAction: "'. $this->deleteAction .'",');
+		$this->tpl->addOnLoadEvent('  editAction: "'. $this->editAction .'",');
+		$this->tpl->addOnLoadEvent('  newAction: "'. $this->newAction .'",');
+		$this->tpl->addOnLoadEvent('  loadingMessage: "'.$this->LoadingMessage.'",');
+		
+		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
+		if ( isset($dgParameter) ) {		
+				$this->tpl->addOnLoadEvent('  parameter: "'.$dgParameter.'",');
+		}	
+		$this->tpl->addOnLoadEvent('  tplPath: "'.BADGER_ROOT.'/tpl/'.$this->tpl->getThemeName().'/Widgets/dataGrid/"');
+		$this->tpl->addOnLoadEvent('});');
 		$this->tpl->addOnLoadEvent('$("dataGrid'.$this->UniqueId.'").obj = dataGrid'.$this->UniqueId.';');
 		//$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.'.htmlDiv = $("dataGrid'.$this->UniqueId.'");');
 
-		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
-		if ( isset($dgParameter) ) {		
-				$this->tpl->addOnLoadEvent("dataGrid".$this->UniqueId.".init('".$dgParameter."');");
-		}else {
-			$this->tpl->addOnLoadEvent("dataGrid".$this->UniqueId.".init();");
-		}	
-		
 		$this->tpl->addOnLoadEvent('Behaviour.register(dataGrid'.$this->UniqueId.'.behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid'.$this->UniqueId.'"), \'keypress\', dataGrid'.$this->UniqueId.'.KeyEvents, false);');
