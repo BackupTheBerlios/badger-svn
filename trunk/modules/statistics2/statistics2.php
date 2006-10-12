@@ -286,13 +286,13 @@ $outputSelectionContent = '<fieldset style="width: 8em; display: inline; vertica
 	. getBadgerTranslation2('statistics2', 'outputSelectionGraphType')
 	. '</legend>'
 	. '<p>'
-	. $widgets->createField("outputSelectionType", null, 'Trend', '', false, 'radio', 'checked="checked" onchange="updateOutputSelection();"')
+	. $widgets->createField("outputSelectionType", null, 'Trend', '', false, 'radio', 'checked="checked" onchange="updateOutputSelection();" onclick="updateOutputSelection();"')
 	. $widgets->createLabel("outputSelectionType", getBadgerTranslation2('statistics2', 'outputSelectionGraphTypeTrend'))
 	. '</p><p>'
-	. $widgets->createField("outputSelectionType", null, 'Category', '', false, 'radio', 'onchange="updateOutputSelection();"')
+	. $widgets->createField("outputSelectionType", null, 'Category', '', false, 'radio', 'onchange="updateOutputSelection();" onclick="updateOutputSelection();"')
 	. $widgets->createLabel("outputSelectionType", getBadgerTranslation2('statistics2', 'outputSelectionGraphTypeCategory'))
 	. '</p><p>'
-	. $widgets->createField("outputSelectionType", null, 'Timespan', '', false, 'radio', 'onchange="updateOutputSelection();"')
+	. $widgets->createField("outputSelectionType", null, 'Timespan', '', false, 'radio', 'onchange="updateOutputSelection();" onclick="updateOutputSelection();"')
 	. $widgets->createLabel("outputSelectionType", getBadgerTranslation2('statistics2', 'outputSelectionGraphTypeTimespan'))
 	. '</p>'
 	. '</fieldset>'

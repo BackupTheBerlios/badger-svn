@@ -72,7 +72,7 @@ function applyFilterX() {
 					if ($F("categoryOp" + currentId) || $F("categoryOp" + currentId + "_0")) {
 						var operator;
 						
-						if ($F("categoryOp" + currentId)) {
+						if ($F("categoryOp" + currentId) == "eq") {
 							operator = "eq";
 						} else {
 							operator = "ne";
@@ -143,7 +143,7 @@ function resetBaseFilter() {
 }
 
 function getSelectedAccountIds() {
-	var accountIdArr = dataGridStatistics2Accounts.getAllIds();
+	var accountIdArr = $("dataGridStatistics2Accounts").obj.getAllIds();
 	var accountIds = "";
 	for (i = 0; i < accountIdArr.length; i++) {
 		accountIds += accountIdArr[i] + ",";
@@ -154,17 +154,17 @@ function getSelectedAccountIds() {
 }
 
 function setDGResultAccounts(accountIds) {
-	dataGridStatistics2Result.sourceXML = "../../core/XML/getDataGridXML.php?q=MultipleAccounts&qp=" + accountIds;
+	$("dataGridStatistics2Result").obj.sourceXML = "../../core/XML/getDataGridXML.php?q=MultipleAccounts&qp=" + accountIds;
 }
 
 function updateDGResult() {
-	dataGridStatistics2Result.deleteAllFilter();
+$("dataGridStatistics2Result").obj.deleteAllFilter();
 
 	for (var i = 0; i < currentFilterX.length; i++) {
-		dataGridStatistics2Result.addFilter(currentFilterX[i]["field"], currentFilterX[i]["operator"], currentFilterX[i]["value"]);
+		$("dataGridStatistics2Result").obj.addFilter(currentFilterX[i]["field"], currentFilterX[i]["operator"], currentFilterX[i]["value"]);
 	}
 	
-	dataGridStatistics2Result.loadData();
+	$("dataGridStatistics2Result").obj.loadData();
 }
 
 function serializeParameterX() {
@@ -182,10 +182,9 @@ function serializeParameterX() {
 }
 
 function showGraph() {
-	var type;
-	if ($F("outputSelectionType")) {
+	if ($F("outputSelectionType") == "Trend") {
 		showTrendGraph();
-	} else if ($F("outputSelectionType_0")) {
+	} else if ($F("outputSelectionType_0") == "Category") {
 		showCategoryGraph();
 	} else {
 		showTimespanGraph();
@@ -196,13 +195,13 @@ function showTrendGraph() {
 	var start;
 	var ticks;
 	
-	if ($F("outputSelectionTrendStart")) {
+	if ($F("outputSelectionTrendStart") == 0) {
 		start = "0";
 	} else {
 		start = "b";
 	}
 	
-	if ($F("outputSelectionTrendTicks")) {
+	if ($F("outputSelectionTrendTicks") == "s") {
 		ticks = "s";
 	} else {
 		ticks = "h";
@@ -215,13 +214,13 @@ function showCategoryGraph() {
 	var type;
 	var summarize;
 
-	if ($F("outputSelectionCategoryType")) {
+	if ($F("outputSelectionCategoryType") == "i") {
 		type = "i";
 	} else {
 		type = "o";
 	}
 	
-	if ($F("outputSelectionCategorySummarize")) {
+	if ($F("outputSelectionCategorySummarize") == "t") {
 		summarize = "t";
 	} else {
 		summarize = "f";
@@ -234,17 +233,17 @@ function showTimespanGraph() {
 	var type;
 	var summarize;
 	
-	if ($F("outputSelectionTimespanType")) {
+	if ($F("outputSelectionTimespanType") == "w") {
 		type = "w";
-	} else if ($F("outputSelectionTimespanType_0")) {
+	} else if ($F("outputSelectionTimespanType_0") == "m") {
 		type = "m";
-	} else if ($F("outputSelectionTimespanType_1")) {
+	} else if ($F("outputSelectionTimespanType_1") == "q") {
 		type = "q";
 	} else {
 		type = "y";
 	}
 	
-	if ($F("outputSelectionTimespanSummarize")) {
+	if ($F("outputSelectionTimespanSummarize") == "t") {
 		summarize = "t";
 	} else {
 		summarize = "f";
@@ -275,9 +274,9 @@ function displayGraph(request) {
 
 function updateOutputSelection() {
 	var sourceName;
-	if ($F("outputSelectionType")) {
+	if ($F("outputSelectionType") == "Trend") {
 		sourceName = "outputSelectionTrend";
-	} else if ($F("outputSelectionType_0")) {
+	} else if ($F("outputSelectionType_0") == "Category") {
 		sourceName = "outputSelectionCategory";
 	} else {
 		sourceName = "outputSelectionTimespan";
@@ -298,7 +297,7 @@ function reachThroughTrend(date, accountIds) {
 function reachThroughCategory(categoryId) {
 	var field;
 
-	if ($F("outputSelectionCategorySummarize")) {
+	if ($F("outputSelectionCategorySummarize") == "t") {
 		field = "parentCategoryId";
 	} else {
 		field = "categoryId";
@@ -310,7 +309,7 @@ function reachThroughCategory(categoryId) {
 
 function reachThroughTimespan(begin, end, categoryId) {
 	var field;
-	if ($F("outputSelectionTimespanSummarize")) {
+	if ($F("outputSelectionTimespanSummarize") == "t") {
 		field = "parentCategoryId";
 	} else {
 		field = "categoryId";
