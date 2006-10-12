@@ -1,6 +1,6 @@
 <?php
 /*
-* ____          _____   _____ ______ _____ 
+* ____          _____   _____ ______ _____  
 *|  _ \   /\   |  __ \ / ____|  ____|  __ \
 *| |_) | /  \  | |  | | |  __| |__  | |__) |
 *|  _ < / /\ \ | |  | | | |_ |  __| |  _  /
@@ -13,6 +13,9 @@
 **/
 // The next line determines the displayed name of this parser.
 // BADGER_REAL_PARSER_NAME comdirect Bank AG
+
+define ('HEADER_END_MARKER', 'Buchungstag');
+
 /**
  * transform csv to array
  *
@@ -37,23 +40,32 @@ function parseToArray($fp, $accountId){
          *
          * @var boolean
          */
-        $headerIgnored = NULL;
+        $headerIgnored = false;
         //for every line
         while (!feof($fp)) {
             //read one line
             $rowArray = NULL;
-            //ignore header (first 14 lines)
-            if (!$headerIgnored){
-                for ($headerLine = 0; $headerLine < 14; $headerLine++) {
-                    $garbage = fgets($fp, 1024);
-                    //to ignore this code on the next loop run
-                    $headerIgnored = true;
-                }
-            }
-            //read one line
             $line = fgets($fp, 1024);
+			
+			//skip header
+			if (!$headerIgnored) {
+				$tmp = strpos($line, HEADER_END_MARKER);
+				//Need this complex check as the source file is reported to say "Buchungstag" and Buchungstag
+				//(with and without quotes) at random
+				if ($tmp !== false && $tmp <= 2) {
+					$headerIgnored = true;
+				}
+				
+				continue;
+			}
+			
+			//break on first empty line, e. g. if we are done with the transactions
+			if (trim($line) === '') {
+				break;
+			}
+			
             //if line is not empty or is no header
-            if (strstr($line, ";")) { //
+            if (strstr($line, ";")) { // 
                 //if line contains excactly 4 ;, to ensure it is a valid Postbank csv file
                 if (substr_count ($line, ";")==4){
                     // divide String to an array
