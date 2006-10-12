@@ -236,7 +236,6 @@ DataGrid.prototype = {
 	},
 	
 	addSeparatorRow: function(dataGrid, dgData) {
-		alert(dataGrid)		
 		newRow = document.createElement("tr");
 		newRow.id = dataGrid.uniqueId+"separator";
 		newRow.className = "dgRowSeparator";	

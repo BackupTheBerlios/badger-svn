@@ -194,7 +194,7 @@ class DataGrid {
 		$this->tpl->addJavaScript('js/dataGrid.js');
 		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
 		
-		$this->tpl->addOnLoadEvent('var dataGrid'.$this->UniqueId.' = new DataGrid( {');
+		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.' = new DataGrid( {');
 		$this->tpl->addOnLoadEvent('  uniqueId: "'. $this->UniqueId .'",');
 		$this->tpl->addOnLoadEvent('  sourceXML: "'.$this->sourceXML.'",');
 		$this->tpl->addOnLoadEvent('  headerName: new Array("'.implode('","',$this->headerName).'"),');

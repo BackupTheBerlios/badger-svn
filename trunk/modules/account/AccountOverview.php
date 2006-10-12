@@ -77,14 +77,14 @@ $amountFilterOperator = $widgets->createSelectField("amountFilter", $datagGridFi
 $categoryLabel = $widgets->createLabel("categoryId", getBadgerTranslation2('accountTransaction', 'category'), false, "");
 $categoryField = $widgets->createSelectField("categoryId", getCategorySelectArray(), "", "", false, "style='width: 210px;'");
 
-$btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dgSetFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/dataGrid/filter.gif");
-$btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "dgResetFilter(['title','amount','valutaDate','categoryId'])", "Widgets/cancel.gif");
+$btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dataGridAccount$accountID.setFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/dataGrid/filter.gif");
+$btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "dataGridAccount$accountID.resetFilter(['title','amount','valutaDate','categoryId'])", "Widgets/cancel.gif");
 
 // DataGrid 
-$btnNewFinished = $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dgNew('type=finished')", "Account/finished_transaction_new.gif");
-$btnNewPlanned = $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dgNew('type=planned')", "Account/planned_transaction_new.gif");
-$btnEdit = $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
-$btnDelete = $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
+$btnNewFinished = $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dataGridAccount$accountID.callNewEvent('type=finished')", "Account/finished_transaction_new.gif");
+$btnNewPlanned = $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dataGridAccount$accountID.callNewEvent('type=planned')", "Account/planned_transaction_new.gif");
+$btnEdit = $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dataGridAccount$accountID.callEditEvent()", "Widgets/table_edit.gif");
+$btnDelete = $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dataGridAccount$accountID.callDeleteEvent()", "Widgets/table_delete.gif");
 $btnShowPlannedTransactions = $widgets->createButton("btnShowPlannedTransactions", getBadgerTranslation2('accountOverview', 'showPlannedTrans'),  "location.href = location.href.replace(/AccountOverview\.php/, 'AccountOverviewPlanned.php');", "Account/planned_transaction.png");
 
 $dgHtml = $dataGrid->writeDataGrid();
