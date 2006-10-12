@@ -116,8 +116,6 @@ DataGrid.prototype = {
 	
 	// fill the datagrid with values
 	insertData: function(objXHR) {
-		//alert(this)
-		//alert(objXHR)
 		objXmlDoc = objXHR.responseXML;
 		strID = this.uniqueId;
 		
@@ -146,7 +144,8 @@ DataGrid.prototype = {
 			}
 			
 			//alert("xmlRows.length: " + xmlRows.length);
-			for (j=0; j<xmlRows.length; j++) {				
+			for (j=0; j<xmlRows.length; j++) {
+				//alert(j + "/"+ xmlRows.length);			
 				xmlCells = xmlRows[j].getElementsByTagName("cell");				
 				
 				//first cell of a row, is always a unique ID
@@ -193,7 +192,6 @@ DataGrid.prototype = {
 					if (xmlElement.textContent) cell.innerHTML = xmlElement.textContent; // FF
 					if (xmlElement.text) cell.innerHTML = xmlElement.text; //IE
 					if (xmlElement.innerHTML) cell.innerHTML = xmlElement.innerHTML; //Opera
-					
 					// add image
 					if (xmlElement.getAttribute("img")) {
 						cell.innerHTML = "<img src='"+badgerRoot+"/"+xmlElement.getAttribute("img")+"' title='"+xmlElement.getAttribute("title")+"' />&nbsp;";
@@ -203,16 +201,15 @@ DataGrid.prototype = {
 					// add cell
 					newRow.appendChild(cell);			
 				}	
-				
 				//insert empty cell as last one (only display purposes)
 				lastTD = document.createElement("td");
 				newRow.appendChild(lastTD);
 				//add complete row to the grid
-				dgData.appendChild(newRow);
+				dgData.appendChild(newRow);				
 			}
 			//refresh JS-behaviours of the rows
 			Behaviour.apply();
-		
+
 			//activate previous selected rows (after resorting)
 			for (i=0; i<this.arrSelectedRows.length; i++) {
 				if($(this.arrSelectedRows[i])) {
@@ -235,12 +232,13 @@ DataGrid.prototype = {
 		}
 
 		// hide loading image
-		$('dgDivScroll'+strID).className = "dgDivScroll";
+		$('dgDivScroll'+strID).className = "dgDivScroll";		
 	},
 	
-	addSeparatorRow: function(dataGrid, dgData) {		
+	addSeparatorRow: function(dataGrid, dgData) {
+		alert(dataGrid)		
 		newRow = document.createElement("tr");
-		newRow.id = this.dataGrid.uniqueId+"separator";
+		newRow.id = dataGrid.uniqueId+"separator";
 		newRow.className = "dgRowSeparator";	
 	
 		checkTD = document.createElement("td");
