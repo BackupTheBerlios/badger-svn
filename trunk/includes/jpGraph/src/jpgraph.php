@@ -16,7 +16,7 @@ require_once 'jpgraph_errhandler.inc.php';
 DEFINE('JPG_VERSION','2.1.3');
 
 // Minimum required PHP version
-DEFINE('MIN_PHPVERSION','5.1.0');
+DEFINE('MIN_PHPVERSION','5.0.0');
 
 // Should the image be a truecolor image? 
 // Note 1: Has only effect with GD 2.0.1 and above.
