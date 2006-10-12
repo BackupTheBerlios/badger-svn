@@ -216,8 +216,10 @@ function showCategoryGraph() {
 
 	if ($F("outputSelectionCategoryType") == "i") {
 		type = "i";
+		addFilterX("amount", "ge", 0);
 	} else {
 		type = "o";
+		addFilterX("amount", "le", 0);
 	}
 	
 	if ($F("outputSelectionCategorySummarize") == "t") {
