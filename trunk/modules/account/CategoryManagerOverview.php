@@ -38,11 +38,11 @@ echo $tpl->getHeader($pageTitle);
 
 echo "<h1>$pageTitle</h1>";
 
-echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "dgNew()", "Widgets/table_add.gif");
+echo $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'new'), "CategoryManager.callNewEvent()", "Widgets/table_add.gif");
 echo ' ';
-echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dgEdit()", "Widgets/table_edit.gif");
+echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "CategoryManager.callEditEvent()", "Widgets/table_edit.gif");
 echo ' ';
-echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dgDelete()", "Widgets/table_delete.gif");
+echo $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "CategoryManager.callDeleteEvent()", "Widgets/table_delete.gif");
 		
 echo $dataGrid->writeDataGrid();
 
