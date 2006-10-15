@@ -471,7 +471,7 @@ function importMatching($importedTransaction, $accountId) {
 //		}
 	}
 	
-	ksort($similarTransactions);
+	krsort($similarTransactions);
 	
 	if (count($similarTransactions)) {
 		$importedTransaction['similarTransactions'] = $similarTransactions;

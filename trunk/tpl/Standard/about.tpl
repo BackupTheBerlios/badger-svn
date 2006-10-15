@@ -38,6 +38,7 @@
 <h2>$contributors</h2>
 <ul>
 	<li>Norman Pausch</li>
+	<li>Jürgen Husse</li>
 </ul>
 
 <h2>$usedComponents</h2>
