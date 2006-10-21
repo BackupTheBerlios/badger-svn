@@ -43,7 +43,7 @@ $dgAccounts->initDataGridJS();
 
 
 $dgResult = new DataGrid($tpl, 'Statistics2Result');
-$dgResult->sourceXML = BADGER_ROOT . '/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1';
+$dgResult->sourceXML = '';//BADGER_ROOT . '/core/XML/getDataGridXML.php?q=MultipleAccounts&qp=1';
 $dgResult->headerName = array(
 	getBadgerTranslation2('statistics2', 'colAccountName'),
 	getBadgerTranslation2('accountOverview', 'colValutaDate'),
@@ -59,7 +59,9 @@ $dgResult->initDataGridJS();
 
 $widgets->addNavigationHead();
 
-echo $tpl->getHeader(getBadgerTranslation2('statistics2', 'pageTitle'));
+$pageTitle = getBadgerTranslation2('statistics2', 'pageTitle');
+
+echo $tpl->getHeader($pageTitle);
 	
 $widgets->addToolTipLayer();
 
@@ -161,35 +163,33 @@ $availableFilters = array (
 	'delete' => getBadgerTranslation2('statistics2', 'availableFiltersDelete')
 );
 
-echo $widgets->createField('dateFormat', null, $us->getProperty('badgerDateFormat'), null, false, 'hidden');
+$dateFormat = $widgets->createField('dateFormat', null, $us->getProperty('badgerDateFormat'), null, false, 'hidden');
 
 $content = "<div style=\"float: left;\">";
 $content .= $widgets->createSelectField("filterSelect$FILTER_ID_MARKER", $availableFilters, "", "", false, "onchange=\"setFilterContent('$FILTER_ID_MARKER');\"");
 $content .= "</div><div id=\"filterContent$FILTER_ID_MARKER\"></div>";
-echo "<div id='filterLineEmpty' style='display:none;'>$content</div>";
+$filterLineEmpty = "<div id='filterLineEmpty' style='display:none;'>$content</div>";
+
+$filtersEmpty = '';
 
 foreach ($filters as $currentName => $currentFilter) {
-	echo "<div id='{$currentName}Empty' style='display:none;'>$currentFilter</div>";
+	$filtersEmpty .= "<div id='{$currentName}Empty' style='display:none;'>$currentFilter</div>";
 }
 
-$filterBox = '<div>'
-	. '<div style="position: absolute; left: 52em; margin-top: 1.2em;">'
-	. $dgAccounts->writeDataGrid()
-	. '</div>'
-	. '<div>' . getBadgerTranslation2('statistics2', 'filterCaption')
-	. $widgets->createButton('addFilter', getBadgerTranslation2('statistics2', 'addFilterButton'), 'addFilterLineX();')
-	. '</div>'
-	. '<form name="mainform" id="mainform">'
-	. '<div id="filterContent" style="overflow: auto; height: 10em; border: 1px solid blue; width: 50em;">'
-	. '</div>'
-	. '</form>'
-	. '</div>';
+$dataGridAccounts = $dgAccounts->writeDataGrid();
+$filterCaption = getBadgerTranslation2('statistics2', 'filterCaption');
+$addFilterButton = $widgets->createButton('addFilter', getBadgerTranslation2('statistics2', 'addFilterButton'), 'addFilterLineX();');
 
-echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionInput'), $filterBox, null, true);
+eval('$filterBoxContent = "' . $tpl->getTemplate('statistics2/filterBox') . '";');
+$filterBox = $widgets->addTwistieSection(
+	getBadgerTranslation2('statistics2', 'twistieCaptionInput'),
+	$filterBoxContent,
+	null,
+	true
+);
 
 $ACTIVE_OS_MARKER = '__ACTIVE_OS__';
 
-echo '<div id="outputSelections" style="display:none;">';
 $outputSelectionTrend = '<div id="outputSelectionTrend" style="display: inline; vertical-align: top;">'
 	. '<fieldset style="display: inline; vertical-align: top;">'
 	. '<legend>'
@@ -216,7 +216,6 @@ $outputSelectionTrend = '<div id="outputSelectionTrend" style="display: inline; 
 	. '</p>'
 	. '</fieldset>'
 	. '</div>';	
-echo $outputSelectionTrend; 
 
 $outputSelectionCategory = '<div id="outputSelectionCategory">'
 	. '<fieldset style="display: inline; vertical-align: top;">'
@@ -244,7 +243,6 @@ $outputSelectionCategory = '<div id="outputSelectionCategory">'
 	. '</p>'
 	. '</fieldset>'
 	. '</div>';
-echo $outputSelectionCategory;
 
 $outputSelectionTimespan = '<div id="outputSelectionTimespan">'
 	. '<fieldset style="display: inline; vertical-align: top;">'
@@ -278,8 +276,13 @@ $outputSelectionTimespan = '<div id="outputSelectionTimespan">'
 	. '</p>'
 	. '</fieldset>'
 	. '</div>';
-echo $outputSelectionTimespan;
-echo '</div>';
+
+
+$outputSelection = "<div id='outputSelections' style='display:none;'>
+	$outputSelectionTrend
+	$outputSelectionCategory
+	$outputSelectionTimespan
+</div>";
 
 $outputSelectionContent = '<fieldset style="width: 8em; display: inline; vertical-align: top;">'
 	. '<legend>'
@@ -300,13 +303,14 @@ $outputSelectionContent = '<fieldset style="width: 8em; display: inline; vertica
 	. str_replace($ACTIVE_OS_MARKER, '', $outputSelectionTrend)
 	. '</div>';
 
-echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionOutputSelection'), $outputSelectionContent, null, true);	
-echo '<div>';
-echo $widgets->createButton('applyFilter', getBadgerTranslation2('statistics2', 'analyzeButton'), 'applyFilterX();');
-echo '</div>';
+$outputSelectionTwistie = $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionOutputSelection'), $outputSelectionContent, null, true);	
 
-echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionGraph'), '<div id="graphContent"></div>', null, true);
+$analyzeButton = $widgets->createButton('applyFilter', getBadgerTranslation2('statistics2', 'analyzeButton'), 'applyFilterX();');
 
-echo $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionOutput'), $dgResult->writeDataGrid(), null, true);
+$graphTwistie = $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionGraph'), '<div id="graphContent"></div>', null, true);
+
+$outputTwistie = $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'twistieCaptionOutput'), '<div id="resultGridContainer" style="display:none;">' . $dgResult->writeDataGrid() . '</div>', null, true);
+
+eval('echo "' . $tpl->getTemplate('statistics2/statistics2') . '";');
 eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 ?>

@@ -158,7 +158,8 @@ function setDGResultAccounts(accountIds) {
 }
 
 function updateDGResult() {
-$("dataGridStatistics2Result").obj.deleteAllFilter();
+	$("resultGridContainer").style.display = "block";
+	$("dataGridStatistics2Result").obj.deleteAllFilter();
 
 	for (var i = 0; i < currentFilterX.length; i++) {
 		$("dataGridStatistics2Result").obj.addFilter(currentFilterX[i]["field"], currentFilterX[i]["operator"], currentFilterX[i]["value"]);
@@ -182,6 +183,8 @@ function serializeParameterX() {
 }
 
 function showGraph() {
+	$("graphContent").innerHTML = "";
+	
 	if ($F("outputSelectionType") == "Trend") {
 		showTrendGraph();
 	} else if ($F("outputSelectionType_0") == "Category") {
