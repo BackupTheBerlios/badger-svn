@@ -53,18 +53,11 @@ function applyFilterX() {
 				
 				case "valutaDateAgo":
 					if (parseInt($F("valutaDateAgo" + currentId)) > 0) {
-						var dateFormat = $F("dateFormat");
 						var now = new Date();
 						var ago = new Date(now.getTime() - parseInt($F("valutaDateAgo" + currentId)) * 24 * 60 * 60 * 1000);
-						var agoString = dateFormat;
-						var day = "" + (ago.getDay() < 10 ? "0" : "") + ago.getDay();
-						var month = "" + (ago.getMonth() + 1 < 10 ? "0" : "") + (ago.getMonth() + 1);
-						var year = "" + ago.getFullYear();
-						agoString = agoString.replace(/dd/, day);
-						agoString = agoString.replace(/mm/, month);
-						agoString = agoString.replace(/yyyy/, year);
-						agoString = agoString.replace(/yy/, year.substr(2, 2));
-						addFilterX("valutaDate", "ge", agoString);
+
+						addFilterX("valutaDate", "ge", formatDate(ago));
+						addFilterX("valutaDate", "lt", formatDate(now));
 					}
 					break;
 				
@@ -120,6 +113,21 @@ function applyFilterX() {
 	saveBaseFilter();
 	setDGResultAccounts(getSelectedAccountIds());
 	updateDGResult();
+}
+
+function formatDate(date) {
+	var dateFormat = $F("dateFormat");
+	
+	var dateString = dateFormat;
+	var day = "" + (date.getDay() < 10 ? "0" : "") + date.getDay();
+	var month = "" + (date.getMonth() + 1 < 10 ? "0" : "") + (date.getMonth() + 1);
+	var year = "" + date.getFullYear();
+	dateString = dateString.replace(/dd/, day);
+	dateString = dateString.replace(/mm/, month);
+	dateString = dateString.replace(/yyyy/, year);
+	dateString = dateString.replace(/yy/, year.substr(2, 2));
+	
+	return dateString;
 }
 
 function emptyFilterX() {
