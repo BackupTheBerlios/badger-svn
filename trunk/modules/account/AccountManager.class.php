@@ -252,7 +252,7 @@ class AccountManager extends DataGridHandler {
 					SELECT SUM(ft.amount) 
 					FROM finished_transaction ft
 					WHERE a.account_id = ft.account_id
-						AND ft.valuta_date <= '" . $today->getDate() . "'
+						AND (ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL)
 				) balance, a.last_calc_date, a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
 			WHERE a.account_id = $accountId";
@@ -459,7 +459,7 @@ class AccountManager extends DataGridHandler {
 					SELECT SUM( ft.amount ) 
 					FROM finished_transaction ft
 					WHERE a.account_id = ft.account_id
-						AND ft.valuta_date <= '" . $today->getDate() . "'
+						AND (ft.valuta_date <= '" . $today->getDate() . "' OR ft.valuta_date IS NULL)
 				) balance, a.last_calc_date, a.csv_parser, a.delete_old_planned_transactions
 			FROM account a
 				INNER JOIN currency c ON a.currency_id = c.currency_id
