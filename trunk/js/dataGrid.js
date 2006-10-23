@@ -99,7 +99,7 @@ DataGrid.prototype = {
 				// no refresh, delete rows in frontend
 				allSelectedIds = this.getAllIds();		    
 				for (i=0; i<allSelectedIds.length; i++) {
-					Element.remove($(allSelectedIds[i]));
+					Element.remove($(this.uniqueId + allSelectedIds[i]));
 					NumberOfRows = $("dgCount"+this.uniqueId).innerHTML;
 					NumberOfRows--;
 					$("dgCount"+this.uniqueId).innerHTML = NumberOfRows;
@@ -356,7 +356,7 @@ DataGrid.prototype = {
 	// delete all selected rows
 	//  - delete row in GUI
 	//  - send a background delete request to the server
-	deleteRows: function () {
+	callDeleteEvent: function () {
 		if(this.deleteAction) {		
 			dgData = $("dgTableData"+this.uniqueId);	
 			checkbox = Form.getInputs("dgForm"+this.uniqueId,"checkbox");
@@ -367,7 +367,7 @@ DataGrid.prototype = {
 			choise = confirm(this.deleteMsg +"("+allSelectedIds.length+")");
 			if (choise) {
 				// delete data in background
-				this.callDeleteEvent(this.deleteAction + allSelectedIds);			
+				this.deleteTheseRows(this.deleteAction + allSelectedIds);			
 			} //if (choise)
 		} //if (dgDeleteAction)
 	},
@@ -381,7 +381,7 @@ DataGrid.prototype = {
 	},
 
 	// delete data
-	callDeleteEvent: function(strUrl) {
+	deleteTheseRows: function(strUrl) {
 		var myAjax = new Ajax.Request(
 			strUrl, {
 				method: 'get',
@@ -600,7 +600,6 @@ DataGrid.prototype = {
 		}
 	},
 
-	//TODO: PROBLEM
 	//Mouse-Events
 	behaviour:  {
 		//Mouse-Events of the rows (selecting, activating)
