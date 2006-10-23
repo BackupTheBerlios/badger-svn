@@ -212,7 +212,7 @@ DataGrid.prototype = {
 
 			//activate previous selected rows (after resorting)
 			for (i=0; i<this.arrSelectedRows.length; i++) {
-				if($(this.arrSelectedRows[i])) {
+				if($(strID + this.arrSelectedRows[i])) {
 					this.selectRow($(strID+this.arrSelectedRows[i]));
 				}
 			}		
@@ -520,7 +520,7 @@ DataGrid.prototype = {
 	
 	//preselect an entry
 	preselectId: function (id) {
-		arrSelectedRows.push(id);
+		this.arrSelectedRows.push(id);
 	},
 	
 	saveDataGridParameter: function () {	

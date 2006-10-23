@@ -75,13 +75,10 @@ function showSelectPage() {
 	try {
 		$preselectedAccounts = $us->getProperty('statisticsPreselectedAccounts');
 		foreach ($preselectedAccounts as $currentPreselectedAccount) {
-			$tpl->addOnLoadEvent("dgPreselectId('$currentPreselectedAccount');");
+			$tpl->addOnLoadEvent("dataGridAccountManagerStatistic.preselectId('$currentPreselectedAccount');");
 		}
 	} catch (BadgerException $ex) {}
 	
-	$tpl->addOnLoadEvent("Behaviour.register(statisticsBehaviour);");
-	$tpl->addOnLoadEvent("Behaviour.apply();");
-
 	$widgets->addNavigationHead();
 
 	$selectTitle = getBadgerTranslation2('statistics','pageTitle');
@@ -169,6 +166,8 @@ function showTrendData() {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
+	updatePreselection();
+
 	$accountIds = getGPC($_GET, 'accounts', 'integerList');
 	$startDate = getGPC($_GET, 'startDate', 'Date');
 	$endDate = getGPC($_GET, 'endDate', 'Date');
@@ -380,6 +379,8 @@ function showCategoryData() {
 		throw new BadgerException('statistics', 'missingParameter');
 	}
 	
+	updatePreselection();
+
 	$accounts = getGPC($_GET, 'accounts', 'integerList');
 	$startDate = getGPC($_GET, 'startDate', 'Date');
 	$endDate = getGPC($_GET, 'endDate', 'Date');
@@ -579,5 +580,13 @@ function gatherCategories($accountIds, $startDate, $endDate, $type, $summarize) 
 
 function compareCategories($a, $b) {
 	return $a['amount']->compare($b['amount']);
+}
+
+function updatePreselection() {
+	global $us;
+	
+	$accountIds = getGPC($_GET, 'accounts', 'integerList');
+	
+	$us->setProperty('statisticsPreselectedAccounts', $accountIds);
 }
 ?>

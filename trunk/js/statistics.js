@@ -12,7 +12,7 @@ function submitSelect() {
 		
 	var accountIds = '';
 	var first = true;
-	var accountArray = dgGetAllIds();
+	var accountArray = dataGridAccountManagerStatistic.getAllIds();
 	
 	if (accountArray.length == 0) {
 		alert(errorMsgAccountMissing);
@@ -272,70 +272,3 @@ function dateCompare(d1Str, d2Str) {
 	
 	return 0;
 }
-
-var statisticsUpdatePreselectionUrl = "../../modules/statistics/updatePreselection.php"
-
-var statisticsBehaviour =  {
-	//Mouse-Events of the rows (selecting, activating)
-	'tr.dgRow' : function(element){
-		element.onclick = function(){
-			if(this.className=="dgRowSelected" || this.className=="dgRowSelectedActive") {
-				deselectRow(this);
-
-				var statisticsAjax = new Ajax.Request(
-					statisticsUpdatePreselectionUrl + "?action=unselect&id=" + this.id, { method: "post" }
-				);
-			} else {
-				selectRow(this);
-
-				var statisticsAjax = new Ajax.Request(
-					statisticsUpdatePreselectionUrl + "?action=select&id=" + this.id, { method: "post" }
-				);
-			}
-		}
-	},
-	// checkbox in the dataGrid-Header, for (de-)selecting all
-	'#dgSelector' : function(element){
-		element.onclick = function(){
-			checkbox = Form.getInputs("dgForm","checkbox");
-
-			if($F(this)=="on") {
-				//select all checkboxes		
-				var accountIds = '';
-				var first = true;
-
-				for (i=0; i<checkbox.length; i++) {
-					if(checkbox[i].id!="dgSelector") {
-						selectRow(checkbox[i].parentNode.parentNode);
-
-						if (!first) {
-							accountIds += ",";
-						} else {
-							first = false;
-						}
-						
-						accountIds += checkbox[i].parentNode.parentNode.id;
-					}
-				}
-			
-			var statisticsAjax = new Ajax.Request(
-				statisticsUpdatePreselectionUrl + "?action=select&id=" + accountIds, { method: "post" }
-			);
-				
-			} else {
-				//deselect all checkboxes	
-				for (i=0; i<checkbox.length; i++) {
-					if(checkbox[i].id!="dgSelector") {
-						deselectRow(checkbox[i].parentNode.parentNode);
-					}
-				}
-
-			var statisticsAjax = new Ajax.Request(
-				statisticsUpdatePreselectionUrl + "?action=unselect&id=all", { method: "post" }
-			);
-
-			} //if($F(this)=="on")
-			this.focus();
-		} //element.onclick 
-	}
-};
