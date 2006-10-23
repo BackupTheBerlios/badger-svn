@@ -152,7 +152,7 @@ foreach($accountIds as $currentAccountId) {
 	$filter = getDataGridFilter($currentAccount);
 	$currentAccount->setFilter($filter);
 
-	$currentBalances = getDailyAmount($currentAccount, $displayStartDate, $displayEndDate, false, $startWithBalance);
+	$currentBalances = getDailyAmount($currentAccount, $displayStartDate, $displayEndDate, false, $startWithBalance, true);
 		
 	$previousAmount = null;
 

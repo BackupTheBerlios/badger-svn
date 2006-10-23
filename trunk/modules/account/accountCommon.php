@@ -26,10 +26,13 @@ require_once BADGER_ROOT . '/core/Date/Span.php';
  * @return array Array of Amount objects corresponding to the balance of $account at each day between
  * $startDate and $endDate. The array keys are the dates as ISO-String (yyyy-mm-dd). 
  */
-function getDailyAmount($account, $startDate, $endDate, $isoDates = true, $startWithBalance = false) {
+function getDailyAmount($account, $startDate, $endDate, $isoDates = true, $startWithBalance = false, $includePlannedTransactions = false) {
 
 	$account->setTargetFutureCalcDate($endDate);
 	$account->setOrder(array (array ('key' => 'valutaDate', 'dir' => 'asc')));
+	if (!$includePlannedTransactions) {
+		$account->setType('finished');
+	}
 	
 	$result = array();
 	
