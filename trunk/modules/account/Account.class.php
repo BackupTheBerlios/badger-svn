@@ -1461,12 +1461,22 @@ class Account extends DataGridHandler {
 	}
 	
 	public function setCsvParser($csvParser) {
-		$this->csvParser = $csvParser;
+		global $logger;
+
+		if (strtoupper($csvParser) === 'NULL') {
+			$value = 'NULL';
+			$this->csvParser = null;
+		} else {
+			$value = "'" . $this->badgerDb->escapeSimple($csvParser) . "'";
+			$this->csvParser = $csvParser;
+		} 
 
 		$sql = "UPDATE account
-			SET csv_parser = '" . $this->badgerDb->escapeSimple($csvParser) . "'
+			SET csv_parser = $value
 			WHERE account_id = " . $this->id;
 	
+		$logger->log('Account::setCsvParser SQL: ' . $sql);
+
 		$dbResult =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($dbResult)) {

@@ -16,6 +16,7 @@ require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/account/CategoryManager.class.php';
 require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 require_once BADGER_ROOT . '/core/Date/Calc.php';
+require_once BADGER_ROOT . '/modules/csvImport/csvImportCommon.php';
 
 $pageHeading = getBadgerTranslation2('csv', 'title');
 $legend = getBadgerTranslation2('csv','legend');
@@ -333,32 +334,6 @@ if (isset($_POST['btnSubmit'])){
 } 		
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 require_once(BADGER_ROOT . "/includes/fileFooter.php");
-
-function getParsers() {
-	$baseDir = BADGER_ROOT . '/modules/csvImport/parser/';
-
-	$parsers = array();
-
-	$parserDir = dir($baseDir);
-	while (false !== ($parserFileName = $parserDir->read())) {
-		if (is_file($baseDir . $parserFileName)) {
-			$parserFile = fopen($baseDir . $parserFileName, "r");
-			while (!feof($parserFile)) {
-				$line = fgets($parserFile);
-				if (preg_match('/[\s]*\/\/[\s]*BADGER_REAL_PARSER_NAME[\s]+([^\n]+)/', $line, $match)) {
-					$parsers[$parserFileName] = $match[1];
-					break;
-				}
-			}
-			fclose($parserFile);
-		}
-	}
-	$parserDir->close();
-	
-	asort($parsers);
-
-	return $parsers;
-}
 
 function importMatching($importedTransaction, $accountId) {
 	global $us;

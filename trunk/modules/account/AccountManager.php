@@ -15,6 +15,7 @@ require_once(BADGER_ROOT . "/includes/fileHeaderFrontEnd.inc.php");
 require_once(BADGER_ROOT . '/modules/account/AccountManager.class.php');
 require_once BADGER_ROOT . '/core/navi/naviTools.php';
 require_once BADGER_ROOT . '/core/Translation2/translationTools.php';
+require_once BADGER_ROOT . '/modules/csvImport/csvImportCommon.php';
 
 $redirectPageAfterSave = "AccountManagerOverview.php";
 
@@ -131,6 +132,7 @@ function printFrontend() {
 	
 	$csvParserLabel = $widgets->createLabel('csvParser', getBadgerTranslation2('accountAccount', 'csvParser'), false);
 	$csvParsers = getParsers(); 
+	$csvParsers = array_merge(array ('NULL' => getBadgerTranslation2('accountAccount', 'csvNoParser')), $csvParsers);
 	$csvParserField = $widgets->createSelectField('csvParser', $csvParsers, $csvParserValue, '', false, "style='width: 31ex;'");
 
 	//Buttons
@@ -219,29 +221,4 @@ function getCurrencyArray($sortBy){
 	
 	return $curs;
 }
-
-function getParsers() {
-	$baseDir = BADGER_ROOT . '/modules/csvImport/parser/';
-
-	$parsers = array();
-
-	$parserDir = dir($baseDir);
-	while (false !== ($parserFileName = $parserDir->read())) {
-		if (is_file($baseDir . $parserFileName)) {
-			$parserFile = fopen($baseDir . $parserFileName, "r");
-			while (!feof($parserFile)) {
-				$line = fgets($parserFile);
-				if (preg_match('/[\s]*\/\/[\s]*BADGER_REAL_PARSER_NAME[\s]+([^\n]+)/', $line, $match)) {
-					$parsers[$parserFileName] = $match[1];
-					break;
-				}
-			}
-			fclose($parserFile);
-		}
-	}
-	$parserDir->close();
-	
-	asort($parsers);
-
-	return $parsers;
-}
+?>

@@ -165,7 +165,7 @@ function printFrontend() {
 	$outsideCapitalField = $widgets->createField("outsideCapital", 30,"on", "", false, "checkbox", $outsideCapitalValue);
 	
 	$keywordsLabel = $widgets->createLabel('keywords', getBadgerTranslation2('accountCategory', 'keywordsLabel'), false);
-	$keywordsField = $widgets->createField('keywords', 30, $keywordsValue, getBadgerTranslation2('acountCategory', 'keywordsDescription'), false, 'text', "style='width: 30ex;'");
+	$keywordsField = $widgets->createField('keywords', 30, $keywordsValue, getBadgerTranslation2('accountCategory', 'keywordsDescription'), false, 'text', "style='width: 30ex;'");
 	
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
