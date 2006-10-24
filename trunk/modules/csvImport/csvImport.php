@@ -365,10 +365,10 @@ function importMatching($importedTransaction, $accountId) {
 		
 		$categoryManager = new CategoryManager($badgerDb);
 		while ($currentCategory = $categoryManager->getNextCategory()) {
-			$categories[$currentCategory->getId()] = preg_split('/[\s]+/', $currentCategory->getKeywords(), -1, PREG_SPLIT_NO_EMPTY);
+			$categories[$currentCategory->getId()] = preg_split('/[\n]+/', $currentCategory->getKeywords(), -1, PREG_SPLIT_NO_EMPTY);
 		}
 	}
-	
+
 	if (!$importedTransaction['valutaDate']) {
 		return $importedTransaction;
 	}
@@ -467,7 +467,7 @@ function importMatching($importedTransaction, $accountId) {
 	foreach ($transactionStrings as $currentTransactionString) {
 		foreach ($categories as $currentCategoryId => $keywords) {
 			foreach ($keywords as $keyword) {
-				if (stripos($currentTransactionString, $keyword) !== false) {
+				if (stripos($currentTransactionString, trim($keyword)) !== false) {
 					$importedTransaction['categoryId'] = $currentCategoryId;
 					
 					break 3;
