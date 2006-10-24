@@ -152,7 +152,7 @@ class DataGrid {
 		$output = '<form id="dgForm'.$this->UniqueId.'"><div id="dataGrid'.$this->UniqueId.'" '.$this->width.' class="dataGrid">
 					<table id="dgTableHead'.$this->UniqueId.'" cellpadding="2" class="dgTableHead" cellspacing="0">
 						<tr>
-							<td style="width: 25px"><input id="dgSelector'.$this->UniqueId.'" type="checkbox" /></td>';
+							<td style="width: 25px"><input id="dgSelector'.$this->UniqueId.'" class="dgSelector" type="checkbox" /></td>';
 			for ($i=0; $i < count($this->headerName); $i++) {
 				$output .= '<td class="dgColumn" id="dgColumn'.$this->UniqueId.$this->columnOrder[$i].'" style="width: '.$this->headerSize[$i].'px">'.
 							$this->headerName[$i].'&nbsp;'.

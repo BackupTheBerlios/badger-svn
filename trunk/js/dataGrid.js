@@ -638,9 +638,9 @@ DataGrid.prototype = {
 			}
 		},
 		// checkbox in the dataGrid-Header, for (de-)selecting all
-		'#dgSelector' : function(element){
+		'input.dgSelector' : function(element){
 			element.onclick = function(){
-				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
+				dataGrid = this.parentNode.parentNode.parentNode.parentNode.parentNode.obj;
 				checkbox = Form.getInputs("dgForm"+dataGrid.uniqueId,"checkbox");
 				if($F(this)=="on") {
 					//select all checkboxes		
