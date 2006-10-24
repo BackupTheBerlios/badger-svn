@@ -93,9 +93,9 @@ $sendButton = $widgets->createButton("sendData", getBadgerTranslation2("forecast
 $dailyPocketMoneyLabel = getBadgerTranslation2("forecast", "dailyPocketMoneyLabel").":";
 $dailyPocketMoneyToolTip = $widgets->addToolTip(getBadgerTranslation2("forecast", "dailyPocketMoneyToolTip")) . "<br />";
 
-$balancedEndDateLabel1 = getBadgerTranslation2("forecast", "printedPocketMoney1Label"). ": " . $viewPocketMoney1 . " " . $accountCurrency . ")".":";
+$balancedEndDateLabel1 = getBadgerTranslation2("forecast", "printedPocketMoney1Label"). ": ";
 
-$balancedEndDateLabel2 = getBadgerTranslation2("forecast", "printedPocketMoney2Label"). ": " . $viewPocketMoney2 . " ". $accountCurrency. ")".":";
+$balancedEndDateLabel2 = getBadgerTranslation2("forecast", "printedPocketMoney2Label"). ": ";
 
 eval("echo \"".$tpl->getTemplate("forecast/forecast")."\";");
 
