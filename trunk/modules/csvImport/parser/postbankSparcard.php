@@ -12,7 +12,7 @@
 * Parse .xls files from Postbank (Germany). Tested with files from 18.05.2006
 **/
 // The next line determines the displayed name of this parser.
-// BADGER_REAL_PARSER_NAME Postbank Girokonto
+// BADGER_REAL_PARSER_NAME Postbank Sparcard
 /**
  * transform csv to array
  *
@@ -44,7 +44,7 @@ function parseToArray($fp, $accountId){
             $rowArray = NULL;
             //ignore header (first 14 lines)
             if (!$headerIgnored){
-                for ($headerLine = 0; $headerLine < 14; $headerLine++) {
+                for ($headerLine = 0; $headerLine < 10; $headerLine++) {
                     $garbage = fgets($fp, 1024);
                     //to ignore this code on the next loop run
                     $headerIgnored = true;
@@ -54,8 +54,8 @@ function parseToArray($fp, $accountId){
             $line = fgets($fp, 1024);
             //if line is not empty or is no header
             if (strstr($line, "\t")) { // \t = tab
-                //if line contains excactly 8 '\t', to ensure it is a valid Postbank csv file
-                if (substr_count ($line, "\t")==8){
+                //if line contains excactly 7 '\t', to ensure it is a valid Postbank Sparcard csv file
+                if (substr_count ($line, "\t")==7){
                     // divide String to an array
                     $transactionArray = explode("\t", $line);
                     //format date YY-MM-DD or YYYY-MM-DD
@@ -68,21 +68,13 @@ function parseToArray($fp, $accountId){
                     $transactionArray[3] = str_replace("\"","",$transactionArray[3]);
                     $transactionArray[3] = str_replace("\\","",$transactionArray[3]);                    
                     //if transactionArray[6]is a negative amount (expenditure), the transaction partner is the receiver, ele the sender is the transaction partner
-                    $kind = array (
-                    	"Auszahlung",
-                    	"Dauerauftrag",
-                    	"Überweisung"
-                    );
                     
-                    if (in_array($transactionArray[2], $kind)){
-                        $transactionPartner = $transactionArray[5];
-                    } else {
-                        $transactionPartner = $transactionArray[4];
-                    }               
+                   $transactionPartner = $transactionArray[4];
+                               
                     //format amount to usersettings
-                    $transactionArray[6] = str_replace(".","", $transactionArray[6]);
-                    $transactionArray[6] = str_replace(",",".",$transactionArray[6]);
-                    $amount1 = new Amount($transactionArray[6]);
+                    $transactionArray[5] = str_replace(".","", $transactionArray[5]);
+                    $transactionArray[5] = str_replace(",",".",$transactionArray[5]);
+                    $amount1 = new Amount($transactionArray[5]);
                     /**
                      * transaction array
                      *
