@@ -84,13 +84,13 @@ function parseToArray($fp, $accountId){
 					 * @var array
 					 */
 					$rowArray = array (
-					   "categoryId" => "",
-					   "accountId" => $accountId,
-					   "title" => substr($transactionArray[4],0,99),// cut title with more than 100 chars
-					   "description" => $transactionArray[3],
-					   "valutaDate" => $valutaDate1,
-					   "amount" => $amount1,
-					   "transactionPartner" => $transactionArray[5]
+						"categoryId" => "",
+						"accountId" => $accountId,
+						"title" => ucwords(strtolower(substr($transactionArray[4],0,99))),// cut title with more than 100 chars
+						"description" => ucwords(strtolower($transactionArray[3])),
+						"valutaDate" => $valutaDate1,
+						"amount" => $amount1,
+						"transactionPartner" => ucwords(strtolower($transactionArray[5]))
 					);
 				} else{
 					$noValidFile = 'true';
