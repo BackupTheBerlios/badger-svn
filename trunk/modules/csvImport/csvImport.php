@@ -177,9 +177,20 @@ if (isset($_POST['Upload'])){
 
    				for ($outputTransactionNumber = 0; $outputTransactionNumber < $transactionNumber; $outputTransactionNumber++) {
    					
+			    	$matchingTransactions = array();
+					$disableFields = '';
+			    	if (isset($importedTransactions[$outputTransactionNumber]['similarTransactions'])) {
+			    		foreach($importedTransactions[$outputTransactionNumber]['similarTransactions'] as $similarity => $currentTransaction) {
+			    			$matchingTransactions[$currentTransaction->getId()] = $currentTransaction->getTitle() . $similarity; //sprintf(' (%1.1f %%)', $similarity); 
+			    		}
+			    		
+			    		$disableFields = ' disabled="disabled"';
+			    	}
+		    		$matchingTransactions['none'] = getBadgerTranslation2('importCsv', 'dontMatchTransaction');
+
 					$tableSelectCheckbox = "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\" />";
 
-					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(), $importedTransactions[$outputTransactionNumber]['categoryId']);
+					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(), $importedTransactions[$outputTransactionNumber]['categoryId'], '', false, $disableFields);
 						    	
 				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
 				    						    
@@ -191,23 +202,15 @@ if (isset($_POST['Upload'])){
    							
 					$tableDescription = $widgets->createField("description".$outputTransactionNumber, 12, $importedTransactions[$outputTransactionNumber]["description"]);
    							
-					$tablePeriodicalCheckbox = "<input type=\"checkbox\" name=\"periodical" . $outputTransactionNumber . "\" value=\"select\" />";
+					$tablePeriodicalCheckbox = "<input type=\"checkbox\" id =\"periodical$outputTransactionNumber\" name=\"periodical" . $outputTransactionNumber . "\" value=\"select\" $disableFields/>";
    							
-					$tableExceptionalCheckbox = "<input type=\"checkbox\" name=\"exceptional" . $outputTransactionNumber . "\" value=\"select\" />";
+					$tableExceptionalCheckbox = "<input type=\"checkbox\" id=\"exceptional$outputTransactionNumber\" name=\"exceptional" . $outputTransactionNumber . "\" value=\"select\" $disableFields/>";
    					
-   					$tableOutsideCheckbox = "<input type=\"checkbox\" name=\"outside" . $outputTransactionNumber . "\" value=\"select\" />";
+   					$tableOutsideCheckbox = "<input type=\"checkbox\" id=\"outside$outputTransactionNumber\" name=\"outside" . $outputTransactionNumber . "\" value=\"select\" $disableFields/>";
 
-			    	$tableSelectAccount= $widgets->createSelectField("account2Select".$outputTransactionNumber, $account1, $importedTransactions[$outputTransactionNumber]["accountId"]);
+			    	$tableSelectAccount= $widgets->createSelectField("account2Select".$outputTransactionNumber, $account1, $importedTransactions[$outputTransactionNumber]["accountId"], '', false, $disableFields);
 			    	
-			    	$matchingTransactions = array();
-			    	if (isset($importedTransactions[$outputTransactionNumber]['similarTransactions'])) {
-			    		foreach($importedTransactions[$outputTransactionNumber]['similarTransactions'] as $similarity => $currentTransaction) {
-			    			$matchingTransactions[$currentTransaction->getId()] = $currentTransaction->getTitle() . $similarity; //sprintf(' (%1.1f %%)', $similarity); 
-			    		}
-			    	}
-		    		$matchingTransactions['none'] = getBadgerTranslation2('importCsv', 'dontMatchTransaction');
-			    	
-			    	$tableSelectMatchingTransaction = $widgets->createSelectField('matchingTransactionSelect' . $outputTransactionNumber, $matchingTransactions);
+			    	$tableSelectMatchingTransaction = $widgets->createSelectField('matchingTransactionSelect' . $outputTransactionNumber, $matchingTransactions, null, '', true, 'onchange="updateDisabledFields(' . $outputTransactionNumber . ');"');
 			    	
 					//echo ("\$tplOutput .= \"".$tpl->getTemplate("CsvImport/csvImportSelectTransactions2")."\";");
 					eval("\$tplOutput .= \"".$tpl->getTemplate("CsvImport/csvImportSelectTransactions2")."\";");
@@ -244,73 +247,37 @@ if (isset($_POST['btnSubmit'])){
 		//reset tableRowArray
 		$tableRowArray = NULL;
 		// if the transaction was selected
-		if (isset($_POST["select" . $selectedTransactionNumber])){
-			// set periodical flag
-			$periodical = getGPC($_POST, 'periodical' . $selectedTransactionNumber, 'checkbox');
-			// set periodical flag
-			$exceptional = getGPC($_POST, "exceptional" . $selectedTransactionNumber, 'checkbox');
-			$outside = getGPC($_POST, "outside" . $selectedTransactionNumber, 'checkbox');
-			//create array with one transaction
-			$amount1 = getGPC($_POST, 'amount' . $selectedTransactionNumber, 'AmountFormatted');
-			$valutaDate1 = getGPC($_POST, 'valutaDate' . $selectedTransactionNumber, 'DateFormatted');
-			$transactionCategory = NULL;
-			#echo $_POST['categorySelect' . $selectedTransactionNumber];
-			if (!getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) == NULL){
-				if (getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) != "NULL"){
-					$transactionCategory = $cm1->getCategoryById(getGPC($_POST, 'categorySelect' . $selectedTransactionNumber, 'integer'));
-					#echo $transactionCategory;
+		if (getGPC($_POST, "select$selectedTransactionNumber", 'checkbox')) {
+			if (getGPC($_POST, 'matchingTransactionSelect' . $selectedTransactionNumber) == 'none') {
+				$account3 = $am3->getAccountById(getGPC($_POST, 'account2Select' . $selectedTransactionNumber, 'integer'));
+				$transactionCategory = NULL;
+				if (!getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) == NULL){
+					if (getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) != "NULL"){
+						$transactionCategory = $cm1->getCategoryById(getGPC($_POST, 'categorySelect' . $selectedTransactionNumber, 'integer'));
+					}
 				}
-			}
-			$matchingTransactionId = getGPC($_POST, 'matchingTransactionSelect' . $selectedTransactionNumber);
-			#echo $transactionCategory;
-			$tableRowArray = array(
-				"categoryId" => $transactionCategory,
-				"account" => getGPC($_POST, 'account2Select' . $selectedTransactionNumber, 'integer'),
-				"title" => getGPC($_POST, 'title' . $selectedTransactionNumber), 
-				"description" => getGPC($_POST, 'description' . $selectedTransactionNumber),
-				"valutaDate" => $valutaDate1,
-				"amount" => $amount1,
-				"transactionPartner" => getGPC($_POST, 'transactionPartner' . $selectedTransactionNumber),
-				"periodical" => $periodical,
-				"exceptional" => $exceptional,
-				"outside" => $outside,
-				'matchingTransactionId' => $matchingTransactionId
-			);
-		}
-		//if a array with one transaction exist
-		if ($tableRowArray){
-			//add the transaction to the multidimensional array
-			$writeToDbArray[$selectedTransaction] = $tableRowArray;
-			//increment number of selected transactions
-			$selectedTransaction++;
-		}
-	}
-	//write array to db
-	if ($writeToDbArray) {
-		for ($arrayRow = 0; $arrayRow < count($writeToDbArray); $arrayRow++) {
-			if ($writeToDbArray[$arrayRow]['matchingTransactionId'] == 'none') {
-				$account3 = $am3->getAccountById($writeToDbArray[$arrayRow]['account']);
-				$writeCategory = $writeToDbArray[$arrayRow]['categoryId'];
-				$writeTitle = $writeToDbArray[$arrayRow]['title']; 
-				$writeDescription = $writeToDbArray[$arrayRow]['description'];
-				$writeValutaDate = $writeToDbArray[$arrayRow]['valutaDate'];
-				$writeAmount = $writeToDbArray[$arrayRow]['amount'];
-				$writeTransactionPartner = $writeToDbArray[$arrayRow]['transactionPartner'];
-				$writePeriodical = $writeToDbArray[$arrayRow]['periodical'];
-				$writeExceptional = $writeToDbArray[$arrayRow]['exceptional'];
-				$writeOutside = $writeToDbArray[$arrayRow]['outside'];
-				$account3->addFinishedTransaction($writeAmount, $writeTitle, $writeDescription, $writeValutaDate, $writeTransactionPartner, $writeCategory, $writeOutside, $writeExceptional, $writePeriodical);
+				$account3->addFinishedTransaction(
+					getGPC($_POST, 'amount' . $selectedTransactionNumber, 'AmountFormatted'),
+					getGPC($_POST, 'title' . $selectedTransactionNumber),
+					getGPC($_POST, 'description' . $selectedTransactionNumber),
+					getGPC($_POST, 'valutaDate' . $selectedTransactionNumber, 'DateFormatted'),
+					getGPC($_POST, 'transactionPartner' . $selectedTransactionNumber),
+					$transactionCategory,
+					getGPC($_POST, "outside" . $selectedTransactionNumber, 'checkbox'),
+					getGPC($_POST, "exceptional" . $selectedTransactionNumber, 'checkbox'),
+					getGPC($_POST, 'periodical' . $selectedTransactionNumber, 'checkbox')
+				);
 			} else {
 				//Update existing transaction
-				$transaction = $baseAccount->getFinishedTransactionById($writeToDbArray[$arrayRow]['matchingTransactionId']);
-				$transaction->setTitle($transaction->getTitle() . ' - ' . $writeToDbArray[$arrayRow]['title']);
+				$transaction = $baseAccount->getFinishedTransactionById(getGPC($_POST, 'matchingTransactionSelect' . $selectedTransactionNumber, 'integer'));
+				$transaction->setTitle($transaction->getTitle() . ' - ' . getGPC($_POST, 'title' . $selectedTransactionNumber));
 				$transaction->setDescription(
 					$transaction->getDescription()
 					. "\n"
-					. $writeToDbArray[$arrayRow]['description']
+					. getGPC($_POST, 'description' . $selectedTransactionNumber)
 					. "\n"
 					. getBadgerTranslation2('importCsv', 'descriptionFieldImportedPartner')
-					. $writeToDbArray[$arrayRow]['transactionPartner']
+					. getGPC($_POST, 'transactionPartner' . $selectedTransactionNumber)
 					. "\n"
 					. getBadgerTranslation2('importCsv', 'descriptionFieldOrigValutaDate')
 					. $transaction->getValutaDate()->getFormatted()
@@ -318,15 +285,18 @@ if (isset($_POST['btnSubmit'])){
 					. getBadgerTranslation2('importCsv', 'descriptionFieldOrigAmount')
 					. $transaction->getAmount()->getFormatted()
 				);
-				$transaction->setValutaDate($writeToDbArray[$arrayRow]['valutaDate']);
-				$transaction->setAmount($writeToDbArray[$arrayRow]['amount']);
+				$transaction->setValutaDate(getGPC($_POST, 'valutaDate' . $selectedTransactionNumber, 'DateFormatted'));
+				$transaction->setAmount(getGPC($_POST, 'amount' . $selectedTransactionNumber, 'AmountFormatted'));
 				if (strpos($transaction->getType(), 'Planned') !== false) {
 					$transaction->setPlannedTransaction(null);
 				}
 			}
 		}
+	}
+	
+	if ($selectedTransactionNumber > 0) {
 		// echo success message & number of written transactions
-		echo "<br/>" . count($writeToDbArray) . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
+		echo "<br/>" . $selectedTransactionNumber . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
 	}else {
 		//echo no transactions selected
 		echo getBadgerTranslation2("importCsv", "noTransactionSelected");
