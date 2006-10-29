@@ -11,7 +11,6 @@
 *
 **/
 
-require_once BADGER_ROOT . '/core/urlTools.php';
 /**
  * Template-Engine Class
  * Get the Template (*.tpl) from the tpl-Folder
@@ -87,7 +86,7 @@ class TemplateEngine {
 		$pageTitle .= " - ".$this->settings->getProperty("badgerSiteName");
 		
 		// create start page link
-		$startPageLink = getAbsoluteStartPage();
+		$startPageLink = BADGER_ROOT . '/' . $us->getProperty('badgerStartPage');
 		
 		// Set character set
 		header ('Content-Type: text/html; charset=ISO-8859-1');

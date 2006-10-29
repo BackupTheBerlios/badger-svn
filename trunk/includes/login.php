@@ -23,8 +23,6 @@
 
 //$us->setProperty('badgerPassword',md5("badger"));
 
-require_once BADGER_ROOT . '/core/urlTools.php';
-
 if(isset($_POST['SubmitMandatoryChangePassword'])){
 	// Validate submitted values
 	// Is yet to be implemented
@@ -102,7 +100,7 @@ elseif(isset($_POST['password']) && md5(getGPC($_POST, 'password')) == $readoutp
 	set_session_var('password',md5(getGPC($_POST, 'password')));
 	
 	if (!isset($_session['sessionTimeout']) || $_session['sessionTimeout'] != true) {
-		$url = getAbsoluteStartPage();
+		$url = BADGER_ROOT . '/' . $us->getProperty('badgerStartPage');
 	
 		$logger->log('Login redirect URL: ' . $url);
 
@@ -238,7 +236,7 @@ if($passwordcorrect == false) {
 	$Heading = "<div class=\"LSPrompt\">" . getBadgerTranslation2('badger_login', 'enter_password') . "</div><br />";
 		
 	if(isset($_GET['logout']) && getGPC($_GET, 'logout') == "true"){
-		$Action = getAbsoluteStartPage();
+		$Action = BADGER_ROOT . '/' . $us->getProperty('badgerStartPage');
 	}else{
 		$Action = $_SERVER['PHP_SELF'];
 	};

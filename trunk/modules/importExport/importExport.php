@@ -126,7 +126,7 @@ function printInsert() {
 
 	$us = new UserSettings($badgerDb);
 
-	$startPageURL = getAbsoluteStartPage();
+	$startPageURL = BADGER_ROOT . '/' . $us->getProperty('badgerStartPage');
 	
 	eval('echo "' . $tpl->getTemplate('importExport/insert') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');

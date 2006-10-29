@@ -14,7 +14,6 @@ define ('BADGER_ROOT', '../..');
 
 require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 require_once BADGER_ROOT . '/modules/importExport/exportLogic.php';
-require_once BADGER_ROOT . '/core/urlTools.php';
 
 if (isset($_GET['mode'])) {
 	$action = getGPC($_GET, 'mode');
@@ -149,7 +148,7 @@ function update() {
 	$goToStartPageLinkText = getUpdateTranslation('updateUpdate', 'goToStartPageLinkText');
 	$goToStartPagePostLink = getUpdateTranslation('updateUpdate', 'goToStartPagePostLink');
 	
-	$startPageURL = getAbsoluteStartPage();
+	$startPageURL = BADGER_ROOT . '/' . $us->getProperty('badgerStartPage');
 
 	eval('echo "' . $tpl->getTemplate('update/update') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
