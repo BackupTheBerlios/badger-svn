@@ -24,6 +24,8 @@
 ** END HEADER ***************************************************/
 
 function validateCompleteForm (objForm, strErrorClass) {
+	
+	//return false;
     return _validateInternal(objForm, strErrorClass, 0);
 };
 
@@ -35,11 +37,11 @@ function validateStandard (objForm, strErrorClass) {
 ** Internal functions
 *****************************************************************/
 function _validateInternal(form, strErrorClass, nErrorThrowType){
+
    var strErrorMessage = ""; var objFirstError = null;
    if (nErrorThrowType == 0){
     strErrorMessage = (form.err) ? form.err : _getLanguageText("err_form");
    };
-
    var fields = _GenerateFormFields(form);
    for (var i = 0; i < fields.length; ++i){
       var field = fields[i];
@@ -90,7 +92,7 @@ function _validateInternal(form, strErrorClass, nErrorThrowType){
       var index = _getElementIndex(arr,element);
       //if it doesn't already exist, add it to our array, else merge the change
       if (index == -1){
-         arr[arr.length] = new Field(element, form);
+         arr[arr.length] = new validationField(element, form);
       }else{
          arr[index].Merge(element)
       };
@@ -115,7 +117,7 @@ function _getElementIndex(arr, element){
 /***************************************************************
 ** Field Class
 *****************************************************************/
-function Field(element, form){
+function validationField(element, form){
    this.type = element.type;
    this.element = element;
    this.exclude = element.exclude || element.getAttribute('exclude');
@@ -165,7 +167,7 @@ function Field(element, form){
           break;
    };
 };
-Field.prototype.Merge = function(element){
+validationField.prototype.Merge = function(element){
    //never negate a require field
    var required = _parseBoolean(element.getAttribute('required'));
    if (required){
@@ -198,7 +200,7 @@ Field.prototype.Merge = function(element){
    };
    this.elements[this.elements.length] = element;
 };
-Field.prototype.IsValid = function(arrFields){
+validationField.prototype.IsValid = function(arrFields){
    switch (this.type){
       case "textarea":
       case "password":
@@ -214,7 +216,7 @@ Field.prototype.IsValid = function(arrFields){
          return true;
    };
 };
-Field.prototype.SetClass = function(newClassName){
+validationField.prototype.SetClass = function(newClassName){
    if ( (newClassName) && (newClassName != "") ) {
        if ( (this.elements) && (this.elements.length > 0)) {
           for (var i = 0; i < this.elements.length; ++i){
@@ -231,7 +233,7 @@ Field.prototype.SetClass = function(newClassName){
        };
    }
 };
-Field.prototype.ResetClass = function(){
+validationField.prototype.ResetClass = function(){
 	if ( (this.type != "button") && (this.type != "submit") && (this.type != "reset") ) {
    		if ( (this.elements) && (this.elements.length > 0)) {
       		for (var i = 0; i < this.elements.length; ++i){
@@ -252,7 +254,7 @@ Field.prototype.ResetClass = function(){
    		};
 	};
 };
-Field.prototype._getRegEx = function(element){
+validationField.prototype._getRegEx = function(element){
    regex = element.regexp || element.getAttribute('regexp')
    if (regex == null) return null;
    retype = typeof(regex);
@@ -272,7 +274,7 @@ Field.prototype._getRegEx = function(element){
        return regex;
    };
 };
-Field.prototype._ValidateText = function(arrFields){
+validationField.prototype._ValidateText = function(arrFields){
    if ( (this.required) && (this.callback) ) {
    	  nCurId = this.element.id ? this.element.id : "";
    	  nCurName = this.element.name ? this.element.name : "";
@@ -341,7 +343,7 @@ Field.prototype._ValidateText = function(arrFields){
    }
    return true;
 };
-Field.prototype._ValidateGroup = function(arrFields){
+validationField.prototype._ValidateGroup = function(arrFields){
    if (this.required && this.values.length == 0){
       return false;
    };
