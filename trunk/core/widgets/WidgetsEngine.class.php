@@ -31,6 +31,9 @@ class WidgetEngine {
 	private $CalendarJSAdded = false;
 	private $TwistieSectionJSAdded = false;
 	private $twistieSectionLastId = 0;
+	private $prototypeJSAdded = false;
+	private $jsonJSAdded = false;
+	private $pageSettingsJSAdded = false;
 	private $tpl;
 	private $settings;
 	private $writtenHeader = false;
@@ -77,8 +80,42 @@ function _jsVal_Language() {
 	}
 	
 	public function addTwistieSectionJS() {
+		if ($this->TwistieSectionJSAdded) {
+			return;
+		}
+
 		$this->tpl->addJavaScript('js/twistieSection.js');
 		$this->TwistieSectionJSAdded = true;
+	}
+	
+	public function addPrototypeJS() {
+		if ($this->prototypeJSAdded) {
+			return;
+		}
+		
+		$this->tpl->addJavaScript('js/prototype.js');
+		$this->prototypeJSAdded = true;
+	}
+	
+	public function addJsonJS() {
+		if ($this->jsonJSAdded) {
+			return;
+		}
+		
+		$this->tpl->addJavaScript('js/json-min.js');
+		$this->jsonJSAdded = true;
+	}
+	
+	public function addPageSettingsJS() {
+		if ($this->pageSettingsJSAdded) {
+			return;
+		}
+		
+		$this->addPrototypeJS();
+		$this->addJsonJS();
+		$this->tpl->addJavaScript('js/PageSettings.js');
+		$this->tpl->addHeaderTag('<script type="text/javascript">var BADGER_GET_PAGE_SETTINGS_URI = "' . BADGER_ROOT . '/core/pageSettings/getPageSettings.php";</script>');
+		$this->pageSettingsJSAdded = true;
 	}
 	
 	public function addToolTipLayer() {
