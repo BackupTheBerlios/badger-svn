@@ -6,6 +6,10 @@ $filterLineEmpty
 
 $filtersEmpty
 
+$pageSettingsTwistie
+
+$pageSettingJS
+
 $filterBox
 
 $outputSelection

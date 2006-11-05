@@ -28,6 +28,8 @@ function setFilterContent(id) {
 }
 
 function applyFilterX() {
+	savePageSetting(true);
+
 	emptyFilterX();
 	
 	for (var currentId = 0; currentId < currentFilterId; currentId++) {
@@ -332,4 +334,313 @@ function reachThroughTimespan(begin, end, categoryId) {
 	addFilterX("valutaDate", "ge", begin);
 	addFilterX("valutaDate", "le", end);
 	updateDGResult();
+}
+
+////////////////////////
+// SaveSettings
+////////////////////////
+
+var pageSettings = new PageSettings();
+
+function loadPageSettingNamesList() {
+	pageSettings.getSettingNamesList("showPageSettingNamesList", "statistics2User");
+}
+
+function showPageSettingNamesList(settingNamesList) {
+	addPageSetting("");
+	
+	for (var i = 0; i < settingNamesList.length; i++) {
+		addPageSetting(settingNamesList[i]);
+	}
+}
+
+function addPageSetting(settingName) {
+	var select = $("pageSettingsSelect");
+
+	var option = document.createElement("option");
+//	option.value = ("" + settingName).replace(/'/g, "'");
+	var value = document.createAttribute("value");
+	value.nodeValue = settingName;
+	option.setAttributeNode(value);
+	option.innerHTML = settingName;
+	select.appendChild(option);
+}
+
+function loadPageSetting(loadDefault) {
+	var page;
+	var settingName;
+
+	if (!loadDefault) {	
+		page = "statistics2User";
+		settingName = $F("pageSettingsSelect");
+	} else {
+		page = "statistics2Default";
+		settingName = "default";
+	}
+	
+	if (settingName != "") {
+		pageSettings.getSettingSer("showPageSetting", page, settingName);
+	}
+}
+
+function showPageSetting(settings) {
+	if (!(settings instanceof Object)) {
+		return;
+	}
+	
+	$("filterContent").innerHTML = "";
+	
+	largestFilterId = settings["largestFilterId"];
+	currentFilterId = 0;
+	
+	for (var i = 0; i <= largestFilterId; i++) {
+		if (settings["filters"]["filter" + i]) {
+			addFilterLineX();
+			var lastFilterId = currentFilterId - 1;
+			var type = settings["filters"]["filter" + i]["type"];
+			$("filterSelect" + lastFilterId).value = type;
+			setFilterContent(lastFilterId);
+			switch (type) {
+				case "title":
+				case "description":
+				case "valutaDate":
+				case "amount":
+				case "transactionPartner":
+					$(type + lastFilterId).value = settings["filters"]["filter" + i][type + "Value"]
+					$(type + "Operator" + lastFilterId).value = settings["filters"]["filter" + i][type + "Operator"];
+					break;
+				
+				case "valutaDateBetween":
+					$("valutaDateStart" + lastFilterId).value = settings["filters"]["filter" + i]["valutaDateStart"];
+					$("valutaDateEnd" + lastFilterId).value = settings["filters"]["filter" + i]["valutaDateEnd"];
+					break;
+				
+				case "valutaDateAgo":
+					$("valutaDateAgo" + lastFilterId).value = settings["filters"]["filter" + i]["valutaDateAgo"];
+					break;
+				
+				case "category":
+					if (settings["filters"]["filter" + i]["categoryOp"] == "eq") {
+						$("categoryOp" + lastFilterId).checked = true;
+					} else {
+						$("categoryOp" + lastFilterId + "_0").checked = true;
+					}
+					$("categoryId" + lastFilterId).value = settings["filters"]["filter" + i]["categoryId"];
+					break;
+				
+				case "outsideCapital":
+				case "exceptional":
+				case "periodical":
+					if (settings["filters"]["filter" + i][type + "Checked"]) {
+						$(type + lastFilterId).checked = true;
+					} else {
+						$(type + lastFilterId + "_0").checked = true; 
+					}
+					break;
+			} //switch type
+		} // if settings exist
+	} //for all filters
+	
+	//$("dataGridStatistics2Accounts").obj.deselectAllRows();
+	for (var i = 0; i < settings["accountIds"].length; i++) {
+		$("dataGridStatistics2Accounts").obj.preselectId(settings["accountIds"][i]);
+	}
+	
+	switch (settings["graphType"]) {
+		case "Trend":
+			$("outputSelectionType").checked = true;
+			updateOutputSelection();
+			if (settings["graphOptions"]["trendStart"] == "zero") {
+				$("outputSelectionTrendStart").checked = true;
+			} else {
+				$("outputSelectionTrendStart_0").checked = true;
+			}
+			if (settings["graphOptions"]["trendTicks"] == "show") {
+				$("outputSelectionTrendTicks").checked = true;
+			} else {
+				$("outputSelectionTrendTicks_0").checked = true;
+			}
+			break;
+		case "Category":
+			$("outputSelectionType_0").checked = true;
+			updateOutputSelection();
+			if (settings["graphOptions"]["categoryType"] == "input") {
+				$("outputSelectionCategoryType").checked = true;
+			} else {
+				$("outputSelectionCategoryType_0").checked = true;
+			}
+			if (settings["graphOptions"]["categorySummarize"] == true) {
+				$("outputSelectionCategorySummarize").checked = true;
+			} else {
+				$("outputSelectionCategorySummarize_0").checked = true;
+			}
+			break;
+		case "Timespan":
+			$("outputSelectionType_1").checked = true;
+			updateOutputSelection();
+			switch (settings["graphOptions"]["timespanType"]) {
+				case "week":
+					$("outputSelectionTimespanType").checked = true;
+					break;
+				case "month":
+					$("outputSelectionTimespanType_0").checked = true;
+					break;
+				case "quarter":
+					$("outputSelectionTimespanType_1").checked = true;
+					break;
+				case "year":
+					$("outputSelectionTimespanType_2").checked = true;
+					break;
+			}
+			if (settings["graphOptions"]["trendSummarize"] == true) {
+				$("outputSelectionTrendSummarize").checked = true;
+			} else {
+				$("outputSelectionTrendSummarize_0").checked = true;
+			}
+			break;
+	} //switch graphType
+} //function showPageSetting
+
+function savePageSetting(saveDefault) {
+	var page;
+
+	if (!saveDefault) {	
+		page = "statistics2User";
+	} else {
+		page = "statistics2Default";
+	}
+	
+	var selectedSetting = $F("pageSettingsSelect");
+
+	var settings = new Object();
+
+	settings["largestFilterId"] = currentFilterId - 1;
+	
+	settings["filters"] = new Object();
+	for (var i = 0; i < currentFilterId; i++) {
+		if ($("filterSelect" + i)) {
+			settings["filters"]["filter" + i] = new Object();
+			var type = $("filterSelect" + i).value;
+			settings["filters"]["filter" + i]["type"] = type;
+			switch (type) {
+				case "title":
+				case "description":
+				case "valutaDate":
+				case "amount":
+				case "transactionPartner":
+					settings["filters"]["filter" + i][type + "Value"] = $(type + i).value;
+					settings["filters"]["filter" + i][type + "Operator"] = $(type + "Operator" + i).value;
+					break;
+				
+				case "valutaDateBetween":
+					settings["filters"]["filter" + i]["valutaDateStart"] = $("valutaDateStart" + i).value;
+					settings["filters"]["filter" + i]["valutaDateEnd"] = $("valutaDateEnd" + i).value;
+					break;
+				
+				case "valutaDateAgo":
+					settings["filters"]["filter" + i]["valutaDateAgo"] = $("valutaDateAgo" + i).value;
+					break;
+				
+				case "category":
+					if ($("categoryOp" + i).checked) {
+						 settings["filters"]["filter" + i]["categoryOp"] = "eq";
+					} else {
+						 settings["filters"]["filter" + i]["categoryOp"] = "ne";
+					}
+					settings["filters"]["filter" + i]["categoryId"] = $("categoryId" + i).value;
+					break;
+				
+				case "outsideCapital":
+				case "exceptional":
+				case "periodical":
+					if ($(type + i).checked) {
+						settings["filters"]["filter" + i][type + "Checked"] = true;
+					} else {
+						settings["filters"]["filter" + i][type + "Checked"] = false; 
+					}
+					break;
+			} //switch type
+		} // if settings exist
+	} //for all filters
+	
+	settings["accountIds"] = $("dataGridStatistics2Accounts").obj.getAllIds();
+	
+	settings["graphOptions"]= new Object();
+	if ($F("outputSelectionType") == "Trend") {
+		settings["graphType"] = "Trend";
+		if ($F("outputSelectionTrendStart") == 0) {
+			settings["graphOptions"]["trendStart"] = "zero";
+		} else {
+			settings["graphOptions"]["trendStart"] == "balance";
+		}
+		
+		if ($F("outputSelectionTrendTicks") == "s") {
+			settings["graphOptions"]["trendTicks"] = "show";
+		} else {
+			settings["graphOptions"]["trendTicks"] = "hide";
+		}
+	} else if ($F("outputSelectionType_0") == "Category") {
+		settings["graphType"] = "Category";
+		if ($F("outputSelectionCategoryType") == "i") {
+			settings["graphOptions"]["categoryType"] = "input";
+		} else {
+			settings["graphOptions"]["categoryType"] = "output";
+		}
+		
+		if ($F("outputSelectionCategorySummarize") == "t") {
+			settings["graphOptions"]["categorySummarize"] = true;
+		} else {
+			settings["graphOptions"]["categorySummarize"] = false;
+		}
+	} else {
+		settings["graphType"] = "Timespan";
+		if ($F("outputSelectionTimespanType") == "w") {
+			settings["graphOptions"]["timespanType"] = "week";
+		} else if ($F("outputSelectionTimespanType_0") == "m") {
+			settings["graphOptions"]["timespanType"] = "month";
+		} else if ($F("outputSelectionTimespanType_1") == "q") {
+			settings["graphOptions"]["timespanType"] = "quarter";
+		} else {
+			settings["graphOptions"]["timespanType"] = "year";
+		}
+		
+		if ($F("outputSelectionTimespanSummarize") == "t") {
+			settings["graphOptions"]["trendSummarize"] = true;
+		} else {
+			settings["graphOptions"]["trendSummarize"] = false;
+		}
+	} //switch graphType
+
+	if (!saveDefault) {
+		var settingName = prompt(newNamePrompt, selectedSetting);
+
+		if (settingName) {
+			pageSettings.setSettingSer("statistics2User", settingName, settings);
+			if (settingName != selectedSetting) {
+				addPageSetting(settingName);
+			}
+		}	
+	} else {
+		pageSettings.setSettingSer("statistics2Default", "default", settings);
+	}
+	
+}
+
+function deletePageSetting() {
+	var setting = $F("pageSettingsSelect");
+	
+	if (setting == "") {
+		return;
+	}
+
+	pageSettings.deleteSetting("statistics2User", setting);
+	var select = $("pageSettingsSelect");
+	
+	var currentOption = select.firstChild;
+	do {
+		if (currentOption.value == setting) {
+			select.removeChild(currentOption);
+			break;
+		}
+	} while(currentOption = currentOption.nextSibling)
 }

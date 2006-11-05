@@ -24,8 +24,9 @@ $widgets = new WidgetEngine($tpl);
 $widgets->addCalendarJS();
 $widgets->addToolTipJS();
 $widgets->addTwistieSectionJS();
+$widgets->addPrototypeJS();
+$widgets->addPageSettingsJS();
 $tpl->addJavaScript("js/behaviour.js");
-$tpl->addJavaScript("js/prototype.js");
 $tpl->addJavaScript("js/statistics2.js");
 
 $dgAccounts = new DataGrid($tpl, 'Statistics2Accounts');
@@ -61,12 +62,25 @@ $widgets->addNavigationHead();
 
 $pageTitle = getBadgerTranslation2('statistics2', 'pageTitle');
 
+$tpl->addOnLoadEvent('loadPageSettingNamesList(); loadPageSetting(true);');
+
 echo $tpl->getHeader($pageTitle);
 	
 $widgets->addToolTipLayer();
 
 $datagGridFilterArray = DataGrid::getFilterSelectArray();
 $datagGridDateFilterArray = DataGrid::getDateFilterSelectArray();
+
+$pageSettingsContent =
+	$widgets->createSelectField('pageSettingsSelect', array(), '', '', false, 'onchange="loadPageSetting();"')
+	. '&nbsp;'
+	. $widgets->createButton('pageSettingSave', getBadgerTranslation2('statistics2', 'pageSettingSave'), 'savePageSetting();')
+	. '&nbsp;'
+	. $widgets->createButton('pageSettingDelete', getBadgerTranslation2('statistics2', 'pageSettingDelete'), 'deletePageSetting();')
+;
+$pageSettingsTwistie = $widgets->addTwistieSection(getBadgerTranslation2('statistics2', 'pageSettingsTwistieTitle'), $pageSettingsContent);
+
+$pageSettingJS = '<script type="text/javascript">var newNamePrompt = "' . getBadgerTranslation2('statistics2', 'pageSettingNewNamePrompt') . '";</script>';
 
 $filters['unselected'] = '';
 $filters['title'] =
