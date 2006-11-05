@@ -411,7 +411,20 @@ function getAllTransactions(&$finishedTransactions, $selectedFields, $order, $up
 				$classSum = 'dgNegativeAmount';
 			}
 		}
-		$classBalance = ($currentTransaction->getBalance()->compare(0) >= 0) ? 'dgPositiveAmount' : 'dgNegativeAmount'; 
+		$balance = $currentTransaction->getBalance(); 
+		if ($balance->compare(0) >= 0) {
+			if ($upperLimit && $balance->compare($upperLimit) > 0) {
+				$classBalance = 'dgOverMaxAmount';
+			} else {
+				$classBalance = 'dgPositiveAmount'; 
+			}
+		} else {
+			if ($lowerLimit && $balance->compare($lowerLimit) < 0) {
+				$classBalance = 'dgUnderMinAmount';
+			} else {
+				$classBalance = 'dgNegativeAmount';
+			}
+		}
 
 		$category = $currentTransaction->getCategory();
 		if (!is_null($category)) {
