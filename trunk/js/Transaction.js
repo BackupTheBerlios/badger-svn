@@ -42,10 +42,30 @@ function updateTransferalAmount() {
 function adjustInputNumberClass(elm) {
 	var val = elm.value;
 	
-	if (val.replace(/ /g, "").substr(0, 1) == "-") {
+	if (isNegative(val)) {
 		elm.className = "inputNumberMinus";
 	} else {
 		elm.className = "inputNumber"
 	}
-}
 	
+	updateExpenseWarning();
+}
+
+function isNegative(val) {
+	return val.replace(/ /g, "").substr(0, 1) == "-";
+}
+
+function updateExpenseWarning() {
+	var val = $F("amount");
+	var categoryId = $F("category");
+	var expenseWarning = $("categoryExpenseWarning")
+	if (
+		categoryId
+		&& categoryExpense[categoryId]
+		&& !isNegative(val)
+	) {
+		expenseWarning.style.display = "table-cell";
+	} else {
+		expenseWarning.style.display = "none";
+	}
+}

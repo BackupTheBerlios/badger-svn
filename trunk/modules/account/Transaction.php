@@ -141,6 +141,8 @@ function printFrontendFinished($AccountID, $ID) {
 	
 	$now = new Date();
 	
+	$categoryExpenseJS = getCategoryExpense();
+	$categoryExpenseWarning = getBadgerTranslation2('accountTransaction', 'categoryExpenseWarning');
 
 	if($ID!="new") {
 		$acc = $am->getAccountById($AccountID);
@@ -254,7 +256,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$outsideToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
 	
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;'");
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;' onchange='updateExpenseWarning();'");
 	
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), false);
 	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", false, "checkbox", $exceptionalValue);
@@ -290,6 +292,9 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
 
 	$now = new Date();
+
+	$categoryExpenseJS = getCategoryExpense();
+	$categoryExpenseWarning = getBadgerTranslation2('accountTransaction', 'categoryExpenseWarning');
 	
 	$transactionType = "planned";
 	if($plannedTransactionId != "new") {
@@ -400,7 +405,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$endDateField = $widgets->addDateField("endDate", $endDateValue);
 
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
-	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "style='width: 30ex;'");
+	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "onchange='updateTransferalAmount();' onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;'");
 
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
 	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false, "text", "style='width: 30ex;'");
@@ -410,7 +415,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$outsideToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
 	
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;'");
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;' onchange='updateExpenseWarning();'");
 	
 	$repeatUnitLabel = $widgets->createLabel("repeatUnit", getBadgerTranslation2('accountTransaction', 'repeatFrequency'), true);
 	$repeatUnitField = $widgets->createSelectField("repeatUnit", getIntervalUnitsArray(), $repeatUnitValue, "", true, "style='width: 104px;'");
@@ -672,4 +677,20 @@ function getRedirectPage($accountId) {
 	}
 	
 	return 'AccountOverview.php?accountID=' . $accountId;
+}
+
+function getCategoryExpense() {
+	global $badgerDb;
+	
+	$categoryManager = new CategoryManager($badgerDb);
+	
+	$result = "<script type='text/javascript'> var categoryExpense = new Object();\n";
+	
+	while ($category = $categoryManager->getNextCategory()) {
+		$result .= "categoryExpense[" . $category->getId() . "] = " . ($category->getExpense() ? 'true' : 'false') . ";\n";
+	}
+	
+	$result .= "</script>";
+	
+	return $result;
 }

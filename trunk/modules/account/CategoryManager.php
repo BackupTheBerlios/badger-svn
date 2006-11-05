@@ -111,6 +111,7 @@ function printFrontend() {
 			$parentValue = "";
 			$parentId = "";
 		}
+		$expenseValue = $category->getExpense();
 	} else {
 		//new: empty values
 		$pageTitle = getBadgerTranslation2 ('accountCategory','pageTitleNew');
@@ -121,6 +122,7 @@ function printFrontend() {
 		$keywordsValue = "";
 		$parentValue = "";
 		$parentId = "";
+		$expenseValue = null;
 	}
 	
 	$widgets = new WidgetEngine($tpl);
@@ -167,6 +169,12 @@ function printFrontend() {
 	$keywordsLabel = $widgets->createLabel('keywords', getBadgerTranslation2('accountCategory', 'keywordsLabel'), false);
 	$keywordsField = $widgets->createTextarea('keywords', $keywordsValue, getBadgerTranslation2('accountCategory', 'keywordsDescription'), false, "style='width: 30ex; height: 5em;'");
 	
+	$expenseRowLabel = getBadgerTranslation2('accountCategory', 'expenseRowLabel');
+	$incomeField = $widgets->createField('expense', 0, 'income', '', false, 'radio', ($expenseValue === false ? 'checked="checked"' : ''));
+	$incomeLabel = $widgets->createLabel('expense', getBadgerTranslation2('accountCategory', 'expenseIncome'), false);
+	$expenseField = $widgets->createField('expense', 0, 'expense', '', false, 'radio', ($expenseValue === true ? 'checked="checked"' : ''));
+	$expenseLabel = $widgets->createLabel('expense', getBadgerTranslation2('accountCategory', 'expenseExpense'), false);
+	
 	//Buttons
 	$submitBtn = $widgets->createButton("submitBtn", getBadgerTranslation2('dataGrid', 'save'), "submit", "Widgets/accept.gif", "accesskey='s'");
 	$backBtn = $widgets->createButton("backBtn", getBadgerTranslation2('dataGrid', 'back'), "location.href='$redirectPageAfterSave';return false;", "Widgets/back.gif");
@@ -180,14 +188,22 @@ function updateRecord() {
 	global $redirectPageAfterSave;
 	global $cm;
 	
+	if (isset($_POST['expense'])) {
+		if (getGPC($_POST, 'expense') === 'expense') {
+			$expense = true;
+		} else {
+			$expense = false;
+		}
+	} else {
+		$expense = null;
+	}
+		
 	switch (getGPC($_POST, 'hiddenID')) {
 	case 'new':
 		//add new record
 		//check if $_POST['symbol'], $_POST['longName'] is set?????
 		
-		
-		
-		$Cat = $cm->addCategory(getGPC($_POST, 'title'), getGPC($_POST, 'description'), getGPC($_POST, 'outsideCapital', 'checkbox'), getGPC($_POST, 'keywords'));
+		$Cat = $cm->addCategory(getGPC($_POST, 'title'), getGPC($_POST, 'description'), getGPC($_POST, 'outsideCapital', 'checkbox'), getGPC($_POST, 'keywords'), $expense);
 		if(isset($_POST['parent']) && getGPC($_POST, 'parent') != ""){
 			$Cat->setParent($cm->getCategoryById(getGPC($_POST, 'parent', 'integer')));
 		};
@@ -201,6 +217,8 @@ function updateRecord() {
 		$Cat->setOutsideCapital(getGPC($_POST, 'outsideCapital', 'checkbox'));
 		
 		$Cat->setKeywords(getGPC($_POST, 'keywords'));
+		
+		$Cat->setExpense($expense);
 		
 		if(isset($_POST['parent']) && getGPC($_POST, 'parent') != ""){
 			$Cat->setParent($cm->getCategoryById(getGPC($_POST, 'parent', 'integer')));

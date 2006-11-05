@@ -76,6 +76,8 @@ class Category {
 	
 	private $keywords;
 	
+	private $expense;
+	
 	/**
 	 * Creates a Category.
 	 * 
@@ -95,7 +97,8 @@ class Category {
 		$description = null,
 		$outsideCapital = null,
 		$parent = null,
-		$keywords = null
+		$keywords = null,
+		$expense = null
 	) {
 		$this->badgerDb = $badgerDb;
 		$this->categoryManager = $categoryManager;
@@ -107,6 +110,10 @@ class Category {
 			$this->outsideCapital = $data['outside_capital'];
 			$this->parent = $data['parent_id'];
 			$this->keywords = $data['keywords'];
+			$this->expense = $data['expense'];
+			if (!is_null($this->expense)) {
+				settype($this->expense, 'boolean');				
+			} 
     	} else {
     		$this->id = $data;
     		$this->title = $title;
@@ -114,6 +121,7 @@ class Category {
     		$this->outsideCapital = $outsideCapital;
     		$this->parent = $parent;
     		$this->keywords = $keywords;
+    		$this->expense = $expense;
     	}
 	}
 	
@@ -222,6 +230,25 @@ class Category {
 		
 		$sql = "UPDATE category
 			SET keywords = '" . $this->badgerDb->escapeSimple($keywords) . "'
+			WHERE category_id = " . $this->id;
+	
+		$dbResult =& $this->badgerDb->query($sql);
+		
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('Category', 'SQLError', $dbResult->getMessage());
+		}
+	}
+
+	public function getExpense() {
+		return $this->expense;
+	}
+	
+ 	public function setExpense($expense) {
+		$this->expense = $expense;
+		
+		$sql = "UPDATE category
+			SET expense = " . $this->badgerDb->quoteSmart($expense) . "
 			WHERE category_id = " . $this->id;
 	
 		$dbResult =& $this->badgerDb->query($sql);

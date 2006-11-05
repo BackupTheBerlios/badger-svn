@@ -58,6 +58,12 @@
   	<td>$rangeAllField $rangeAllLabel $rangeThisField $rangeThisLabel $rangePreviousField $rangePreviousLabel $rangeFollowingField $rangeFollowingLabel $rangeUnit</td>
   </tr>
   <tr>
+  	<td></td>
+  	<td style="display: none; color: red; font-weight: bold" id="categoryExpenseWarning">
+  		$categoryExpenseWarning
+  	</td>
+  </tr>
+  <tr>
     <td>$backBtn</td>
     <td>$submitBtn $deleteBtn</td>
   </tr>
@@ -66,4 +72,5 @@ $hiddenID
 $hiddenType
 $hiddenFinishedTransactionID
 $backToIdField
+$categoryExpenseJS
 </form>

@@ -24,6 +24,10 @@
 	  	<td>$keywordsField</td>
 	  </tr>
 	  <tr>
+	  	<td>$expenseRowLabel</td>
+	  	<td>{$incomeField}&nbsp;{$incomeLabel} {$expenseField}&nbsp;{$expenseLabel}</td>
+	  </tr>
+	  <tr>
 	    <td>$backBtn</td>
 	    <td>$submitBtn</td>
 	  </tr>

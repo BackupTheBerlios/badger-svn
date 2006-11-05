@@ -34,7 +34,8 @@ class CategoryManager extends DataGridHandler {
 		'outsideCapital',
 		'parentId',
 		'parentTitle',
-		'keywords'
+		'keywords',
+		'expense'
 	);
 		
 	/**
@@ -109,7 +110,8 @@ class CategoryManager extends DataGridHandler {
 			'outsideCapital' => 'boolean',
 			'parentId' => 'integer',
 			'parentTitle' => 'string',
-			'keywords' => 'string'
+			'keywords' => 'string',
+			'expense' => 'boolean'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -144,7 +146,8 @@ class CategoryManager extends DataGridHandler {
 			'outsideCapital' => 'c.outside_capital',
 			'parentId' => 'c.parent_id',
 			'parentTitle' => 'p.title',
-			'keywords' => 'c.keywords'
+			'keywords' => 'c.keywords',
+			'expense' => 'c.expense'
 		);
 	
 		if (!isset ($fieldTypes[$fieldName])){
@@ -238,6 +241,10 @@ class CategoryManager extends DataGridHandler {
 					case 'keywords':
 						$result[$currResultIndex]['keywords'] = $currentCategory->getKeywords();
 						break;
+					
+					case 'expense':
+						$result[$currResultIndex]['expense'] = $currentCategory->getExpense();
+						break;
 				} //switch
 			} //foreach selectedFields
 			
@@ -276,7 +283,7 @@ class CategoryManager extends DataGridHandler {
 				}
 			}
 		}	
-		$sql = "SELECT c.category_id, c.parent_id, c.title, c.description, c.outside_capital, c.keywords
+		$sql = "SELECT c.category_id, c.parent_id, c.title, c.description, c.outside_capital, c.keywords, c.expense
 			FROM category c
 			WHERE c.category_id = $categoryId";
 
@@ -361,7 +368,7 @@ class CategoryManager extends DataGridHandler {
 	 * @throws BadgerException insertError If the account cannot be inserted.
 	 * @return object The new Account object.
 	 */
-	public function addCategory($title, $description = null, $outsideCapital = null, $keywords = null) {
+	public function addCategory($title, $description = null, $outsideCapital = null, $keywords = null, $expense = null) {
 		$categoryId = $this->badgerDb->nextId('category_ids');
 		
 		$sql = "INSERT INTO category
@@ -379,6 +386,10 @@ class CategoryManager extends DataGridHandler {
 			$sql .= ", keywords";
 		}
 		
+		if (!is_null($expense)) {
+			$sql .= ", expense";
+		}
+
 		$sql .= ")
 			VALUES ($categoryId, '" . $this->badgerDb->escapeSimple($title) . "'";
 	
@@ -394,6 +405,10 @@ class CategoryManager extends DataGridHandler {
 			$sql .= ", '" . $this->badgerDb->escapeSimple($keywords) . "'";
 		}
 			
+		if(!is_null($expense)){
+			$sql .= ", ".  $this->badgerDb->quoteSmart($expense);
+		}
+
 		$sql .= ")";
 		
 		
@@ -408,7 +423,7 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'insertError', $dbResult->getMessage());
 		}
 		
-		$this->categories[$categoryId] = new Category($this->badgerDb, $this, $categoryId, $title, $description, $outsideCapital, null, $keywords);
+		$this->categories[$categoryId] = new Category($this->badgerDb, $this, $categoryId, $title, $description, $outsideCapital, null, $keywords, $expense);
 		
 		return $this->categories[$categoryId];	
 	}
@@ -425,7 +440,7 @@ class CategoryManager extends DataGridHandler {
 			return;
 		}
 		
-		$sql = "SELECT c.category_id, c.parent_id, c.title, c.description, c.outside_capital, c.keywords
+		$sql = "SELECT c.category_id, c.parent_id, c.title, c.description, c.outside_capital, c.keywords, c.expense
 			FROM category c
 				LEFT OUTER JOIN category p ON c.parent_id = p.category_id
 			";
@@ -541,6 +556,10 @@ class CategoryManager extends DataGridHandler {
 				
 				case 'keywords':
 					$tmp = strncasecmp($a->getKeywords(), $b->getKeywords(), 9999);
+					break;
+				
+				case 'expense':
+					$tmp = $a->getExpense() - $b->getExpense();
 					break;
 			}
 			

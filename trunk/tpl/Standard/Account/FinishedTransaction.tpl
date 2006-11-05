@@ -53,7 +53,12 @@
   	<td>$transferalAmountLabel</td>
   	<td>$transferalAmountField</td>
   </tr>
-
+  <tr>
+  	<td></td>
+  	<td style="display: none; color: red; font-weight: bold" id="categoryExpenseWarning">
+  		$categoryExpenseWarning
+  	</td>
+  </tr>
   <tr>
     <td>$backBtn</td>
     <td>$submitBtn</td>
@@ -62,4 +67,5 @@
 $hiddenID
 $hiddenType
 $backToIdField
+$categoryExpenseJS
 </form>
