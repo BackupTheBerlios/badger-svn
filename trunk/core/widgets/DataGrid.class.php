@@ -192,8 +192,9 @@ class DataGrid {
 		$us = new UserSettings($badgerDb);
 		
 		$this->tpl->addJavaScript('js/dataGrid.js');
+		//add global variable dataGrid'.$this->UniqueId.'
+		$this->tpl->addHeaderTag('<script>dataGrid'.$this->UniqueId.' = new Object()</script>');
 		$this->tpl->addOnLoadEvent('badgerRoot = "'. $tpl->getBadgerRoot() .'";');
-		$this->tpl->addOnLoadEvent('var dataGrid'.$this->UniqueId.' = new Object(); /*solving the IE Bug*/');
 		$this->tpl->addOnLoadEvent('dataGrid'.$this->UniqueId.' = new DataGrid( {');
 		$this->tpl->addOnLoadEvent('  uniqueId: "'. $this->UniqueId .'",');
 		$this->tpl->addOnLoadEvent('  sourceXML: "'.$this->sourceXML.'",');
