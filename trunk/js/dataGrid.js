@@ -404,6 +404,15 @@ DataGrid.prototype = {
 		}
 	},
 	
+	deselectAllRows: function () {
+		for (i=0; i<checkbox.length; i++) {
+			if(checkbox[i].id!="dgSelector"+this.uniqueId) {
+				this.deselectRow(checkbox[i].parentNode.parentNode);
+			}
+		}
+		
+	},
+	
 	// get all ids from selected rows -> array
 	getAllIds: function () {
 		checkbox = Form.getInputs("dgForm"+this.uniqueId,"checkbox");
