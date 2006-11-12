@@ -237,7 +237,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$hiddenType = $widgets->createField("hiddenType", 20, $transactionType, "", false, "hidden");
 	//Fields & Labels
 	$titleLabel = $widgets->createLabel("title", getBadgerTranslation2('accountTransaction', 'title'), true);
-	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "style='width: 30ex;'");
+	$titleField = $widgets->createField("title", 30, $titleValue, "", true, "text", "style='width: 30ex;' callback='validateTitle'");
 	
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountTransaction', 'description'), false);
 	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 5em;'");

@@ -279,7 +279,8 @@ validationField.prototype._ValidateText = function(arrFields){
    	  nCurId = this.element.id ? this.element.id : "";
    	  nCurName = this.element.name ? this.element.name : "";
    	  
-   	  eval("bResult = "+this.callback+"('"+nCurId+"', '"+nCurName+"', '"+this.value+"');"); 
+   	  eval("bResult = "+this.callback+"('"+nCurId+"');"); 
+
    	  if (bResult == false) {
    	  	 return false;
    	  };

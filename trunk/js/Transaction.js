@@ -69,3 +69,20 @@ function updateExpenseWarning() {
 		expenseWarning.style.display = "none";
 	}
 }
+
+function validateTitle(id) {	
+	if ($(id).value=="" ) {
+		var catId = $("category").options.selectedIndex;
+		var catValue = $("category").options[catId].text;
+		
+		if( catValue ) {
+			$(id).value = catValue;
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return true;
+	}
+	
+}
