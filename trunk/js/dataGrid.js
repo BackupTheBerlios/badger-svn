@@ -204,6 +204,8 @@ DataGrid.prototype = {
 				//insert empty cell as last one (only display purposes)
 				lastTD = document.createElement("td");
 				newRow.appendChild(lastTD);
+				lastTD.innerHTML = "&nbsp;"; //filling dummy cell
+					
 				//add complete row to the grid
 				dgData.appendChild(newRow);				
 			}

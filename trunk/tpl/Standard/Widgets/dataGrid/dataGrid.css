@@ -67,7 +67,7 @@ table.dgTableData td {
 	overflow: hidden;
     padding: 2px 0px 2px 4px;
     margin: 0px;
-    height: 22px;
+    height: auto;
     line-height: 12px;
 }
 
