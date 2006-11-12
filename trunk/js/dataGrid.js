@@ -59,7 +59,9 @@ DataGrid.prototype = {
 	// retrieve data from server, define callback-function
 	loadData: function() {
 		// get selected rows, so that we can restore selection after reloading
-		this.arrSelectedRows = this.getAllIds();
+		
+		//alert(this.arrSelectedRows);
+		//this.arrSelectedRows = this.getAllIds();
 		
 		// load data
 		this.myAjax = new Ajax.Request(
@@ -207,17 +209,19 @@ DataGrid.prototype = {
 				lastTD.innerHTML = "&nbsp;"; //filling dummy cell
 					
 				//add complete row to the grid
-				dgData.appendChild(newRow);				
+				dgData.appendChild(newRow);
 			}
 			//refresh JS-behaviours of the rows
 			Behaviour.apply();
 
-			//activate previous selected rows (after resorting)
+			//activate previous selected rows 
 			for (i=0; i<this.arrSelectedRows.length; i++) {
 				if($(strID + this.arrSelectedRows[i])) {
-					this.selectRow($(strID+this.arrSelectedRows[i]));
+					$(strID + this.arrSelectedRows[i]).className = "dgRowSelected";
+					$("check"+$(strID + this.arrSelectedRows[i]).id).checked = "checked";
 				}
-			}		
+			}
+			
 			// refresh row count
 			$("dgCount"+strID).innerHTML = xmlRows.length;
 			
@@ -261,6 +265,7 @@ DataGrid.prototype = {
 	},
 
 	// Row Handling
+	//Activation -> Highlight, when mouse over
 	activateRow: function (objRow) {
 		if (objRow.className == "dgRow") objRow.className = "dgRowActive";
 		if (objRow.className == "dgRowSelected") objRow.className = "dgRowSelectedActive";
@@ -270,13 +275,16 @@ DataGrid.prototype = {
 		if (objRow.className == "dgRowActive") objRow.className = "dgRow";
 		if (objRow.className == "dgRowSelectedActive") objRow.className = "dgRowSelected";
 	},
+	//Selection -> enable checkbox
 	selectRow: function (objRow) {
+		this.arrSelectedRows.push(objRow.rowId);
 		if (objRow.className == "dgRow") objRow.className = "dgRowSelected";
 		if (objRow.className == "dgRowActive") objRow.className = "dgRowSelectedActive";
 		$("check"+objRow.id).checked = "checked";
 		$("check"+objRow.id).focus();
 	},
 	deselectRow: function (objRow) {
+		this.arrSelectedRows.without(objRow.rowId);
 		if (objRow.className == "dgRowSelected") objRow.className = "dgRow";
 		if (objRow.className == "dgRowSelectedActive") objRow.className = "dgRowActive";
 		$("check"+objRow.id).checked = "";
@@ -290,7 +298,6 @@ DataGrid.prototype = {
 		location.href = location.href;
 	},
 
-	//TODO: PROBLEM
 	//Key-Events of the Rows
 	KeyEvents: function (event) {
 		if (!event) event=window.event;
