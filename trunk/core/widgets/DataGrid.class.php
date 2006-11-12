@@ -137,6 +137,7 @@ class DataGrid {
 		$this->rowCounterName = getBadgerTranslation2('dataGrid', 'rowCounterName');
 		$this->noRowSelectedMsg = getBadgerTranslation2('dataGrid', 'NoRowSelectedMsg');
 		
+		//TODO: inserted twice of two DG's on one site
 		$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
 		$tpl->addCss("Widgets/dataGrid/dataGrid.css", "screen");
 	}
