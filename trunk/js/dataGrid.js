@@ -412,6 +412,7 @@ DataGrid.prototype = {
 	},
 	
 	deselectAllRows: function () {
+		checkbox = Form.getInputs("dgForm"+this.uniqueId,"checkbox");
 		for (i=0; i<checkbox.length; i++) {
 			if(checkbox[i].id!="dgSelector"+this.uniqueId) {
 				this.deselectRow(checkbox[i].parentNode.parentNode);
@@ -539,6 +540,11 @@ DataGrid.prototype = {
 	//preselect an entry
 	preselectId: function (id) {
 		this.arrSelectedRows.push(id);
+		
+		var row = $(this.uniqueId + id);
+		if (row) {
+			this.selectRow(row);
+		}
 	},
 	
 	saveDataGridParameter: function () {	

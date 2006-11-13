@@ -441,9 +441,10 @@ function showPageSetting(settings) {
 		} // if settings exist
 	} //for all filters
 	
-	//$("dataGridStatistics2Accounts").obj.deselectAllRows();
+	dgGrid = $("dataGridStatistics2Accounts").obj;
+	dgGrid.deselectAllRows();
 	for (var i = 0; i < settings["accountIds"].length; i++) {
-		$("dataGridStatistics2Accounts").obj.preselectId(settings["accountIds"][i]);
+		dgGrid.preselectId(settings["accountIds"][i]);
 	}
 	
 	switch (settings["graphType"]) {
