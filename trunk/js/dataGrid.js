@@ -58,13 +58,11 @@ DataGrid.prototype = {
 	
 	// retrieve data from server, define callback-function
 	loadData: function() {
-		// get selected rows, so that we can restore selection after reloading
-		
-		//alert(this.arrSelectedRows);
-		//this.arrSelectedRows = this.getAllIds();
-		
 		// load data
-		this.myAjax = new Ajax.Request(
+		if (this.myAjaxLoad) {
+			this.myAjaxLoad.transport.abort();
+		};
+		this.myAjaxLoad = new Ajax.Request(
 			this.sourceXML, {
 				method: 'post',
 				parameters: this.serializeParameter() + "&sf=" + this.columnOrder,
@@ -391,7 +389,7 @@ DataGrid.prototype = {
 
 	// delete data
 	deleteTheseRows: function(strUrl) {
-		var myAjax = new Ajax.Request(
+		var myAjaxDelete = new Ajax.Request(
 			strUrl, {
 				method: 'get',
 				onComplete: this.handleDeleteResponse.bind(this),
@@ -555,7 +553,7 @@ DataGrid.prototype = {
 			strParameter = "id="+this.uniqueId+"&"+strParameter;
 		}	
 		
-		var myAjax = new Ajax.Request(
+		var myAjaxSave = new Ajax.Request(
 		strUrl, {
 			method: 'post',
 			parameters: strParameter
