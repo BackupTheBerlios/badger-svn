@@ -18,7 +18,7 @@ $pageTitle = getBadgerTranslation2('accountCategory', 'pageTitleOverview');
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
-$tpl->addJavaScript("js/prototype.js");
+$widgets->addPageSettingsJS();
 
 $dataGrid = new DataGrid($tpl, "CategoryManager");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CategoryManager";

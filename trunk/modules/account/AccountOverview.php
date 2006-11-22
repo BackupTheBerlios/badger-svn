@@ -30,7 +30,7 @@ $pageTitle .= ": ".$account->getTitle();
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
-$tpl->addJavaScript("js/prototype.js");
+$widgets->addPageSettingsJS();
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 

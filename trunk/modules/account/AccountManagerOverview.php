@@ -21,7 +21,7 @@ updateBalances();
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
-$tpl->addJavaScript("js/prototype.js");
+$widgets->addPageSettingsJS();
 
 $dataGrid = new DataGrid($tpl, "AccountManager");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";

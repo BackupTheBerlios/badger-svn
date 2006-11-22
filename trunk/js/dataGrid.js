@@ -18,7 +18,10 @@
  *
 **/
 
+var pageSettings = new PageSettings();
+
 DataGrid = Class.create();
+DataGrid.SortOrder = Class.create();
 
 DataGrid.prototype = {
 	initialize: function(arrParameters) {
@@ -26,10 +29,12 @@ DataGrid.prototype = {
 		this.uniqueId = arrParameters.uniqueId;
 		this.htmlDiv = arrParameters.htmlDiv;
 		this.sourceXML = arrParameters.sourceXML;
+		
 		this.headerName = arrParameters.headerName;
-		this.columnOrder = arrParameters.columnOrder;
+		this.columnOrder = arrParameters.columnOrder;	
 		this.headerSize = arrParameters.headerSize;
 		this.cellAlign = arrParameters.cellAlign;
+		
 		this.noRowSelectedMsg = arrParameters.noRowSelectedMsg;
 		this.deleteMsg = arrParameters.deleteMsg;
 		this.deleteRefreshType = arrParameters.deleteRefreshType;
@@ -42,17 +47,19 @@ DataGrid.prototype = {
 		this.mouseEventsDisabled = false;
 		
 		this.objRowActive;
-		this.strSortingColumnActive = "";
+		this.ActiveSortColumn = "";
 		this.arrSelectedRows = new Array();	
 		this.arrURLParameter = new Array();
+		this.sortParameter = new Object();
+		this.activeFilter = new Object();
 		
 		// if there are some stored values in the usersettings
-		if(arrParameters.parameter) {
-			//TODO: Load Parameter via AJAX
-			this.deserializeParameter(arrParameters.parameter);
-			this.initSortOrder();
-			this.initFilterFields();
-		}
+		//this.deserializeParameter(arrParameters.parameter);
+		
+		//initialize SortParameter
+		this.sortOrder = new DataGrid.SortOrder(this);
+		
+		this.initFilterFields();
 		this.loadData();
 	},
 	
@@ -65,7 +72,7 @@ DataGrid.prototype = {
 		this.myAjaxLoad = new Ajax.Request(
 			this.sourceXML, {
 				method: 'post',
-				parameters: this.serializeParameter() + "&sf=" + this.columnOrder,
+				parameters: this.serializeParameter() + "&sf=" + this.columnOrder + "&" +this.sortOrder.toQueryString(),
 				onComplete: this.insertData.bind(this),
 				onFailure: this.handleError.bind(this)
 			}); 
@@ -441,68 +448,7 @@ DataGrid.prototype = {
 			}
 		}
 	},
-		
-	// change sort order and hide/show sort images
-	addNewSortOrder: function (strSortColumn, strDirection) {
-		// reset old sorting image
-		if(this.strSortingColumnActive) this.changeColumnSortImage(this.strSortingColumnActive, "empty");
-			
-		if(strSortColumn==this.arrURLParameter["ok0"]) {
-			// click on the same column:  change sort direction
-			if (this.arrURLParameter["od0"]=="a") {
-				// asc -> desc
-				this.arrURLParameter["od0"]="d";
-				this.changeColumnSortImage(strSortColumn, "d");
-			} else {
-				// desc -> asc
-				this.arrURLParameter["od0"]="a";
-				this.changeColumnSortImage(strSortColumn, "a");
-			}
-		} else {
-			// click on a different column
-			this.arrURLParameter["ok2"] = this.arrURLParameter["ok1"];
-			this.arrURLParameter["od2"] = this.arrURLParameter["od1"];
-			this.arrURLParameter["ok1"] = this.arrURLParameter["ok0"];
-			this.arrURLParameter["od1"] = this.arrURLParameter["od0"];
-			this.arrURLParameter["ok0"] = strSortColumn;
-			if(strDirection!="d") {
-				this.arrURLParameter["od0"] = "a";
-				this.changeColumnSortImage(strSortColumn, "a");
-			} else {
-				this.arrURLParameter["od0"] = "d";
-				this.changeColumnSortImage(strSortColumn, "d");
-			}
-		}
-		this.strSortingColumnActive = strSortColumn;
-		
-		this.saveDataGridParameter();		
-	},
-	
-	initSortOrder: function () {
-		if(this.arrURLParameter["ok0"]!=undefined && this.arrURLParameter["ok0"]!="") {
-			this.strSortingColumnActive = this.arrURLParameter["ok0"];
-			if(this.arrURLParameter["od0"]=="a") {
-				this.changeColumnSortImage(this.arrURLParameter["ok0"], "a");
-			} else {
-				this.changeColumnSortImage(this.arrURLParameter["ok0"], "d");
-			}
-		}
-	},
-	
-	//change the image for sorting direction
-	changeColumnSortImage: function (id, newstatus) {
-		switch(newstatus) {
-			case 'empty':
-				$("dgImg"+this.uniqueId+id).src = this.tplPath + "dropEmpty.gif";
-				break;
-			case 'a':
-				$("dgImg"+this.uniqueId+id).src = this.tplPath + "dropDown.png";
-				break;
-			case 'd':
-				$("dgImg"+this.uniqueId+id).src = this.tplPath + "dropUp.png";
-				break;
-		}	
-	},
+
 	
 	serializeParameter: function () {
 		var strURLParameter = $H(this.arrURLParameter).toQueryString();
@@ -546,6 +492,7 @@ DataGrid.prototype = {
 	},
 	
 	saveDataGridParameter: function () {	
+		/*
 		var strUrl = badgerRoot+"/core/widgets/DataGridSaveParameter.php";
 		var strParameter = this.serializeParameter();
 		
@@ -558,6 +505,8 @@ DataGrid.prototype = {
 			method: 'post',
 			parameters: strParameter
 		}); 
+		*/
+		pageSettings.setSettingSer("dataGrid"+this.uniqueId, "Parameter", strParameter);
 	},
 	
 	setFilterFields: function (arrayOfFields) {
@@ -621,6 +570,10 @@ DataGrid.prototype = {
 			}
 		}
 	},
+	getFirstColumnName: function () {
+		return this.columnOrder[0];
+		
+	},
 
 	//Mouse-Events
 	behaviour:  {
@@ -655,7 +608,7 @@ DataGrid.prototype = {
 			element.onclick = function(){
 				dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
 				id = this.id.replace("dgColumn"+dataGrid.uniqueId,"");
-				dataGrid.addNewSortOrder(id);
+				dataGrid.sortOrder.addNewSortOrder(id);
 				dataGrid.loadData();
 			}
 		},
@@ -683,7 +636,116 @@ DataGrid.prototype = {
 			} //element.onclick 
 		}
 	}
+}
 
+DataGrid.SortOrder.prototype= {
+	/*
+	 * ok[0-2]: order key
+	 * od[0-2]: order direction
+	 * a: ascending
+	 * d: descending
+	 */
+	sortOrder: new Object(),
+	parent: new Object(),
+	
+	initialize: function(objDataGrid) {
+		this.parent = objDataGrid;	
+		this.load();
+		if(this.sortOrder.ok0!=undefined && this.sortOrder.ok0!="") {
+			this.activeSortColumn = this.sortOrder.ok0;
+			if(this.sortOrder.od0=="a") {
+				this.changeColumnSortImage(this.sortOrder.ok0, "a");
+			} else {
+				this.changeColumnSortImage(this.sortOrder.ok0, "d");
+			}
+		} else {
+			//default
+			this.sortOrder = new Object();
+			this.sortOrder.od0 = "a";
+			this.sortOrder.ok0 = this.parent.getFirstColumnName();
+		}
+		return this;
+	},
+	toQueryString: function() {
+		//Object to QueryString		
+		return $H(this.sortOrder).toQueryString();
+	},
+	
+	addNewSortOrder: function(sortColumn, sortDirection) {
+		// reset old sorting image
+		if(this.activeSortColumn) this.changeColumnSortImage(this.activeSortColumn, "empty");
+			
+		if(sortColumn==this.sortOrder.ok0) {
+			// click on the same column:  change sort direction
+			if (this.sortOrder.od0=="a") {
+				// asc -> desc
+				this.sortOrder.od0="d";
+				this.changeColumnSortImage(sortColumn, "d");
+			} else {
+				// desc -> asc
+				this.sortOrder.od0="a";
+				this.changeColumnSortImage(sortColumn, "a");
+			}
+		} else {
+			// click on a different column
+			this.sortOrder.ok2 = this.sortOrder.ok1;
+			this.sortOrder.od2 = this.sortOrder.od1;
+			this.sortOrder.ok1 = this.sortOrder.ok0;
+			this.sortOrder.od1 = this.sortOrder.od0;
+			this.sortOrder.ok0 = sortColumn;
+			if(sortDirection!="d") {
+				this.sortOrder.od0 = "a";
+				this.changeColumnSortImage(sortColumn, "a");
+			} else {
+				this.sortOrder.od0 = "d";
+				this.changeColumnSortImage(sortColumn, "d");
+			}
+		}
+		this.activeSortColumn = sortColumn;
+		this.save();
+	},
+	save: function() {
+		//alert("JSON: " + this.sortOrder.toJSONString())
+		pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, "SortOrder", this.sortOrder);
+	},
+	load: function() {
+		//maybe we find another way
+		eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "SortOrder") + ")");
+	},
+	processResult: function(objResult) {
+		this.sortOrder = objResult;
+	},
+	//change the image for sorting direction
+	changeColumnSortImage: function (columnId, newSortOrder) {
+		switch(newSortOrder) {
+			case 'empty':
+				$("dgImg"+this.parent.uniqueId+columnId).src = this.parent.tplPath + "dropEmpty.gif";
+				break;
+			case 'a':
+				$("dgImg"+this.parent.uniqueId+columnId).src = this.parent.tplPath + "dropDown.png";
+				break;
+			case 'd':
+				$("dgImg"+this.parent.uniqueId+columnId).src = this.parent.tplPath + "dropUp.png";
+				break;
+		}	
+	}
+	
+}
+
+
+DataGrid.Filter = {
+	loadFilter: function(strFiltername) {		
+		
+	},
+	resetFilter: function() {
+		
+		
+	},
+	saveNewFilter: function(strFilterName, filter) {
+		
+	}
+
+		
 }
 
 function URLDecode(strEncodeString) {

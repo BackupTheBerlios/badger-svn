@@ -18,7 +18,7 @@ $pageTitle = getBadgerTranslation2('accountCurrency', 'pageTitleOverview');
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
-$tpl->addJavaScript("js/prototype.js");
+$widgets->addPageSettingsJS();
 
 $dataGrid = new DataGrid($tpl, "CurrencyManager");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=CurrencyManager";

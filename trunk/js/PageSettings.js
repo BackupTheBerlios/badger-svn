@@ -29,7 +29,7 @@ PageSettings.prototype = {
 		this.callAjax(null, "deleteSetting", page, settingName);
 	},
 	
-	callAjax: function(callback, action, page, settingName, setting) {
+	callAjax: function(callback, action, page, settingName, setting, async) {
 //		if (this.myAjax) {
 //			this.myAjax.transport.abort();
 //		}
@@ -43,8 +43,16 @@ PageSettings.prototype = {
 					+ "&settingName=" + encodeURIComponent(settingName)
 					+ "&setting=" + encodeURIComponent(setting)
 				,
-				onComplete: callback
+				onComplete: callback,
+				asynchronous: async
 			}
 		);
+		if (!async) {
+			return this.myAjax.transport.responseText;
+		}
+	},
+	getSettingSync: function(page, settingName) {
+		return this.callAjax(null, "getSettingSer", page, settingName, false);
 	}
+	
 }

@@ -30,7 +30,7 @@ $pageTitle .= ": ".$account->getTitle();
 
 $widgets = new WidgetEngine($tpl);
 $tpl->addJavaScript("js/behaviour.js");
-$tpl->addJavaScript("js/prototype.js");
+$widgets->addPageSettingsJS();
 
 $dataGrid = new DataGrid($tpl, "Account".$accountID."planned");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID;planned";
