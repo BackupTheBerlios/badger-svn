@@ -21,8 +21,8 @@
 /**
  * The current Version of BADGER
  */
-define('BADGER_VERSION', '1.0 beta 2');
-define ('BADGER_RELEASE_DATE', '2006-08-26');
+define('BADGER_VERSION', '1.0 beta 3');
+define ('BADGER_RELEASE_DATE', 'not released yet');
 
 /**
  * Common functions

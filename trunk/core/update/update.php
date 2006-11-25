@@ -1,13 +1,13 @@
 <?php
 /*
-* ____          _____   _____ ______ _____  
-*|  _ \   /\   |  __ \ / ____|  ____|  __ \ 
+* ____          _____   _____ ______ _____
+*|  _ \   /\   |  __ \ / ____|  ____|  __ \
 *| |_) | /  \  | |  | | |  __| |__  | |__) |
-*|  _ < / /\ \ | |  | | | |_ |  __| |  _  / 
-*| |_) / ____ \| |__| | |__| | |____| | \ \ 
+*|  _ < / /\ \ | |  | | | |_ |  __| |  _  /
+*| |_) / ____ \| |__| | |__| | |____| | \ \
 *|____/_/    \_\_____/ \_____|______|_|  \_\
 * Open Source Financial Management
-* Visit http://badger.berlios.org 
+* Visit http://badger.berlios.org
 *
 **/
 define ('BADGER_ROOT', '../..');
@@ -25,11 +25,11 @@ switch ($action) {
 	case 'backupDatabase':
 		backupDatabase();
 		break;
-	
+
 	case 'update':
 		update();
 		break;
-	
+
 	case 'displayProcedure':
 	default:
 		displayProcedure();
@@ -38,13 +38,13 @@ switch ($action) {
 
 function displayProcedure() {
 	global $tpl;
-	$widgets = new WidgetEngine($tpl); 
-	
+	$widgets = new WidgetEngine($tpl);
+
 	$widgets->addNavigationHead();
-	
+
 	$procedureTitle = getUpdateTranslation('updateProcedure', 'pageTitle');
 	echo $tpl->getHeader($procedureTitle);
-	
+
 	$legend = getUpdateTranslation('updateProcedure', 'legend');
 	$updateInformation = getUpdateTranslation('updateProcedure', 'updateInformation');
 	$dbVersionText = getUpdateTranslation('updateProcedure', 'dbVersionText');
@@ -60,35 +60,39 @@ function displayProcedure() {
 	$step2LinkTarget = BADGER_ROOT . '/core/update/update.php?mode=update';
 	$step2LinkText = getUpdateTranslation('updateProcedure', 'step2LinkText');
 	$step2PostLink = getUpdateTranslation('updateProcedure', 'step2PostLink');
-	
+
 	eval('echo "' . $tpl->getTemplate('update/procedure') . '";');
 	eval('echo "' . $tpl->getTemplate('badgerFooter') . '";');
 }
 
 function backupDatabase() {
 	sendSqlDump();
-	
+
 	exit;
 }
 
 function update() {
 	global $tpl, $us;
-	
+
 	$versionHistory = array (
 		array (
 			'version' => '1.0 beta',
-			'function' => 'update1_0betaTo1_0beta2',
+			'function' => 'update1_0betaTo1_0beta2'
 		),
 		array (
 			'version' => '1.0 beta 2',
+			'function' => 'update1_0beta2To1_0beta3'
+		),
+		array (
+			'version' => '1.0 beta 3',
 			'function' => false
 		)
 	);
 
-	$widgets = new WidgetEngine($tpl); 
-	
+	$widgets = new WidgetEngine($tpl);
+
 	$widgets->addNavigationHead();
-	
+
 	$updateTitle = getUpdateTranslation('updateUpdate', 'pageTitle');
 	echo $tpl->getHeader($updateTitle);
 
@@ -99,12 +103,12 @@ function update() {
 			break;
 		}
 	}
-	
+
 	$numNeededSteps = count($versionHistory) - $dbVersionIndex - 1;
-	
+
 	$dbVersion = $currentDbVersion;
 	$fileVersion = BADGER_VERSION;
-	
+
 	$betweenVersions = '';
 	for ($i = $dbVersionIndex + 1; $i < count($versionHistory) - 1; $i++) {
 		$currentVersion = $versionHistory[$i];
@@ -112,7 +116,7 @@ function update() {
 	}
 
 	$betweenVersionsText = getUpdateTranslation('updateUpdate', 'betweenVersionsText');
-	
+
 	if ($betweenVersions !== '') {
 		eval('$betweenVersionsBlock = "' . $tpl->getTemplate('update/betweenVersionsBlock') . '";');
 	} else {
@@ -120,7 +124,7 @@ function update() {
 	}
 
 	$updateLog = '';
-	
+
 	$preCurrentText = getUpdateTranslation('updateUpdate', 'preCurrentText');
 	$postCurrentText = getUpdateTranslation('updateUpdate', 'postCurrentText');
 	$postNextText = getUpdateTranslation('updateUpdate', 'postNextText');
@@ -132,9 +136,9 @@ function update() {
 		$nextVersion = $versionHistory[$currentVersionIndex + 1]['version'];
 
 		eval('$updateLog .= "' . $tpl->getTemplate('update/updateStepHeader') . '";');
-		
+
 		$logEntry = $versionHistory[$currentVersionIndex]['function']();
-		
+
 		eval('$updateLog .= "' . $tpl->getTemplate('update/updateStepEntry') . '";');
 	}
 
@@ -143,11 +147,11 @@ function update() {
 	$dbVersionText = getUpdateTranslation('updateProcedure', 'dbVersionText');
 	$fileVersionText = getUpdateTranslation('updateProcedure', 'fileVersionText');
 	$updateFinished = getUpdateTranslation('updateUpdate', 'updateFinished');
-	
+
 	$goToStartPagePreLink = getUpdateTranslation('updateUpdate', 'goToStartPagePreLink');
 	$goToStartPageLinkText = getUpdateTranslation('updateUpdate', 'goToStartPageLinkText');
 	$goToStartPagePostLink = getUpdateTranslation('updateUpdate', 'goToStartPagePostLink');
-	
+
 	$startPageURL = BADGER_ROOT . '/' . $us->getProperty('badgerStartPage');
 
 	eval('echo "' . $tpl->getTemplate('update/update') . '";');
@@ -156,7 +160,7 @@ function update() {
 
 function update1_0betaTo1_0beta2() {
 	$log = '';
-	
+
 /*
 	$log .= "&rarr; Deleting duplicate i18n entries.\n";
 	$log .= doQuery("DELETE FROM `i18n` WHERE `page_id` = 'UserSettingsAdmin' AND `id` = 'error_confirm_failed' LIMIT 1");
@@ -185,7 +189,7 @@ function update1_0betaTo1_0beta2() {
 */
 	$log .= "&rarr; Adding primary key to i18n.\n";
 	$log .= doQuery("ALTER IGNORE TABLE `i18n` ADD PRIMARY KEY ( `page_id` , `id` ( 255 ) )", array(-1));
-	
+
 	$log .= "&rarr; Adding primary key to langs.\n";
 	$log .= doQuery("ALTER TABLE `langs` ADD PRIMARY KEY ( `id` )", array(-1));
 
@@ -193,11 +197,11 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("TRUNCATE TABLE session_master");
 	$log .= "&rarr; Adding primary key to session_master.\n";
 	$log .= doQuery("ALTER TABLE `session_master` ADD PRIMARY KEY ( `sid` )", array(-1));
-	
+
 	$log .= "&rarr; Removing old session data.\n";
 	$log .= doQuery("TRUNCATE TABLE session_global");
 	$log .= "&rarr; Adding primary key to session_global.\n";
-	$log .= doQuery("ALTER TABLE `session_global` ADD PRIMARY KEY ( `sid` , `variable` );", array(-1));	
+	$log .= doQuery("ALTER TABLE `session_global` ADD PRIMARY KEY ( `sid` , `variable` );", array(-1));
 
 	$log .= "&rarr; Creating references from transferred recurring transactions to recurring transactions.\n";
 	$log .= doQuery("UPDATE `finished_transaction` f SET `planned_transaction_id` = (SELECT planned_transaction_id FROM planned_transaction p WHERE f.category_id <=> p.category_id AND f.account_id <=> p.account_id AND f.title <=> p.title AND f.transaction_partner <=> p.transaction_partner AND f.amount <=> p.amount LIMIT 1)");
@@ -282,7 +286,7 @@ function update1_0betaTo1_0beta2() {
 
 	$log .= "&rarr; Dropping CSV parser table not used anymore.\n";
 	$log .= doQuery("DROP TABLE IF EXISTS csv_parser\n");
-	
+
 	$log .= "&rarr; Adding new translation entries.\n";
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'futureCalcSpanLabel', en = 'Planning horizon (months)', de = 'Planungszeitraum in Monaten'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'futureCalcSpanDescription', en = 'Please enter how far into the future you would like to be able to plan. With usability in mind, recurring transactions will only be displayed as far into the future as you enter here. ', de = 'Geben Sie hier ein, wie weit Sie in die Zukunft planen m&ouml;chten. Wiedekehrende Transaktionen werden der &Uuml;bersichtlichkeit wegen nur so weit in die Zukunft dargestellt, wie Sie hier eingeben.'");
@@ -323,7 +327,7 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'open', en = 'Open', de = 'Öffnen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'Navigation', id = 'releaseNotes', en = 'Release Notes', de = 'Versionsgeschichte (englisch)'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'welcome', id = 'pageTitle', en = 'Your accounts', de = 'Ihre Konten'");
-	
+
 	$log .= "&rarr; Updating old translation entries.\n";
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'mandatory_change_password_heading', en = 'You are currently using the BADGER standard password.<br />\r\nPlease change it.<br />\r\nSie können die Sprache von BADGER unter dem Menüpunkt System / Preferences unter Language ändern.', de = 'Sie verwenden momentan das BADGER Standardpasswort.<br />\r\nBitte ändern Sie es.<br />\r\nYou can change the language of BADGER at menu System / Einstellungen, field Sprache.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'session_time_name', en = 'Session time (min):', de = 'Sessionlänge (min):'");
@@ -343,7 +347,7 @@ function update1_0betaTo1_0beta2() {
 	$log .= "&rarr; Updating demo account menu links.\n";
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"35\";' WHERE prop_key = 'accountNaviId_3'");
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"34\";' WHERE prop_key = 'accountNaviId_4'");
-	
+
 	$log .= "&rarr; Increasing security of session timeout.\n";
 	$log .= doQuery("UPDATE user_settings SET prop_value = 's:2:\"30\";' WHERE prop_key = 'badgerSessionTime' AND prop_value = 's:4:\"9999\";'");
 
@@ -355,17 +359,225 @@ function update1_0betaTo1_0beta2() {
 	return $log;
 }
 
+function update1_0beta2To1_0beta3() {
+	global $badgerDb;
+	
+	$log = '';
+
+	$log .= "&rarr; Adding page settings table.\n";
+	$log .= doQuery(
+		"CREATE TABLE IF NOT EXISTS `page_settings` (
+		`page_name` VARCHAR(255) NOT NULL,
+		`setting_name` VARCHAR(255) NOT NULL,
+		`setting` TEXT NULL,
+		PRIMARY KEY (`page_name`, `setting_name`)
+		)", array(-1)
+	);
+
+	$log .= "&rarr; Adding new columns to account table.\n";
+	$log .= doQuery(
+		"ALTER TABLE `account` ADD `last_calc_date` DATE NOT NULL DEFAULT '1000-01-01',
+		ADD `csv_parser` VARCHAR( 100 ) NULL,
+		ADD `delete_old_planned_transactions` BOOL NULL", array(-1)
+	);
+
+	$log .= "&rarr; Adding new columns to category table.\n";
+	$log .= doQuery(
+		"ALTER TABLE `category` ADD `keywords` TEXT NULL,
+		ADD `expense` BOOL NULL", array(-1)
+	);
+
+
+	$log .= "&rarr; Adding new datagrid handler.\n";
+	$log .= doQuery("REPLACE datagrid_handler SET handler_name = 'MultipleAccounts', file_path = '/modules/statistics2/MultipleAccounts.class.php', class_name = 'MultipleAccounts'");
+
+	$log .= "&rarr; Adding new columns to finished transaction table.\n";
+	$log .= doQuery(
+		"ALTER TABLE `finished_transaction` ADD `transferal_transaction_id` INT NULL,
+		ADD `transferal_source` BOOL NULL", array(-1)
+	);
+
+	$log .= "&rarr; Adding new columns to planned transaction table.\n";
+	$log .= doQuery(
+		"ALTER TABLE `planned_transaction` ADD `transferal_transaction_id` INT NULL,
+		ADD `transferal_source` BOOL NULL", array(-1)
+	);
+
+	$log .= "&rarr; Deleting unused translation entries.\n";
+	$log .= doQuery("DELETE FROM i18n WHERE page_id = 'accountCategory' AND id = 'pageTitle'");
+
+	$log .= "&rarr; Adding new translation entries.\n";
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'pageTitleEdit', en = 'Edit Category', de = 'Kategorie bearbeiten'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'filterLegend', en = 'Filter', de = 'Filter'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'setFilter', en = 'Set Filter', de = 'Filtern'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'resetFilter', en = 'Reset', de = 'Reset'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'common', id = 'gpcFieldUndefined', en = 'GET/POST/COOKIE field undefined', de = 'GET/POST/COOKIE-Feld nicht definiert'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'pageTitleNew', en = 'Create new Catagory', de = 'Neue Kategorie erstellen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'DataGridHandler', id = 'illegalFieldSelected', en = 'The following field is not known to this DataGridHandler:', de = 'Das folgende Feld ist diesem DataGridHandler nicht bekannt:'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'MultipleAccounts', id = 'invalidFieldName', en = 'An unknown field was used with MultipleAccounts.', de = 'Es wurde ein unbekanntes Feld mit MultipleAccounts verwendet.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountAccount', id = 'deleteOldPlannedTransactions', en = 'Auto-insert recurring transactions:', de = 'Wiederkehrende Transaktionen automatisch eintragen:'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountAccount', id = 'csvParser', en = 'CSV parser:', de = 'CSV-Parser:'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountAccount', id = 'deleteOldPlannedTransactionsDescription', en = 'If this option is checked, every occuring instance of a recurring transaction is automatically inserted as an single transaction. Uncheck this if you import your transactions from a CSV file on a regular basis.', de = 'Wenn diese Option ausgewählt wurde, werden eintretende Instanzen einer wiederkehrenden Transaktion automatisch als einmalige Transaktionen eingetragen. Wählen Sie die Option nicht aus, wenn Sie Ihre Transaktionen regelmäßig aus einer CSV-Datei importieren.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'range', en = 'Apply to', de = 'Anwenden auf'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'rangeAll', en = 'all', de = 'alle'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'rangeThis', en = 'this', de = 'diese'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'rangePrevious', en = 'this and previous', de = 'diese und vorherige'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'rangeFollowing', en = 'this and following', de = 'diese und folgende'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'rangeUnit', en = 'instances', de = 'Ausprägungen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'plannedTransaction', id = 'afterTitle', en = 'after', de = 'nach'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'plannedTransaction', id = 'beforeTitle', en = 'before', de = 'vor'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'AccountManager', id = 'UnknownFinishedTransactionId', en = 'An unknown single transaction id was used.', de = 'Es wurde eine unbekannte ID einer einmaligen Transaktion verwendet.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'AccountManager', id = 'UnknownPlannedTransactionId', en = 'An unknown recurring transaction id was used.', de = 'Es wurde eine unbekannte ID einer wiederkehrenden Transaktion verwendet.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalEnabled', en = 'Add transferal transaction', de = 'Überweisungstransaktion hinzufügen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalAccount', en = 'Target account', de = 'Zielkonto'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalAmount', en = 'Amount on target Account', de = 'Betrag auf Zielkonto'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'FinishedTransferalSourceTransaction', en = 'Source of single transferal transaction', de = 'Quelle einer Einmaligen Überweisungstransaktion'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'FinishedTransferalTargetTransaction', en = 'Target of single transferal transaction', de = 'Ziel einer Einmaligen Überweisungstransaktion'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'PlannedTransferalSourceTransaction', en = 'Source of recurring transferal transaction', de = 'Quelle einer Wiederkehrenden Überweisungstransaktion'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'PlannedTransferalTargetTransaction', en = 'Target of recurring transferal transaction', de = 'Ziel einer Wiederkehrenden Überweisungstransaktion'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCommon', id = 'includeSubCategories', en = '(including sub-categories)', de = '(Unterkategorien eingeschlossen)'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'widgetEngine', id = 'noImage', en = 'An image file cannot be found in the current theme or the Standard theme.', de = 'Eine Bilddatei kann weder im aktuellen noch im Standardtheme gefunden werden.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'NavigationFromDB', id = 'noIcon', en = 'An navigation icon cannot be found in the current theme or the Standard theme.', de = 'Ein Navigationsicon kann weder im aktuellen noch im Standardtheme gefunden werden.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'keywordsLabel', en = 'Keywords', de = 'Schlüsselwörter'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'keywordsDescription', en = 'If an imported transaction contains one of these keywords, this category will be pre-selected for this transaction. Use one line per keyword.', de = 'Wenn eine importierte Transaktion eines dieser Schlüsselwörter enthält, wird diese Kategorie vor-ausgewählt. Geben Sie pro Schlüsselwort eine neue Zeile ein.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingDateDeltaLabel', en = 'Max. difference in days:', de = 'Max. Differenz in Tagen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingDateDeltaDescription', en = 'Only transactions that differ at most this amount of days from the imported transaction are considered for comparison.', de = 'Nur Transaktionen, die maximal diese Anzahl an Tagen von der importierten Transaktion abweichen, werden zum Vergleich herangezogen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingAmountDeltaLabel', en = 'Max. difference of amount (%)', de = 'Max. Abweichung des Betrags (%)'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingAmountDeltaDescription', en = 'Only transactions that differ at most this percentage in amount from the imported transaction are considered for comparison.', de = 'Nur Transaktionen, deren Betrag maximal diesen Prozentsatz von der importierten Transaktion abweichen, werden zum Vergleich herangezogen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingTextSimilarityLabel', en = 'Min. text similarity (%)', de = 'Mind. Textähnlichkeit (%)'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingTextSimilarityDescription', en = 'Only transactions that are similar to the imported transaction by this percentage are considered for comparison.', de = 'Nur Transaktionen, die mindestens diesen Prozentsatz an Ähnlichkeit zur importierten Transaktion aufweisen, werden zum Vergleich herangezogen.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'UserSettingsAdmin', id = 'matchingHeading', en = 'CSV Import Matching', de = 'Abgleich beim CSV-Import'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'matchingHeader', en = 'Similar Transactions', de = 'Ähnliche Transaktionen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'matchingToolTip', en = 'If you choose a transaction here, it will be replaced by the imported data.', de = 'Wenn Sie hier eine Transaktion auswählen, wird sie durch die importierten Daten ersetzt.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'dontMatchTransaction', en = '&lt;Import as new&gt;', de = '&lt;Neu importieren&gt;'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'descriptionFieldImportedPartner', en = 'Imported transaction partner: ', de = 'Importierter Transaktionspartner: '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'descriptionFieldOrigValutaDate', en = 'Original valuta date: ', de = 'Original-Buchungsdatum: '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'descriptionFieldOrigAmount', en = 'Original amount: ', de = 'Original-Betrag: '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountOverview', id = 'colBalance', en = 'Balance', de = 'Kontostand'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'colAccountName', en = 'Account', de = 'Konto'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'pageTitle', en = 'Advanced Statistics', de = 'Erweiterte Statistik'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'titleFilter', en = 'Title is ', de = 'Titel ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'descriptionFilter', en = 'Description is ', de = 'Beschreibung ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'valutaDateFilter', en = 'Valuta date is ', de = 'Buchungsdatum ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'valutaDateBetweenFilter', en = 'Valuta date is between ', de = 'Buchungsdatum ist zwischen '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'valutaDateBetweenFilterConj', en = ' and ', de = ' und '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'valutaDateBetweenFilterInclusive', en = ' (both inclusive)', de = ' (beide inklusive)'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'valutaDateAgoFilter', en = 'Valuta within the last ', de = 'Buchungsdatum innerhalb der letzten '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'valutaDateAgoFilterDaysAgo', en = ' days', de = ' Tage'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'amountFilter', en = 'Amount is ', de = 'Betrag ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outsideCapitalFilter', en = 'Source is ', de = 'Quelle ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outsideCapitalFilterOutside', en = 'outside capital', de = 'Fremdkapital'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outsideCapitalFilterInside', en = 'inside capital', de = 'Eigenkapital'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'transactionPartnerFilter', en = 'Transaction partner is ', de = 'Transaktionspartner ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'categoryFilter', en = 'Category ', de = 'Kategorie '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'categoryFilterIs', en = 'is', de = 'ist'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'categoryFilterIsNot', en = 'is not', de = 'ist nicht'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'exceptionalFilter', en = 'Transaction is ', de = 'Transaktion ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'exceptionalFilterExceptional', en = 'exceptional', de = 'außergewöhnlich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'exceptionalFilterNotExceptional', en = 'not exceptional', de = 'nicht außergewöhnlich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilter', en = 'Transaction is ', de = 'Transaktion ist '");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilterPeriodical', en = 'periodical', de = 'regelämäßig'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilterNotPeriodical', en = 'not periodical', de = 'unregelmäßig'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersUnselected', en = 'Please choose a filter', de = 'Bitte wählen Sie einen Filter'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersTitle', en = 'Title', de = 'Titel'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersDescription', en = 'Description', de = 'Beschreibung'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersValutaDate', en = 'Valuta date', de = 'Buchungsdatum'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersValutaDateBetween', en = 'Valuta date between', de = 'Buchungsdatum zwischen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersValutaDateAgo', en = 'Valuta date last days', de = 'Buchungsdatum vergangene Tage'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersAmount', en = 'Amount', de = 'Betrag'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersOutsideCapital', en = 'Outside capital', de = 'Fremdkapital'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersTransactionPartner', en = 'Transaction partner', de = 'Transaktionspartner'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersCategory', en = 'Category', de = 'Kategorie'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersExceptional', en = 'Exceptional', de = 'Außergewöhnlich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersPeriodical', en = 'Periodical', de = 'Regelmäßig'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersDelete', en = '&lt;Delete Filter&gt;', de = '&lt;Filter löschen&gt;'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'filterCaption', en = 'Filters', de = 'Filter'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'twistieCaptionInput', en = 'Input Values', de = 'Eingabewerte'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValue', en = 'Start Value', de = 'Startwert'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValueZero', en = '0 (zero)', de = '0 (null)'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValueBalance', en = 'Balance', de = 'Kontostand'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendTickLabels', en = 'Tick labels', de = 'Tickmarken'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendTickLabelsShow', en = 'Show', de = 'Anzeigen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendTickLabelsHide', en = 'Hide', de = 'Verbergen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryType', en = 'Category Type', de = 'Kategorietyp'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryTypeInput', en = 'Input', de = 'Einnahmen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryTypeOutput', en = 'Output', de = 'Ausgaben'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategorySubCategories', en = 'Sub-Categories', de = 'Unterkategorien'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategorySubCategoriesSummarize', en = 'Summarize sub-categories', de = 'Unterkategorien zusammenfassen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategorySubCategoriesNoSummarize', en = 'Do not summarize sub-categories', de = 'Unterkategorien einzeln aufführen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTimespanType', en = 'Type', de = 'Typ'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTimespanTypeWeek', en = 'Week', de = 'Woche'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTimespanTypeMonth', en = 'Month', de = 'Monat'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTimespanTypeQuarter', en = 'Quarter', de = 'Quartal'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTimespanTypeYear', en = 'Year', de = 'Jahr'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionGraphType', en = 'Graph Type', de = 'Graphtyp'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionGraphTypeTrend', en = 'Trend', de = 'Verlauf'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionGraphTypeCategory', en = 'Category', de = 'Kategorie'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionGraphTypeTimespan', en = 'Timespan', de = 'Zeitvergleich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'twistieCaptionOutputSelection', en = 'Output Selection', de = 'Ausgabeauswahl'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'analyzeButton', en = 'Analyse', de = 'Analysieren'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'twistieCaptionGraph', en = 'Graph', de = 'Graph'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'twistieCaptionOutput', en = 'Output', de = 'Ausgabe'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'addFilterButton', en = 'Add Filter', de = 'Filter hinzufügen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2Graph', id = 'noMatchingTransactions', en = 'No transactions match your criteria.', de = 'Keine Transaktionen entsprechen Ihren Kriterien.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'beginsWith', en = 'begins with', de = 'fängt an mit'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'endsWith', en = 'ends with', de = 'hört auf mit'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'contains', en = 'contains', de = 'enthält'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'dateEqualTo', en = 'equal to', de = 'gleich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'dateBefore', en = 'before', de = 'vor'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'dateBeforeEqual', en = 'before or equal to', de = 'vor oder gleich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'dateAfter', en = 'after', de = 'nach'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'dateAfterEqual', en = 'after or equal to', de = 'nach oder gleich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'dateNotEqual', en = 'not equal to', de = 'ungleich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Navigation', id = 'Statistics2', en = 'Advanced Statistics', de = 'Erweiterte Statistik'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountAccount', id = 'csvNoParser', en = '&lt;No parser&gt;', de = '&lt;Kein Parser&gt;'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'PageSettings', id = 'SQLError', en = 'An SQL error occured attempting to fetch the PageSettings data from the database.', de = 'Beim Abrufen der PageSettings-Daten aus der Datenbank trat ein SQL-Fehler auf.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'pageSettingSave', en = 'Save Settings', de = 'Einstellungen speichern'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'pageSettingDelete', en = 'Delete Setting', de = 'Einstellung löschen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'pageSettingsTwistieTitle', en = 'Settings', de = 'Einstellungen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'pageSettingNewNamePrompt', en = 'Please enter the name for the setting:', de = 'Bitte geben Sie den Namen für die Einstellung ein:'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'expenseRowLabel', en = 'Standard direction:', de = 'Standardgeldfluss:'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'expenseIncome', en = 'Income', de = 'Einnahme'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'expenseExpense', en = 'Expense', de = 'Ausgabe'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'categoryExpenseWarning', en = 'The selected category is marked as expense, but your amount is positive.', de = 'Die ausgewählte Kategorie ist als Ausgabe markiert, jedoch ist Ihr Betrag positiv.'");
+
+	$log .= "&rarr; Changing translation entries.\n";
+	$log .= doQuery("REPLACE i18n SET page_id = 'CategoryManager', id = 'no_parent', en = '&lt;No parent category&gt;', de = '&lt;Keine Elternkategorie&gt;'");
+
+	$sql = "SELECT count(navi_id) FROM navi WHERE item_name = 'Statistics2'";
+	$result =& $badgerDb->query($sql);
+	$arr = array();
+	$result->fetchInto($arr, DB_FETCHMODE_ORDERED);
+	if ($arr[0] == 0) {
+		$log .= "&rarr; Inserting new menu entry for advanced statistics.\n";
+		$log .= doQuery("SELECT @max_navi_id := max(navi_id) FROM navi;");
+		$log .= doQuery("INSERT INTO navi(navi_id, parent_id, menu_order, item_type, item_name, tooltip, icon_url, command) VALUES (@max_navi_id + 1, 30, 5, 'i', 'Statistics2', '', 'statistics.gif', '{BADGER_ROOT}/modules/statistics2/statistics2.php')");
+		$log .= "&rarr; Updating max id to navigation sequence table.\n";
+		$log .= doQuery("UPDATE navi_ids_seq SET id = ((SELECT MAX(navi_id) FROM navi) + 1)");
+	
+		$log .= "&rarr; Updating menu order of forecast.\n";
+		$log .= doQuery("UPDATE navi SET menu_order = 6 WHERE item_name = 'Forecast'");
+	}
+
+	$log .= "&rarr; Updating database version to 1.0 beta 3.\n";
+	$log .= doQuery("REPLACE user_settings SET prop_key = 'badgerDbVersion', prop_value = 's:10:\"1.0 beta 3\";'");
+
+	$log .= "\n&rarr;&rarr; Update to version 1.0 beta 3 finished. &larr;&larr;\n\n";
+
+	return $log;
+}
+
 function doQuery($sql, $acceptableResults = array()) {
 	global $badgerDb, $tpl;
 
 	$severeError = getUpdateTranslation('updateUpdate', 'severeError');
 
 	$log = "SQL: $sql\n";
-	
+
 	$result = $badgerDb->query($sql);
 
 	if (PEAR::isError($result)) {
-		$log .= 'Query resulted in error. Error code: ' . $result->getCode() . ' Error message: ' . $result->getMessage() . ' Native error message: ' . $result->getUserInfo() . "\n"; 
+		$log .= 'Query resulted in error. Error code: ' . $result->getCode() . ' Error message: ' . $result->getMessage() . ' Native error message: ' . $result->getUserInfo() . "\n";
 
 		if (array_search($result->getCode(), $acceptableResults) === false) {
 			eval('$log .= "' . $tpl->getTemplate('update/severeError') . '";');
@@ -375,15 +587,15 @@ function doQuery($sql, $acceptableResults = array()) {
 	} else {
 		$log .= "Query succeeded. " . $badgerDb->affectedRows() . " rows affected.\n";
 	}
-	
+
 	$log .= "\n";
-	
+
 	return $log;
 }
 
 function getUpdateTranslation($pageId, $id) {
 	global $us;
-	
+
 	static $transTbl = array (
 		'updateProcedure' => array (
 			'en' => array (
@@ -450,11 +662,11 @@ function getUpdateTranslation($pageId, $id) {
 	);
 
 	$trans = getBadgerTranslation2($pageId, $id);
-	
+
 	if (PEAR::isError($trans) || $trans === '') {
 		$trans = $transTbl[$pageId][$us->getProperty('badgerLanguage')][$id];
 	}
-	
+
 	return $trans;
 }
 
