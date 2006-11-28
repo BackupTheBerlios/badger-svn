@@ -659,16 +659,24 @@ DataGrid.SortOrder.prototype= {
 				this.changeColumnSortImage(this.sortOrder.ok0, "d");
 			}
 		} else {
-			//default
+			// delete object
 			this.sortOrder = new Object();
-			this.sortOrder.od0 = "a";
-			this.sortOrder.ok0 = this.parent.getFirstColumnName();
+			// set default sorting, first column ascending
+			this.addNewSortOrder( this.parent.getFirstColumnName(), "a");
 		}
 		return this;
 	},
-	toQueryString: function() {
-		//Object to QueryString		
-		return $H(this.sortOrder).toQueryString();
+	toQueryString: function() {		
+		var cleanedSortOrder = new Object();
+		
+		//clean up load object
+		for (i in this.sortOrder) {
+			if ( this.sortOrder[i] != undefined) {
+				cleanedSortOrder[i] = this.sortOrder[i];
+			}
+		}
+		//Object to QueryString
+		return $H(cleanedSortOrder).toQueryString();
 	},
 	
 	addNewSortOrder: function(sortColumn, sortDirection) {
@@ -705,6 +713,7 @@ DataGrid.SortOrder.prototype= {
 		this.save();
 	},
 	save: function() {
+		//alert("save")
 		//alert("JSON: " + this.sortOrder.toJSONString())
 		pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, "SortOrder", this.sortOrder);
 	},
