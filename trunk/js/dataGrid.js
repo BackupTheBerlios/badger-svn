@@ -649,8 +649,13 @@ DataGrid.SortOrder.prototype= {
 	parent: new Object(),
 	
 	initialize: function(objDataGrid) {
+		// remember handle to data grid object
 		this.parent = objDataGrid;	
+		
+		// load data from page settings
 		this.load();
+		
+		// initialise sort order
 		if(this.sortOrder.ok0!=undefined && this.sortOrder.ok0!="") {
 			// set sort order
 			this.addNewSortOrder( this.sortOrder.ok0, this.sortOrder.od0);
@@ -660,6 +665,8 @@ DataGrid.SortOrder.prototype= {
 			// set default sorting, first column ascending
 			this.addNewSortOrder( this.parent.getFirstColumnName(), "a" );
 		}
+		
+		//return sort object
 		return this;
 	},
 	toQueryString: function() {		
@@ -711,17 +718,15 @@ DataGrid.SortOrder.prototype= {
 		this.save();
 	},
 	save: function() {
-		//alert("save")
-		//alert("JSON: " + this.sortOrder.toJSONString())
 		pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, "SortOrder", this.sortOrder);
 	},
 	load: function() {
-		//maybe we find another way
 		eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "SortOrder") + ")");
 	},
 	processResult: function(objResult) {
 		this.sortOrder = objResult;
 	},
+	
 	//change the image for sorting direction
 	changeColumnSortImage: function (columnId, newSortOrder) {
 		switch(newSortOrder) {
