@@ -652,24 +652,20 @@ DataGrid.SortOrder.prototype= {
 		this.parent = objDataGrid;	
 		this.load();
 		if(this.sortOrder.ok0!=undefined && this.sortOrder.ok0!="") {
-			this.activeSortColumn = this.sortOrder.ok0;
-			if(this.sortOrder.od0=="a") {
-				this.changeColumnSortImage(this.sortOrder.ok0, "a");
-			} else {
-				this.changeColumnSortImage(this.sortOrder.ok0, "d");
-			}
+			// set sort order
+			this.addNewSortOrder( this.sortOrder.ok0, this.sortOrder.od0);
 		} else {
 			// delete object
 			this.sortOrder = new Object();
 			// set default sorting, first column ascending
-			this.addNewSortOrder( this.parent.getFirstColumnName(), "a");
+			this.addNewSortOrder( this.parent.getFirstColumnName(), "a" );
 		}
 		return this;
 	},
 	toQueryString: function() {		
 		var cleanedSortOrder = new Object();
 		
-		//clean up load object
+		//clean up object, remove undefined attributes
 		for (i in this.sortOrder) {
 			if ( this.sortOrder[i] != undefined) {
 				cleanedSortOrder[i] = this.sortOrder[i];
@@ -683,8 +679,9 @@ DataGrid.SortOrder.prototype= {
 		// reset old sorting image
 		if(this.activeSortColumn) this.changeColumnSortImage(this.activeSortColumn, "empty");
 			
-		if(sortColumn==this.sortOrder.ok0) {
+		if(sortColumn==this.sortOrder.ok0 & sortDirection==undefined) {
 			// click on the same column:  change sort direction
+			// no directions is specified when called by column click
 			if (this.sortOrder.od0=="a") {
 				// asc -> desc
 				this.sortOrder.od0="d";
@@ -696,6 +693,7 @@ DataGrid.SortOrder.prototype= {
 			}
 		} else {
 			// click on a different column
+			// or initialisation of sorting
 			this.sortOrder.ok2 = this.sortOrder.ok1;
 			this.sortOrder.od2 = this.sortOrder.od1;
 			this.sortOrder.ok1 = this.sortOrder.ok0;
