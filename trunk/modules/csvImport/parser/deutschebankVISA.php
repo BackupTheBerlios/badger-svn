@@ -10,6 +10,8 @@
 * Visit http://www.badger-finance.org
 *
 * Parse .csv files from Deutsche Bank VISA Card. Tested with an example from forum 28.11.2006
+* written by juergen
+* tested by sepp (04.12.2006)
 **/
 // The next line determines the displayed name of this parser.
 // BADGER_REAL_PARSER_NAME Deutsche Bank VISA Card
