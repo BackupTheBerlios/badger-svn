@@ -140,6 +140,8 @@ class DataGrid {
 		//TODO: inserted twice of two DG's on one site
 		$tpl->addCss("Widgets/dataGrid/dataGridPrint.css", "print");
 		$tpl->addCss("Widgets/dataGrid/dataGrid.css", "screen");
+		
+		$this->widgetEngine->addPageSettingsJS();
 	}
 	
 	/**

@@ -112,6 +112,9 @@ function parseDate (date, format) {
 				tokensChanged++;
 			} else if ((aFormat[i] == "yyyy") || (aFormat[i] == "yy")) {
 				yearSelected = parseInt(aData[i], 10);
+				if (yearSelected < 100) {
+					yearSelected += 2000;
+				}
 				tokensChanged++;
 			} else if (aFormat[i] == "mmm") {
 				for (j=0; j<12; j++) {
