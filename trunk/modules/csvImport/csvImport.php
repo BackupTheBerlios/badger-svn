@@ -35,6 +35,8 @@ echo $widgets->addToolTipLayer();
 
 //create account manger object
 $am = new AccountManager($badgerDb);
+$am->setOrder(array (array ('key' => 'title', 'dir' => 'asc')));
+
 //if no Upload yet, show form
 if (!isset($_POST['btnSubmit'])){
 	if (!isset($_POST['Upload'])){	
