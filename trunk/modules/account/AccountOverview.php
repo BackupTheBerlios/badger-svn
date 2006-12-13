@@ -29,8 +29,6 @@ $pageTitle = getBadgerTranslation2 ('accountOverview','pageTitle');
 $pageTitle .= ": ".$account->getTitle();
 
 $widgets = new WidgetEngine($tpl);
-$tpl->addJavaScript("js/behaviour.js");
-$widgets->addPageSettingsJS();
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
 

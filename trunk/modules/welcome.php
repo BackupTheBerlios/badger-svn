@@ -19,9 +19,6 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 updateBalances();
 
 $widgets = new WidgetEngine($tpl); 
-$tpl->addJavaScript("js/behaviour.js");
-$widgets->addPageSettingsJS();
-
 $dataGrid = new DataGrid($tpl, "AccountManagerWelcomePage");
 
 //$dataGrid->noRowSelectedMsg = "test";
@@ -35,6 +32,7 @@ $dataGrid->width = "520px";
 $dataGrid->editAction = "account/AccountOverview.php?accountID=";
 $dataGrid->initDataGridJS();
 
+/*
 $dataGridTest = new DataGrid($tpl, "AccountManagerTest");
 
 $dataGridTest->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
@@ -46,7 +44,7 @@ $dataGridTest->height = "130px";
 $dataGridTest->width = "520px";
 $dataGridTest->editAction = "account/AccountOverview.php?accountID=";
 $dataGridTest->initDataGridJS();
-
+*/
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Badger");
@@ -57,7 +55,7 @@ $btnOpen =  $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', '
 
 eval("echo \"".$tpl->getTemplate("badgerOverview")."\";");
 
-echo $dataGridTest->writeDataGrid();
+/*echo $dataGridTest->writeDataGrid();*/
 eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
 
 require_once(BADGER_ROOT . "/includes/fileFooter.php");

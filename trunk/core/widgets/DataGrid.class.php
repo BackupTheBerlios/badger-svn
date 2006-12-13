@@ -142,6 +142,7 @@ class DataGrid {
 		$tpl->addCss("Widgets/dataGrid/dataGrid.css", "screen");
 		
 		$this->widgetEngine->addPageSettingsJS();
+		$tpl->addJavaScript("js/behaviour.js");
 	}
 	
 	/**
