@@ -17,7 +17,7 @@
 // BADGER_REAL_PARSER_NAME Deutsche Bank VISA Card
 
 define ('HEADER_END_MARKER', 'Belegdatum');
-define ('FOOTER_END_MARKER', 'Saldo');
+define ('FOOTER_END_MARKER', 'Summe');
 /**
  * transform csv to array
  *
