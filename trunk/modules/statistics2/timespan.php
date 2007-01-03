@@ -19,6 +19,8 @@ require_once BADGER_ROOT . '/includes/jpGraph/src/jpgraph_bar.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/statistics2/colors.php';
 
+define('MAX_LABELS', 30);
+
 $graph = new Graph(800, 400);
 $graph->SetScale('textlin');
 
@@ -182,6 +184,7 @@ if ($type != 'y') {
 $data = array();
 $dataNames = array();
 $targets = array();
+$numDatas = 0;
 foreach ($amounts as $currentCategoryId => $currentAmounts) {
 	$data[$currentCategoryId] = array();
 	$dataNames[$currentCategoryId] = array();
@@ -194,6 +197,7 @@ foreach ($amounts as $currentCategoryId => $currentAmounts) {
 		} else {
 			$data[$currentCategoryId][] = 0;
 			$dataNames[$currentCategoryId][] = '';
+			$numDatas++;
 		}
 		
 		if ($currentCategoryId != 'none') {
@@ -226,6 +230,12 @@ $graph->add($groupBar);
 $graph->xaxis->SetTickLabels($tickLabels);
 $graph->xaxis->SetFont(FF_VERA, FS_BOLD);
 $graph->xaxis->SetColor('black', 'green');
+$interval = $numDatas / MAX_LABELS;
+if ($interval < 1) {
+	$interval = 1;
+}
+//echo "numDatas: $numDatas; interval: $interval";
+$graph->xaxis->SetTextLabelInterval($interval);
 
 $graph->yaxis->SetFont(FF_VERA);
 
@@ -235,7 +245,7 @@ $graph->legend->SetColumns(5);
 $graph->legend->SetHColMargin(10);
 
 $graph->SetMargin(80, 20, 60, 20);
-$graph-> StrokeCSIM(basename(__FILE__));
+$graph->StrokeCSIM(basename(__FILE__));
 
 require_once BADGER_ROOT . "/includes/fileFooter.php";
 
