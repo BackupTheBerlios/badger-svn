@@ -210,11 +210,11 @@ $outputSelectionTrend = '<div id="outputSelectionTrend" style="display: inline; 
 	. getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValue')
 	. '</legend>'
 	. '<p>'
-	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, '0', '', false, 'radio', 'checked="checked"')
-	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValueZero'))
-	. '</p><p>'
-	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, 'b', '', false, 'radio')
+	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, 'b', '', false, 'radio', 'checked="checked"')
 	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValueBalance'))
+	. '</p><p>'
+	. $widgets->createField("outputSelectionTrendStart$ACTIVE_OS_MARKER", null, '0', '', false, 'radio')
+	. $widgets->createLabel("outputSelectionTrendStart$ACTIVE_OS_MARKER", getBadgerTranslation2('statistics2', 'outputSelectionTrendStartValueZero'))
 	. '</p>'
 	. '</fieldset>'
 	. '<fieldset style="display: inline; vertical-align: top;">'

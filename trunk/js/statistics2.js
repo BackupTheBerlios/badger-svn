@@ -209,9 +209,9 @@ function showTrendGraph() {
 	var ticks;
 	
 	if ($F("outputSelectionTrendStart") == 0) {
-		start = "0";
-	} else {
 		start = "b";
+	} else {
+		start = "0";
 	}
 	
 	if ($F("outputSelectionTrendTicks") == "s") {
@@ -452,9 +452,9 @@ function showPageSetting(settings) {
 			$("outputSelectionType").checked = true;
 			updateOutputSelection();
 			if (settings["graphOptions"]["trendStart"] == "zero") {
-				$("outputSelectionTrendStart").checked = true;
-			} else {
 				$("outputSelectionTrendStart_0").checked = true;
+			} else {
+				$("outputSelectionTrendStart").checked = true;
 			}
 			if (settings["graphOptions"]["trendTicks"] == "show") {
 				$("outputSelectionTrendTicks").checked = true;
@@ -570,9 +570,9 @@ function savePageSetting(saveDefault) {
 	if ($F("outputSelectionType") == "Trend") {
 		settings["graphType"] = "Trend";
 		if ($F("outputSelectionTrendStart") == 0) {
-			settings["graphOptions"]["trendStart"] = "zero";
-		} else {
 			settings["graphOptions"]["trendStart"] == "balance";
+		} else {
+			settings["graphOptions"]["trendStart"] = "zero";
 		}
 		
 		if ($F("outputSelectionTrendTicks") == "s") {

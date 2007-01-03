@@ -18,7 +18,7 @@ PageSettings.prototype = {
 	},
 
 	getSettingSer: function(callback, page, settingName) {
-		this.callAjax(function(XHR) {eval(callback + "(" + XHR.responseText + ")")}, "getSettingSer", page, settingName);
+		this.callAjax(function(XHR) {eval(callback + "(" + XHR.responseText + ")");}, "getSettingSer", page, settingName);
 	},
 
 	setSettingSer: function(page, settingName, setting) {
@@ -30,6 +30,9 @@ PageSettings.prototype = {
 	},
 	
 	callAjax: function(callback, action, page, settingName, setting, async) {
+		if (async !== false) {
+			async = true;
+		}
 //		if (this.myAjax) {
 //			this.myAjax.transport.abort();
 //		}
@@ -52,7 +55,7 @@ PageSettings.prototype = {
 		}
 	},
 	getSettingSync: function(page, settingName) {
-		return this.callAjax(null, "getSettingSer", page, settingName, false);
+		return this.callAjax(null, "getSettingSer", page, settingName, false, false);
 	}
 	
 }
