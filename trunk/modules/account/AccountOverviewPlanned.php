@@ -53,7 +53,7 @@ echo $tpl->getHeader($pageTitle);
 
 echo "<h1>$pageTitle</h1>";
 
-echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dataGridAccount".$accountID."planned.callNewEvent()", "Widgets/table_add.gif");
+echo $widgets->createButton("btnNewPlanned", getBadgerTranslation2('accountTransaction', 'newPlannedTrans'), "dataGridAccount".$accountID."planned.callNewEvent('type=planned')", "Widgets/table_add.gif");
 echo ' ';
 echo $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dataGridAccount".$accountID."planned.callEditEvent()", "Widgets/table_edit.gif");
 echo ' ';
