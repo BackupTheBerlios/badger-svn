@@ -22,6 +22,7 @@ var pageSettings = new PageSettings();
 
 DataGrid = Class.create();
 DataGrid.SortOrder = Class.create();
+DataGrid.Filter = Class.create();
 
 DataGrid.prototype = {
 	initialize: function(arrParameters) {
@@ -49,17 +50,12 @@ DataGrid.prototype = {
 		this.objRowActive;
 		this.ActiveSortColumn = "";
 		this.arrSelectedRows = new Array();	
-		this.arrURLParameter = new Array();
 		this.sortParameter = new Object();
-		this.activeFilter = new Object();
 		
-		// if there are some stored values in the usersettings
-		//this.deserializeParameter(arrParameters.parameter);
+		//initialize Sort and Filter Parameter
+		this.sortOrder = new DataGrid.SortOrder(this);		
+		this.filter = new DataGrid.Filter(this);
 		
-		//initialize SortParameter
-		this.sortOrder = new DataGrid.SortOrder(this);
-		
-		this.initFilterFields();
 		this.loadData();
 	},
 	
@@ -72,7 +68,7 @@ DataGrid.prototype = {
 		this.myAjaxLoad = new Ajax.Request(
 			this.sourceXML, {
 				method: 'post',
-				parameters: this.serializeParameter() + "&sf=" + this.columnOrder + "&" +this.sortOrder.toQueryString(),
+				parameters: "&sf=" + this.columnOrder + "&" +this.sortOrder.toQueryString() + "&" +this.filter.toQueryString(),
 				onComplete: this.insertData.bind(this),
 				onFailure: this.handleError.bind(this)
 			}); 
@@ -83,7 +79,7 @@ DataGrid.prototype = {
 		$('dgTableData'+this.uniqueId).style.visibility = "hidden"; 
 
 		// filter image in footer
-		if( this.arrURLParameter["fn"]>"0" && this.arrURLParameter["fn"]!=undefined) {
+		if( this.filter.getNumberOfActiveFilters() >0 ) {
 			$('dgFilterStatus'+this.uniqueId).style.visibility = "visible"; //filter active
 		} else {
 			$('dgFilterStatus'+this.uniqueId).style.visibility = "hidden"; //filter inactive
@@ -422,8 +418,7 @@ DataGrid.prototype = {
 			if(checkbox[i].id!="dgSelector"+this.uniqueId) {
 				this.deselectRow(checkbox[i].parentNode.parentNode);
 			}
-		}
-		
+		}		
 	},
 	
 	// get all ids from selected rows -> array
@@ -449,27 +444,6 @@ DataGrid.prototype = {
 		}
 	},
 
-	
-	serializeParameter: function () {
-		var strURLParameter = $H(this.arrURLParameter).toQueryString();
-		// reinitialize array without undefinded parameters
-		this.arrURLParameter = new Array();
-		this.deserializeParameter(strURLParameter);
-		strURLParameter = $H(this.arrURLParameter).toQueryString();
-		return strURLParameter;
-	},
-	
-	deserializeParameter: function (strParameter) {
-		lines = strParameter.split("&");
-	
-		for(i=0; i<lines.length;i++) {
-			parpair = lines[i].split("=");
-			if(parpair[0]!=undefined && parpair[1]!="undefined" && parpair[1]!="" ) {
-				this.arrURLParameter[parpair[0]] = parpair[1];
-			}
-		}
-	},
-	
 	//display a message in the dataGrid footer
 	showMessageLayer: function (strMessage) {
 		divMessage = $("dgMessage"+this.uniqueId);
@@ -488,86 +462,6 @@ DataGrid.prototype = {
 		var row = $(this.uniqueId + id);
 		if (row) {
 			this.selectRow(row);
-		}
-	},
-	
-	saveDataGridParameter: function () {	
-		/*
-		var strUrl = badgerRoot+"/core/widgets/DataGridSaveParameter.php";
-		var strParameter = this.serializeParameter();
-		
-		if( strParameter.indexOf("id="+this.uniqueId)==-1 ) {
-			strParameter = "id="+this.uniqueId+"&"+strParameter;
-		}	
-		
-		var myAjaxSave = new Ajax.Request(
-		strUrl, {
-			method: 'post',
-			parameters: strParameter
-		}); 
-		*/
-		pageSettings.setSettingSer("dataGrid"+this.uniqueId, "Parameter", strParameter);
-	},
-	
-	setFilterFields: function (arrayOfFields) {
-		this.deleteAllFilter();
-		if(arrayOfFields){
-			for (i=0; i<arrayOfFields.length; i++) {
-				if( $(arrayOfFields[i]) ) {
-					if( $F(arrayOfFields[i]) != "" && $F(arrayOfFields[i])!="NULL" ) {
-						strKey = arrayOfFields[i];
-						strValue = $F(arrayOfFields[i]);
-						if( $(arrayOfFields[i]+"Filter") ) {
-							strOperator = $F(arrayOfFields[i]+"Filter");
-						} else {					
-							strOperator = "eq";
-						}
-						this.addFilter(strKey, strOperator, strValue);
-					}
-				}		
-			}
-		}
-		this.loadData();
-		this.saveDataGridParameter();
-	},
-	
-	resetFilter: function (arrayOfFields) {
-		this.deleteAllFilter();
-		this.saveDataGridParameter();	
-		this.loadData();
-		this.initFilterFields(arrayOfFields);	
-	},
-	
-	addFilter: function (strKey, strOperator, strValue) {	
-		this.arrURLParameter["fk"+this.arrURLParameter["fn"]] = strKey;
-		this.arrURLParameter["fo"+this.arrURLParameter["fn"]] = strOperator;
-		this.arrURLParameter["fv"+this.arrURLParameter["fn"]] = strValue;
-		this.arrURLParameter["fn"]++;
-	},
-	
-	deleteAllFilter: function () {
-		for (i=0; i<this.arrURLParameter["fn"]; i++) {
-			this.arrURLParameter["fk"+i] = undefined;
-			this.arrURLParameter["fo"+i] = undefined;
-			this.arrURLParameter["fv"+i] = undefined;
-		}
-		this.arrURLParameter.compact();
-		this.arrURLParameter["fn"] = 0;
-	},
-	
-	initFilterFields: function (arrayOfFields) {
-		for (i=0; i<this.arrURLParameter["fn"]; i++) {
-			if($(this.arrURLParameter["fk"+i])) $(this.arrURLParameter["fk"+i]).value = this.arrURLParameter["fv"+i];
-			if($(this.arrURLParameter["fk"+i]+"Filter")) {
-				$(this.arrURLParameter["fk"+i]+"Filter").value = this.arrURLParameter["fo"+i];
-			}
-		}
-		if(arrayOfFields) {
-			for (i=0; i<arrayOfFields.length; i++) {
-				if( $(arrayOfFields[i]) ) {
-					$(arrayOfFields[i]).value = "";
-				}
-			}
 		}
 	},
 	getFirstColumnName: function () {
@@ -674,12 +568,13 @@ DataGrid.SortOrder.prototype= {
 		
 		//clean up object, remove undefined attributes
 		for (i in this.sortOrder) {
-			if ( this.sortOrder[i] != undefined) {
+			if ( this.sortOrder[i] != undefined && i != "toJSONString") {
 				cleanedSortOrder[i] = this.sortOrder[i];
 			}
 		}
 		//Object to QueryString
 		return $H(cleanedSortOrder).toQueryString();
+
 	},
 	
 	addNewSortOrder: function(sortColumn, sortDirection) {
@@ -740,24 +635,133 @@ DataGrid.SortOrder.prototype= {
 				$("dgImg"+this.parent.uniqueId+columnId).src = this.parent.tplPath + "dropUp.png";
 				break;
 		}	
-	}
-	
+	}	
 }
 
 
-DataGrid.Filter = {
-	loadFilter: function(strFiltername) {		
+DataGrid.Filter.prototype = {
+	activeFilter: new Object(),
+	parent: new Object(),
+	
+	initialize: function(objDataGrid) {
+		// remember handle to data grid object
+		this.parent = objDataGrid;	
+		
+		this.activeFilter.arrCriterias = new Array();
+		this.activeFilter.arrCriterias.length = 0;
+		
+		// load data from page settings
+		this.load();
+		
+		//return filter object
+		return this;
+	},
+	reset: function() {		
+		this.activeFilter = new Object()
+	},
+	save: function(strFilterName) {
+		if (strFilterName) {
+			strFilterName += "Filter";
+			//save a specific filter
+			//???????
+			pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, strFilterName, this.activeFilter);		
+		} else {
+			//save last used filter for this grid
+			pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, "FilterActive", this.activeFilter);
+		}
+	},
+	
+	load: function(strFilterName) {
+		if (strFilterName) {
+			strFilterName += "Filter";
+			//load a specific filter
+			eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, strFilterName) + ")");
+			
+		} else {
+			//load last used filter for this grid
+			eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "FilterActive") + ")");
+		}
 		
 	},
-	resetFilter: function() {
-		
-		
+	processResult: function(objResult) {
+		this.activeFilter = objResult;
 	},
-	saveNewFilter: function(strFilterName, filter) {
-		
-	}
+	
+	addFilterCriteria: function(field, operator, value) {
+		if (!this.activeFilter.arrCriterias) {
+			this.activeFilter.arrCriterias = new Array();
+			this.activeFilter.arrCriterias.length = 0;
+		}
+		//alert("numberOfFilterCriterias:"+this.activeFilter.arrCriterias.length)
 
+		this.activeFilter.arrCriterias.push({
+			"field" : field,
+			"operator" : operator,
+			"value" : value
+		});
+		//alert("numberOfFilterCriterias:"+this.activeFilter.arrCriterias.length)
 		
+	},
+	setFilterFields: function (arrayOfFields) {
+		this.reset();
+		
+		if(arrayOfFields){
+			for (i=0; i<arrayOfFields.length; i++) {
+				if( $(arrayOfFields[i]) ) {
+					if( $F(arrayOfFields[i]) != "" && $F(arrayOfFields[i])!="NULL" ) {
+						strField = arrayOfFields[i];
+						strValue = $F(arrayOfFields[i]);
+						if( $(arrayOfFields[i]+"Filter") ) {
+							strOperator = $F(arrayOfFields[i]+"Filter");
+						} else {					
+							strOperator = "eq";
+						}
+						this.addFilterCriteria(strField, strOperator, strValue)
+					}
+				}		
+			}
+		}		
+		this.save();
+		this.parent.loadData();
+	},
+	resetFilterFields: function (arrayOfFields) {
+		this.reset();		
+		this.save();
+		this.parent.loadData();
+		
+		//reset values in form fields
+		if(arrayOfFields) {
+			for (i=0; i<arrayOfFields.length; i++) {
+				if( $(arrayOfFields[i]) ) {
+					$(arrayOfFields[i]).value = "";
+				}
+			}
+		}
+	},
+	getNumberOfActiveFilters: function() {
+		if (this.activeFilter.arrCriterias) {
+			return this.activeFilter.arrCriterias.length;
+		} else return 0;
+	},
+	toQueryString: function() {		
+		var arrResult = new Array();
+		
+		//build querystring
+		if(this.activeFilter && this.activeFilter.arrCriterias) {
+			for (i=0; i<this.activeFilter.arrCriterias.length; i++) {
+				//alert("i: " + i);
+				//alert($H(this.activeFilter.arrCriterias[i]).toQueryString())
+				if ( this.activeFilter.arrCriterias[i] != undefined && i != "toJSONString") {
+					arrResult["fk"+i] = this.activeFilter.arrCriterias[i].field;
+					arrResult["fo"+i] = this.activeFilter.arrCriterias[i].operator;
+					arrResult["fv"+i] = this.activeFilter.arrCriterias[i].value;
+					//alert(this.activeFilter.arrCriterias[i].field)
+				}
+			}
+			//Object to QueryString
+			return $H(arrResult).toQueryString();
+		} else return "";		
+	}		
 }
 
 function URLDecode(strEncodeString) {
