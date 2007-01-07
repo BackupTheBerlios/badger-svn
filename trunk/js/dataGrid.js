@@ -55,6 +55,7 @@ DataGrid.prototype = {
 		//initialize Sort and Filter Parameter
 		this.sortOrder = new DataGrid.SortOrder(this);		
 		this.filter = new DataGrid.Filter(this);
+		this.filter.initFilterFields();
 		
 		this.loadData();
 	},
@@ -735,6 +736,17 @@ DataGrid.Filter.prototype = {
 				if( $(arrayOfFields[i]) ) {
 					$(arrayOfFields[i]).value = "";
 				}
+			}
+		}
+	},
+	initFilterFields: function () {
+		if (this.activeFilter.arrCriterias) {
+			var arrCriterias = this.activeFilter.arrCriterias
+			for (i=0; i<arrCriterias.length; i++) {
+				$(arrCriterias[i].field).value = arrCriterias[i].value;
+				if ( $(arrCriterias[i].field+"Filter") ) {
+					$(arrCriterias[i].field+"Filter").value = arrCriterias[i].operator;
+				}				
 			}
 		}
 	},
