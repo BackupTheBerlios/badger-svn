@@ -190,16 +190,16 @@ function _jsVal_Language() {
 		if ($startOpen == true) {
 			$result .= ' style="display:none;"';
 		}
-		$result .= '>';
-		$result .= $this->addImage('Widgets/twistie/arrow_out.png', "class=\"showTwistie\" onclick=\"showTwistie('$id');\"");
+		$result .= " onclick=\"showTwistie('$id');\">";
+		$result .= $this->addImage('Widgets/twistie/arrow_out.png', "class=\"showTwistie\" ");
 		$result .= "&nbsp;$title</div>\n";
 		
 		$result .= "<fieldset id='{$id}Opened'";
 		if ($startOpen == false) {
 			$result .= ' style="display:none;"';
 		}
-		$result .= '><legend>';
-		$result .= $this->addImage('Widgets/twistie/arrow_in.png', "class=\"hideTwistie\" onclick=\"hideTwistie('$id');\"");
+		$result .= "><legend onclick=\"hideTwistie('$id');\">";
+		$result .= $this->addImage('Widgets/twistie/arrow_in.png', "class=\"hideTwistie\" ");
 		$result .= "&nbsp;$title</legend>\n";
 		$result .= $innerHTML;
 		$result .= '</fieldset>';

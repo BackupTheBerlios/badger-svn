@@ -31,6 +31,7 @@ $pageTitle .= ": ".$account->getTitle();
 $widgets = new WidgetEngine($tpl);
 $widgets->addToolTipJS();
 $widgets->addCalendarJS();
+$widgets->addTwistieSectionJS();
 
 $dataGrid = new DataGrid($tpl,"Account$accountID");
 $dataGrid->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=Account&qp=$accountID";
@@ -77,6 +78,10 @@ $categoryField = $widgets->createSelectField("categoryId", getCategorySelectArra
 
 $btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dataGridAccount$accountID.filter.setFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/dataGrid/filter.gif");
 $btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "dataGridAccount$accountID.filter.resetFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/cancel.gif");
+
+eval('$filterContent = "' . $tpl->getTemplate('Account/StandardFilter') . '";');
+
+$standardFilter =  $widgets->addTwistieSection("Filter",$filterContent);
 
 // DataGrid 
 $btnNewFinished = $widgets->createButton("btnNewFinished", getBadgerTranslation2('accountTransaction', 'newFinishedTrans'), "dataGridAccount$accountID.callNewEvent('type=finished')", "Account/finished_transaction_new.gif");
