@@ -700,9 +700,9 @@ DataGrid.Filter.prototype = {
 			"operator" : operator,
 			"value" : value
 		});
-		//alert("numberOfFilterCriterias:"+this.activeFilter.arrCriterias.length)
-		
+		//alert("numberOfFilterCriterias:"+this.activeFilter.arrCriterias.length)		
 	},
+	
 	setFilterFields: function (arrayOfFields) {
 		this.reset();
 		

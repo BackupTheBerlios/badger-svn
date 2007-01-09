@@ -169,10 +169,10 @@ function setDGResultAccounts(accountIds) {
 
 function updateDGResult() {
 	$("resultGridContainer").style.display = "block";
-	$("dataGridStatistics2Result").obj.deleteAllFilter();
+	$("dataGridStatistics2Result").obj.filter.reset();
 
 	for (var i = 0; i < currentFilterX.length; i++) {
-		$("dataGridStatistics2Result").obj.addFilter(currentFilterX[i]["field"], currentFilterX[i]["operator"], currentFilterX[i]["value"]);
+		$("dataGridStatistics2Result").obj.filter.addFilterCriteria(currentFilterX[i]["field"], currentFilterX[i]["operator"], currentFilterX[i]["value"]);
 	}
 	
 	$("dataGridStatistics2Result").obj.loadData();
