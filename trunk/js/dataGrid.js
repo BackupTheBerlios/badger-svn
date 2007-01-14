@@ -18,7 +18,7 @@
  *
 **/
 
-var pageSettings = new PageSettings();
+pageSettings = new PageSettings();
 
 DataGrid = Class.create();
 DataGrid.SortOrder = Class.create();
@@ -43,7 +43,9 @@ DataGrid.prototype = {
 		this.editAction = arrParameters.editAction;
 		this.newAction = arrParameters.newAction;
 		this.tplPath = arrParameters.tplPath;
+		this.discardSelectedRows = arrParameters.discardSelectedRows;
 		this.loadingMessage = arrParameters.loadingMessage;
+		
 	
 		this.mouseEventsDisabled = false;
 		
@@ -58,6 +60,11 @@ DataGrid.prototype = {
 		this.filter.initFilterFields();
 		
 		this.loadData();
+		
+		//when we save selected rows at page refresh, then we should restore it here
+		if (!this.discardSelectedRows) {
+			this.restoreSelectedRows();
+		}		
 	},
 	
 	// retrieve data from server, define callback-function
@@ -95,7 +102,7 @@ DataGrid.prototype = {
 				//refresh whole dataGrid				
 				this.loadData();
 				break;
-			case 'refreshPage': 
+			case 'refreshPage':
 				//refresh whole page	
 				window.setTimeout("this.refreshPage()", 10);
 				break;
@@ -280,13 +287,28 @@ DataGrid.prototype = {
 	//Selection -> enable checkbox
 	selectRow: function (objRow) {
 		this.arrSelectedRows.push(objRow.rowId);
+		//save selected rows
+		if (!this.discardSelectedRows) {
+			this.saveSelectedRows();
+		}
 		if (objRow.className == "dgRow") objRow.className = "dgRowSelected";
 		if (objRow.className == "dgRowActive") objRow.className = "dgRowSelectedActive";
 		$("check"+objRow.id).checked = "checked";
 		$("check"+objRow.id).focus();
+
 	},
 	deselectRow: function (objRow) {
-		this.arrSelectedRows.without(objRow.rowId);
+		//remove row id from array
+		position = this.arrSelectedRows.indexOf(objRow.rowId);
+		if(position>=0) {
+			this.arrSelectedRows[position] = null;
+			this.arrSelectedRows = this.arrSelectedRows.compact();
+			//save selected rows
+			if (!this.discardSelectedRows) {
+				this.saveSelectedRows();
+			}
+		}
+		
 		if (objRow.className == "dgRowSelected") objRow.className = "dgRow";
 		if (objRow.className == "dgRowSelectedActive") objRow.className = "dgRowActive";
 		$("check"+objRow.id).checked = "";
@@ -390,7 +412,6 @@ DataGrid.prototype = {
 			document.location.href = this.newAction + "&" + addParam;
 		}
 	},
-
 	// delete data
 	deleteTheseRows: function(strUrl) {
 		var myAjaxDelete = new Ajax.Request(
@@ -413,6 +434,18 @@ DataGrid.prototype = {
 		}
 	},
 	
+	saveSelectedRows: function(event) {
+		pageSettings.setSettingSer("DataGrid"+this.uniqueId, "arrSelectedRows", this.arrSelectedRows);
+	},
+	restoreSelectedRows: function() {
+		eval("this.restoreSelectedRowsCallback(" + pageSettings.getSettingSync("DataGrid"+this.uniqueId, "arrSelectedRows") + ")");		
+	},
+	restoreSelectedRowsCallback: function (objResult) {
+		if(objResult) {
+			this.arrSelectedRows = objResult;
+		}
+	},
+			
 	deselectAllRows: function () {
 		checkbox = Form.getInputs("dgForm"+this.uniqueId,"checkbox");
 		for (i=0; i<checkbox.length; i++) {
@@ -507,6 +540,7 @@ DataGrid.prototype = {
 				dataGrid.loadData();
 			}
 		},
+		
 		// checkbox in the dataGrid-Header, for (de-)selecting all
 		'input.dgSelector' : function(element){
 			element.onclick = function(){
@@ -665,7 +699,7 @@ DataGrid.Filter.prototype = {
 			strFilterName += "Filter";
 			//save a specific filter
 			//???????
-			pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, strFilterName, this.activeFilter);		
+			pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, strFilterName, this.activeFilter);
 		} else {
 			//save last used filter for this grid
 			pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, "FilterActive", this.activeFilter);

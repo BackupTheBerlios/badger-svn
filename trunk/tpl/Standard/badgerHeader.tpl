@@ -16,5 +16,3 @@ $JSOnLoadEvents
 </div>
 <div id="staticMenuBar"></div>
 <div id="content">
-
-

@@ -29,29 +29,16 @@ $dataGrid->headerSize = array(200,150,100);
 $dataGrid->cellAlign = array("left","right","left");
 $dataGrid->height = "130px";
 $dataGrid->width = "520px";
+$dataGrid->discardSelectedRows = "true";
 $dataGrid->editAction = "account/AccountOverview.php?accountID=";
 $dataGrid->initDataGridJS();
-
-/*
-$dataGridTest = new DataGrid($tpl, "AccountManagerTest");
-
-$dataGridTest->sourceXML = BADGER_ROOT."/core/XML/getDataGridXML.php?q=AccountManager";
-$dataGridTest->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'), getBadgerTranslation2('accountAccount', 'colBalance'),getBadgerTranslation2('accountAccount', 'colCurrency'));
-$dataGridTest->columnOrder = array("title","balance","currency"); 
-$dataGridTest->headerSize = array(200,150,100);
-$dataGridTest->cellAlign = array("left","right","left");
-$dataGridTest->height = "130px";
-$dataGridTest->width = "520px";
-$dataGridTest->editAction = "account/AccountOverview.php?accountID=";
-$dataGridTest->initDataGridJS();
-*/
 
 $widgets->addNavigationHead();
 echo $tpl->getHeader("Badger");
 
 $accountOverviewHeader = getBadgerTranslation2('welcome', 'pageTitle');
 $accountOverviewGrid = $dataGrid->writeDataGrid();
-$btnOpen =  $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'open'), "dgEdit()", "Widgets/table_go.gif");
+$btnOpen =  $widgets->createButton("btnNew", getBadgerTranslation2('dataGrid', 'open'), "dataGridAccountManagerWelcomePage.callEditEvent()", "Widgets/table_go.gif");
 
 eval("echo \"".$tpl->getTemplate("badgerOverview")."\";");
 

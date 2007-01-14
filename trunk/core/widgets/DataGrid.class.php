@@ -121,6 +121,8 @@ class DataGrid {
 	 * @var string
 	 */	
 	public $height;
+	
+	public $discardSelectedRows = "false";
 
 	/**
 	 * function function __construct($tpl)
@@ -212,6 +214,7 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('  deleteAction: "'. $this->deleteAction .'",');
 		$this->tpl->addOnLoadEvent('  editAction: "'. $this->editAction .'",');
 		$this->tpl->addOnLoadEvent('  newAction: "'. $this->newAction .'",');
+		$this->tpl->addOnLoadEvent('  discardSelectedRows: '. $this->discardSelectedRows .',');
 		$this->tpl->addOnLoadEvent('  loadingMessage: "'.$this->LoadingMessage.'",');
 		
 		try {$dgParameter = $us->getProperty('dgParameter'.$this->UniqueId); } catch(BadgerException $e) {};
@@ -226,7 +229,9 @@ class DataGrid {
 		$this->tpl->addOnLoadEvent('Behaviour.register(dataGrid'.$this->UniqueId.'.behaviour);');
 		$this->tpl->addOnLoadEvent('Behaviour.apply();');
 		$this->tpl->addOnLoadEvent('Event.observe($("dataGrid'.$this->UniqueId.'"), \'keypress\', dataGrid'.$this->UniqueId.'.KeyEvents, false);');
-		
+		//TODO: find a solution that's working with multiple datagrids
+		//$this->tpl->addOnLoadEvent('Event.observe(window, \'unload\', dataGrid'.$this->UniqueId.'.saveSelectedRows, false);');
+		//$this->tpl->addOnLoadEvent('window.addEventListener(\'unload\', dataGrid'.$this->UniqueId.'.saveSelectedRows, false);');
 	}
 	
 	public static function getFilterSelectArray() {
