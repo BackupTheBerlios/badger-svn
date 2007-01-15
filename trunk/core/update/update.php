@@ -325,6 +325,7 @@ function update1_0betaTo1_0beta2() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'DateFormats', id = 'mm/dd/yy', en = 'mm/dd/yy', de = 'mm/tt/jj'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics', id = 'showButton', en = 'Show', de = 'Anzeigen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'open', en = 'Open', de = 'Öffnen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'gotoToday', en = 'Today', de = 'Heute'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'Navigation', id = 'releaseNotes', en = 'Release Notes', de = 'Versionsgeschichte (englisch)'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'welcome', id = 'pageTitle', en = 'Your accounts', de = 'Ihre Konten'");
 
