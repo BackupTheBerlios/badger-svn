@@ -256,7 +256,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$outsideToolTip =  $widgets->addToolTip(getBadgerTranslation2("importCsv", "outsideCapitalToolTip"));
 	
 	$categoryLabel = $widgets->createLabel("category", getBadgerTranslation2('accountTransaction', 'category'), false);
-	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(), $categoryValue, "", false, "style='width: 31ex;' onchange='updateExpenseWarning();'");
+	$categoryField = $widgets->createSelectField("category", getCategorySelectArray(false), $categoryValue, "", false, "style='width: 31ex;' onchange='updateExpenseWarning();'");
 	
 	$exceptionalLabel = $widgets->createLabel("exceptional", getBadgerTranslation2('accountTransaction', 'exceptional'), false);
 	$exceptionalField = $widgets->createField("exceptional", 30, "on", "", false, "checkbox", $exceptionalValue);

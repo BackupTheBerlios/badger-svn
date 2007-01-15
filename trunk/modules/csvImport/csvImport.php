@@ -192,7 +192,7 @@ if (isset($_POST['Upload'])){
 
 					$tableSelectCheckbox = "<input type=\"checkbox\" name=\"select" . $outputTransactionNumber . "\" value=\"select\" checked=\"checked\" />";
 
-					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(), $importedTransactions[$outputTransactionNumber]['categoryId'], '', false, $disableFields);
+					$tableSelectCategory= $widgets->createSelectField("categorySelect".$outputTransactionNumber, getCategorySelectArray(false), $importedTransactions[$outputTransactionNumber]['categoryId'], '', false, $disableFields);
 						    	
 				    $tableValutaDate = $widgets->addDateField("valutaDate".$outputTransactionNumber, $importedTransactions[$outputTransactionNumber]["valutaDate"]->getFormatted());
 				    						    

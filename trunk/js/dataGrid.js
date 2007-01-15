@@ -258,7 +258,8 @@ DataGrid.prototype = {
 		checkTD = document.createElement("td");
 		checkTD.style.width = "25px";
 		checkTD.style.height = "5px";
-		newRow.appendChild(checkTD);	
+		checkTD.className = "today";
+		newRow.appendChild(checkTD);
 
 		for (i=0; i<dataGrid.columnOrder.length; i++) {
 			cell = document.createElement("td");
@@ -272,7 +273,14 @@ DataGrid.prototype = {
 		lastTD.style.height = "5px";
 		newRow.appendChild(lastTD);
 	},
-
+	gotoToday: function () {
+		var scrollLayer = $("dgDivScroll"+this.uniqueId);
+		try {
+			var separatorTR = document.getElementsByClassName("today", scrollLayer)[0].parentNode;
+			separatorTR.nextSibling.firstChild.childNodes[0].focus();
+		} catch (e) {};
+		
+	},
 	// Row Handling
 	//Activation -> Highlight, when mouse over
 	activateRow: function (objRow) {
@@ -751,7 +759,12 @@ DataGrid.Filter.prototype = {
 						} else {					
 							strOperator = "eq";
 						}
-						this.addFilterCriteria(strField, strOperator, strValue)
+						if (strField == "categoryId" & strValue.substr(0, 1) == '-') {
+							strField = "parentCategoryId";
+							strValue = strValue * -1;
+						}
+						alert(strField +":"+ strOperator +":"+ strValue);
+						this.addFilterCriteria(strField, strOperator, strValue);
 					}
 				}		
 			}

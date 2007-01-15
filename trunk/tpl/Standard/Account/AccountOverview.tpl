@@ -2,7 +2,7 @@
 
 $standardFilter
 <br>
-$btnNewFinished&nbsp;$btnNewPlanned&nbsp;$btnEdit&nbsp;$btnDelete&nbsp;$btnShowPlannedTransactions&nbsp;
+$btnNewFinished&nbsp;$btnNewPlanned&nbsp;$btnEdit&nbsp;$btnDelete&nbsp;$btnShowPlannedTransactions&nbsp;$btnGotoToday&nbsp;
 $dgHtml
 
 <fieldset class="dataGridLegend">

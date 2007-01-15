@@ -74,7 +74,7 @@ $amountField = $widgets->createField("amount", 14, "", "", false, "text", "");
 $amountFilterOperator = $widgets->createSelectField("amountFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");	
 
 $categoryLabel = $widgets->createLabel("categoryId", getBadgerTranslation2('accountTransaction', 'category'), false, "");
-$categoryField = $widgets->createSelectField("categoryId", getCategorySelectArray(), "", "", false, "style='width: 210px;'");
+$categoryField = $widgets->createSelectField("categoryId", getCategorySelectArray(true), "", "", false, "style='width: 210px;'");
 
 $btnFilterOkay = $widgets->createButton("btnFilterOkay", getBadgerTranslation2('dataGrid', 'setFilter'), "dataGridAccount$accountID.filter.setFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/dataGrid/filter.gif");
 $btnFilterReset = $widgets->createButton("btnFilterReset", getBadgerTranslation2('dataGrid', 'resetFilter'), "dataGridAccount$accountID.filter.resetFilterFields(['title','amount','valutaDate','categoryId'])", "Widgets/cancel.gif");
@@ -89,7 +89,7 @@ $btnNewPlanned = $widgets->createButton("btnNewPlanned", getBadgerTranslation2('
 $btnEdit = $widgets->createButton("btnEdit", getBadgerTranslation2('dataGrid', 'edit'), "dataGridAccount$accountID.callEditEvent()", "Widgets/table_edit.gif");
 $btnDelete = $widgets->createButton("btnDelete", getBadgerTranslation2('dataGrid', 'delete'), "dataGridAccount$accountID.callDeleteEvent()", "Widgets/table_delete.gif");
 $btnShowPlannedTransactions = $widgets->createButton("btnShowPlannedTransactions", getBadgerTranslation2('accountOverview', 'showPlannedTrans'),  "location.href = location.href.replace(/AccountOverview\.php/, 'AccountOverviewPlanned.php');", "Account/planned_transaction.png");
-
+$btnGotoToday = $widgets->createButton("btnGotoToday", getBadgerTranslation2('dataGrid', 'gotoToday'), "dataGridAccount$accountID.gotoToday()", "Widgets/dataGrid/goto.gif");
 $dgHtml = $dataGrid->writeDataGrid();
 
 $legend = getBadgerTranslation2('dataGrid', 'legend');
