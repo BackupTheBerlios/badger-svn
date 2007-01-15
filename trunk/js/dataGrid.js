@@ -763,7 +763,7 @@ DataGrid.Filter.prototype = {
 							strField = "parentCategoryId";
 							strValue = strValue * -1;
 						}
-						alert(strField +":"+ strOperator +":"+ strValue);
+						//alert(strField +":"+ strOperator +":"+ strValue);
 						this.addFilterCriteria(strField, strOperator, strValue);
 					}
 				}		
@@ -790,9 +790,15 @@ DataGrid.Filter.prototype = {
 		if (this.activeFilter.arrCriterias) {
 			var arrCriterias = this.activeFilter.arrCriterias
 			for (i=0; i<arrCriterias.length; i++) {
-				$(arrCriterias[i].field).value = arrCriterias[i].value;
-				if ( $(arrCriterias[i].field+"Filter") ) {
-					$(arrCriterias[i].field+"Filter").value = arrCriterias[i].operator;
+				strField = arrCriterias[i].field;
+				strValue = arrCriterias[i].value;
+				if(strField=="parentCategoryId") {
+					strField = "categoryId";
+					strValue = strValue * -1;
+				}
+				$(strField).value = strValue;
+				if ( $(strField+"Filter") ) {
+					$(strField+"Filter").value = arrCriterias[i].operator;
 				}				
 			}
 		}
