@@ -35,14 +35,18 @@ $dataGrid->headerName = array(
 	getBadgerTranslation2('accountOverview', 'colTitle'),
 	getBadgerTranslation2('accountOverviewPlanned', 'colBeginDate'),
 	getBadgerTranslation2('accountOverviewPlanned', 'colEndDate'),
-	getBadgerTranslation2('accountOverviewPlanned', 'colUnit'),
-	getBadgerTranslation2('accountOverviewPlanned', 'colFrequency'),
+	//getBadgerTranslation2('accountOverviewPlanned', 'colUnit'),
+	//getBadgerTranslation2('accountOverviewPlanned', 'colFrequency'),
+	getBadgerTranslation2('accountOverviewPlanned', 'colRepeatText'),
 	getBadgerTranslation2('accountOverview', 'colAmount'),
 	getBadgerTranslation2('accountOverview', 'colCategoryTitle'));
-$dataGrid->columnOrder = array("title","beginDate", "endDate", "repeatUnit", "repeatFrequency", "amount", "categoryTitle");  
+//$dataGrid->columnOrder = array("title","beginDate", "endDate", "repeatUnit", "repeatFrequency", "amount", "categoryTitle");  
+$dataGrid->columnOrder = array("title","beginDate", "endDate", "repeatText", "amount", "categoryTitle");  
 $dataGrid->height = "350px";
-$dataGrid->headerSize = array(210, 95, 85, 70, 75, 120, 200);
-$dataGrid->cellAlign = array("left", "right", "right", "left", "right", "right", "left");
+//$dataGrid->headerSize = array(210, 95, 85, 70, 75, 120, 200);
+$dataGrid->headerSize = array(210, 95, 85, 85, 120, 200);
+//$dataGrid->cellAlign = array("left", "right", "right", "left", "right", "right", "left");
+$dataGrid->cellAlign = array("left", "right", "right", "left", "right", "left");
 $dataGrid->deleteAction = "Transaction.php?action=delete&backTo=planned&accountID=$accountID&ID=";
 $dataGrid->editAction = "Transaction.php?action=edit&backTo=planned&accountID=$accountID&ID=";
 $dataGrid->newAction = "Transaction.php?action=new&backTo=planned&accountID=$accountID";

@@ -67,6 +67,7 @@ class Account extends DataGridHandler {
 			'endDate',
 			'repeatUnit',
 			'repeatFrequency',
+			'repeatText',
 			'categoryId',
 			'categoryTitle',
 			'parentCategoryId',
@@ -413,6 +414,7 @@ class Account extends DataGridHandler {
 			'concatCategoryTitle' => 'string',
 			'repeatUnit' => 'string',
 			'repeatFrequency' => 'integer',
+			'repeatText' => 'string',
 			'exceptional' => 'boolean',
 			'periodical' => 'boolean',
 			'sum' => 'amount',
@@ -470,6 +472,7 @@ class Account extends DataGridHandler {
 				'endDate' => 'pt.end_date',
 				'repeatUnit' => 'pt.repeat_unit',
 				'repeatFrequency' => 'pt.repeat_frequency',
+				'repeatText' => 'CONCAT(pt.repeat_unit, pt_repeat_frequency)',
 				'categoryId' => 'pt.category_id',
 				'categoryTitle' => 'c.title',
 				'parentCategoryId' => 'pc.category_id',
@@ -703,6 +706,14 @@ class Account extends DataGridHandler {
 					
 					case 'repeatFrequency':
 						$result[$currResultIndex]['repeatFrequency'] = $currentTransaction->getRepeatFrequency();
+						break;
+						
+					case 'repeatText':
+						$result[$currResultIndex]['repeatText'] = 
+							$this->ordinal($currentTransaction->getRepeatFrequency())
+							. ' '
+							. getBadgerTranslation2('Account', 'text' . $currentTransaction->getRepeatUnit())
+						;
 						break;
 						
 					case 'categoryId':
@@ -1912,5 +1923,38 @@ class Account extends DataGridHandler {
 		
 		return false;
 	}
+	
+	private function ordinal($cardinal) {
+		global $us;
+		
+		switch ($us->getProperty('badgerLanguage')) {
+			case 'en':
+				$cardinal = (int) $cardinal;
+				$digit = substr($cardinal, -1, 1);
+				$tens = round($cardinal/10);
+				if($tens == 1) {
+					return $cardinal . 'th';
+				}
+				
+				switch($digit) {
+					case 1:
+						return $cardinal . 'st';
+					case 2:
+						return $cardinal . 'nd';
+					case 3:
+						return $cardinal . 'rd';
+					default:
+						return $cardinal . 'th';
+				}
+				break;
+			
+			case 'de':
+				return "$cardinal.";
+				break;
+				
+			default:
+				throw new BadgerException('Account', 'unknownOrdinalisationLanguage', $us->getProperty('badgerLanguage'));
+		}
+   }
 }
 ?>
