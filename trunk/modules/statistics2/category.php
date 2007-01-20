@@ -20,7 +20,7 @@ require_once BADGER_ROOT . '/includes/jpGraph/src/jpgraph_pie3d.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/statistics2/colors.php';
 
-define('MAX_CATEGORIES', 16);
+define('MAX_CATEGORIES', 12);
 define('MIN_PERCENTAGE', 0.02);
 
 $graph = new PieGraph(800, 400);
