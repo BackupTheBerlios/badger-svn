@@ -177,7 +177,7 @@ class DataGrid {
 							
 					<table id="dgTableFoot'.$this->UniqueId.'" class="dgTableFoot" cellpadding="2" cellspacing="0">						
 						<tr>
-							<td style="width: 110px"><span id="dgCount'.$this->UniqueId.'">0</span> '.$this->rowCounterName.'&nbsp;</td>
+							<td style="width: 110px"><span id="dgCount'.$this->UniqueId.'">0</span>/<span id="dgCountTotal'.$this->UniqueId.'">0</span> '.$this->rowCounterName.'&nbsp;</td>
 							<td style="width: 23px"><span id="dgFilterStatus'.$this->UniqueId.'">' .
 							$this->widgetEngine->addImage('Widgets/dataGrid/filter.gif') .
 							'</span></td>
