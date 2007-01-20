@@ -20,6 +20,8 @@ require_once BADGER_ROOT . '/includes/jpGraph/src/jpgraph_date.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/statistics2/colors.php';
 
+define('MAX_LABELS', 15);
+
 $graph = new Graph(800, 400);
 $graph->setScale('datlin');
 
@@ -244,7 +246,13 @@ if (count($values) > 1) {
 
 
 $graph->xaxis->SetFont(FF_VERA);
-$graph->xaxis->SetTextLabelInterval(5);
+$interval = $numDates / MAX_LABELS;
+if ($interval < 1) {
+	$interval = 1;
+}
+//echo "numDatas: $numDates; interval: $interval";
+$graph->xaxis->SetTextLabelInterval($interval);
+//$graph->xaxis->SetTextLabelInterval(5);
 $graph->xaxis->SetLabelFormatCallback('xAxisCallback');
 //$graph->xaxis->scale->SetDateAlign(MONTHADJ_1, MONTHADJ_1);
 $graph->yaxis->SetFont(FF_VERA);
