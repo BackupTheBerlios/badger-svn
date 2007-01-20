@@ -92,7 +92,7 @@ header('Content-Type: text/xml');
 if (isset($_SERVER['HTTP_USER_AGENT']) && strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'opera') === false) {
 	if (ini_get('zlib.output_compression') == false) {
 		if (function_exists('ob_gzhandler')) {
-			ob_start('ob_gzhandler');
+			@ob_start('ob_gzhandler');
 		}
 	}
 }
