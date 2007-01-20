@@ -1826,6 +1826,8 @@ class Account extends DataGridHandler {
 		global $logger;
 		$logger->log('Account Finished SQL: ' . $sql);
 
+		$this->badgerDb->query('SELECT @balance := 0');
+		
 		$result = $this->badgerDb->query($sqlPrepare);
 		if (PEAR::isError($result)) {
 			throw new BadgerException('Account', 'SQLError', "SQL: $sql\n" . $this->dbResultFinished->getMessage());

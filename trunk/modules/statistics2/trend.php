@@ -108,7 +108,7 @@ foreach ($accountIds as $currentAccountId) {
 		while ($currentTransaction = $currentAccount->getNextTransaction()) {
 			$startDate = $currentTransaction->getValutaDate();
 			if (!is_null($startDate)) {
-				$displayStartDate = laterDate($displayStartDate, $startDate);
+				$displayStartDate = earlierDate($displayStartDate, $startDate);
 				break;
 			}
 		}
@@ -127,7 +127,7 @@ if (!$displayEndDateFound) {
 		while ($currentTransaction = $currentAccount->getNextTransaction()) {
 			$endDate = $currentTransaction->getValutaDate();
 			if (!is_null($endDate)) {
-				$displayEndDate = earlierDate($displayEndDate, $endDate);
+				$displayEndDate = laterDate($displayEndDate, $endDate);
 				break;
 			}
 		}
@@ -152,11 +152,15 @@ foreach($accountIds as $currentAccountId) {
 	$currentAccount = $accountManager->getAccountById($currentAccountId);
 
 	$filter = getDataGridFilter($currentAccount);
+//echo "<pre>"; print_r($filter); echo "</pre>";
 	$currentAccount->setFilter($filter);
 
 	$currentBalances = getDailyAmount($currentAccount, $displayStartDate, $displayEndDate, false, $startWithBalance, true);
 		
 	$previousAmount = null;
+
+//echo "currentAccountId: $currentAccountId<br />";
+//echo "<pre>"; print_r($currentBalances); echo "</pre>";
 
 	foreach ($currentBalances as $balanceKey => $balanceVal) {
 		if (isset($totals[$balanceKey])) {
@@ -165,7 +169,12 @@ foreach($accountIds as $currentAccountId) {
 			$totals[$balanceKey] = $balanceVal;
 		}
 		
-		$values[$currentAccount->getId()][] = $balanceVal->compare($previousAmount) != 0 ? $balanceVal->get() : '-';
+		$values[$currentAccount->getId()][] = (
+				is_null($previousAmount)
+				|| $balanceVal->compare($previousAmount) != 0
+				|| $balanceKey == $displayEndDate->getTime() 
+			) ? $balanceVal->get() : '-';
+		//$values[$currentAccount->getId()][] = ($balanceVal->compare($previousAmount) != 0) ? $balanceVal->get() : '-';
 		if ($showTickMarks) { 
 			$date = new Date($balanceKey);
 			$valueTargets[$currentAccount->getId()][] = "javascript:reachThroughTrend('" . $date->getFormatted() . "', '$currentAccountId');";
@@ -176,8 +185,11 @@ foreach($accountIds as $currentAccountId) {
 	}
 }
 
+//echo "<pre>"; print_r($values); echo "</pre>";
+
 $dataAvailable = false;
-foreach($values as $ints) {
+foreach($values as $key => $ints) {
+//echo "key: $key, max: " . max($ints) . ", min: " . min($ints) . "<br />";
 	if (max($ints) != 0 || min($ints) != 0) {
 		$dataAvailable = true;
 		break;

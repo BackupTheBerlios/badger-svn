@@ -57,6 +57,7 @@ function getDailyAmount($account, $startDate, $endDate, $isoDates = true, $start
 		
 		if ($firstRun && $startWithBalance) {
 			$currentAmount = new Amount($currentTransaction->getBalance());
+			$currentAmount->sub($currentTransaction->getAmount());
 			$firstRun = false;
 		}
 
