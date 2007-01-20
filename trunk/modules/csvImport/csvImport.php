@@ -18,8 +18,8 @@ require_once BADGER_ROOT . '/modules/account/accountCommon.php';
 require_once BADGER_ROOT . '/core/Date/Calc.php';
 require_once BADGER_ROOT . '/modules/csvImport/csvImportCommon.php';
 
-$pageHeading = getBadgerTranslation2('csv', 'title');
-$legend = getBadgerTranslation2('csv','legend');
+$pageHeading = getBadgerTranslation2('importCsv', 'pageHeading');
+$legend = getBadgerTranslation2('importCsv','legend');
 
 //include widget functionalaty
 $widgets = new WidgetEngine($tpl); 
@@ -88,6 +88,8 @@ if (!isset($_POST['btnSubmit'])){
 	}
 }
 if (isset($_POST['Upload'])){
+	$uploadTitle = getBadgerTranslation2('importCsv', 'uploadTitle');
+	
 	// for every file
 	foreach($_FILES as $file_name => $file_array) {
 		//if a file is chosen
@@ -230,6 +232,7 @@ if (isset($_POST['Upload'])){
 	}	
 }
 if (isset($_POST['btnSubmit'])){		
+
 	// create array with the selected transaction from the form above
 
 	// to count number of selected transactions
@@ -244,6 +247,10 @@ if (isset($_POST['btnSubmit'])){
 
 	$cm1 = new CategoryManager($badgerDb);
 
+	$targetAccounts = array();
+
+	$targetAccounts["x$baseAccountId"] = $baseAccount;
+	
 	//for all rows
 	for ($selectedTransactionNumber = 0; $selectedTransactionNumber < getGPC($_POST, 'tableRows', 'integer'); $selectedTransactionNumber++) {
 		//reset tableRowArray
@@ -252,6 +259,9 @@ if (isset($_POST['btnSubmit'])){
 		if (getGPC($_POST, "select$selectedTransactionNumber", 'checkbox')) {
 			if (getGPC($_POST, 'matchingTransactionSelect' . $selectedTransactionNumber) == 'none') {
 				$account3 = $am3->getAccountById(getGPC($_POST, 'account2Select' . $selectedTransactionNumber, 'integer'));
+				
+				$targetAccounts['x' . $account3->getId()] = $account3;
+				
 				$transactionCategory = NULL;
 				if (!getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) == NULL){
 					if (getGPC($_POST, 'categorySelect' . $selectedTransactionNumber) != "NULL"){
@@ -295,10 +305,31 @@ if (isset($_POST['btnSubmit'])){
 			}
 		}
 	}
+
+	$submitTitle = getBadgerTranslation2('importCsv', 'submitTitle');
+	echo "<h1>$submitTitle</h1>\n";
 	
 	if ($selectedTransactionNumber > 0) {
 		// echo success message & number of written transactions
-		echo "<br/>" . $selectedTransactionNumber . " ". getBadgerTranslation2("importCsv", "successfullyWritten");
+		echo 
+			$selectedTransactionNumber
+			. ' '
+			. getBadgerTranslation2("importCsv", "successfullyWritten")
+			. '<ul>';
+		;
+		foreach ($targetAccounts as $currentAccount) {
+			echo
+				'<li><a href="'
+				. BADGER_ROOT
+				. '/modules/account/AccountOverview.php?accountID='
+				. $currentAccount->getId()
+				. '">'
+				. htmlentities($currentAccount->getTitle())
+				. '</a></li>'
+			;	
+		}
+		echo '</ul>';
+		
 	}else {
 		//echo no transactions selected
 		echo getBadgerTranslation2("importCsv", "noTransactionSelected");

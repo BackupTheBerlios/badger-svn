@@ -1,4 +1,4 @@
-<h1>$pageHeading</h1>
+<h1>$uploadTitle</h1>
 <form action="" method="post" name="mainform" id="mainform">
  	<div id="CSVscroll">	
 		<table cellpadding="2" cellspacing="0">
