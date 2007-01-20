@@ -244,7 +244,7 @@ if (count($values) > 1) {
 
 
 $graph->xaxis->SetFont(FF_VERA);
-$graph->xaxis->SetTextLabelInterval(4);
+$graph->xaxis->SetTextLabelInterval(5);
 $graph->xaxis->SetLabelFormatCallback('xAxisCallback');
 //$graph->xaxis->scale->SetDateAlign(MONTHADJ_1, MONTHADJ_1);
 $graph->yaxis->SetFont(FF_VERA);
