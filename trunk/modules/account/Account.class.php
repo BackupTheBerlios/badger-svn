@@ -276,7 +276,8 @@ class Account extends DataGridHandler {
 		$upperLimit = null,
 		$currency = null,
 		$csvParser = null,
-		$deleteOldPlannedTransactions = null
+		$deleteOldPlannedTransactions = null,
+		$expandPlannedTransactions = true
 	) {
 		global $us;
 		
@@ -306,6 +307,8 @@ class Account extends DataGridHandler {
 					$currencyManager = new CurrencyManager($badgerDb);
 					$this->currency = $currencyManager->getCurrencyById($data['currency_id']);
 				}
+				
+				$expandPlannedTransactions = $title;
 			} else {
 				//called with all parameters
 				$this->id = $data;
@@ -366,7 +369,9 @@ class Account extends DataGridHandler {
 			$this->properties[$row['prop_key']] = $row['prop_value'];
 		}
 
-		$this->expandPlannedTransactions();
+		if ($expandPlannedTransactions) {
+			$this->expandPlannedTransactions();
+		}
 	}
 	
 	/**

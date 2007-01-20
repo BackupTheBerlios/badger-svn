@@ -14,6 +14,7 @@ define ('BADGER_ROOT', '../..');
 
 require_once BADGER_ROOT . '/includes/fileHeaderFrontEnd.inc.php';
 require_once BADGER_ROOT . '/modules/importExport/exportLogic.php';
+require_once BADGER_ROOT . '/modules/account/Account.class.php';
 
 if (isset($_GET['mode'])) {
 	$action = getGPC($_GET, 'mode');
@@ -560,6 +561,16 @@ function update1_0beta2To1_0beta3() {
 		$log .= doQuery("UPDATE navi SET menu_order = 6 WHERE item_name = 'Forecast'");
 	}
 
+	$log .= "&rarr; Applying new recurring transaction mode.\n";
+	$accountManager = new AccountManager($badgerDb);
+	$now = new Date();
+	$now->setHour(0);
+	$now->setMinute(0);
+	$now->setSecond(0);
+	while ($currentAccount = $accountManager->getNextAccount()) {
+		$currentAccount->expandPlannedTransactions($now);
+	}
+	
 	$log .= "&rarr; Updating database version to 1.0 beta 3.\n";
 	$log .= doQuery("REPLACE user_settings SET prop_key = 'badgerDbVersion', prop_value = 's:10:\"1.0 beta 3\";'");
 

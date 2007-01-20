@@ -72,13 +72,17 @@ class AccountManager extends DataGridHandler {
 	 */
 	private $dbResult;
 	
+	private $expandPlannedTransactions;
+	
 	/**
 	 * Creates an AccountManager.
 	 * 
 	 * @param $badgerDb object The DB object.
 	 */
-	function __construct($badgerDb) {
+	function __construct($badgerDb, $expandPlannedTransactions = true) {
 		parent::__construct($badgerDb);
+		
+		$this->expandPlannedTransactions = $expandPlannedTransactions;
 	}
 	
 	/**
@@ -498,7 +502,7 @@ class AccountManager extends DataGridHandler {
 		$row = false;
 		
 		if($this->dbResult->fetchInto($row, DB_FETCHMODE_ASSOC)) {
-			$this->accounts[$row['account_id']] = new Account($this->badgerDb, $this, $row);
+			$this->accounts[$row['account_id']] = new Account($this->badgerDb, $this, $row, false);
 			return $this->accounts[$row['account_id']];
 		} else {
 			$this->allDataFetched = true;
