@@ -56,6 +56,7 @@ $dgResult->height = "350px";
 $dgResult->headerSize = array(200, 90,350,80,200);
 $dgResult->cellAlign = array('left', 'left', 'left', 'right', 'left');
 $dgResult->deleteRefreshType = 'refreshDataGrid';
+$dgResult->discardSelectedRows = true;
 $dgResult->initDataGridJS();
 
 $widgets->addNavigationHead();

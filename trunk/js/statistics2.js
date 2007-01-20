@@ -208,7 +208,7 @@ function showTrendGraph() {
 	var start;
 	var ticks;
 	
-	if ($F("outputSelectionTrendStart") == 0) {
+	if ($F("outputSelectionTrendStart") == "b") {
 		start = "b";
 	} else {
 		start = "0";
@@ -569,7 +569,7 @@ function savePageSetting(saveDefault) {
 	settings["graphOptions"]= new Object();
 	if ($F("outputSelectionType") == "Trend") {
 		settings["graphType"] = "Trend";
-		if ($F("outputSelectionTrendStart") == 0) {
+		if ($F("outputSelectionTrendStart") == "b") {
 			settings["graphOptions"]["trendStart"] == "balance";
 		} else {
 			settings["graphOptions"]["trendStart"] = "zero";
