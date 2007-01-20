@@ -20,10 +20,10 @@ require_once BADGER_ROOT . '/includes/jpGraph/src/jpgraph_date.php';
 require_once BADGER_ROOT . '/modules/account/AccountManager.class.php';
 require_once BADGER_ROOT . '/modules/statistics2/colors.php';
 
-define('MAX_LABELS', 15);
+define('MAX_LABELS', 8);
 
 $graph = new Graph(800, 400);
-$graph->setScale('datlin');
+$graph->setScale('textlin');
 
 $accountIds = getGPC($_GET, 'accounts', 'integerList');
 
@@ -203,8 +203,11 @@ if (!$dataAvailable) {
 	exit;
 }
 
-$xdata = array_keys($totals);
 $numDates = count($totals);
+//$xdata = array_keys($totals);
+$xdata = range(0, $numDates - 1);
+
+//echo "<pre>";print_r($values);print_r($xdata);echo "</pre>";
 
 $colorIndex = 0;
 
@@ -223,6 +226,8 @@ foreach ($values as $currentAccountId => $currentValues) {
 	$graph->add($line);
 }
 
+$tickLabels = array();
+
 if (count($values) > 1) {
 	$data = array();
 	$dataTargets = array();
@@ -231,12 +236,18 @@ if (count($values) > 1) {
 	$previousAmount = null;
 
 	foreach($totals as $key => $currentAmount) {
-		$data[] = $currentAmount->compare($previousAmount) != 0 ? $currentAmount->get() : '-';
-		if ($showTickMarks) { 
+		$data[] = (
+				is_null($previousAmount)
+				|| $currentAmount->compare($previousAmount) != 0
+				|| $key == $displayEndDate->getTime()
+			) ? $currentAmount->get() : '-';
+		if ($showTickMarks) {
 			$date = new Date($key);
 			$dataTargets[] = "javascript:reachThroughTrend('" . $date->getFormatted() . "', '" . implode(',', $accountIds) . "');";
 			$dataNames[] = $date->getFormatted() . ': ' . $currentAmount->getFormatted(); 
 		}
+		
+		$tickLabels[] = $date->getFormatted();
 		
 		$previousAmount = new Amount($currentAmount);
 	}
@@ -256,16 +267,16 @@ if (count($values) > 1) {
 	$graph->add($line);
 }
 
-
 $graph->xaxis->SetFont(FF_VERA);
 $interval = $numDates / MAX_LABELS;
 if ($interval < 1) {
 	$interval = 1;
 }
 //echo "numDatas: $numDates; interval: $interval";
-$graph->xaxis->SetTextLabelInterval($interval);
-//$graph->xaxis->SetTextLabelInterval(5);
-$graph->xaxis->SetLabelFormatCallback('xAxisCallback');
+$graph->xaxis->SetTickLabels($tickLabels);
+//$graph->xaxis->SetTextLabelInterval($interval);
+$graph->xaxis->SetTextTickInterval($interval);
+//$graph->xaxis->SetLabelFormatCallback('xAxisCallback');
 //$graph->xaxis->scale->SetDateAlign(MONTHADJ_1, MONTHADJ_1);
 $graph->yaxis->SetFont(FF_VERA);
 $graph->yaxis->SetLabelFormatCallback('yAxisCallback');
