@@ -110,9 +110,9 @@ DataGrid.prototype = {
 				allSelectedIds = this.getAllSelectedIds();		    
 				for (i=0; i<allSelectedIds.length; i++) {
 					Element.remove($(this.uniqueId + allSelectedIds[i]));
-					NumberOfRows = $("dgCount"+this.uniqueId).innerHTML;
-					NumberOfRows--;
-					$("dgCount"+this.uniqueId).innerHTML = NumberOfRows;
+					var numberOfRows = $("dgCount"+this.uniqueId).innerHTML;
+					numberOfRows--;
+					$("dgCount"+this.uniqueId).innerHTML = numberOfRows;
 				}
 			} //switch	
 		} else {
@@ -126,18 +126,18 @@ DataGrid.prototype = {
 	
 	// fill the datagrid with values
 	insertData: function(objXHR) {
-		objXmlDoc = objXHR.responseXML;
+		var objXmlDoc = objXHR.responseXML;
 		
 		if(objXmlDoc) {			
-			xmlColumns = objXmlDoc.getElementsByTagName("column");
-			xmlRows = objXmlDoc.getElementsByTagName("row");
+			var xmlColumns = objXmlDoc.getElementsByTagName("column");
+			var xmlRows = objXmlDoc.getElementsByTagName("row");
 
 			//delete old table body if exists
 			if($("dgTableData"+this.uniqueId).getElementsByTagName("tbody")[0]) {
 				Element.remove($("dgTableData"+this.uniqueId).getElementsByTagName("tbody")[0])	
 			}
 			//create new table body
-			tableDataBody = document.createElement("tbody");
+			var tableDataBody = document.createElement("tbody");
 			$("dgTableData"+this.uniqueId).appendChild(tableDataBody);
 			
 			//column assignment
@@ -154,7 +154,7 @@ DataGrid.prototype = {
 			//alert("xmlRows.length: " + xmlRows.length);
 			for (j=0; j<xmlRows.length; j++) {
 				//alert(j + "/"+ xmlRows.length);			
-				xmlCells = xmlRows[j].getElementsByTagName("cell");				
+				var xmlCells = xmlRows[j].getElementsByTagName("cell");				
 				
 				//first cell of a row, is always a unique ID
 				if(xmlCells[0].textContent) rowID =	URLDecode(xmlCells[0].textContent); //FF
@@ -167,32 +167,32 @@ DataGrid.prototype = {
 				}
 				
 				//define a new row
-				newRow = document.createElement("tr");
+				var newRow = document.createElement("tr");
 				newRow.className = "dgRow";
 				newRow.id = this.uniqueId+rowID;
 				newRow.rowId = rowID;
 				
 				//add checkbox as the first cell
-				checkTD = document.createElement("td");
-				checkTD.style.width = "25px";
+				var firstCell = document.createElement("td");
+				firstCell.style.width = "25px";
 				checkBox = document.createElement("input");
 				checkBox.id = "check"+this.uniqueId+rowID;
 				checkBox.name = "check"+this.uniqueId+rowID;
 				checkBox.type = "checkbox";
-				checkTD.appendChild(checkBox);
-				checkTD.innerHTML = checkTD.innerHTML + "&nbsp;";
-				newRow.appendChild(checkTD);
+				firstCell.appendChild(checkBox);
+				firstCell.innerHTML = firstCell.innerHTML + "&nbsp;";
+				newRow.appendChild(firstCell);
 
 				//insert cell values
 				// dgColumnOrder[0] -> 'balance' : name of the column
 				// columnPosition['balance'] -> '1' : first column
 				// cells[1].text{Content} -> '899.23' : value				
 				for (i=0; i<this.columnOrder.length; i++) {
-					cell = document.createElement("td");
+					var cell = document.createElement("td");
 					cell.style.width = this.headerSize[i] + "px";
 					cell.align = this.cellAlign[i];
 
-					xmlElement = xmlCells[columnPosition[this.columnOrder[i]]];
+					var xmlElement = xmlCells[columnPosition[this.columnOrder[i]]];
 					// get cell className
 					cell.className = xmlElement.getAttribute("class");
 										
@@ -210,9 +210,9 @@ DataGrid.prototype = {
 					newRow.appendChild(cell);			
 				}	
 				//insert empty cell as last one (only display purposes)
-				lastTD = document.createElement("td");
-				newRow.appendChild(lastTD);
-				lastTD.innerHTML = "&nbsp;"; //filling dummy cell
+				var lastCell = document.createElement("td");
+				newRow.appendChild(lastCell);
+				lastCell.innerHTML = "&nbsp;"; //filling dummy cell
 					
 				//add complete row to the grid
 				tableDataBody.appendChild(newRow);
@@ -380,7 +380,7 @@ DataGrid.prototype = {
 				objNextRow = dataGrid.objRowActive.previousSibling;
 				if (objNextRow) {
 					if(objNextRow.tagName!="TR") objNextRow = objNextRow.previousSibling; //only FF, difference in the DOM
-					if(objNextRow) {
+					if (objNextRow) {
 						dataGrid.deactivateRow(dataGrid.objRowActive);
 						dataGrid.activateRow(objNextRow);
 						dataGrid.objRowActive = objNextRow;
@@ -411,7 +411,7 @@ DataGrid.prototype = {
 	callDeleteEvent: function () {
 		if(this.deleteAction) {		
 			// get selected row ids
-			allSelectedIds = this.getAllSelectedIds();	
+			var allSelectedIds = this.getAllSelectedIds();	
 			
 			//asks use, if he is sure
 			choise = confirm(this.deleteMsg +"("+allSelectedIds.length+")");
@@ -451,7 +451,7 @@ DataGrid.prototype = {
 		}
 	},
 	
-	saveSelectedRows: function(event) {
+	saveSelectedRows: function() {
 		pageSettings.setSettingSer("DataGrid"+this.uniqueId, "arrSelectedRows", this.arrSelectedRows);
 	},
 	restoreSelectedRows: function() {
@@ -464,7 +464,8 @@ DataGrid.prototype = {
 	},
 			
 	deselectAllRows: function () {
-		allCheckboxes = Form.getInputs("dgForm"+this.uniqueId, "checkbox");
+		var allCheckboxes = Form.getInputs("dgForm"+this.uniqueId, "checkbox");
+		
 		for (i=0; i<allCheckboxes.length; i++) {
 			if(allCheckboxes[i].id!="dgSelector"+this.uniqueId) {
 				this.deselectRow(allCheckboxes[i].parentNode.parentNode);
@@ -487,11 +488,11 @@ DataGrid.prototype = {
 	
 	// get all ids from selected rows -> array
 	getFirstId: function () {
-		checkbox = Form.getInputs("dgForm"+this.uniqueId, "checkbox");
+		var allCheckboxes = Form.getInputs("dgForm"+this.uniqueId, "checkbox");
 	
-		for (i=0; i<checkbox.length; i++) {
-			if(checkbox[i].id.indexOf("check") != -1 ) {
-				if ($F(checkbox[i]) == "on") return checkbox[i].parentNode.parentNode.rowId;
+		for (i=0; i < allCheckboxes.length; i++) {
+			if(allCheckboxes[i].id.indexOf("check") != -1 ) {
+				if ($F(allCheckboxes[i]) == "on") return allCheckboxes[i].parentNode.parentNode.rowId;
 			}
 		}
 	},
@@ -533,6 +534,7 @@ DataGrid.prototype = {
 				}
 			}
 			element.onmouseout = function(){
+				var dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
 				if (!dataGrid.mouseEventsDisabled) dataGrid.deactivateRow(this);
 			}
 			element.onclick = function(){
@@ -561,24 +563,35 @@ DataGrid.prototype = {
 		// checkbox in the dataGrid-Header, for (de-)selecting all
 		'input.dgSelector' : function(element){
 			element.onclick = function(){
-				var dataGrid = this.parentNode.parentNode.parentNode.parentNode.parentNode.obj;
+				var dataGrid = this.parentNode.parentNode.parentNode.parentNode.parentNode.obj;				
+				var allCheckboxes = Form.getInputs("dgForm"+dataGrid.uniqueId,"checkbox");
+				var tmpDiscardSelectedRows = this.discardSelectedRows;
 				
-				checkbox = Form.getInputs("dgForm"+dataGrid.uniqueId,"checkbox");
+				// disable setting save on each selection
+				this.discardSelectedRows = true;
+				
 				if($F(this)=="on") {
 					//select all checkboxes		
-					for (i=0; i<checkbox.length; i++) {
-						if(checkbox[i].id!="dgSelector"+dataGrid.uniqueId) {
-							dataGrid.selectRow(checkbox[i].parentNode.parentNode);
+					for (i=0; i<allCheckboxes.length; i++) {
+						if(allCheckboxes[i].id!="dgSelector"+dataGrid.uniqueId) {
+							dataGrid.selectRow(allCheckboxes[i].parentNode.parentNode);
 						}
 					}
 				} else {
 					//deselect all checkboxes	
-					for (i=0; i<checkbox.length; i++) {
-						if(checkbox[i].id!="dgSelector"+dataGrid.uniqueId) {
-							dataGrid.deselectRow(checkbox[i].parentNode.parentNode);
+					for (i=0; i<allCheckboxes.length; i++) {
+						if(allCheckboxes[i].id!="dgSelector"+dataGrid.uniqueId) {
+							dataGrid.deselectRow(allCheckboxes[i].parentNode.parentNode);
 						}
 					}
 				} //if($F(this)=="on")
+				
+				//reactivate settings saving & save settings once
+				this.discardSelectedRows = tmpDiscardSelectedRows;
+				if(!tmpDiscardSelectedRows) {
+					this.saveSelectedRows;
+				}				
+				
 				this.focus();
 			} //element.onclick 
 		}
@@ -669,9 +682,9 @@ DataGrid.SortOrder.prototype= {
 		pageSettings.setSettingSer("DataGrid"+this.parent.uniqueId, "SortOrder", this.sortOrder);
 	},
 	load: function() {
-		eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "SortOrder") + ")");
+		eval("this.loadCallback(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "SortOrder") + ")");
 	},
-	processResult: function(objResult) {
+	loadCallback: function(objResult) {
 		this.sortOrder = objResult;
 	},
 	
@@ -728,15 +741,15 @@ DataGrid.Filter.prototype = {
 		if (strFilterName) {
 			strFilterName += "Filter";
 			//load a specific filter
-			eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, strFilterName) + ")");
+			eval("this.loadCallback(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, strFilterName) + ")");
 			
 		} else {
 			//load last used filter for this grid
-			eval("this.processResult(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "FilterActive") + ")");
+			eval("this.loadCallback(" + pageSettings.getSettingSync("DataGrid"+this.parent.uniqueId, "FilterActive") + ")");
 		}
 		
 	},
-	processResult: function(objResult) {
+	loadCallback: function(objResult) {
 		this.activeFilter = objResult;
 	},
 	
