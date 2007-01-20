@@ -153,7 +153,7 @@ function resetBaseFilter() {
 }
 
 function getSelectedAccountIds() {
-	var accountIdArr = $("dataGridStatistics2Accounts").obj.getAllIds();
+	var accountIdArr = $("dataGridStatistics2Accounts").obj.getAllSelectedIds();
 	var accountIds = "";
 	for (i = 0; i < accountIdArr.length; i++) {
 		accountIds += accountIdArr[i] + ",";
@@ -564,7 +564,7 @@ function savePageSetting(saveDefault) {
 		} // if settings exist
 	} //for all filters
 	
-	settings["accountIds"] = $("dataGridStatistics2Accounts").obj.getAllIds();
+	settings["accountIds"] = $("dataGridStatistics2Accounts").obj.getAllSelectedIds();
 	
 	settings["graphOptions"]= new Object();
 	if ($F("outputSelectionType") == "Trend") {

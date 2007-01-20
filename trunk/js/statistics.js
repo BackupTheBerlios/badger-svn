@@ -12,7 +12,7 @@ function submitSelect() {
 		
 	var accountIds = '';
 	var first = true;
-	var accountArray = dataGridAccountManagerStatistic.getAllIds();
+	var accountArray = dataGridAccountManagerStatistic.getAllSelectedIds();
 	
 	if (accountArray.length == 0) {
 		alert(errorMsgAccountMissing);
