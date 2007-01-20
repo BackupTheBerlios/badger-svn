@@ -706,15 +706,12 @@ DataGrid.SortOrder.prototype= {
 
 
 DataGrid.Filter.prototype = {
-	activeFilter: new Object(),
+	activeFilter: new Array(),
 	parent: new Object(),
 	
 	initialize: function(objDataGrid) {
 		// remember handle to data grid object
 		this.parent = objDataGrid;	
-		
-		this.activeFilter.arrCriterias = new Array();
-		this.activeFilter.arrCriterias.length = 0;
 		
 		// load data from page settings
 		this.load();
@@ -723,7 +720,7 @@ DataGrid.Filter.prototype = {
 		return this;
 	},
 	reset: function() {		
-		this.activeFilter = new Object()
+		this.activeFilter = new Array();
 	},
 	save: function(strFilterName) {
 		if (strFilterName) {
@@ -754,18 +751,15 @@ DataGrid.Filter.prototype = {
 	},
 	
 	addFilterCriteria: function(field, operator, value) {
-		if (!this.activeFilter.arrCriterias) {
-			this.activeFilter.arrCriterias = new Array();
-			this.activeFilter.arrCriterias.length = 0;
+		if (!this.activeFilter) {
+			this.activeFilter = new Array();
 		}
-		//alert("numberOfFilterCriterias:"+this.activeFilter.arrCriterias.length)
 
-		this.activeFilter.arrCriterias.push({
+		this.activeFilter.push({
 			"field" : field,
 			"operator" : operator,
 			"value" : value
 		});
-		//alert("numberOfFilterCriterias:"+this.activeFilter.arrCriterias.length)		
 	},
 	
 	setFilterFields: function (arrayOfFields) {
@@ -810,40 +804,37 @@ DataGrid.Filter.prototype = {
 		}
 	},
 	initFilterFields: function () {
-		if (this.activeFilter.arrCriterias) {
-			var arrCriterias = this.activeFilter.arrCriterias
-			for (i=0; i<arrCriterias.length; i++) {
-				strField = arrCriterias[i].field;
-				strValue = arrCriterias[i].value;
+		if (this.activeFilter) {
+
+			for (i=0; i<this.activeFilter.length; i++) {
+				strField = this.activeFilter[i].field;
+				strValue = this.activeFilter[i].value;
 				if(strField=="parentCategoryId") {
 					strField = "categoryId";
 					strValue = strValue * -1;
 				}
 				$(strField).value = strValue;
 				if ( $(strField+"Filter") ) {
-					$(strField+"Filter").value = arrCriterias[i].operator;
+					$(strField+"Filter").value = this.activeFilter[i].operator;
 				}				
 			}
 		}
 	},
 	getNumberOfActiveFilters: function() {
-		if (this.activeFilter.arrCriterias) {
-			return this.activeFilter.arrCriterias.length;
+		if (this.activeFilter) {
+			return this.activeFilter.length;
 		} else return 0;
 	},
 	toQueryString: function() {		
 		var arrResult = new Array();
 		
 		//build querystring
-		if(this.activeFilter && this.activeFilter.arrCriterias) {
-			for (i=0; i<this.activeFilter.arrCriterias.length; i++) {
-				//alert("i: " + i);
-				//alert($H(this.activeFilter.arrCriterias[i]).toQueryString())
-				if ( this.activeFilter.arrCriterias[i] != undefined && i != "toJSONString") {
-					arrResult["fk"+i] = this.activeFilter.arrCriterias[i].field;
-					arrResult["fo"+i] = this.activeFilter.arrCriterias[i].operator;
-					arrResult["fv"+i] = this.activeFilter.arrCriterias[i].value;
-					//alert(this.activeFilter.arrCriterias[i].field)
+		if(this.activeFilter) {
+			for (i=0; i<this.activeFilter.length; i++) {
+				if ( this.activeFilter[i] != undefined && i != "toJSONString") {
+					arrResult["fk"+i] = this.activeFilter[i].field;
+					arrResult["fo"+i] = this.activeFilter[i].operator;
+					arrResult["fv"+i] = this.activeFilter[i].value;
 				}
 			}
 			//Object to QueryString
