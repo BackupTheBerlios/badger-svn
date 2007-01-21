@@ -342,7 +342,7 @@ DataGrid.prototype = {
 		if (!event) event=window.event;
 
 		//KEY_DOWN
-		if (event.keyCode == Event.KEY_DOWN) {
+		if (event.keyCode == Event.KEY_DOWN | event.keyCode == Event.KEY_TAB) {
 			Event.stop(event);
 			var dataGrid = this.obj;	
 			if (!dataGrid) { //IE
