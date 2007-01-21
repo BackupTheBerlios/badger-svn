@@ -18,7 +18,7 @@ $chartColors = array (
 	"#404040",
 	"#800040",
 	'#000070',
-	'#FFFF99',
+	//'#FFFF99', //yellow - not readable on laptops
 	'#007000',
 	'#FFCC99',
 	'#700070',
@@ -29,5 +29,5 @@ $chartColors = array (
 	'#CCFF99',
 	'#A35200',
 	'#FFCA7A'
-);                
+);
 ?>
