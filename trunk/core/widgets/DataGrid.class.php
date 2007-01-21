@@ -196,6 +196,7 @@ class DataGrid {
 		global $tpl;
 		
 		$us = new UserSettings($badgerDb);
+		if ($this->discardSelectedRows == true) $this->discardSelectedRows = "true";
 		
 		$this->tpl->addJavaScript('js/dataGrid.js');
 		//add global variable dataGrid'.$this->UniqueId.'
