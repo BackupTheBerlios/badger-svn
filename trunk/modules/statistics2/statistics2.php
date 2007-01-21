@@ -40,6 +40,7 @@ $dgAccounts->headerSize = array(160, 100, 75);
 $dgAccounts->cellAlign = array('left', 'right', 'left');
 $dgAccounts->width = '30em';
 $dgAccounts->height = '7em';
+$dgAccounts->discardSelectedRows = true;
 $dgAccounts->initDataGridJS();
 
 
