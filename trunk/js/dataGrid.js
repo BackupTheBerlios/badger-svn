@@ -292,7 +292,7 @@ DataGrid.prototype = {
 	//Selection -> enable checkbox
 	selectRow: function (objRow, disableFocus) {
 		var position = this.arrSelectedRows.indexOf(objRow.rowId);
-		if(position==0) { //not existing in array
+		if(position==-1) { //not existing in array
 			this.arrSelectedRows.push(objRow.rowId);			
 			//save selected rows
 			if (!this.discardSelectedRows) this.saveSelectedRows();
