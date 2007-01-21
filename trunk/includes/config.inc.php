@@ -57,7 +57,7 @@
 	 * 
 	 * @var global constant
 	 */	
- define("LOG_FILE_NAME", BADGER_ROOT . "/.htlog");
+ define("LOG_FILE_NAME", BADGER_ROOT . "/badger.log");
  
   	/**
 	 * Formatting for date used in log entries according to http://www.php.net/date
