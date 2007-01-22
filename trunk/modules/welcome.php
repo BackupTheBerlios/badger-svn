@@ -27,7 +27,7 @@ $dataGrid->headerName = array(getBadgerTranslation2('accountAccount', 'colTitle'
 $dataGrid->columnOrder = array("title","balance","currency"); 
 $dataGrid->headerSize = array(200,150,100);
 $dataGrid->cellAlign = array("left","right","left");
-$dataGrid->height = "130px";
+$dataGrid->height = "180px";
 $dataGrid->width = "520px";
 $dataGrid->discardSelectedRows = "true";
 $dataGrid->editAction = "account/AccountOverview.php?accountID=";
