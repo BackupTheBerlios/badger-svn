@@ -122,7 +122,7 @@ class DataGrid {
 	 */	
 	public $height;
 	
-	public $discardSelectedRows = "false";
+	public $discardSelectedRows = false;
 
 	/**
 	 * function function __construct($tpl)
@@ -196,7 +196,11 @@ class DataGrid {
 		global $tpl;
 		
 		$us = new UserSettings($badgerDb);
-		if ($this->discardSelectedRows == true) $this->discardSelectedRows = "true";
+		if ($this->discardSelectedRows == true) {
+			$this->discardSelectedRows = "true";
+		} else {
+			$this->discardSelectedRows = "false";
+		}
 		
 		$this->tpl->addJavaScript('js/dataGrid.js');
 		//add global variable dataGrid'.$this->UniqueId.'
