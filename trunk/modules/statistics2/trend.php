@@ -241,8 +241,9 @@ if (count($values) > 1) {
 				|| $currentAmount->compare($previousAmount) != 0
 				|| $key == $displayEndDate->getTime()
 			) ? $currentAmount->get() : '-';
-		if ($showTickMarks) {
-			$date = new Date($key);
+		
+		$date = new Date($key);
+		if ($showTickMarks) {			
 			$dataTargets[] = "javascript:reachThroughTrend('" . $date->getFormatted() . "', '" . implode(',', $accountIds) . "');";
 			$dataNames[] = $date->getFormatted() . ': ' . $currentAmount->getFormatted(); 
 		}
