@@ -254,7 +254,19 @@ class DataGrid {
 		
 		return $filterArray;
 	}
-	
+
+	public static function getStringFilterSelectArray() {
+		$filterArray = array ();
+		
+		$filterArray["eq"] = "=";
+		$filterArray["ne"] = "<>";
+		$filterArray["bw"] = getBadgerTranslation2('dataGridFilter', 'beginsWith');
+		$filterArray["ew"] = getBadgerTranslation2('dataGridFilter', 'endsWith');
+		$filterArray["ct"] = getBadgerTranslation2('dataGridFilter', 'contains');
+		
+		return $filterArray;
+	}
+
 	public static function getDateFilterSelectArray() {
 		$filterArray = array ();
 		
