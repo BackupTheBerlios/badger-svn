@@ -10,6 +10,9 @@
 * Visit http://badger.berlios.org 
 *
 **/
+error_reporting(E_ALL);
+ini_set('display_errors', true);
+
 define('BADGER_ROOT', '..');
 
 $title = 'BADGER finance prerequisites check';
