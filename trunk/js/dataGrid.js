@@ -400,15 +400,15 @@ DataGrid.prototype = {
 			var dataGrid = this.obj;
 			dataGrid.callDeleteEvent();
 		}
-		//KEY_SPACE (only for opera)
-		if (event.keyCode == 32) {
-			var dataGrid = this.obj;
-			if(dataGrid.objRowActive.className=="dgRowSelected" || dataGrid.objRowActive.className=="dgRowSelectedActive") {
-				dataGrid.deselectRow(dataGrid.objRowActive);
-			} else {
-				dataGrid.selectRow(dataGrid.objRowActive);
-			}	
-		}
+		//KEY_SPACE (only for opera 8.X)
+		//if (event.keyCode == 32) {
+		//	var dataGrid = this.obj;
+		//	if(dataGrid.objRowActive.className=="dgRowSelected" || dataGrid.objRowActive.className=="dgRowSelectedActive") {
+		//		dataGrid.deselectRow(dataGrid.objRowActive);
+		//	} else {
+		//		dataGrid.selectRow(dataGrid.objRowActive);
+		//	}	
+		//}
 	},
 	// call site to  edit record with ID in a special page
 	callEditEvent: function (id) {
