@@ -118,7 +118,7 @@ $filters['valutaDateAgo'] =
 $filters['amount'] =
 	getBadgerTranslation2('statistics2', 'amountFilter')
 	. $widgets->createSelectField("amountOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
-	. '&nbsp'
+	. '&nbsp;'
 	. $widgets->createField("amount$FILTER_ID_MARKER", 3, "", "", false, "integer", "")
 	;
 $filters['outsideCapital'] =

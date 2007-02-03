@@ -166,7 +166,7 @@ function _jsVal_Language() {
 
 		if($this->CalendarJSAdded) {
 			$strDateField = "<input type=\"text\" id=\"".$fieldname."\" name=\"".$fieldname."\" size=\"10\" maxlength=\"10\" value=\"" . escape4Attr($startdate) . "\" />\n"; 
-			$strDateField .= "<a href=\"javascript:void(0)\" onclick='showCalendar(this, mainform.".$fieldname.", \"".$format."\",1,-1,-1)' tabindex=\"-999\">" . $this->addImage('Widgets/calendar/calendar.jpg') . "</a>\n";
+			$strDateField .= "<a href=\"javascript:void(0)\" onclick=\"showCalendar(this, mainform.".$fieldname.", '".$format."',1,-1,-1)\" tabindex=\"-999\">" . $this->addImage('Widgets/calendar/calendar.jpg') . "</a>\n";
 			return $strDateField;
 		} else {
 			throw new badgerException('widgetsEngine', 'CalendarJSNotAdded'); 

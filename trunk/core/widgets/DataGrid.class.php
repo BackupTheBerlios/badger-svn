@@ -243,11 +243,11 @@ class DataGrid {
 		$filterArray = array ();
 		
 		$filterArray["eq"] = "=";
-		$filterArray["lt"] = "<";
-		$filterArray["le"] = "<=";
-		$filterArray["gt"] = ">";
-		$filterArray["ge"] = ">=";
-		$filterArray["ne"] = "<>";
+		$filterArray["lt"] = "&lt;";
+		$filterArray["le"] = "&lt;=";
+		$filterArray["gt"] = "&gt;";
+		$filterArray["ge"] = "&gt;=";
+		$filterArray["ne"] = "&lt;&gt;";
 		$filterArray["bw"] = getBadgerTranslation2('dataGridFilter', 'beginsWith');
 		$filterArray["ew"] = getBadgerTranslation2('dataGridFilter', 'endsWith');
 		$filterArray["ct"] = getBadgerTranslation2('dataGridFilter', 'contains');
