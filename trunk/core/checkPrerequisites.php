@@ -75,6 +75,16 @@ if ($mysql) {
 	$error = true;
 } //mysql
 
+echo '<h2>gd extension</h2>';
+$gd = extension_loaded('gd');
+if ($gd) {
+	echo '<p class="passed">loaded</p>';
+} else {
+	echo '<p class="failed">not loaded</p>';
+	echo '<p>The GD extension is required for drawing the charts of advanced statistics. Badger is usable without this, but only half as pretty.</p>';
+	$error = true;
+} //mysql
+
 echo '<h2>Config file</h2>';
 $configFilePath = '../includes/config.inc.php';
 $configFile = file_exists($configFilePath);
@@ -162,7 +172,7 @@ if ($configFile) {
 	$error = true;
 } //configFile
 
-echo '<h1>Prerequisites check summary</h1';
+echo '<h1>Prerequisites check summary</h1>';
 if (!$error) {
 	echo '<p class="passed">All checks passed. BADGER finance will work on your system.</p>';
 } else {

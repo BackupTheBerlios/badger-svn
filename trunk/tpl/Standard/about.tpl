@@ -20,7 +20,7 @@
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</p>
 </blockquote>
 
-<p>Copyright &copy; 2006 $copyrightBy</p>
+<p>Copyright &copy; 2007 $copyrightBy</p>
 
 <h2>$developerTeam</h2>
 <ul>
@@ -49,8 +49,8 @@
 	<li><a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">FamFamFam Silk Icons</a> $by Mark James</li>
 	<li><a href="http://www.freebasic.net/target="_blank">FreeBasic</a></li>	
 	<li><a href="http://ssteiner.freebasic.de/index.php?s=fbdl" target="_blank">FreeBasic Addon</a> $by Sebastian Steiner</li>	
-	<li><a href="http://www.tufat.com/s_html2ps_html2pdf.htm" target="_blank">HTML2PS/PDF</a> $by Darren</li>
 	<li><a href="http://jsval.fantastic-bits.de/" target="_blank">JS Validate</a> $by Karl Seguin, Timo Haberkern</li>
+	<li><a href="http://www.aditus.nu/jpgraph/index.php" target="_blank">JpGraph</a> $by Aditus Consulting</li>
 	<li><a href="http://www.tohzhiqiang.per.sg/projects/jsdomenubar/" target="_blank">jsDOMenuBar</a> $by Toh Zhiqiang</li>
 	<li><a href="http://www.mysql.com/" target="_blank">MySQL</a></li>
 	<li><a href="http://nsis.sourceforge.net/" target="_blank">Nullsoft Scriptable Install System</a></li>
@@ -60,6 +60,7 @@
 	<li><a href="http://pear.php.net/package/Log" target="_blank">PEAR Log</a> $by Jon Parise</li>
 	<li><a href="http://pear.php.net/package/Translation2" target="_blank">PEAR Translation2</a> $by Lorenzo Alberton</li>
 	<li><a href="http://www.php.net/" target="_blank">PHP: Hypertext Preprocessor</a></li>
+	<li> <a href="http://www.eclipse.org/php/" target="_blank">PHP Development Tool</a></li>
 	<li><a href="http://www.maani.us/charts/" target="_blank">PHP/SWF Charts</a> $by maani.us</li>
 	<li><a href="http://www.phpeclipse.net/tiki-view_articles.php" target="_blank">PHPEclipse</a></li>
 	<li><a href="http://www.sparrowscripts.com/dp-intro.php" target="_blank">PopCalendar (previous Version)</a> $by Tan Ling Wee</li>

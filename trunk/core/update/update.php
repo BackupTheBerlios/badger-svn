@@ -363,7 +363,7 @@ function update1_0betaTo1_0beta2() {
 
 function update1_0beta2To1_0beta3() {
 	global $badgerDb;
-	
+
 	$log = '';
 
 	$log .= "&rarr; Adding page settings table.\n";
@@ -407,9 +407,14 @@ function update1_0beta2To1_0beta3() {
 
 	$log .= "&rarr; Deleting unused translation entries.\n";
 	$log .= doQuery("DELETE FROM i18n WHERE page_id = 'accountCategory' AND id = 'pageTitle'");
+	$log .= doQuery("DELETE FROM i18n WHERE page_id = 'csv' AND id = 'title'");
+	$log .= doQuery("DELETE FROM i18n WHERE page_id = 'csv' AND id = 'legend'");
 
 	$log .= "&rarr; Adding new translation entries.\n";
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'pageTitleEdit', en = 'Edit Category', de = 'Kategorie bearbeiten'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'gotoToday', en = 'Today', de = 'Heute'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'pageTitleEdit', en = 'Edit Category', de = 'Kategorie bearbeiten'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'legend', en = 'Properties', de = 'Eigenschaften'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'filterLegend', en = 'Filter', de = 'Filter'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'setFilter', en = 'Set Filter', de = 'Filtern'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'resetFilter', en = 'Reset', de = 'Reset'");
@@ -478,7 +483,7 @@ function update1_0beta2To1_0beta3() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'exceptionalFilterExceptional', en = 'exceptional', de = 'außergewöhnlich'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'exceptionalFilterNotExceptional', en = 'not exceptional', de = 'nicht außergewöhnlich'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilter', en = 'Transaction is ', de = 'Transaktion ist '");
-	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilterPeriodical', en = 'periodical', de = 'regelämäßig'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilterPeriodical', en = 'periodical', de = 'regelmäßig'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'periodicalFilterNotPeriodical', en = 'not periodical', de = 'unregelmäßig'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersUnselected', en = 'Please choose a filter', de = 'Bitte wählen Sie einen Filter'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'availableFiltersTitle', en = 'Title', de = 'Titel'");
@@ -497,13 +502,13 @@ function update1_0beta2To1_0beta3() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'twistieCaptionInput', en = 'Input Values', de = 'Eingabewerte'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValue', en = 'Start Value', de = 'Startwert'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValueZero', en = '0 (zero)', de = '0 (null)'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValueBalance', en = 'Balance', de = 'Kontostand'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendStartValueBalance', en = 'Account Balance', de = 'Kontostand'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendTickLabels', en = 'Tick labels', de = 'Tickmarken'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendTickLabelsShow', en = 'Show', de = 'Anzeigen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionTrendTickLabelsHide', en = 'Hide', de = 'Verbergen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryType', en = 'Category Type', de = 'Kategorietyp'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryTypeInput', en = 'Input', de = 'Einnahmen'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryTypeOutput', en = 'Output', de = 'Ausgaben'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryTypeInput', en = 'Income', de = 'Einnahmen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategoryTypeOutput', en = 'Spending', de = 'Ausgaben'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategorySubCategories', en = 'Sub-Categories', de = 'Unterkategorien'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategorySubCategoriesSummarize', en = 'Summarize sub-categories', de = 'Unterkategorien zusammenfassen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'outputSelectionCategorySubCategoriesNoSummarize', en = 'Do not summarize sub-categories', de = 'Unterkategorien einzeln aufführen'");
@@ -542,9 +547,24 @@ function update1_0beta2To1_0beta3() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'expenseIncome', en = 'Income', de = 'Einnahme'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'expenseExpense', en = 'Expense', de = 'Ausgabe'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'categoryExpenseWarning', en = 'The selected category is marked as expense, but your amount is positive.', de = 'Die ausgewählte Kategorie ist als Ausgabe markiert, jedoch ist Ihr Betrag positiv.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2', id = 'miscCategories', en = '(Miscellaneous)', de = '(Verbleibende)'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'uploadTitle', en = 'File Uploaded and Analyzed', de = 'Datei hochgeladen und analysiert'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'submitTitle', en = 'CSV Data Imported', de = 'CSV-Daten importiert'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'pageHeading', en = 'CSV Import', de = 'CSV-Import'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'textday', en = 'day', de = 'Tag'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'textmonth', en = 'month', de = 'Monat'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'textweek', en = 'week', de = 'Woche'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'textyear', en = 'year', de = 'Jahr'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'unknownOrdinalisationLanguage', en = 'An unknown language was passed to Account::ordinal().', de = 'An Account::ordinal wurde eine unbekannte Sprache übergeben.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountOverviewPlanned', id = 'colRepeatText', en = 'Repetition', de = 'Wiederholung'");
 
 	$log .= "&rarr; Changing translation entries.\n";
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'successfullyWritten', en = 'transaction(s) successfully written to the following accounts:', de = 'Transaktion(en) erfolgreich in die folgenden Konten geschrieben:'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'noTransactionSelected', en = 'No transactions selected.', de = 'Keine Transaktionen ausgewählt.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountCategory', id = 'pageTitleOverview', en = 'Transaction Categories', de = 'Transaktionskategorien'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountAccount', id = 'pageTitleOverview', en = 'Account Overview', de = 'Kontenübersicht'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'CategoryManager', id = 'no_parent', en = '&lt;No parent category&gt;', de = '&lt;Keine Elternkategorie&gt;'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGrid', id = 'NoRowSelectedMsg', en = 'Please, select a row to edit', de = 'Bitte selektieren sie eine Zeile, die sie bearbeiten wollen.'");
 
 	$sql = "SELECT count(navi_id) FROM navi WHERE item_name = 'Statistics2'";
 	$result =& $badgerDb->query($sql);
@@ -556,7 +576,7 @@ function update1_0beta2To1_0beta3() {
 		$log .= doQuery("INSERT INTO navi(navi_id, parent_id, menu_order, item_type, item_name, tooltip, icon_url, command) VALUES (@max_navi_id + 1, 30, 5, 'i', 'Statistics2', '', 'statistics.gif', '{BADGER_ROOT}/modules/statistics2/statistics2.php')");
 		$log .= "&rarr; Updating max id to navigation sequence table.\n";
 		$log .= doQuery("UPDATE navi_ids_seq SET id = ((SELECT MAX(navi_id) FROM navi) + 1)");
-	
+
 		$log .= "&rarr; Updating menu order of forecast.\n";
 		$log .= doQuery("UPDATE navi SET menu_order = 6 WHERE item_name = 'Forecast'");
 	}
@@ -570,7 +590,7 @@ function update1_0beta2To1_0beta3() {
 	while ($currentAccount = $accountManager->getNextAccount()) {
 		$currentAccount->expandPlannedTransactions($now);
 	}
-	
+
 	$log .= "&rarr; Updating database version to 1.0 beta 3.\n";
 	$log .= doQuery("REPLACE user_settings SET prop_key = 'badgerDbVersion', prop_value = 's:10:\"1.0 beta 3\";'");
 

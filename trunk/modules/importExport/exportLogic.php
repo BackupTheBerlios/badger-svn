@@ -52,6 +52,7 @@ function getDbDump() {
 		'navi',
 		'navi_ids_seq',
 		'naviIds_seq',
+		'page_settings',
 		'planned_transaction_ids_seq',
 		'plannedTransactionIds_seq',
 		'planned_transaction',
