@@ -102,7 +102,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 	var today    = new Date();
 	var dateNow  = today.getDate();
 	var monthNow = today.getMonth();
-	var yearNow  = today.getYear();
+	var yearNow  = today.getFullYear();
 	var imgsrc   = new Array('drop1.png','drop2.png','left1.png','left2.png','right1.png','right2.png');
 	var img      = new Array();
 	var bShow    = false;
@@ -203,10 +203,7 @@ $badgerTemplate = $settings->getProperty("badgerTemplate");
 
 	
 	function initCalendar() {
-		if (!ns4)
-		{
-			if (!ie || op) yearNow += 1900;
-
+		if (!ns4) {
 			crossobj=(dom)?document.getElementById('calendar').style : ie? document.all.calendar : document.calendar;
 			hideCalendar();
 
