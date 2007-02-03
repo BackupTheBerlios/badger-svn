@@ -100,20 +100,21 @@ foreach ($accountIds as $currentAccountId) {
 		
 		$valutaDateFilterAnalysed = true;
 	}
-	
+
 	if (!$displayStartDateFound) {
 		$currentAccount->setOrder($orderMin);
 		$currentAccount->setFilter($filter);
-
+	
 		while ($currentTransaction = $currentAccount->getNextTransaction()) {
 			$startDate = $currentTransaction->getValutaDate();
-			if (!is_null($startDate)) {
+			if (isValidDate($startDate)) {
 				$displayStartDate = earlierDate($displayStartDate, $startDate);
 				break;
 			}
 		}
 	}
 } //foreach account
+	
 
 if (!$displayEndDateFound) {
 	$accountManager = new AccountManager($badgerDb);
@@ -140,6 +141,8 @@ $totals = array();
 $values = array();
 $valueTargets = array();
 $valueNames = array();
+
+//echo '<pre>'; print_r($displayStartDate); echo "x"; print_r($displayEndDate); echo '</pre>';
 
 if (is_null($displayStartDate) || is_null($displayEndDate)) {
 	echo getBadgerTranslation2('statistics2Graph', 'noMatchingTransactions');
@@ -227,7 +230,11 @@ foreach ($values as $currentAccountId => $currentValues) {
 }
 
 $tickLabels = array();
-
+foreach($totals as $key => $currentAmount) {
+	$date = new Date($key);
+	$tickLabels[] = $date->getFormatted();
+}		
+	
 if (count($values) > 1) {
 	$data = array();
 	$dataTargets = array();
@@ -247,8 +254,6 @@ if (count($values) > 1) {
 			$dataTargets[] = "javascript:reachThroughTrend('" . $date->getFormatted() . "', '" . implode(',', $accountIds) . "');";
 			$dataNames[] = $date->getFormatted() . ': ' . $currentAmount->getFormatted(); 
 		}
-		
-		$tickLabels[] = $date->getFormatted();
 		
 		$previousAmount = new Amount($currentAmount);
 	}
@@ -273,6 +278,9 @@ $interval = $numDates / MAX_LABELS;
 if ($interval < 1) {
 	$interval = 1;
 }
+
+//print_r($tickLabels);
+
 //echo "numDatas: $numDates; interval: $interval";
 $graph->xaxis->SetTickLabels($tickLabels);
 //$graph->xaxis->SetTextLabelInterval($interval);
@@ -310,13 +318,13 @@ function yAxisCallback($number) {
 }
 
 function earlierDate($d1, $d2) {
-	if (is_null($d1) && is_null($d2)) {
+	if (!isValidDate($d1) && !isValidDate($d2)) {
 		return null;
 	}
-	if (is_null($d1)) {
+	if (!isValidDate($d1)) {
 		return new Date($d2);
 	}
-	if (is_null($d2)) {
+	if (!isValidDate($d2)) {
 		return new Date($d1);
 	}
 	
@@ -328,13 +336,13 @@ function earlierDate($d1, $d2) {
 }
 
 function laterDate($d1, $d2) {
-	if (is_null($d1) && is_null($d2)) {
+	if (!isValidDate($d1) && !isValidDate($d2)) {
 		return null;
 	}
-	if (is_null($d1)) {
+	if (!isValidDate($d1)) {
 		return new Date($d2);
 	}
-	if (is_null($d2)) {
+	if (!isValidDate($d2)) {
 		return new Date($d1);
 	}
 	
@@ -343,5 +351,18 @@ function laterDate($d1, $d2) {
 	} else {
 		return new Date($d2);
 	}
+}
+
+function isValidDate($date) {
+	if (is_null($date)) {
+		return false;
+	}
+	
+	$nullDate = new Date('0000-01-01');
+	if ($nullDate->equals($date)) {
+		return false;
+	}
+	
+	return true;
 }
 ?>
