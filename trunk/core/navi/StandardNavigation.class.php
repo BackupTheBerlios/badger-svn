@@ -197,6 +197,11 @@ class StandardNavigation implements Navigation {
 		$result = '';
 		
 		$numElement = 0;
+		
+		$isOpera = isset($_SERVER['HTTP_USER_AGENT']) && (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'opera') !== false);
+
+		//echo $_SERVER['HTTP_USER_AGENT'] . $isOpera;
+		
 		foreach ($structure as $key => $currentElement) {
 			$iconId = "{$name}_{$numElement}";
 			
@@ -205,7 +210,7 @@ class StandardNavigation implements Navigation {
 					background-image: url('$currentElement[icon]');
 					background-repeat: no-repeat; /* Do not alter this line! */
 					height: 16px;
-					left: 2px;
+					left: " . ($isOpera ? '-22px' : '2px') . ";
 					position: absolute; /* Do not alter this line! */
 					width: 16px;
 				 }\n";
