@@ -1,8 +1,0 @@
-<Files "badger.log"> 
-	Order deny,allow 
-	Deny from all 
-</Files>
-<Files "exceptions.log"> 
-	Order deny,allow 
-	Deny from all 
-</Files>
