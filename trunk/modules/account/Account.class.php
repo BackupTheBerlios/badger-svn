@@ -807,14 +807,16 @@ class Account extends DataGridHandler {
 		settype($finishedTransactionId, 'integer');
 
 		$sql= "DELETE FROM finished_transaction
-				WHERE finished_transaction_id = $finishedTransactionId";
+				WHERE finished_transaction_id = $finishedTransactionId
+					OR transferal_transaction_id = $finishedTransactionId"
+		;
 		
-		if (
-			!is_null($tmp = $this->getFinishedTransactionById($finishedTransactionId))
-			&& !is_null($tmp2 = $tmp->getTransferalTransaction())
-		) {
-			$sql .= " OR finished_transaction_id = " . $tmp2->getId();
-		}		
+//		if (
+//			!is_null($tmp = $this->getFinishedTransactionById($finishedTransactionId))
+//			&& !is_null($tmp2 = $tmp->getTransferalTransaction())
+//		) {
+//			$sql .= " OR finished_transaction_id = " . $tmp2->getId();
+//		}		
 		
 				
 		$dbResult =& $this->badgerDb->query($sql);
@@ -1078,17 +1080,32 @@ class Account extends DataGridHandler {
 	public function deletePlannedTransaction($plannedTransactionId){
 		$plannedTransactionId = PlannedTransaction::sanitizeId($plannedTransactionId);
 
+		$sql = "SELECT transferal_transaction_id 
+			FROM planned_transaction
+			WHERE planned_transaction_id = $plannedTransactionId"
+		;
+		
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($dbResult)) {
+			throw new BadgerException('Account', 'SQLError', "SQL: $sql\n". $dbResult->getMessage());
+		}
+		
+		$dbResult->fetchInto($row, DB_FETCHMODE_ASSOC);
+		$transferalId = $row['transferal_transaction_id'];
+		
 		$sql= "DELETE FROM planned_transaction
-				WHERE planned_transaction_id = $plannedTransactionId";
+				WHERE planned_transaction_id = $plannedTransactionId
+					OR transferal_transaction_id = $plannedTransactionId"
+		;
 				
-		$transferalId = null;
-		if (
-			!is_null($tmp = $this->getPlannedTransactionById($plannedTransactionId))
-			&& !is_null($tmp2 = $tmp->getTransferalTransaction())
-		) {
-			$transferalId = $tmp2->getId();
-			$sql .= " OR planned_transaction_id = $transferalId";
-		}		
+//		$transferalId = null;
+//		if (
+//			!is_null($tmp = $this->getPlannedTransactionById($plannedTransactionId))
+//			&& !is_null($tmp2 = $tmp->getTransferalTransaction())
+//		) {
+//			$transferalId = $tmp2->getId();
+//			$sql .= " OR planned_transaction_id = $transferalId";
+//		}		
 		$dbResult =& $this->badgerDb->query($sql);
 		if (PEAR::isError($dbResult)) {
 			throw new BadgerException('Account', 'SQLError', "SQL: $sql\n". $dbResult->getMessage());
@@ -1099,7 +1116,8 @@ class Account extends DataGridHandler {
 		}
 		
 		$sql = "DELETE FROM finished_transaction
-					WHERE planned_transaction_id = $plannedTransactionId";
+					WHERE planned_transaction_id = $plannedTransactionId"
+		;
 		if (!is_null($transferalId)) {
 			$sql .= " OR planned_transaction_id = $transferalId";
 		}		
