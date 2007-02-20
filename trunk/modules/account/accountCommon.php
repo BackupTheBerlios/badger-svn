@@ -27,7 +27,8 @@ require_once BADGER_ROOT . '/core/Date/Span.php';
  * $startDate and $endDate. The array keys are the dates as ISO-String (yyyy-mm-dd). 
  */
 function getDailyAmount($account, $startDate, $endDate, $isoDates = true, $startWithBalance = false, $includePlannedTransactions = false) {
-
+	global $badgerDb;
+	
 	$account->setTargetFutureCalcDate($endDate);
 	$account->setOrder(array (array ('key' => 'valutaDate', 'dir' => 'asc')));
 	if (!$includePlannedTransactions) {
@@ -79,6 +80,34 @@ function getDailyAmount($account, $startDate, $endDate, $isoDates = true, $start
 		}
 
 		$currentAmount->add($currentTransaction->getAmount());
+	}
+	
+	if ($firstRun && $startWithBalance) {
+		$newAccountManager = new AccountManager($badgerDb);
+		$newAccount = $newAccountManager->getAccountById($account->getId());
+		
+		$newAccount->setOrder(array (array ('key' => 'valutaDate', 'dir' => 'asc')));
+		
+		while ($newTransaction = $newAccount->getNextTransaction()) {
+			$currentDate = $newTransaction->getValutaDate();
+			
+			if ($currentDate->after($startDate)) {
+				//we reached $endDAte
+				break;
+			}
+			
+			$currentAmount = new Amount($newTransaction->getBalance());
+		}
+		
+		$currentDate = new Date($startDate);
+		
+		if ($isoDates) {
+			$key = $currentDate->getDate();
+		} else {
+			$key = $currentDate->getTime();
+		}
+		
+		$result[$key] = new Amount($currentAmount);
 	}
 	
 	//fill all dates after the last transaction with the newest amount
