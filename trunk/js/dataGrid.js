@@ -460,8 +460,9 @@ DataGrid.prototype = {
 				this.loadData();
 				break;
 			case 'refreshPage':
-				//refresh whole page	
-				window.setTimeout("this.refreshPage()", 10);
+				//refresh whole page
+				var tmpThis = this;	
+				window.setTimeout(function() {tmpThis.refreshPage();}, 10);
 				break;
 			default:
 				// no refresh, delete rows in frontend
