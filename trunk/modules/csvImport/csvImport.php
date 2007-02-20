@@ -445,7 +445,8 @@ function importMatching($importedTransaction, $accountId) {
 //		if ($currentTextSimilarity >= $textSimilarity) {
 			$overallSimilarity = ($titleSimilarity + $descriptionSimilarity + $transactionPartnerSimilarity + $dateSimilarity + $amountSimilarity) / 5;
 			
-			$similarTransactions["$overallSimilarity t:$titleSimilarity d:$descriptionSimilarity tp:$transactionPartnerSimilarity vd:$dateSimilarity a:$amountSimilarity"] = $currentTransaction;
+			//$similarTransactions["$overallSimilarity t:$titleSimilarity d:$descriptionSimilarity tp:$transactionPartnerSimilarity vd:$dateSimilarity a:$amountSimilarity"] = $currentTransaction;
+			$similarTransactions[$overallSimilarity] = $currentTransaction;
 //		}
 	}
 	
