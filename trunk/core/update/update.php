@@ -435,13 +435,13 @@ function update1_0beta2To1_0beta3() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'plannedTransaction', id = 'beforeTitle', en = 'before', de = 'vor'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'AccountManager', id = 'UnknownFinishedTransactionId', en = 'An unknown single transaction id was used.', de = 'Es wurde eine unbekannte ID einer einmaligen Transaktion verwendet.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'AccountManager', id = 'UnknownPlannedTransactionId', en = 'An unknown recurring transaction id was used.', de = 'Es wurde eine unbekannte ID einer wiederkehrenden Transaktion verwendet.'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalEnabled', en = 'Add transferal transaction', de = 'Überweisungstransaktion hinzufügen'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalEnabled', en = 'Add transferal transaction', de = 'Gegenbuchung hinzufügen'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalAccount', en = 'Target account', de = 'Zielkonto'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountTransaction', id = 'transferalAmount', en = 'Amount on target Account', de = 'Betrag auf Zielkonto'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'FinishedTransferalSourceTransaction', en = 'Source of single transferal transaction', de = 'Quelle einer Einmaligen Überweisungstransaktion'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'FinishedTransferalTargetTransaction', en = 'Target of single transferal transaction', de = 'Ziel einer Einmaligen Überweisungstransaktion'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'PlannedTransferalSourceTransaction', en = 'Source of recurring transferal transaction', de = 'Quelle einer Wiederkehrenden Überweisungstransaktion'");
-	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'PlannedTransferalTargetTransaction', en = 'Target of recurring transferal transaction', de = 'Ziel einer Wiederkehrenden Überweisungstransaktion'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'FinishedTransferalSourceTransaction', en = 'Source of single transferal transaction', de = 'Quelle einer Einmaligen Gegenbuchung'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'FinishedTransferalTargetTransaction', en = 'Target of single transferal transaction', de = 'Ziel einer Einmaligen Gegenbuchung'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'PlannedTransferalSourceTransaction', en = 'Source of recurring transferal transaction', de = 'Quelle einer Wiederkehrenden Gegenbuchung'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'PlannedTransferalTargetTransaction', en = 'Target of recurring transferal transaction', de = 'Ziel einer Wiederkehrenden Gegenbuchung'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountCommon', id = 'includeSubCategories', en = '(including sub-categories)', de = '(Unterkategorien eingeschlossen)'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'widgetEngine', id = 'noImage', en = 'An image file cannot be found in the current theme or the Standard theme.', de = 'Eine Bilddatei kann weder im aktuellen noch im Standardtheme gefunden werden.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'NavigationFromDB', id = 'noIcon', en = 'An navigation icon cannot be found in the current theme or the Standard theme.', de = 'Ein Navigationsicon kann weder im aktuellen noch im Standardtheme gefunden werden.'");
