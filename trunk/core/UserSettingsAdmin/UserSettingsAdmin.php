@@ -235,7 +235,7 @@ try {
 try {
 	$matchingTextSimilarity = 100 * $us->getProperty('matchingTextSimilarity');
 } catch (BadgerException $ex) {
-	$matchingTextSimilarity = 75;
+	$matchingTextSimilarity = 25;
 }
 
 $matchingHeading = getBadgerTranslation2('UserSettingsAdmin', 'matchingHeading');

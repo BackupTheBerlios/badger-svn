@@ -363,7 +363,7 @@ function importMatching($importedTransaction, $accountId) {
 		try {
 			$textSimilarity = $us->getProperty('matchingTextSimilarity');
 		} catch (BadgerException $ex) {
-			$textSimilarity = 0.75;
+			$textSimilarity = 0.25;
 		}
 		
 		$categoryManager = new CategoryManager($badgerDb);
