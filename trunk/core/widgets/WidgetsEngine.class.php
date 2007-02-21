@@ -263,7 +263,7 @@ function _jsVal_Language() {
 	
 	public function createButton($name, $text, $action, $img="", $addTags=""){
 		if ($action=="submit") { 
-			$action = "if(validateCompleteForm(this.form, 'error')) {this.form.submit()} else {return false}";
+			$action = "if(!validateCompleteForm(this.form, 'error')) return false;";
 			$type = "submit";
 		} else {
 			$type = "button";		
