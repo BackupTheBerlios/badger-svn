@@ -3,11 +3,11 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Aug 26, 2006 at 08:24 PM
--- Server version: 5.0.24
--- PHP Version: 5.1.6-0.dotdeb.1
+-- Erstellungszeit: 24. Februar 2007 um 17:53
+-- Server Version: 5.0.24
+-- PHP-Version: 5.1.6-0.dotdeb.2
 -- 
--- Database: `badgerbank`
+-- Datenbank: `badgerbank`
 -- 
 CREATE DATABASE `badgerbank` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `badgerbank`;
@@ -15,7 +15,7 @@ USE `badgerbank`;
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `account`
+-- Tabellenstruktur für Tabelle `account`
 -- 
 
 DROP TABLE IF EXISTS `account`;
@@ -26,23 +26,26 @@ CREATE TABLE IF NOT EXISTS `account` (
   `description` text,
   `lower_limit` decimal(20,2) default NULL,
   `upper_limit` decimal(20,2) default NULL,
+  `last_calc_date` date NOT NULL default '1000-01-01',
+  `csv_parser` varchar(100) default NULL,
+  `delete_old_planned_transactions` tinyint(1) default '0',
   PRIMARY KEY  (`account_id`),
   KEY `account_FKIndex1` (`currency_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- 
--- Dumping data for table `account`
+-- Daten für Tabelle `account`
 -- 
 
-INSERT INTO `account` (`account_id`, `currency_id`, `title`, `description`, `lower_limit`, `upper_limit`) VALUES (1, 1, 'Girokonto', 'Deutsche Bank Kto-Nr.: 12345678', '-1000.00', '2000.00'),
-(2, 1, 'Visa-Karte', 'Visa Kredit-Karte', '-3000.00', NULL),
-(3, 1, 'Tagesgeldkonto', 'Konto mit täglicher Verfügbarkeit, höhere Zinsen', '0.00', '3000.00'),
-(4, 2, 'Paypal', 'Pay Pal Account geführt in Dollar', '0.00', '1000.00');
+INSERT INTO `account` (`account_id`, `currency_id`, `title`, `description`, `lower_limit`, `upper_limit`, `last_calc_date`, `csv_parser`, `delete_old_planned_transactions`) VALUES (1, 1, 'Girokonto', 'Deutsche Bank Kto-Nr.: 12345678', '-1000.00', '2000.00', '1000-01-01', NULL, 0),
+(2, 1, 'Visa-Karte', 'Visa Kredit-Karte', '-3000.00', NULL, '1000-01-01', NULL, 0),
+(3, 1, 'Tagesgeldkonto', 'Konto mit täglicher Verfügbarkeit, höhere Zinsen', '0.00', '3000.00', '1000-01-01', NULL, 0),
+(4, 2, 'Paypal', 'Pay Pal Account geführt in Dollar', '0.00', '1000.00', '1000-01-01', NULL, 0);
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `account_ids_seq`
+-- Tabellenstruktur für Tabelle `account_ids_seq`
 -- 
 
 DROP TABLE IF EXISTS `account_ids_seq`;
@@ -52,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `account_ids_seq` (
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 -- 
--- Dumping data for table `account_ids_seq`
+-- Daten für Tabelle `account_ids_seq`
 -- 
 
 INSERT INTO `account_ids_seq` (`id`) VALUES (5);
@@ -60,7 +63,7 @@ INSERT INTO `account_ids_seq` (`id`) VALUES (5);
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `account_property`
+-- Tabellenstruktur für Tabelle `account_property`
 -- 
 
 DROP TABLE IF EXISTS `account_property`;
@@ -73,14 +76,14 @@ CREATE TABLE IF NOT EXISTS `account_property` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `account_property`
+-- Daten für Tabelle `account_property`
 -- 
 
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `category`
+-- Tabellenstruktur für Tabelle `category`
 -- 
 
 DROP TABLE IF EXISTS `category`;
@@ -90,38 +93,40 @@ CREATE TABLE IF NOT EXISTS `category` (
   `title` varchar(100) NOT NULL,
   `description` text,
   `outside_capital` tinyint(1) NOT NULL default '0',
+  `keywords` text,
+  `expense` tinyint(1) default NULL,
   PRIMARY KEY  (`category_id`),
   KEY `category_FKIndex1` (`parent_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 -- 
--- Dumping data for table `category`
+-- Daten für Tabelle `category`
 -- 
 
-INSERT INTO `category` (`category_id`, `parent_id`, `title`, `description`, `outside_capital`) VALUES (1, NULL, 'Miete', 'Transaktionen die mit Miete zu tun haben.', 0),
-(2, NULL, 'Auto', 'Auto-Transaktionen', 0),
-(3, 11, 'Haushalt', NULL, 1),
-(4, NULL, 'Gehalt', NULL, 0),
-(5, NULL, 'Kommunikation', 'Kommunikationsausgaben', 0),
-(6, 11, 'Kleidung', NULL, 0),
-(7, NULL, 'Studium', NULL, 0),
-(8, NULL, 'Sparen', NULL, 0),
-(9, 7, 'Buecher', NULL, 0),
-(10, 7, 'Buerokratie', NULL, 0),
-(11, NULL, 'Lebensführung', NULL, 0),
-(12, 11, 'Lebensmittel', NULL, 0),
-(13, 11, 'Luxus und Genuss', NULL, 0),
-(14, 2, 'Instandhaltung', NULL, 0),
-(15, 2, 'Benzin', NULL, 0),
-(16, NULL, 'Sonstiges', NULL, 0),
-(17, NULL, 'Hobbies und Freizeit', NULL, 0),
-(18, NULL, 'Bargeld', NULL, 0),
-(19, NULL, 'Gesundheit', NULL, 0);
+INSERT INTO `category` (`category_id`, `parent_id`, `title`, `description`, `outside_capital`, `keywords`, `expense`) VALUES (1, NULL, 'Miete', 'Transaktionen die mit Miete zu tun haben.', 0, NULL, NULL),
+(2, NULL, 'Auto', 'Auto-Transaktionen', 0, NULL, NULL),
+(3, 11, 'Haushalt', NULL, 1, NULL, NULL),
+(4, NULL, 'Gehalt', NULL, 0, NULL, NULL),
+(5, NULL, 'Kommunikation', 'Kommunikationsausgaben', 0, NULL, NULL),
+(6, 11, 'Kleidung', NULL, 0, NULL, NULL),
+(7, NULL, 'Studium', NULL, 0, NULL, NULL),
+(8, NULL, 'Sparen', NULL, 0, NULL, NULL),
+(9, 7, 'Buecher', NULL, 0, NULL, NULL),
+(10, 7, 'Buerokratie', NULL, 0, NULL, NULL),
+(11, NULL, 'Lebensführung', NULL, 0, NULL, NULL),
+(12, 11, 'Lebensmittel', NULL, 0, NULL, NULL),
+(13, 11, 'Luxus und Genuss', NULL, 0, NULL, NULL),
+(14, 2, 'Instandhaltung', NULL, 0, NULL, NULL),
+(15, 2, 'Benzin', NULL, 0, NULL, NULL),
+(16, NULL, 'Sonstiges', NULL, 0, NULL, NULL),
+(17, NULL, 'Hobbies und Freizeit', NULL, 0, NULL, NULL),
+(18, NULL, 'Bargeld', NULL, 0, NULL, NULL),
+(19, NULL, 'Gesundheit', NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `category_ids_seq`
+-- Tabellenstruktur für Tabelle `category_ids_seq`
 -- 
 
 DROP TABLE IF EXISTS `category_ids_seq`;
@@ -131,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `category_ids_seq` (
 ) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 -- 
--- Dumping data for table `category_ids_seq`
+-- Daten für Tabelle `category_ids_seq`
 -- 
 
 INSERT INTO `category_ids_seq` (`id`) VALUES (20);
@@ -139,7 +144,7 @@ INSERT INTO `category_ids_seq` (`id`) VALUES (20);
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `currency`
+-- Tabellenstruktur für Tabelle `currency`
 -- 
 
 DROP TABLE IF EXISTS `currency`;
@@ -151,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `currency` (
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- 
--- Dumping data for table `currency`
+-- Daten für Tabelle `currency`
 -- 
 
 INSERT INTO `currency` (`currency_id`, `long_name`, `symbol`) VALUES (1, 'Euro', 'EUR'),
@@ -160,7 +165,7 @@ INSERT INTO `currency` (`currency_id`, `long_name`, `symbol`) VALUES (1, 'Euro',
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `currency_ids_seq`
+-- Tabellenstruktur für Tabelle `currency_ids_seq`
 -- 
 
 DROP TABLE IF EXISTS `currency_ids_seq`;
@@ -170,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `currency_ids_seq` (
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 -- 
--- Dumping data for table `currency_ids_seq`
+-- Daten für Tabelle `currency_ids_seq`
 -- 
 
 INSERT INTO `currency_ids_seq` (`id`) VALUES (3);
@@ -178,7 +183,7 @@ INSERT INTO `currency_ids_seq` (`id`) VALUES (3);
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `datagrid_handler`
+-- Tabellenstruktur für Tabelle `datagrid_handler`
 -- 
 
 DROP TABLE IF EXISTS `datagrid_handler`;
@@ -190,18 +195,19 @@ CREATE TABLE IF NOT EXISTS `datagrid_handler` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `datagrid_handler`
+-- Daten für Tabelle `datagrid_handler`
 -- 
 
 INSERT INTO `datagrid_handler` (`handler_name`, `file_path`, `class_name`) VALUES ('AccountManager', '/modules/account/AccountManager.class.php', 'AccountManager'),
 ('Account', '/modules/account/Account.class.php', 'Account'),
 ('CategoryManager', '/modules/account/CategoryManager.class.php', 'CategoryManager'),
-('CurrencyManager', '/modules/account/CurrencyManager.class.php', 'CurrencyManager');
+('CurrencyManager', '/modules/account/CurrencyManager.class.php', 'CurrencyManager'),
+('MultipleAccounts', '/modules/statistics2/MultipleAccounts.class.php', 'MultipleAccounts');
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `finished_transaction`
+-- Tabellenstruktur für Tabelle `finished_transaction`
 -- 
 
 DROP TABLE IF EXISTS `finished_transaction`;
@@ -218,109 +224,111 @@ CREATE TABLE IF NOT EXISTS `finished_transaction` (
   `periodical` tinyint(1) NOT NULL default '0',
   `exceptional` tinyint(1) NOT NULL default '0',
   `planned_transaction_id` int(11) default NULL,
+  `transferal_transaction_id` int(11) default NULL,
+  `transferal_source` tinyint(1) default NULL,
   PRIMARY KEY  (`finished_transaction_id`),
   KEY `finished_transaction_FKIndex1` (`account_id`),
   KEY `finished_transaction_FKIndex2` (`category_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=91 DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
 
 -- 
--- Dumping data for table `finished_transaction`
+-- Daten für Tabelle `finished_transaction`
 -- 
 
-INSERT INTO `finished_transaction` (`finished_transaction_id`, `category_id`, `account_id`, `title`, `description`, `valuta_date`, `amount`, `outside_capital`, `transaction_partner`, `periodical`, `exceptional`, `planned_transaction_id`) VALUES (2, 4, 1, 'Gehalt', NULL, '2005-06-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(3, 4, 1, 'Gehalt', '', '2005-07-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(4, 1, 1, 'Gehalt', NULL, '2005-08-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(5, 4, 1, 'Gehalt', NULL, '2005-09-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(6, 4, 1, 'Gehalt', NULL, '2005-10-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(7, 4, 1, 'Gehalt', NULL, '2005-11-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(8, 4, 1, 'Gehalt', NULL, '2005-12-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(9, 4, 1, 'Gehalt', NULL, '2006-01-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5),
-(10, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-07-01', '-420.00', 0, NULL, 1, 0, 6),
-(11, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-08-01', '-420.00', 0, NULL, 1, 0, 6),
-(12, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-09-01', '-420.00', 0, NULL, 1, 0, 6),
-(13, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-10-01', '-420.00', 0, NULL, 1, 0, 6),
-(14, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-11-01', '-420.00', 0, NULL, 1, 0, 6),
-(15, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-12-01', '-420.00', 0, NULL, 1, 0, 6),
-(16, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2006-01-01', '-420.00', 0, NULL, 1, 0, 6),
-(17, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2006-02-01', '-420.00', 0, NULL, 1, 0, 6),
-(18, 14, 1, 'Neue Benzinpumpe', NULL, '2005-10-12', '-200.00', 0, NULL, 0, 1, NULL),
-(19, 14, 1, 'Scheibenwischer', 'Wer klaut denn jemandem einfach die Scheibenwischer? Das ist doch gemein!', '2005-11-18', '-53.00', 0, 'ATU', 0, 1, NULL),
-(20, 15, 1, 'Tanken', NULL, '2005-07-01', '-62.00', 0, NULL, 0, 0, NULL),
-(21, 15, 1, 'Tanken', NULL, '2005-07-20', '-53.23', 0, NULL, 0, 0, NULL),
-(22, 15, 1, 'Tanken', NULL, '2005-08-07', '-53.45', 0, NULL, 0, 0, NULL),
-(23, 15, 1, 'Tanken', NULL, '2005-08-25', '-53.23', 0, NULL, 0, 0, NULL),
-(24, 15, 1, 'Tanken', NULL, '2005-09-18', '-44.45', 0, NULL, 0, 0, NULL),
-(25, 15, 1, 'Tanken', NULL, '2005-09-30', '-52.13', 0, NULL, 0, 0, NULL),
-(26, 15, 1, 'Tanken', NULL, '2005-10-12', '-53.45', 0, NULL, 0, 0, NULL),
-(27, 15, 1, 'Tanken', NULL, '2005-10-29', '-47.88', 0, NULL, 0, 0, NULL),
-(28, 15, 1, 'Tanken', NULL, '2005-11-07', '-61.22', 0, NULL, 0, 0, NULL),
-(29, 15, 1, 'Tanken', NULL, '2005-11-18', '-33.34', 0, NULL, 0, 0, NULL),
-(30, 15, 1, 'Tanken', NULL, '2005-12-20', '-58.38', 0, NULL, 0, 0, NULL),
-(31, 15, 1, 'Tanken', NULL, '2005-12-30', '-50.50', 0, NULL, 0, 0, NULL),
-(32, 15, 0, 'Tanken', NULL, '2006-01-18', '-48.33', 0, NULL, 0, 0, NULL),
-(33, 15, 0, 'Tanken', NULL, '2006-01-31', '-50.10', 0, NULL, 0, 0, NULL),
-(34, 15, 0, 'Tanken', NULL, '2006-02-12', '-20.50', 0, NULL, 0, 0, NULL),
-(35, 15, 0, 'Tanken', NULL, '2006-02-12', '-12.45', 0, NULL, 0, 0, NULL),
-(36, 3, 1, 'Teppichreinigung', NULL, '2005-10-30', '-120.00', 0, NULL, 0, 1, NULL),
-(37, 3, 1, 'Fenster ersetzt', 'Diese Nachbarskinder', '2006-01-11', '-312.50', 0, NULL, 0, 1, NULL),
-(38, 6, 1, 'Neuer Anzug', NULL, NULL, '-215.00', 0, NULL, 0, 1, NULL),
-(39, 6, 1, 'Socken, Shirts', NULL, NULL, '-45.00', 0, NULL, 0, 1, NULL),
-(40, 13, 2, 'Wellness-Wochenende', NULL, '2005-01-07', '-210.45', 0, NULL, 0, 1, NULL),
-(41, 13, 2, 'Maniküre', NULL, '2005-09-15', '-33.00', 0, NULL, 0, 0, NULL),
-(42, 9, 1, 'Buch: Solvency II im Unternehmen', NULL, '2006-01-10', '-50.00', 0, NULL, 0, 0, NULL),
-(43, 9, 0, 'Wöhe', NULL, '2005-07-15', '-54.00', 0, NULL, 0, 0, NULL),
-(44, 10, 1, 'Bachelor', NULL, '2006-01-03', '-172.00', 0, NULL, 0, 0, NULL),
-(45, 10, 1, 'Studentenwerksbeitrag', NULL, '2005-12-01', '-182.00', 0, NULL, 0, 0, NULL),
-(46, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-07-01', '-100.00', 0, NULL, 1, 0, NULL),
-(47, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-08-01', '-100.00', 0, NULL, 1, 0, NULL),
-(48, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-09-01', '-100.00', 0, NULL, 1, 0, NULL),
-(49, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-10-01', '-100.00', 0, NULL, 1, 0, NULL),
-(50, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-11-01', '-100.00', 0, NULL, 1, 0, NULL),
-(51, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-12-01', '-100.00', 0, NULL, 1, 0, NULL),
-(52, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2006-01-01', '-100.00', 0, NULL, 1, 0, NULL),
-(53, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2006-02-01', '-100.00', 0, NULL, 1, 0, NULL),
-(54, 4, 1, 'Bonus', 'Bonus für sehr gute Arbeit', '2006-01-02', '2000.00', 0, NULL, 0, 1, NULL),
-(55, 17, 2, 'Lenkdrache gekauft', NULL, '2005-09-13', '-80.00', 0, NULL, 0, 1, NULL),
-(56, 17, 2, 'Tauchkurs', 'PADI Open Water Diver ', '2005-11-23', '-355.00', 0, NULL, 0, 1, NULL),
-(57, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-07-03', '-45.00', 0, NULL, 0, 0, NULL),
-(58, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-08-03', '-45.00', 0, NULL, 0, 0, NULL),
-(59, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-09-03', '-45.00', 0, NULL, 0, 0, NULL),
-(60, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-10-03', '-45.00', 0, NULL, 0, 0, NULL),
-(61, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-11-03', '-45.00', 0, NULL, 0, 0, NULL),
-(62, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-12-03', '-45.00', 0, NULL, 0, 0, NULL),
-(63, 5, 1, 'Mobiltelefonrechnung', NULL, '2006-01-03', '-45.00', 0, NULL, 0, 0, NULL),
-(64, 5, 1, 'Mobiltelefonrechnung', NULL, '2006-02-03', '-45.00', 0, NULL, 0, 0, NULL),
-(65, 12, 1, 'Fritten und Bier', NULL, '2005-07-01', '-15.00', 0, NULL, 0, 0, NULL),
-(66, 12, 1, 'Aldi', NULL, '2005-07-02', '-45.00', 0, NULL, 0, 0, NULL),
-(67, 12, 1, 'Aldi', NULL, '2005-07-11', '-65.45', 0, NULL, 0, 0, NULL),
-(68, 12, 1, 'Getränke', NULL, '2005-07-17', '-34.23', 0, NULL, 0, 0, NULL),
-(69, 12, 1, 'Getränke', NULL, '2005-08-12', '-32.23', 0, NULL, 0, 0, NULL),
-(70, 12, 1, 'Aldi', NULL, '2005-08-20', '-30.45', 0, NULL, 0, 0, NULL),
-(71, 12, 1, 'Maredo', NULL, '2005-08-30', '-80.00', 0, NULL, 0, 0, NULL),
-(72, 12, 1, 'Kartoffeln', NULL, '2005-09-10', '-13.66', 0, NULL, 0, 0, NULL),
-(73, 12, 1, 'Aldi', NULL, '2005-09-12', '-13.66', 0, NULL, 0, 0, NULL),
-(74, 12, 1, 'Kantine', NULL, '2005-09-23', '-2.00', 0, NULL, 0, 0, NULL),
-(75, 12, 1, 'Aldi', NULL, '2005-10-01', '-30.48', 0, NULL, 0, 0, NULL),
-(76, 12, 1, 'Getränke', NULL, '2005-10-22', '-62.23', 0, NULL, 0, 0, NULL),
-(77, 12, 1, 'Getränke', NULL, '2005-11-02', '-39.23', 0, NULL, 0, 0, NULL),
-(78, 12, 1, 'Bier', NULL, '2005-11-07', '-20.00', 0, NULL, 0, 0, NULL),
-(79, 12, 1, 'Aldi', NULL, '2005-11-19', '-42.00', 0, NULL, 0, 0, NULL),
-(80, 12, 1, 'Fritten und Bier', NULL, '2005-11-30', '-35.00', 0, NULL, 0, 0, NULL),
-(81, 12, 1, 'Süpermarket', NULL, '2005-12-03', '-33.00', 0, NULL, 0, 0, NULL),
-(82, 12, 1, 'Aldi', NULL, '2005-12-08', '-42.00', 0, NULL, 0, 0, NULL),
-(83, 12, 1, 'Bier', NULL, '2005-12-20', '-80.00', 0, NULL, 0, 0, NULL),
-(84, 12, 1, 'Getränke', NULL, '2005-12-30', '-39.23', 0, NULL, 0, 0, NULL),
-(85, 12, 1, 'Rollmöpse', NULL, '2006-01-01', '-32.00', 0, NULL, 0, 0, NULL),
-(86, 12, 1, 'Aldi', NULL, '2006-01-06', '-30.48', 0, NULL, 0, 0, NULL),
-(87, 12, 1, 'Kantine', NULL, '2006-01-18', '-29.00', 0, NULL, 0, 0, NULL),
-(88, 12, 1, 'Aldi', NULL, '2006-01-30', '-43.66', 0, NULL, 0, 0, NULL),
-(89, 12, 1, 'Kaffee', NULL, '2006-02-10', '-13.66', 0, NULL, 0, 0, NULL),
-(90, 12, 1, 'Gummibärchen', NULL, '2006-01-12', '-40.00', 0, NULL, 0, 0, NULL);
+INSERT INTO `finished_transaction` (`finished_transaction_id`, `category_id`, `account_id`, `title`, `description`, `valuta_date`, `amount`, `outside_capital`, `transaction_partner`, `periodical`, `exceptional`, `planned_transaction_id`, `transferal_transaction_id`, `transferal_source`) VALUES (2, 4, 1, 'Gehalt', NULL, '2005-06-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(3, 4, 1, 'Gehalt', '', '2005-07-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(4, 1, 1, 'Gehalt', NULL, '2005-08-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(5, 4, 1, 'Gehalt', NULL, '2005-09-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(6, 4, 1, 'Gehalt', NULL, '2005-10-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(7, 4, 1, 'Gehalt', NULL, '2005-11-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(8, 4, 1, 'Gehalt', NULL, '2005-12-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(9, 4, 1, 'Gehalt', NULL, '2006-01-30', '1357.00', 0, 'Arbeitgeber AG', 1, 0, 5, NULL, NULL),
+(10, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-07-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(11, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-08-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(12, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-09-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(13, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-10-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(14, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-11-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(15, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2005-12-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(16, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2006-01-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(17, 1, 1, 'Miete', 'Miete für Musterstr. 16', '2006-02-01', '-420.00', 0, NULL, 1, 0, 6, NULL, NULL),
+(18, 14, 1, 'Neue Benzinpumpe', NULL, '2005-10-12', '-200.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(19, 14, 1, 'Scheibenwischer', 'Wer klaut denn jemandem einfach die Scheibenwischer? Das ist doch gemein!', '2005-11-18', '-53.00', 0, 'ATU', 0, 1, NULL, NULL, NULL),
+(20, 15, 1, 'Tanken', NULL, '2005-07-01', '-62.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(21, 15, 1, 'Tanken', NULL, '2005-07-20', '-53.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(22, 15, 1, 'Tanken', NULL, '2005-08-07', '-53.45', 0, NULL, 0, 0, NULL, NULL, NULL),
+(23, 15, 1, 'Tanken', NULL, '2005-08-25', '-53.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(24, 15, 1, 'Tanken', NULL, '2005-09-18', '-44.45', 0, NULL, 0, 0, NULL, NULL, NULL),
+(25, 15, 1, 'Tanken', NULL, '2005-09-30', '-52.13', 0, NULL, 0, 0, NULL, NULL, NULL),
+(26, 15, 1, 'Tanken', NULL, '2005-10-12', '-53.45', 0, NULL, 0, 0, NULL, NULL, NULL),
+(27, 15, 1, 'Tanken', NULL, '2005-10-29', '-47.88', 0, NULL, 0, 0, NULL, NULL, NULL),
+(28, 15, 1, 'Tanken', NULL, '2005-11-07', '-61.22', 0, NULL, 0, 0, NULL, NULL, NULL),
+(29, 15, 1, 'Tanken', NULL, '2005-11-18', '-33.34', 0, NULL, 0, 0, NULL, NULL, NULL),
+(30, 15, 1, 'Tanken', NULL, '2005-12-20', '-58.38', 0, NULL, 0, 0, NULL, NULL, NULL),
+(31, 15, 1, 'Tanken', NULL, '2005-12-30', '-50.50', 0, NULL, 0, 0, NULL, NULL, NULL),
+(32, 15, 0, 'Tanken', NULL, '2006-01-18', '-48.33', 0, NULL, 0, 0, NULL, NULL, NULL),
+(33, 15, 0, 'Tanken', NULL, '2006-01-31', '-50.10', 0, NULL, 0, 0, NULL, NULL, NULL),
+(34, 15, 0, 'Tanken', NULL, '2006-02-12', '-20.50', 0, NULL, 0, 0, NULL, NULL, NULL),
+(35, 15, 0, 'Tanken', NULL, '2006-02-12', '-12.45', 0, NULL, 0, 0, NULL, NULL, NULL),
+(36, 3, 1, 'Teppichreinigung', NULL, '2005-10-30', '-120.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(37, 3, 1, 'Fenster ersetzt', 'Diese Nachbarskinder', '2006-01-11', '-312.50', 0, NULL, 0, 1, NULL, NULL, NULL),
+(38, 6, 1, 'Neuer Anzug', NULL, NULL, '-215.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(39, 6, 1, 'Socken, Shirts', NULL, NULL, '-45.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(40, 13, 2, 'Wellness-Wochenende', NULL, '2005-01-07', '-210.45', 0, NULL, 0, 1, NULL, NULL, NULL),
+(41, 13, 2, 'Maniküre', NULL, '2005-09-15', '-33.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(42, 9, 1, 'Buch: Solvency II im Unternehmen', NULL, '2006-01-10', '-50.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(43, 9, 0, 'Wöhe', NULL, '2005-07-15', '-54.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(44, 10, 1, 'Bachelor', NULL, '2006-01-03', '-172.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(45, 10, 1, 'Studentenwerksbeitrag', NULL, '2005-12-01', '-182.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(46, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-07-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(47, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-08-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(48, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-09-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(49, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-10-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(50, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-11-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(51, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2005-12-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(52, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2006-01-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(53, 8, 1, 'Fonds-Sparen', '100 Euro Überweisen an DWS Investment Fonds', '2006-02-01', '-100.00', 0, NULL, 1, 0, NULL, NULL, NULL),
+(54, 4, 1, 'Bonus', 'Bonus für sehr gute Arbeit', '2006-01-02', '2000.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(55, 17, 2, 'Lenkdrache gekauft', NULL, '2005-09-13', '-80.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(56, 17, 2, 'Tauchkurs', 'PADI Open Water Diver ', '2005-11-23', '-355.00', 0, NULL, 0, 1, NULL, NULL, NULL),
+(57, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-07-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(58, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-08-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(59, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-09-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(60, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-10-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(61, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-11-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(62, 5, 1, 'Mobiltelefonrechnung', NULL, '2005-12-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(63, 5, 1, 'Mobiltelefonrechnung', NULL, '2006-01-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(64, 5, 1, 'Mobiltelefonrechnung', NULL, '2006-02-03', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(65, 12, 1, 'Fritten und Bier', NULL, '2005-07-01', '-15.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(66, 12, 1, 'Aldi', NULL, '2005-07-02', '-45.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(67, 12, 1, 'Aldi', NULL, '2005-07-11', '-65.45', 0, NULL, 0, 0, NULL, NULL, NULL),
+(68, 12, 1, 'Getränke', NULL, '2005-07-17', '-34.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(69, 12, 1, 'Getränke', NULL, '2005-08-12', '-32.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(70, 12, 1, 'Aldi', NULL, '2005-08-20', '-30.45', 0, NULL, 0, 0, NULL, NULL, NULL),
+(71, 12, 1, 'Maredo', NULL, '2005-08-30', '-80.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(72, 12, 1, 'Kartoffeln', NULL, '2005-09-10', '-13.66', 0, NULL, 0, 0, NULL, NULL, NULL),
+(73, 12, 1, 'Aldi', NULL, '2005-09-12', '-13.66', 0, NULL, 0, 0, NULL, NULL, NULL),
+(74, 12, 1, 'Kantine', NULL, '2005-09-23', '-2.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(75, 12, 1, 'Aldi', NULL, '2005-10-01', '-30.48', 0, NULL, 0, 0, NULL, NULL, NULL),
+(76, 12, 1, 'Getränke', NULL, '2005-10-22', '-62.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(77, 12, 1, 'Getränke', NULL, '2005-11-02', '-39.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(78, 12, 1, 'Bier', NULL, '2005-11-07', '-20.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(79, 12, 1, 'Aldi', NULL, '2005-11-19', '-42.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(80, 12, 1, 'Fritten und Bier', NULL, '2005-11-30', '-35.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(81, 12, 1, 'Süpermarket', NULL, '2005-12-03', '-33.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(82, 12, 1, 'Aldi', NULL, '2005-12-08', '-42.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(83, 12, 1, 'Bier', NULL, '2005-12-20', '-80.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(84, 12, 1, 'Getränke', NULL, '2005-12-30', '-39.23', 0, NULL, 0, 0, NULL, NULL, NULL),
+(85, 12, 1, 'Rollmöpse', NULL, '2006-01-01', '-32.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(86, 12, 1, 'Aldi', NULL, '2006-01-06', '-30.48', 0, NULL, 0, 0, NULL, NULL, NULL),
+(87, 12, 1, 'Kantine', NULL, '2006-01-18', '-29.00', 0, NULL, 0, 0, NULL, NULL, NULL),
+(88, 12, 1, 'Aldi', NULL, '2006-01-30', '-43.66', 0, NULL, 0, 0, NULL, NULL, NULL),
+(89, 12, 1, 'Kaffee', NULL, '2006-02-10', '-13.66', 0, NULL, 0, 0, NULL, NULL, NULL),
+(90, 12, 1, 'Gummibärchen', NULL, '2006-01-12', '-40.00', 0, NULL, 0, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `finished_transaction_ids_seq`
+-- Tabellenstruktur für Tabelle `finished_transaction_ids_seq`
 -- 
 
 DROP TABLE IF EXISTS `finished_transaction_ids_seq`;
@@ -330,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `finished_transaction_ids_seq` (
 ) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 AUTO_INCREMENT=92 ;
 
 -- 
--- Dumping data for table `finished_transaction_ids_seq`
+-- Daten für Tabelle `finished_transaction_ids_seq`
 -- 
 
 INSERT INTO `finished_transaction_ids_seq` (`id`) VALUES (91);
@@ -338,7 +346,7 @@ INSERT INTO `finished_transaction_ids_seq` (`id`) VALUES (91);
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `i18n`
+-- Tabellenstruktur für Tabelle `i18n`
 -- 
 
 DROP TABLE IF EXISTS `i18n`;
@@ -351,7 +359,7 @@ CREATE TABLE IF NOT EXISTS `i18n` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `i18n`
+-- Daten für Tabelle `i18n`
 -- 
 
 INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString', 'Go To Current Month', 'Gehe zu aktuellem Monat'),
@@ -436,8 +444,8 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('importCsv', 'amount', 'Amount', 'Betrag'),
 ('importCsv', 'transactionPartner', 'Transaction Partner', 'Transaktionspartner'),
 ('importCsv', 'save', 'Write to Database', 'In Datenbank schreiben'),
-('importCsv', 'successfullyWritten', 'transactions successfully written to db', 'Transaktionen erfolgreich in die Datenbank geschrieben'),
-('importCsv', 'noTransactionSelected', 'No transactions selected', 'Keine Transaktionen ausgewählt'),
+('importCsv', 'successfullyWritten', 'transaction(s) successfully written to the following accounts:', 'Transaktion(en) erfolgreich in die folgenden Konten geschrieben:'),
+('importCsv', 'noTransactionSelected', 'No transactions selected.', 'Keine Transaktionen ausgewählt.'),
 ('Account', 'invalidFieldName', 'The following field is not known to Account:', 'Das folgende Feld ist Account nicht bekannt:'),
 ('Account', 'SQLError', 'An SQL error occured attempting to fetch the Account data from the database:', 'Beim Abrufen der Account-Daten aus der Datenbank trat ein SQL-Fehler auf:'),
 ('CategoryManager', 'invalidFieldName', 'An unknown field was used in CategoryManager.', 'Im CategoryManager wurde ein ungültiges Feld verwendet.'),
@@ -570,7 +578,7 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('UserSettingsAdmin', 'mandatory_commited_fs_heading', 'Password Changed', 'Passwort geändert'),
 ('Navigation', 'Statistics', 'Statistics', 'Statistiken'),
 ('dataGrid', 'save', 'Save', 'Speichern'),
-('dataGrid', 'back', 'Back', 'Zurück'),
+('dataGrid', 'gotoToday', 'Today', 'Heute'),
 ('dataGrid', 'LoadingMessage', 'Loading ...', 'Lade ...'),
 ('Navigation', 'CategoryManager', 'Transaction categories', 'Transaktionskategorien'),
 ('Navigation', 'Help', 'Help', 'Hilfe'),
@@ -640,8 +648,8 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('accountCurrency', 'pageTitleOverview', 'Currency Manager', 'Währungsübersicht'),
 ('forecast', 'savingTargetField', 'Saving target', 'Sparziel'),
 ('forecast', 'savingTargetToolTip', 'Please insert your saving target. When the forecast is created, there will be a graph where the balance at the end date reaches the saving target. Furthermore the pocketmoney will be shown, which is available for daily use under the condition, that the saving target has to be reached.', 'Bitte geben Sie Ihr Sparziel ein. Bei der Prognose wird ein Graph ausgegeben, bei dem am Enddatum dieser Kontostand erreicht wird. Außerdem wird der Betrag ausgegeben, der Ihnen täglich zum Ausgeben zur Verfügung steht.'),
-('accountCategory', 'pageTitleOverview', 'Category Manager', 'Kategorieübersicht'),
-('accountAccount', 'pageTitleOverview', 'Account Manager', 'Kontenübersicht'),
+('accountCategory', 'pageTitleOverview', 'Transaction Categories', 'Transaktionskategorien'),
+('accountAccount', 'pageTitleOverview', 'Account Overview', 'Kontenübersicht'),
 ('forecast', 'pocketMoney1Field', 'Pocket money 1', 'Taschengeld 1'),
 ('forecast', 'pocketMoney1ToolTip', 'Here you can insert an amount, which you want to dispose of every day (=pocket money). If you insert here an amount, a graph will be displayed, which shows the trend of your balances under consideration of the pocket money. Furthermore the balance at the end of the forecast period is shown.', 'Hier können Sie einen Betrag, den sie täglich zur Verfügung haben möchten (=Taschengeld). Wenn Sie hier einen Wert eingeben, wird ein Graph angezeigt, der den Verlauf des Kontostandes anzeigt, wenn Sie diesen Betrag täglich ausgeben. Außerdem wird angezeigt, wie in diesem Falle der Kontostand am Enddatum ist.'),
 ('accountAccount', 'pageTitle', 'Account properties', 'Kontoeigenschaften'),
@@ -655,7 +663,7 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('forecast', 'upperLimitLabel', 'Graph upper limit', 'Graph oberes Limit'),
 ('forecast', 'upperLimitToolTip', 'Shows the upper limit in the graph.', 'Zeigt im Diagramm das obere Limit des Zielkontos.'),
 ('accountCurrency', 'pageTitle', 'Edit Currency', 'Währung bearbeiten'),
-('accountCategory', 'pageTitle', 'Edit Catagory', 'Kategorie bearbeiten'),
+('accountCategory', 'pageTitleEdit', 'Edit Category', 'Kategorie bearbeiten'),
 ('forecast', 'plannedTransactionsLabel', 'Graph planned transactions', 'Graph geplante Transaktionen'),
 ('forecast', 'plannedTransactionsToolTip', 'Shows the graph for planned transactions. The saving target and pocket money will not be included.', 'Zeigt den Graph für die geplanten Transaktionen. Es wird kein Sparziel und kein Taschengeld berücksichtigt.'),
 ('accountOverview', 'pageTitle', 'Transaction overview', 'Transaktionsübersicht'),
@@ -713,16 +721,15 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('forecast', 'legendSetting', 'Parameter', 'Parameter'),
 ('forecast', 'legendGraphs', 'Select graphs', 'Graphen auswählen'),
 ('accountTransaction', 'pageTitle', 'Transaction', 'Transaktion'),
-('csv', 'title', 'CSV-Import', 'CSV-Import'),
 ('UserSettingsAdmin', 'title', 'User Settings', 'Einstellungen'),
 ('forecast', 'title', 'Forecast', 'Prognose'),
 ('about', 'contributors', 'Contributors', 'Mitwirkende'),
-('csv', 'legend', 'Properties', 'Eigenschaften'),
+('importCsv', 'legend', 'Properties', 'Eigenschaften'),
 ('askInsert', 'legend', 'Import', 'Import'),
 ('askExport', 'legend', 'Export', 'Export'),
 ('accountTransaction', 'newPlannedTrans', 'New recurring transaction', 'Neue wiederkehrende Transaktion'),
 ('accountTransaction', 'newFinishedTrans', 'New single transaction', 'Neue einmalige Transaktion'),
-('CategoryManager', 'no_parent', 'No parent category', 'Keine Elternkategorie'),
+('CategoryManager', 'no_parent', '&lt;No parent category&gt;', '&lt;Keine Elternkategorie&gt;'),
 ('accountAccount', 'legend', 'Properties', 'Eigenschaften'),
 ('accountCategory', 'legend', 'Properties', 'Eigenschaften'),
 ('accountCurrency', 'legend', 'Properties', 'Eigenschaften'),
@@ -749,7 +756,7 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('accountOverviewPlanned', 'colUnit', 'Unit', 'Einheit'),
 ('accountOverviewPlanned', 'colFrequency', 'Interval', 'Intervall'),
 ('dataGrid', 'edit', 'Edit', 'Bearbeiten'),
-('dataGrid', 'NoRowSelectedMsg', 'Please, select a row to edit', 'Bitte selektieren eine Zeile, die sie bearbeiten wollen.'),
+('dataGrid', 'NoRowSelectedMsg', 'Please, select a row to edit', 'Bitte selektieren sie eine Zeile, die sie bearbeiten wollen.'),
 ('jsVal', 'err_form', 'Please enter/select values for the following fields:\\n\\n', 'Bitte geben Sie die Werte für folgende Felder ein:\\n\\n'),
 ('jsVal', 'err_select', 'Please select a valid "%FIELDNAME%"', 'Bitte wählen Sie einen gültigen Wert für "%FIELDNAME%"'),
 ('jsVal', 'err_enter', 'Please enter a valid "%FIELDNAME%"', 'Bitte geben Sie einen gültigen Wert für "%FIELDNAME%" ein'),
@@ -771,9 +778,9 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('Calendar', 'gotoString
 ('badger_login', 'sessionTimeout', 'Your session timed out. You have been logged out for security reasons.', 'Ihre Sitzung ist abgelaufen. Sie wurden aus Sicherheitsgründen ausgeloggt.'),
 ('updateProcedure', 'step1PostLink', '', ''),
 ('updateProcedure', 'step2PreLink', 'Please click the following link to start the database update.', 'Bitte klicken Sie auf folgenden Link, um die Datenbank-Aktualisierung zu beginnen.'),
-('updateProcedure', 'step1PreLink', 'Please click the following link and save the file to your computer.', 'Bitte klicken Sie auf folgenden Link und speichern Sie die Datei auf Ihrem Computer.'),
-('updateProcedure', 'step1LinkText', 'Save backup', 'Sicherungskopie speichern');
-INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('updateProcedure', 'fileVersionText', 'File version:', 'Datei-Version:'),
+('updateProcedure', 'step1PreLink', 'Please click the following link and save the file to your computer.', 'Bitte klicken Sie auf folgenden Link und speichern Sie die Datei auf Ihrem Computer.');
+INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('updateProcedure', 'step1LinkText', 'Save backup', 'Sicherungskopie speichern'),
+('updateProcedure', 'fileVersionText', 'File version:', 'Datei-Version:'),
 ('updateProcedure', 'stepDescription', 'The update consists of two simple steps. First, a backup of the database is saved to your computer. This preserves your data in the rare case anything goes wrong. Second, the database is updated.', 'Die Aktualisierung besteht aus zwei einfachen Schritten. Zuerst wird eine Sicherheitskopie der Datenbank auf Ihrem Computer gespeichert. Dadurch bleiben Ihre Daten auch im unwahrscheinlichen Fall eines Fehlschlags erhalten. Anschließend wird die Datenbank aktualisiert.'),
 ('updateProcedure', 'dbVersionText', 'Database version:', 'Datenbank-Version:'),
 ('updateProcedure', 'legend', 'Steps to Update', 'Schritte zur Aktualisierung'),
@@ -802,12 +809,155 @@ INSERT INTO `i18n` (`page_id`, `id`, `en`, `de`) VALUES ('updateProcedure', 'fil
 ('statistics', 'showButton', 'Show', 'Anzeigen'),
 ('dataGrid', 'open', 'Open', 'Öffnen'),
 ('Navigation', 'releaseNotes', 'Release Notes', 'Versionsgeschichte (englisch)'),
-('welcome', 'pageTitle', 'Your accounts', 'Ihre Konten');
+('welcome', 'pageTitle', 'Your accounts', 'Ihre Konten'),
+('dataGrid', 'filterLegend', 'Filter', 'Filter'),
+('dataGrid', 'setFilter', 'Set Filter', 'Filtern'),
+('dataGrid', 'resetFilter', 'Reset', 'Reset'),
+('common', 'gpcFieldUndefined', 'GET/POST/COOKIE field undefined', 'GET/POST/COOKIE-Feld nicht definiert'),
+('accountCategory', 'pageTitleNew', 'Create new Catagory', 'Neue Kategorie erstellen'),
+('DataGridHandler', 'illegalFieldSelected', 'The following field is not known to this DataGridHandler:', 'Das folgende Feld ist diesem DataGridHandler nicht bekannt:'),
+('MultipleAccounts', 'invalidFieldName', 'An unknown field was used with MultipleAccounts.', 'Es wurde ein unbekanntes Feld mit MultipleAccounts verwendet.'),
+('accountAccount', 'deleteOldPlannedTransactions', 'Auto-insert recurring transactions:', 'Wiederkehrende Transaktionen automatisch eintragen:'),
+('accountAccount', 'csvParser', 'CSV parser:', 'CSV-Parser:'),
+('accountAccount', 'deleteOldPlannedTransactionsDescription', 'If this option is checked, every occuring instance of a recurring transaction is automatically inserted as an single transaction. Uncheck this if you import your transactions from a CSV file on a regular basis.', 'Wenn diese Option ausgewählt wurde, werden eintretende Instanzen einer wiederkehrenden Transaktion automatisch als einmalige Transaktionen eingetragen. Wählen Sie die Option nicht aus, wenn Sie Ihre Transaktionen regelmäßig aus einer CSV-Datei importieren.'),
+('accountTransaction', 'range', 'Apply to', 'Anwenden auf'),
+('accountTransaction', 'rangeAll', 'all', 'alle'),
+('accountTransaction', 'rangeThis', 'this', 'diese'),
+('accountTransaction', 'rangePrevious', 'this and previous', 'diese und vorherige'),
+('accountTransaction', 'rangeFollowing', 'this and following', 'diese und folgende'),
+('accountTransaction', 'rangeUnit', 'instances', 'Ausprägungen'),
+('plannedTransaction', 'afterTitle', 'after', 'nach'),
+('plannedTransaction', 'beforeTitle', 'before', 'vor'),
+('AccountManager', 'UnknownFinishedTransactionId', 'An unknown single transaction id was used.', 'Es wurde eine unbekannte ID einer einmaligen Transaktion verwendet.'),
+('AccountManager', 'UnknownPlannedTransactionId', 'An unknown recurring transaction id was used.', 'Es wurde eine unbekannte ID einer wiederkehrenden Transaktion verwendet.'),
+('accountTransaction', 'transferalEnabled', 'Add transferal transaction', 'Gegenbuchung hinzufügen'),
+('accountTransaction', 'transferalAccount', 'Target account', 'Zielkonto'),
+('accountTransaction', 'transferalAmount', 'Amount on target Account', 'Betrag auf Zielkonto'),
+('Account', 'FinishedTransferalSourceTransaction', 'Source of single transferal transaction', 'Quelle einer Einmaligen Gegenbuchung'),
+('Account', 'FinishedTransferalTargetTransaction', 'Target of single transferal transaction', 'Ziel einer Einmaligen Gegenbuchung'),
+('Account', 'PlannedTransferalSourceTransaction', 'Source of recurring transferal transaction', 'Quelle einer Wiederkehrenden Gegenbuchung'),
+('Account', 'PlannedTransferalTargetTransaction', 'Target of recurring transferal transaction', 'Ziel einer Wiederkehrenden Gegenbuchung'),
+('accountCommon', 'includeSubCategories', '(including sub-categories)', '(Unterkategorien eingeschlossen)'),
+('widgetEngine', 'noImage', 'An image file cannot be found in the current theme or the Standard theme.', 'Eine Bilddatei kann weder im aktuellen noch im Standardtheme gefunden werden.'),
+('NavigationFromDB', 'noIcon', 'An navigation icon cannot be found in the current theme or the Standard theme.', 'Ein Navigationsicon kann weder im aktuellen noch im Standardtheme gefunden werden.'),
+('accountCategory', 'keywordsLabel', 'Keywords', 'Schlüsselwörter'),
+('accountCategory', 'keywordsDescription', 'If an imported transaction contains one of these keywords, this category will be pre-selected for this transaction. Use one line per keyword.', 'Wenn eine importierte Transaktion eines dieser Schlüsselwörter enthält, wird diese Kategorie vor-ausgewählt. Geben Sie pro Schlüsselwort eine neue Zeile ein.'),
+('UserSettingsAdmin', 'matchingDateDeltaLabel', 'Max. difference in days:', 'Max. Differenz in Tagen'),
+('UserSettingsAdmin', 'matchingDateDeltaDescription', 'Only transactions that differ at most this amount of days from the imported transaction are considered for comparison.', 'Nur Transaktionen, die maximal diese Anzahl an Tagen von der importierten Transaktion abweichen, werden zum Vergleich herangezogen.'),
+('UserSettingsAdmin', 'matchingAmountDeltaLabel', 'Max. difference of amount (%)', 'Max. Abweichung des Betrags (%)'),
+('UserSettingsAdmin', 'matchingAmountDeltaDescription', 'Only transactions that differ at most this percentage in amount from the imported transaction are considered for comparison.', 'Nur Transaktionen, deren Betrag maximal diesen Prozentsatz von der importierten Transaktion abweichen, werden zum Vergleich herangezogen.'),
+('UserSettingsAdmin', 'matchingTextSimilarityLabel', 'Min. text similarity (%)', 'Mind. Textähnlichkeit (%)'),
+('UserSettingsAdmin', 'matchingTextSimilarityDescription', 'Only transactions that are similar to the imported transaction by this percentage are considered for comparison.', 'Nur Transaktionen, die mindestens diesen Prozentsatz an Ähnlichkeit zur importierten Transaktion aufweisen, werden zum Vergleich herangezogen.'),
+('UserSettingsAdmin', 'matchingHeading', 'CSV Import Matching', 'Abgleich beim CSV-Import'),
+('importCsv', 'matchingHeader', 'Similar Transactions', 'Ähnliche Transaktionen'),
+('importCsv', 'matchingToolTip', 'If you choose a transaction here, it will be replaced by the imported data.', 'Wenn Sie hier eine Transaktion auswählen, wird sie durch die importierten Daten ersetzt.'),
+('importCsv', 'dontMatchTransaction', '&lt;Import as new&gt;', '&lt;Neu importieren&gt;'),
+('importCsv', 'descriptionFieldImportedPartner', 'Imported transaction partner: ', 'Importierter Transaktionspartner: '),
+('importCsv', 'descriptionFieldOrigValutaDate', 'Original valuta date: ', 'Original-Buchungsdatum: '),
+('importCsv', 'descriptionFieldOrigAmount', 'Original amount: ', 'Original-Betrag: '),
+('accountOverview', 'colBalance', 'Balance', 'Kontostand'),
+('statistics2', 'colAccountName', 'Account', 'Konto'),
+('statistics2', 'pageTitle', 'Advanced Statistics', 'Erweiterte Statistik'),
+('statistics2', 'titleFilter', 'Title is ', 'Titel ist '),
+('statistics2', 'descriptionFilter', 'Description is ', 'Beschreibung ist '),
+('statistics2', 'valutaDateFilter', 'Valuta date is ', 'Buchungsdatum ist '),
+('statistics2', 'valutaDateBetweenFilter', 'Valuta date is between ', 'Buchungsdatum ist zwischen '),
+('statistics2', 'valutaDateBetweenFilterConj', ' and ', ' und '),
+('statistics2', 'valutaDateBetweenFilterInclusive', ' (both inclusive)', ' (beide inklusive)'),
+('statistics2', 'valutaDateAgoFilter', 'Valuta within the last ', 'Buchungsdatum innerhalb der letzten '),
+('statistics2', 'valutaDateAgoFilterDaysAgo', ' days', ' Tage'),
+('statistics2', 'amountFilter', 'Amount is ', 'Betrag ist '),
+('statistics2', 'outsideCapitalFilter', 'Source is ', 'Quelle ist '),
+('statistics2', 'outsideCapitalFilterOutside', 'outside capital', 'Fremdkapital'),
+('statistics2', 'outsideCapitalFilterInside', 'inside capital', 'Eigenkapital'),
+('statistics2', 'transactionPartnerFilter', 'Transaction partner is ', 'Transaktionspartner ist '),
+('statistics2', 'categoryFilter', 'Category ', 'Kategorie '),
+('statistics2', 'categoryFilterIs', 'is', 'ist'),
+('statistics2', 'categoryFilterIsNot', 'is not', 'ist nicht'),
+('statistics2', 'exceptionalFilter', 'Transaction is ', 'Transaktion ist '),
+('statistics2', 'exceptionalFilterExceptional', 'exceptional', 'außergewöhnlich'),
+('statistics2', 'exceptionalFilterNotExceptional', 'not exceptional', 'nicht außergewöhnlich'),
+('statistics2', 'periodicalFilter', 'Transaction is ', 'Transaktion ist '),
+('statistics2', 'periodicalFilterPeriodical', 'periodical', 'regelmäßig'),
+('statistics2', 'periodicalFilterNotPeriodical', 'not periodical', 'unregelmäßig'),
+('statistics2', 'availableFiltersUnselected', 'Please choose a filter', 'Bitte wählen Sie einen Filter'),
+('statistics2', 'availableFiltersTitle', 'Title', 'Titel'),
+('statistics2', 'availableFiltersDescription', 'Description', 'Beschreibung'),
+('statistics2', 'availableFiltersValutaDate', 'Valuta date', 'Buchungsdatum'),
+('statistics2', 'availableFiltersValutaDateBetween', 'Valuta date between', 'Buchungsdatum zwischen'),
+('statistics2', 'availableFiltersValutaDateAgo', 'Valuta date last days', 'Buchungsdatum vergangene Tage'),
+('statistics2', 'availableFiltersAmount', 'Amount', 'Betrag'),
+('statistics2', 'availableFiltersOutsideCapital', 'Outside capital', 'Fremdkapital'),
+('statistics2', 'availableFiltersTransactionPartner', 'Transaction partner', 'Transaktionspartner'),
+('statistics2', 'availableFiltersCategory', 'Category', 'Kategorie'),
+('statistics2', 'availableFiltersExceptional', 'Exceptional', 'Außergewöhnlich'),
+('statistics2', 'availableFiltersPeriodical', 'Periodical', 'Regelmäßig'),
+('statistics2', 'availableFiltersDelete', '&lt;Delete Filter&gt;', '&lt;Filter löschen&gt;'),
+('statistics2', 'filterCaption', 'Filters', 'Filter'),
+('statistics2', 'twistieCaptionInput', 'Input Values', 'Eingabewerte'),
+('statistics2', 'outputSelectionTrendStartValue', 'Start Value', 'Startwert'),
+('statistics2', 'outputSelectionTrendStartValueZero', '0 (zero)', '0 (null)'),
+('statistics2', 'outputSelectionTrendStartValueBalance', 'Account Balance', 'Kontostand'),
+('statistics2', 'outputSelectionTrendTickLabels', 'Tick labels', 'Tickmarken'),
+('statistics2', 'outputSelectionTrendTickLabelsShow', 'Show', 'Anzeigen'),
+('statistics2', 'outputSelectionTrendTickLabelsHide', 'Hide', 'Verbergen'),
+('statistics2', 'outputSelectionCategoryType', 'Category Type', 'Kategorietyp'),
+('statistics2', 'outputSelectionCategoryTypeInput', 'Income', 'Einnahmen'),
+('statistics2', 'outputSelectionCategoryTypeOutput', 'Spending', 'Ausgaben'),
+('statistics2', 'outputSelectionCategorySubCategories', 'Sub-Categories', 'Unterkategorien'),
+('statistics2', 'outputSelectionCategorySubCategoriesSummarize', 'Summarize sub-categories', 'Unterkategorien zusammenfassen'),
+('statistics2', 'outputSelectionCategorySubCategoriesNoSummarize', 'Do not summarize sub-categories', 'Unterkategorien einzeln aufführen'),
+('statistics2', 'outputSelectionTimespanType', 'Type', 'Typ'),
+('statistics2', 'outputSelectionTimespanTypeWeek', 'Week', 'Woche'),
+('statistics2', 'outputSelectionTimespanTypeMonth', 'Month', 'Monat'),
+('statistics2', 'outputSelectionTimespanTypeQuarter', 'Quarter', 'Quartal'),
+('statistics2', 'outputSelectionTimespanTypeYear', 'Year', 'Jahr'),
+('statistics2', 'outputSelectionGraphType', 'Graph Type', 'Graphtyp'),
+('statistics2', 'outputSelectionGraphTypeTrend', 'Trend', 'Verlauf'),
+('statistics2', 'outputSelectionGraphTypeCategory', 'Category', 'Kategorie'),
+('statistics2', 'outputSelectionGraphTypeTimespan', 'Timespan', 'Zeitvergleich'),
+('statistics2', 'twistieCaptionOutputSelection', 'Output Selection', 'Ausgabeauswahl'),
+('statistics2', 'analyzeButton', 'Analyse', 'Analysieren'),
+('statistics2', 'twistieCaptionGraph', 'Graph', 'Graph'),
+('statistics2', 'twistieCaptionOutput', 'Output', 'Ausgabe'),
+('statistics2', 'addFilterButton', 'Add Filter', 'Filter hinzufügen'),
+('statistics2Graph', 'noMatchingTransactions', 'No transactions match your criteria.', 'Keine Transaktionen entsprechen Ihren Kriterien.'),
+('dataGridFilter', 'beginsWith', 'begins with', 'fängt an mit'),
+('dataGridFilter', 'endsWith', 'ends with', 'hört auf mit'),
+('dataGridFilter', 'contains', 'contains', 'enthält'),
+('dataGridFilter', 'dateEqualTo', 'equal to', 'gleich'),
+('dataGridFilter', 'dateBefore', 'before', 'vor'),
+('dataGridFilter', 'dateBeforeEqual', 'before or equal to', 'vor oder gleich'),
+('dataGridFilter', 'dateAfter', 'after', 'nach'),
+('dataGridFilter', 'dateAfterEqual', 'after or equal to', 'nach oder gleich'),
+('dataGridFilter', 'dateNotEqual', 'not equal to', 'ungleich'),
+('Navigation', 'Statistics2', 'Advanced Statistics', 'Erweiterte Statistik'),
+('accountAccount', 'csvNoParser', '&lt;No parser&gt;', '&lt;Kein Parser&gt;'),
+('PageSettings', 'SQLError', 'An SQL error occured attempting to fetch the PageSettings data from the database.', 'Beim Abrufen der PageSettings-Daten aus der Datenbank trat ein SQL-Fehler auf.'),
+('statistics2', 'pageSettingSave', 'Save Settings', 'Einstellungen speichern'),
+('statistics2', 'pageSettingDelete', 'Delete Setting', 'Einstellung löschen'),
+('statistics2', 'pageSettingsTwistieTitle', 'Settings', 'Einstellungen'),
+('statistics2', 'pageSettingNewNamePrompt', 'Please enter the name for the setting:', 'Bitte geben Sie den Namen für die Einstellung ein:'),
+('accountCategory', 'expenseRowLabel', 'Standard direction:', 'Standardgeldfluss:'),
+('accountCategory', 'expenseIncome', 'Income', 'Einnahme'),
+('accountCategory', 'expenseExpense', 'Expense', 'Ausgabe'),
+('accountTransaction', 'categoryExpenseWarning', 'The selected category is marked as expense, but your amount is positive.', 'Die ausgewählte Kategorie ist als Ausgabe markiert, jedoch ist Ihr Betrag positiv.'),
+('statistics2', 'miscCategories', '(Miscellaneous)', '(Verbleibende)'),
+('dataGrid', 'back', 'Back', 'Zurück'),
+('importCsv', 'uploadTitle', 'File Uploaded and Analyzed', 'Datei hochgeladen und analysiert'),
+('importCsv', 'submitTitle', 'CSV Data Imported', 'CSV-Daten importiert'),
+('importCsv', 'pageHeading', 'CSV Import', 'CSV-Import'),
+('Account', 'textday', 'day', 'Tag'),
+('Account', 'textmonth', 'month', 'Monat'),
+('Account', 'textweek', 'week', 'Woche'),
+('Account', 'textyear', 'year', 'Jahr'),
+('Account', 'unknownOrdinalisationLanguage', 'An unknown language was passed to Account::ordinal().', 'An Account::ordinal wurde eine unbekannte Sprache übergeben.'),
+('accountOverviewPlanned', 'colRepeatText', 'Repetition', 'Wiederholung');
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `langs`
+-- Tabellenstruktur für Tabelle `langs`
 -- 
 
 DROP TABLE IF EXISTS `langs`;
@@ -821,7 +971,7 @@ CREATE TABLE IF NOT EXISTS `langs` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `langs`
+-- Daten für Tabelle `langs`
 -- 
 
 INSERT INTO `langs` (`id`, `name`, `meta`, `error_text`, `encoding`) VALUES ('de', 'deutsch', 'Hochdeutsch', 'not avaiable', 'iso-8859-1'),
@@ -830,7 +980,7 @@ INSERT INTO `langs` (`id`, `name`, `meta`, `error_text`, `encoding`) VALUES ('de
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `navi`
+-- Tabellenstruktur für Tabelle `navi`
 -- 
 
 DROP TABLE IF EXISTS `navi`;
@@ -844,10 +994,10 @@ CREATE TABLE IF NOT EXISTS `navi` (
   `icon_url` varchar(255) default NULL,
   `command` varchar(255) default NULL,
   PRIMARY KEY  (`navi_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
+) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
 
 -- 
--- Dumping data for table `navi`
+-- Daten für Tabelle `navi`
 -- 
 
 INSERT INTO `navi` (`navi_id`, `parent_id`, `menu_order`, `item_type`, `item_name`, `tooltip`, `icon_url`, `command`) VALUES (23, 22, 2, 'm', 'Backup', NULL, 'server_go.gif', '{BADGER_ROOT}/modules/importExport/importExport.php'),
@@ -857,8 +1007,8 @@ INSERT INTO `navi` (`navi_id`, `parent_id`, `menu_order`, `item_type`, `item_nam
 (17, 22, 1, 'i', 'Preferences', NULL, 'cog.gif', '{BADGER_ROOT}/core/UserSettingsAdmin/UserSettingsAdmin.php'),
 (1, 22, 3, 'i', 'CurrencyManager', '', 'coins.gif', '{BADGER_ROOT}/modules/account/CurrencyManagerOverview.php'),
 (24, 31, 5, 'i', 'CSV-Import', NULL, 'csvimport.gif', '{BADGER_ROOT}/modules/csvImport/csvImport.php'),
-(25, 30, 5, 'i', 'Forecast', NULL, 'forecast.gif', '{BADGER_ROOT}/modules/forecast/forecast.php'),
-(26, 30, 4, 'i', 'Statistics', NULL, 'statistics.gif', '{BADGER_ROOT}/modules/statistics/statistics.php'),
+(25, 30, 6, 'i', 'Forecast', NULL, 'forecast.gif', '{BADGER_ROOT}/modules/forecast/forecast.php'),
+(56, 30, 5, 'i', 'Statistics2', NULL, 'statistics.gif', '{BADGER_ROOT}/modules/statistics2/statistics2.php'),
 (27, 31, 4, 'i', 'CategoryManager', NULL, 'categories.gif', '{BADGER_ROOT}/modules/account/CategoryManagerOverview.php'),
 (28, 0, 8, 'm', 'Help', NULL, 'help.gif', NULL),
 (29, 28, 9, 'i', 'About', NULL, 'information.gif', '{BADGER_ROOT}/core/about.php'),
@@ -881,30 +1031,50 @@ INSERT INTO `navi` (`navi_id`, `parent_id`, `menu_order`, `item_type`, `item_nam
 (53, 0, 7, 'i', 'Print', NULL, 'printer.gif', 'javascript:window.print();'),
 (50, 44, 3, 's', NULL, NULL, NULL, NULL),
 (51, 44, 2, 'i', 'NewTransactionPlanned', NULL, 'planned_transaction_new.gif', '{BADGER_ROOT}/modules/account/Transaction.php?action=new&type=planned'),
-(52, 44, 1, 'i', 'NewTransactionFinished', NULL, 'finished_transaction_new.gif', '{BADGER_ROOT}/modules/account/Transaction.php?action=new&type=finished');
+(52, 44, 1, 'i', 'NewTransactionFinished', NULL, 'finished_transaction_new.gif', '{BADGER_ROOT}/modules/account/Transaction.php?action=new&type=finished'),
+(26, 30, 4, 'i', 'Statistics', NULL, 'statistics.gif', '{BADGER_ROOT}/modules/statistics/statistics.php');
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `navi_ids_seq`
+-- Tabellenstruktur für Tabelle `navi_ids_seq`
 -- 
 
 DROP TABLE IF EXISTS `navi_ids_seq`;
 CREATE TABLE IF NOT EXISTS `navi_ids_seq` (
   `id` int(10) unsigned NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
+) ENGINE=MyISAM AUTO_INCREMENT=58 DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
 
 -- 
--- Dumping data for table `navi_ids_seq`
+-- Daten für Tabelle `navi_ids_seq`
 -- 
 
-INSERT INTO `navi_ids_seq` (`id`) VALUES (56);
+INSERT INTO `navi_ids_seq` (`id`) VALUES (57);
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `planned_transaction`
+-- Tabellenstruktur für Tabelle `page_settings`
+-- 
+
+DROP TABLE IF EXISTS `page_settings`;
+CREATE TABLE IF NOT EXISTS `page_settings` (
+  `page_name` varchar(255) NOT NULL,
+  `setting_name` varchar(255) NOT NULL,
+  `setting` text,
+  PRIMARY KEY  (`page_name`,`setting_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- 
+-- Daten für Tabelle `page_settings`
+-- 
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Tabellenstruktur für Tabelle `planned_transaction`
 -- 
 
 DROP TABLE IF EXISTS `planned_transaction`;
@@ -921,22 +1091,24 @@ CREATE TABLE IF NOT EXISTS `planned_transaction` (
   `end_date` date default NULL,
   `repeat_unit` char(5) default NULL,
   `repeat_frequency` int(10) unsigned default NULL,
+  `transferal_transaction_id` int(11) default NULL,
+  `transferal_source` tinyint(1) default NULL,
   PRIMARY KEY  (`planned_transaction_id`),
   KEY `planned_transaction_FKIndex1` (`account_id`),
   KEY `planned_transaction_FKIndex2` (`category_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 -- 
--- Dumping data for table `planned_transaction`
+-- Daten für Tabelle `planned_transaction`
 -- 
 
-INSERT INTO `planned_transaction` (`planned_transaction_id`, `category_id`, `account_id`, `title`, `description`, `amount`, `outside_capital`, `transaction_partner`, `begin_date`, `end_date`, `repeat_unit`, `repeat_frequency`) VALUES (6, 1, 1, 'Miete', 'Miete für Musterstr. 16', '-420.00', 0, NULL, '2006-03-01', NULL, 'month', 1),
-(5, 4, 1, 'Gehalt', 'Mein Gehalt', '1357.00', 0, 'Arbeitgeber AG', '2006-02-28', NULL, 'month', 1);
+INSERT INTO `planned_transaction` (`planned_transaction_id`, `category_id`, `account_id`, `title`, `description`, `amount`, `outside_capital`, `transaction_partner`, `begin_date`, `end_date`, `repeat_unit`, `repeat_frequency`, `transferal_transaction_id`, `transferal_source`) VALUES (6, 1, 1, 'Miete', 'Miete für Musterstr. 16', '-420.00', 0, NULL, '2006-03-01', NULL, 'month', 1, NULL, NULL),
+(5, 4, 1, 'Gehalt', 'Mein Gehalt', '1357.00', 0, 'Arbeitgeber AG', '2006-02-28', NULL, 'month', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `planned_transaction_ids_seq`
+-- Tabellenstruktur für Tabelle `planned_transaction_ids_seq`
 -- 
 
 DROP TABLE IF EXISTS `planned_transaction_ids_seq`;
@@ -946,7 +1118,7 @@ CREATE TABLE IF NOT EXISTS `planned_transaction_ids_seq` (
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 -- 
--- Dumping data for table `planned_transaction_ids_seq`
+-- Daten für Tabelle `planned_transaction_ids_seq`
 -- 
 
 INSERT INTO `planned_transaction_ids_seq` (`id`) VALUES (7);
@@ -954,7 +1126,7 @@ INSERT INTO `planned_transaction_ids_seq` (`id`) VALUES (7);
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `session_global`
+-- Tabellenstruktur für Tabelle `session_global`
 -- 
 
 DROP TABLE IF EXISTS `session_global`;
@@ -966,14 +1138,14 @@ CREATE TABLE IF NOT EXISTS `session_global` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `session_global`
+-- Daten für Tabelle `session_global`
 -- 
 
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `session_master`
+-- Tabellenstruktur für Tabelle `session_master`
 -- 
 
 DROP TABLE IF EXISTS `session_master`;
@@ -988,14 +1160,14 @@ CREATE TABLE IF NOT EXISTS `session_master` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `session_master`
+-- Daten für Tabelle `session_master`
 -- 
 
 
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `user_settings`
+-- Tabellenstruktur für Tabelle `user_settings`
 -- 
 
 DROP TABLE IF EXISTS `user_settings`;
@@ -1006,14 +1178,14 @@ CREATE TABLE IF NOT EXISTS `user_settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- 
--- Dumping data for table `user_settings`
+-- Daten für Tabelle `user_settings`
 -- 
 
 INSERT INTO `user_settings` (`prop_key`, `prop_value`) VALUES ('badgerTemplate', 's:8:"Standard";'),
 ('badgerSiteName', 's:14:"BADGER Finance";'),
 ('badgerLanguage', 's:2:"en";'),
 ('badgerDateFormat', 's:10:"yyyy-mm-dd";'),
-('badgerPassword', 's:32:"7e59cb5b2f52c763bc846471fe5942e4";'),
+('badgerPassword', 's:32:"fe01ce2a7fbac8fafaed7c982a04e229";'),
 ('badgerMaxLoginAttempts', 's:1:"5";'),
 ('badgerLockOutTime', 's:2:"30";'),
 ('badgerDecimalSeparator', 's:1:",";'),
@@ -1030,4 +1202,4 @@ INSERT INTO `user_settings` (`prop_key`, `prop_value`) VALUES ('badgerTemplate',
 ('csvImportStandardParser', 's:0:"";'),
 ('csvImportStandardAccount', 's:0:"";'),
 ('autoExpandPlannedTransactions', 'b:1;'),
-('badgerDbVersion', 's:10:"1.0 beta 2";');
+('badgerDbVersion', 's:10:"1.0 beta 3";');
