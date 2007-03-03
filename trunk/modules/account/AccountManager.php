@@ -124,9 +124,9 @@ function printFrontend() {
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountAccount', 'description'), false);
 	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 5em;'");
 	$lowerLimitLabel = $widgets->createLabel("lowerLimit", getBadgerTranslation2('accountAccount', 'lowerLimit'), false);
-	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "style='width: 30ex;'");
+	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "style='width: 30ex;' regexp='BADGER_NUMBER'");
 	$upperLimitLabel = $widgets->createLabel("upperLimit", getBadgerTranslation2('accountAccount', 'upperLimit'), false);
-	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", true, "text", "style='width: 30ex;' callback='validateUpperLimit'");
+	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", true, "text", "style='width: 30ex;' callback='validateUpperLimit' regexp='BADGER_NUMBER'");
 
 	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), true);
 	$currencies = getCurrencyArray('symbol');

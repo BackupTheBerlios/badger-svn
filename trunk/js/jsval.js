@@ -262,7 +262,8 @@ validationField.prototype._getRegEx = function(element){
        return regex;
    else if ( (retype.toUpperCase() == "STRING") && !(regex == "JSVAL_RX_EMAIL") && !(regex == "JSVAL_RX_TEL")
    				&& !(regex == "JSVAL_RX_PC") && !(regex == "JSVAL_RX_ZIP") && !(regex == "JSVAL_RX_MONEY") 
-				&& !(regex == "JSVAL_RX_CREDITCARD") && !(regex == "JSVAL_RX_POSTALZIP"))
+				&& !(regex == "JSVAL_RX_CREDITCARD") && !(regex == "JSVAL_RX_POSTALZIP")
+				&& !(regex == "BADGER_NUMBER"))
    {
        nBegin = 0; nEnd = regex.length-1;
        if (regex.charAt(0) == "/") nBegin=1;
@@ -299,8 +300,7 @@ validationField.prototype._ValidateText = function(arrFields){
 	   };
 	   //value fails regular expression
 	   if (this.regexp){
-	   	  if (!_checkRegExp(this.regexp, this.value))
-	   	  {
+	   	  if (!_checkRegExp(this.regexp, this.value)) {
 	   	  	  //the field isn't required, but there is a value
 		      if (!this.required && this.value){
 		         return false;
@@ -426,6 +426,9 @@ function _isRequired(element){
 
 function _checkRegExp(regx, value){
   switch (regx){
+  case "BADGER_NUMBER":
+	return ((/^[-0-9., ]+$/).test(value));
+  	break;
   case "JSVAL_RX_EMAIL":
     return ((/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/).test(value));
   case "JSVAL_RX_TEL":

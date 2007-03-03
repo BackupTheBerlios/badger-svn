@@ -195,18 +195,18 @@ $SeperatorsLabel = $widgets->createLabel("Seperators", getBadgerTranslation2('Us
 $SeperatorsField = $widgets->createSelectField("Seperators", $seperators, $default=$seperators_default, $description=getBadgerTranslation2('UserSettingsAdmin','seperators_description'), $mandatory=true, 'style="width: 10em;"');
 		
 $MaxLoginLabel = $widgets->createLabel("MaximumLoginAttempts", getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_name'), true);
-$MaxLoginField = $widgets->createField("MaximumLoginAttempts", 0, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true, 'text', 'style="width: 10em;"');
+$MaxLoginField = $widgets->createField("MaximumLoginAttempts", 0, $us->getProperty('badgerMaxLoginAttempts'), getBadgerTranslation2('UserSettingsAdmin','maximum_login_attempts_description'), true, 'text', ' regexp="BADGER_NUMBER" style="width: 10em;"');
 
 
 $LockOutTimeLabel = $widgets->createLabel("LockOutTime", getBadgerTranslation2('UserSettingsAdmin','lock_out_time_name'), true);
-$LockOutTimeField = $widgets->createField("LockOutTime", 0, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true, 'text', 'style="width: 10em;"');
+$LockOutTimeField = $widgets->createField("LockOutTime", 0, $us->getProperty('badgerLockOutTime'), getBadgerTranslation2('UserSettingsAdmin','lock_out_time_description'), true, 'text', ' regexp="BADGER_NUMBER" style="width: 10em;"');
 
 
 $StartPageLabel = $widgets->createLabel("StartPage", getBadgerTranslation2('UserSettingsAdmin','start_page_name'), true);
 $StartPageField = $widgets->createField("StartPage", 0, $us->getProperty('badgerStartPage'), getBadgerTranslation2('UserSettingsAdmin','start_page_description'), true, 'text', 'style="width: 10em;"');
 
 $SessionTimeLabel = $widgets->createLabel("SessionTime", getBadgerTranslation2('UserSettingsAdmin','session_time_name'), true);
-$SessionTimeField = $widgets->createField("SessionTime", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'style="width: 10em;"');
+$SessionTimeField = $widgets->createField("SessionTime", 0, $us->getProperty('badgerSessionTime'), getBadgerTranslation2('UserSettingsAdmin','session_time_description'), true, 'text', 'regexp="BADGER_NUMBER" style="width: 10em;"');
 
 try {
 	$preCalc = $us->getProperty('amountFutureCalcSpan');
@@ -215,7 +215,7 @@ try {
 }
 
 $futureCalcSpanLabel = $widgets->createLabel('futureCalcSpan', getBadgerTranslation2('UserSettingsAdmin', 'futureCalcSpanLabel'), true);
-$futureCalcSpanField = $widgets->createField('futureCalcSpan', 0, $preCalc, getBadgerTranslation2('UserSettingsAdmin', 'futureCalcSpanDescription'), true, 'text', 'style="width: 10em;"');
+$futureCalcSpanField = $widgets->createField('futureCalcSpan', 0, $preCalc, getBadgerTranslation2('UserSettingsAdmin', 'futureCalcSpanDescription'), true, 'text', 'regexp="BADGER_NUMBER" style="width: 10em;"');
 
 $autoExpandPlannedTransactionsLabel = $widgets->createLabel("autoExpandPlannedTransactions", getBadgerTranslation2('UserSettingsAdmin', 'autoExpandPlannedTransactionsName'), true);
 $autoExpandPlannedTransactionsField = $widgets->createField("autoExpandPlannedTransactions", 0, 1, getBadgerTranslation2('UserSettingsAdmin','autoExpandPlannedTransactionsDescription'), false, 'checkbox', $us->getProperty('autoExpandPlannedTransactions') ? 'checked="checked"' : '');
@@ -241,13 +241,13 @@ try {
 $matchingHeading = getBadgerTranslation2('UserSettingsAdmin', 'matchingHeading');
 
 $matchingDateDeltaLabel = $widgets->createLabel('matchingDateDelta', getBadgerTranslation2('UserSettingsAdmin', 'matchingDateDeltaLabel'), true);
-$matchingDateDeltaField = $widgets->createField('matchingDateDelta', 0, $matchingDateDelta, getBadgerTranslation2('UserSettingsAdmin', 'matchingDateDeltaDescription'), true, 'text', 'style="width: 10em;"');
+$matchingDateDeltaField = $widgets->createField('matchingDateDelta', 0, $matchingDateDelta, getBadgerTranslation2('UserSettingsAdmin', 'matchingDateDeltaDescription'), true, 'text', ' regexp="BADGER_NUMBER" style="width: 10em;"');
 
 $matchingAmountDeltaLabel = $widgets->createLabel('matchingAmountDelta', getBadgerTranslation2('UserSettingsAdmin', 'matchingAmountDeltaLabel'), true);
-$matchingAmountDeltaField = $widgets->createField('matchingAmountDelta', 0, $matchingAmountDelta, getBadgerTranslation2('UserSettingsAdmin', 'matchingAmountDeltaDescription'), true, 'text', 'style="width: 10em;"');
+$matchingAmountDeltaField = $widgets->createField('matchingAmountDelta', 0, $matchingAmountDelta, getBadgerTranslation2('UserSettingsAdmin', 'matchingAmountDeltaDescription'), true, 'text', ' regexp="BADGER_NUMBER" style="width: 10em;"');
 
 $matchingTextSimilarityLabel = $widgets->createLabel('matchingTextSimilarity', getBadgerTranslation2('UserSettingsAdmin', 'matchingTextSimilarityLabel'), true);
-$matchingTextSimilarityField = $widgets->createField('matchingTextSimilarity', 0, $matchingTextSimilarity, getBadgerTranslation2('UserSettingsAdmin', 'matchingTextSimilarityDescription'), true, 'text', 'style="width: 10em;"');
+$matchingTextSimilarityField = $widgets->createField('matchingTextSimilarity', 0, $matchingTextSimilarity, getBadgerTranslation2('UserSettingsAdmin', 'matchingTextSimilarityDescription'), true, 'text', ' regexp="BADGER_NUMBER" style="width: 10em;"');
 
 // Print Form for change of password 
 

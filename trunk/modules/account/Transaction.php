@@ -246,7 +246,7 @@ function printFrontendFinished($AccountID, $ID) {
 	$valutaDateField = $widgets->addDateField("valutaDate", $valutaDateValue);
 	
 	$amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), true);
-	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "onchange='updateTransferalAmount();' onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;'");
+	$amountField = $widgets->createField("amount", 30, $amountValue, "", true, "text", "onchange='updateTransferalAmount();' onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' regexp='BADGER_NUMBER' style='width: 30ex;'");
 	
 	$transactionPartnerLabel = $widgets->createLabel("transactionPartner", getBadgerTranslation2('accountTransaction', 'transactionPartner'), false);
 	$transactionPartnerField = $widgets->createField("transactionPartner", 30, $transactionPartnerValue, "", false, 'text', "style='width: 30ex;'");

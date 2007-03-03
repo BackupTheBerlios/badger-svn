@@ -72,7 +72,7 @@ $valutaDateFilterOperator = $widgets->createSelectField("valutaDateFilter", $dat
 	
 $amountLabel = $widgets->createLabel("amount", getBadgerTranslation2('accountTransaction', 'amount'), false);
 $amountField = $widgets->createField("amount", 14, "", "", false, "text", "");
-$amountFilterOperator = $widgets->createSelectField("amountFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;'");	
+$amountFilterOperator = $widgets->createSelectField("amountFilter", $datagGridFilterArray, "", "", false, "style='width: 95px;' regexp='BADGER_NUMBER'");	
 
 $categoryLabel = $widgets->createLabel("categoryId", getBadgerTranslation2('accountTransaction', 'category'), false, "");
 $categoryField = $widgets->createSelectField("categoryId", getCategorySelectArray(true), "", "", false, "style='width: 210px;'");
