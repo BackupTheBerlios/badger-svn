@@ -43,7 +43,7 @@
 				<td style="text-align: right; white-space: nowrap;">$autoExpandPlannedTransactionsField</td>
 			</tr>
 		</table>
-	</fieldset>
+	</fieldset><br/>
 	<fieldset style="width: 30em;">
 		<legend>$matchingHeading</legend>
 		<table>

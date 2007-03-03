@@ -242,6 +242,7 @@ function _jsVal_Language() {
 		//$valCondition
 		//example:
 		//    minvalue="10" maxvalue="90" regexp="money"
+		//    callback="jsFunction"
 
 		//required
 		if ($required) $required = "required='required'";

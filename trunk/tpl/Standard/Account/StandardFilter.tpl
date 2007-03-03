@@ -1,5 +1,5 @@
 <div id="filter">
-	<form action="javascript:return false;" name="mainform" id="mainform">
+	<form action="$formAction" name="mainform" id="mainform">
 		<table>
 			<tr>
 				<td>$titleLabel</td>

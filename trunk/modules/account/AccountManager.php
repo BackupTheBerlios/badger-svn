@@ -63,16 +63,20 @@ if (isset($_GET['action'])) {
 			break;
 	}	
 }
+require_once(BADGER_ROOT . "/includes/fileFooter.php");
+
 function printFrontend() {
 	global $pageTitle;
 	global $tpl;
 	global $am;
 	global $redirectPageAfterSave;
+	
 	$widgets = new WidgetEngine($tpl);
 	$widgets->addToolTipJS();	
 	$widgets->addJSValMessages();
 	$tpl->addJavaScript("js/prototype.js");
 	$tpl->addOnLoadEvent("Form.focusFirstElement('mainform')");
+	$tpl->addJavaScript("js/account.js");
 	
 	$widgets->addNavigationHead();
 	if (isset($_GET['ID'])) {
@@ -80,9 +84,10 @@ function printFrontend() {
 	} else {
 		$pageTitle = getBadgerTranslation2('accountAccount', 'pageTitlePropNew');
 	}
-	echo $tpl->getHeader($pageTitle);
-	
+	echo $tpl->getHeader($pageTitle);	
 	echo $widgets->addToolTipLayer();
+	
+	
 	if (isset($_GET['ID'])) {
 		//edit: load values for this ID
 		$ID = getGPC($_GET, 'ID', 'integer');
@@ -119,9 +124,9 @@ function printFrontend() {
 	$descriptionLabel = $widgets->createLabel("description", getBadgerTranslation2('accountAccount', 'description'), false);
 	$descriptionField = $widgets->createTextarea("description", $descriptionValue, "", false, "style='width: 30ex; height: 5em;'");
 	$lowerLimitLabel = $widgets->createLabel("lowerLimit", getBadgerTranslation2('accountAccount', 'lowerLimit'), false);
-	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "class='inputNumber' style='width: 30ex;'");
+	$lowerLimitField = $widgets->createField("lowerLimit", 30, $lowerLimitValue, "", false, "text", "style='width: 30ex;'");
 	$upperLimitLabel = $widgets->createLabel("upperLimit", getBadgerTranslation2('accountAccount', 'upperLimit'), false);
-	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", false, "text", "class='inputNumber' style='width: 30ex;'");
+	$upperLimitField = $widgets->createField("upperLimit", 30, $upperLimitValue, "", true, "text", "style='width: 30ex;' callback='validateUpperLimit'");
 
 	$currencyLabel = $widgets->createLabel("currency", getBadgerTranslation2('accountAccount', 'currency'), true);
 	$currencies = getCurrencyArray('symbol');
@@ -141,6 +146,8 @@ function printFrontend() {
 
 	//add vars to template, print site
 	eval("echo \"".$tpl->getTemplate("Account/Account")."\";");
+	eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+	
 }
 
 

@@ -85,6 +85,8 @@ if (isset($_GET['action'])) {
 			break;
 	}	
 }
+eval("echo \"".$tpl->getTemplate("badgerFooter")."\";");
+	
 function printFrontend() {
 	global $tpl;
 	global $cm;

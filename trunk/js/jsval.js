@@ -360,6 +360,7 @@ validationField.prototype._ValidateGroup = function(arrFields){
 function _handleError (field, strErrorMessage) {
 	var obj = field.element;
 	var objLabel;
+	var strFieldName;
    
 	//added by sepp
 	//get the value of label for this field I18N

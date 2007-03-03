@@ -70,7 +70,7 @@ echo $tpl->getHeader($pageTitle);
 	
 $widgets->addToolTipLayer();
 
-$datagGridFilterArray = DataGrid::getFilterSelectArray();
+$datagGridFilterArray = DataGrid::getNumberFilterSelectArray();
 $datagGridDateFilterArray = DataGrid::getDateFilterSelectArray();
 
 $pageSettingsContent =

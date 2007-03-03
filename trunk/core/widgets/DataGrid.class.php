@@ -239,7 +239,7 @@ class DataGrid {
 		//$this->tpl->addOnLoadEvent('window.addEventListener(\'unload\', dataGrid'.$this->UniqueId.'.saveSelectedRows, false);');
 	}
 	
-	public static function getFilterSelectArray() {
+	public static function getNumberFilterSelectArray() {
 		$filterArray = array ();
 		
 		$filterArray["eq"] = "=";
@@ -248,9 +248,6 @@ class DataGrid {
 		$filterArray["gt"] = "&gt;";
 		$filterArray["ge"] = "&gt;=";
 		$filterArray["ne"] = "&lt;&gt;";
-		$filterArray["bw"] = getBadgerTranslation2('dataGridFilter', 'beginsWith');
-		$filterArray["ew"] = getBadgerTranslation2('dataGridFilter', 'endsWith');
-		$filterArray["ct"] = getBadgerTranslation2('dataGridFilter', 'contains');
 		
 		return $filterArray;
 	}

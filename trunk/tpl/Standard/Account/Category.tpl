@@ -2,7 +2,7 @@
 <form method="post" name="mainform" id="mainform" accept-charset="ISO-8859-1" action="$FormAction?action=save">
 <fieldset style="width: 26em;">
 	<legend>$legend</legend>	
-	<table style="width: 100%";>
+	<table style="width: 100%">
 	  <tr>
 	    <td>$titleLabel</td>
 	    <td>$titleField</td>

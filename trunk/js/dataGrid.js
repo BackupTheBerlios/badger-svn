@@ -261,7 +261,7 @@ DataGrid.prototype = {
 				}
 			}
 			//activate row after separator
-			this.activateRow(separatorRow.nextSibling);
+			this.activateRow(separatorRow.previousSibling);
 		} else {
 			// focus last checkbox
 			var tableDataBody = $("dgTableData"+this.uniqueId);
@@ -393,11 +393,18 @@ DataGrid.prototype = {
 		//KEY_RETURN
 		if (event.keyCode == Event.KEY_RETURN) {
 			var dataGrid = this.obj;
+			if (dataGrid.tagName) { //IE
+				dataGrid = Event.element(event).parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.obj;
+			}
+			
 			dataGrid.callEditEvent();
 		}
 		//KEY_DELETE
 		if (event.keyCode == Event.KEY_DELETE) {
 			var dataGrid = this.obj;
+			if (dataGrid.tagName) { //IE
+				dataGrid = Event.element(event).parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.obj;
+			}			
 			dataGrid.callDeleteEvent();
 		}
 		//KEY_SPACE (only for opera 8.X)
@@ -425,13 +432,17 @@ DataGrid.prototype = {
 	// delete all selected rows
 	//  - send a background delete request to the server
 	callDeleteEvent: function () {
-		if(this.deleteAction) {		
-			//asks use, if he is sure
-			var choise = confirm(this.deleteMsg +"("+this.arrSelectedRows.length+")");
-			if (choise) {
-				// delete data in background
-				this.deleteTheseRows(this.deleteAction + this.arrSelectedRows);			
-			} //if (choise)
+		if(this.deleteAction) {	
+			if(this.arrSelectedRows.length > 0) { 	
+				//asks use, if he is sure
+				var choise = confirm(this.deleteMsg +"("+this.arrSelectedRows.length+")");
+				if (choise) {
+					// delete data in background
+					this.deleteTheseRows(this.deleteAction + this.arrSelectedRows);			
+				} //if (choise)
+			} else {
+				alert (this.noRowSelectedMsg);
+			} //this.arrSelectedRows.length > 0
 		} //if (dgDeleteAction)
 	},
 
@@ -469,7 +480,7 @@ DataGrid.prototype = {
 				var numberOfRows = $("dgCountTotal"+this.uniqueId).innerHTML;
 				for (i=0; i < this.arrSelectedRows.length; i++) {
 					objRow = $(this.uniqueId + this.arrSelectedRows[i]);
-					this.deselectRow(objRow)
+					this.deselectRow(objRow);
 					Element.remove(objRow);										
 					numberOfRows--;					
 				}
