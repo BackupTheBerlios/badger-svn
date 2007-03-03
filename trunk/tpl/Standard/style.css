@@ -136,6 +136,16 @@ input.inputNumberMinus {
 	text-align: right;
 	color: #F50000;
 }
+button {
+	border: 1px solid #7D7D7D;
+	margin: 2px 2px 2px 2px;
+	cursor: pointer;
+}
+button:hover {
+	border: 1px solid #4A4A4A;
+	margin: 2px 2px 2px 2px;
+	cursor: pointer;
+}
 /* END FORMS */
 
 
