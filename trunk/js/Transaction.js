@@ -15,7 +15,7 @@ function checkBeginEndDate() {
 
 function toggleTransferal() {
 	var showTransferalData = $F("transferalEnabled");
-	var displayType = showTransferalData ? "table-row" : "none";
+	var displayType = showTransferalData ? "" : "none";
 	
 	$("transferalAccountRow").style.display = displayType;
 	$("transferalAmountRow").style.display = displayType;
