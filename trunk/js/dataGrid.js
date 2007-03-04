@@ -472,6 +472,12 @@ DataGrid.prototype = {
 				break;
 			case 'refreshPage':
 				//refresh whole page
+				
+				//deselect rows, before page refresh
+				for (i=0; i < this.arrSelectedRows.length; i++) {
+					objRow = $(this.uniqueId + this.arrSelectedRows[i]);
+					this.deselectRow(objRow);
+				}
 				var tmpThis = this;	
 				window.setTimeout(function() {tmpThis.refreshPage();}, 10);
 				break;
@@ -562,6 +568,9 @@ DataGrid.prototype = {
 			}
 			element.ondblclick = function(){
 				var dataGrid = this.parentNode.parentNode.parentNode.parentNode.obj;
+				//IE fires in dblclick also the click event
+				//it is deselecting a selected row -> we select it again
+				dataGrid.selectRow(this);
 				dataGrid.callEditEvent(this.rowId);
 			}
 		},
