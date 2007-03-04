@@ -2,7 +2,7 @@
 
 <h2>$badgerImage BADGER finance Version $version $from $date</h2>
 
-<p><a href="http://badger-finance.org/" target="_blank">http://badger-finance.org/</a></p>
+<p><a href="http://www.badger-finance.org/" target="_blank">http://www.badger-finance.org/</a></p>
 <p>$releasedUnder <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU General Public Licence</a></p>
 <blockquote cite="http://www.gnu.org/licenses/gpl.html">
 	<p>This program is free software; you can redistribute it and/or
