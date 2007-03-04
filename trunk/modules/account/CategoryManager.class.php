@@ -343,6 +343,30 @@ class CategoryManager extends DataGridHandler {
 		if(isset($this->categories[$categoryId])){
 			unset($this->categories[$categoryId]);
 		}
+		$sql = "UPDATE finished_transaction ft
+			INNER JOIN category c on ft.category_id = c.category_id
+			SET ft.category_id = NULL
+			WHERE ft.category_id = $categoryId
+				OR c.parent_id = $categoryId"
+		;
+		$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('CategoryManager', 'SQLError', $dbResult->getMessage());
+		}
+		
+		$sql = "UPDATE planned_transaction pt
+			INNER JOIN category c on pt.category_id = c.category_id
+			SET pt.category_id = NULL
+			WHERE pt.category_id = $categoryId
+				OR c.parent_id = $categoryId"
+		;
+				$dbResult =& $this->badgerDb->query($sql);
+		if (PEAR::isError($dbResult)) {
+			//echo "SQL Error: " . $dbResult->getMessage();
+			throw new BadgerException('CategoryManager', 'SQLError', $dbResult->getMessage());
+		}
+		
 		$sql= "DELETE FROM category
 				WHERE category_id = $categoryId
 					OR parent_id = $categoryId";
@@ -354,7 +378,7 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($this->badgerDb->affectedRows() <= 1){
+		if($this->badgerDb->affectedRows() < 1){
 			throw new BadgerException('CategoryManager', 'UnknownCategoryId', $categoryId);
 		}
 	}

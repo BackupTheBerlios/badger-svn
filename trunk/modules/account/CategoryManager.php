@@ -37,27 +37,26 @@ if (isset($_GET['action'])) {
 			if (isset($_GET['ID'])) {
 				$IDs = getGPC($_GET, 'ID', 'integerList');
 				
-				
 				//for all categories which should be deleted
 				foreach($IDs as $ID){
 					//for all accounts:
-					$am = new AccountManager($badgerDb);
-					while( $account = $am->getNextAccount() ) {					
-						//set filter: get all transaction with this category
-			 			$filter = array (
-							array (
-								'key' => 'categoryId',
-								'op' => 'eq',
-								'val' => $ID
-							)
-						);
-						$account->setFilter($filter);
-						$account2 = clone $account;
-						//flush category
-						while($ta = $account->getNextTransaction()) {
-							$ta->setCategory(NULL);
-						}
-					} //accounts
+//					$am = new AccountManager($badgerDb);
+//					while( $account = $am->getNextAccount() ) {					
+//						//set filter: get all transaction with this category
+//			 			$filter = array (
+//							array (
+//								'key' => 'categoryId',
+//								'op' => 'eq',
+//								'val' => $ID
+//							)
+//						);
+//						$account->setFilter($filter);
+//						$account2 = clone $account;
+//						//flush category
+//						while($ta = $account->getNextTransaction()) {
+//							$ta->setCategory(NULL);
+//						}
+//					} //accounts
 					
 					//delete category
 					$cm->deleteCategory($ID);
