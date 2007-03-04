@@ -361,6 +361,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 		$transferalLabel = $widgets->createLabel('transferalEnabled', getBadgerTranslation2('accountTransaction', 'transferalEnabled'), false);
 		$transferalField = $widgets->createField('transferalEnabled', 30, 'on', '', false, 'checkbox', "onclick='toggleTransferal();'");
 		
+		$transferalFieldStyle = 'display: none;';
 		$transferalDataStyle = 'style="display: none;"';
 
 		$transferalAccountField = $widgets->createSelectField('transferalAccountId', getAccountsSelectArray($AccountID), '', '', false, "style='width: 213px;'");
@@ -368,6 +369,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 		$transferalLabel = '';
 		$transferalField = '';
 
+		$transferalFieldStyle = '';
 		$transferalDataStyle = '';
 		
 		$transferalAccountField = $transaction->getTransferalTransaction()->getAccount()->getTitle();
@@ -376,7 +378,7 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$transferalAccountLabel = $widgets->createLabel('transferalAccountId', getBadgerTranslation2('accountTransaction', 'transferalAccount'), false);
 	
 	$transferalAmountLabel = $widgets->createLabel('transferalAmount', getBadgerTranslation2('accountTransaction', 'transferalAmount'), false);
-	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;'");
+	$transferalAmountField = $widgets->createField('transferalAmount', 30, $transferalAmountValue, '', true, 'text', " onkeyup='adjustInputNumberClass(this);' onkeydown='adjustInputNumberClass(this);' onkeypress='adjustInputNumberClass(this);' style='width: 30ex;$transferalFieldStyle'");
 
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
