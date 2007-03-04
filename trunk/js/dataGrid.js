@@ -526,10 +526,10 @@ DataGrid.prototype = {
 	
 	//preselect an entry
 	preselectId: function (id) {
-		this.arrSelectedRows.push(id);
-		
 		var row = $(this.uniqueId + id);
+		
 		if (row) {
+			this.arrSelectedRows.push(id);
 			this.selectRow(row);
 		}
 	},
