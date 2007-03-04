@@ -344,7 +344,8 @@ class CategoryManager extends DataGridHandler {
 			unset($this->categories[$categoryId]);
 		}
 		$sql= "DELETE FROM category
-				WHERE category_id = $categoryId";
+				WHERE category_id = $categoryId
+					OR parent_id = $categoryId";
 				
 		$dbResult =& $this->badgerDb->query($sql);
 		
@@ -353,7 +354,7 @@ class CategoryManager extends DataGridHandler {
 			throw new BadgerException('CategoryManager', 'SQLError', $dbResult->getMessage());
 		}
 		
-		if($this->badgerDb->affectedRows() != 1){
+		if($this->badgerDb->affectedRows() <= 1){
 			throw new BadgerException('CategoryManager', 'UnknownCategoryId', $categoryId);
 		}
 	}
@@ -543,13 +544,13 @@ class CategoryManager extends DataGridHandler {
 					break;
 
 				case 'parentTitle':				
-					if ($a->getParent() && $b->getParent()) {
+					if (!is_null($a->getParent()) && !is_null($b->getParent())) {
 						$tmp = strncasecmp($a->getParent()->getTitle() . $a->getTitle(), $b->getParent()->getTitle() . $b->getTitle(), 9999);
-					} else if ($a->getParent() && !$b->getParent()) {
+					} else if (!is_null($a->getParent()) && is_null($b->getParent())) {
 						$tmp = strncasecmp($a->getParent()->getTitle() . $a->getTitle(), $b->getTitle(), 9999);
-					} else if (!$a->getParent() && $b->getParent()) {
+					} else if (is_null($a->getParent()) && !is_null($b->getParent())) {
 						$tmp = strncasecmp($a->getTitle(), $b->getParent()->getTitle() . $b->getTitle(), 9999);
-					} else if (!$a->getParent() && !$b->getParent()) {
+					} else if (is_null($a->getParent()) && is_null($b->getParent())) {
 						$tmp = strncasecmp($a->getTitle(), $b->getTitle(), 9999);
 					}
 					break;

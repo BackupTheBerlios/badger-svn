@@ -557,6 +557,9 @@ function update1_0beta2To1_0beta3() {
 	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'textyear', en = 'year', de = 'Jahr'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'Account', id = 'unknownOrdinalisationLanguage', en = 'An unknown language was passed to Account::ordinal().', de = 'An Account::ordinal wurde eine unbekannte Sprache übergeben.'");
 	$log .= doQuery("REPLACE i18n SET page_id = 'accountOverviewPlanned', id = 'colRepeatText', en = 'Repetition', de = 'Wiederholung'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'statistics2Graph', id = 'only1transaction', en = 'Your criteria resulted in only one transaction, of which no line graph can be drawn.', de = 'Ihre Kriterien ergaben nur eine Transaktion, woraus kein Liniendiagramm gezeichnet werden kann.'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'stringEqualTo', en = 'equals', de = 'gleich'");
+	$log .= doQuery("REPLACE i18n SET page_id = 'dataGridFilter', id = 'stringNotEqual', en = 'not equal', de = 'ungleich'");
 
 	$log .= "&rarr; Changing translation entries.\n";
 	$log .= doQuery("REPLACE i18n SET page_id = 'importCsv', id = 'successfullyWritten', en = 'transaction(s) successfully written to the following accounts:', de = 'Transaktion(en) erfolgreich in die folgenden Konten geschrieben:'");

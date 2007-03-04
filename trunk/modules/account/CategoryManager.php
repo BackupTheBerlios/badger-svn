@@ -36,7 +36,8 @@ if (isset($_GET['action'])) {
 			//called by dataGrid
 			if (isset($_GET['ID'])) {
 				$IDs = getGPC($_GET, 'ID', 'integerList');
-							
+				
+				
 				//for all categories which should be deleted
 				foreach($IDs as $ID){
 					//for all accounts:
@@ -53,19 +54,16 @@ if (isset($_GET['action'])) {
 						$account->setFilter($filter);
 						$account2 = clone $account;
 						//flush category
-						while($ta = $account->getNextFinishedTransaction() ) {
+						while($ta = $account->getNextTransaction()) {
 							$ta->setCategory(NULL);
-						} //transactions
-						while($ta = $account2->getNextPlannedTransaction() ) {
-							$ta->setCategory(NULL);
-						} //transactions
+						}
 					} //accounts
 					
 					//delete category
 					$cm->deleteCategory($ID);
 				}
 
-				echo "";
+				exit();
 			} else {
 				echo "no ID was transmitted!";	
 			}			

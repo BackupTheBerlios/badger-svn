@@ -255,8 +255,8 @@ class DataGrid {
 	public static function getStringFilterSelectArray() {
 		$filterArray = array ();
 		
-		$filterArray["eq"] = "=";
-		$filterArray["ne"] = "<>";
+		$filterArray["eq"] = getBadgerTranslation2('dataGridFilter', 'stringEqualTo');;
+		$filterArray["ne"] = getBadgerTranslation2('dataGridFilter', 'StringNotEqual');;
 		$filterArray["bw"] = getBadgerTranslation2('dataGridFilter', 'beginsWith');
 		$filterArray["ew"] = getBadgerTranslation2('dataGridFilter', 'endsWith');
 		$filterArray["ct"] = getBadgerTranslation2('dataGridFilter', 'contains');

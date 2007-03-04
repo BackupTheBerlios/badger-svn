@@ -70,14 +70,15 @@ function showSelectPage() {
 	$dataGrid->cellAlign = array("left", "right", "left");
 	$dataGrid->width = '30em';
 	$dataGrid->height = '7em';
+	$dataGrid->discardSelectedRows = false;
 	$dataGrid->initDataGridJS();
 	
-	try {
-		$preselectedAccounts = $us->getProperty('statisticsPreselectedAccounts');
-		foreach ($preselectedAccounts as $currentPreselectedAccount) {
-			$tpl->addOnLoadEvent("dataGridAccountManagerStatistic.preselectId('$currentPreselectedAccount');");
-		}
-	} catch (BadgerException $ex) {}
+//	try {
+//		$preselectedAccounts = $us->getProperty('statisticsPreselectedAccounts');
+//		foreach ($preselectedAccounts as $currentPreselectedAccount) {
+//			$tpl->addOnLoadEvent("dataGridAccountManagerStatistic.preselectId('$currentPreselectedAccount');");
+//		}
+//	} catch (BadgerException $ex) {}
 	
 	$widgets->addNavigationHead();
 

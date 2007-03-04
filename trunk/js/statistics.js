@@ -58,7 +58,7 @@ function submitSelect() {
 
 	writeFlash(encodeURIComponent(url));
 	
-	flashContainer = $("flashContainer");
+	var flashContainer = $("flashContainer");
 	window.scrollTo(0, flashContainer.offsetTop);
 
 	return;

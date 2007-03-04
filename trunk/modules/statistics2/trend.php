@@ -207,7 +207,15 @@ if (!$dataAvailable) {
 }
 
 $numDates = count($totals);
-//$xdata = array_keys($totals);
+
+if ($numDates <= 1) {
+	echo getBadgerTranslation2('statistics2Graph', 'only1transaction');
+	
+	require_once BADGER_ROOT . "/includes/fileFooter.php";
+	exit;
+}
+
+	//$xdata = array_keys($totals);
 $xdata = range(0, $numDates - 1);
 
 //echo "<pre>";print_r($values);print_r($xdata);echo "</pre>";

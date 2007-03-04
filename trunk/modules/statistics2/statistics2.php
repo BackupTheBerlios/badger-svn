@@ -70,8 +70,9 @@ echo $tpl->getHeader($pageTitle);
 	
 $widgets->addToolTipLayer();
 
-$datagGridFilterArray = DataGrid::getNumberFilterSelectArray();
-$datagGridDateFilterArray = DataGrid::getDateFilterSelectArray();
+$dataGridFilterArray = DataGrid::getNumberFilterSelectArray();
+$dataGridDateFilterArray = DataGrid::getDateFilterSelectArray();
+$dataGridStringFilterArray = DataGrid::getStringFilterSelectArray();
 
 $pageSettingsContent =
 	$widgets->createSelectField('pageSettingsSelect', array(), '', '', false, 'onchange="loadPageSetting();"')
@@ -87,19 +88,19 @@ $pageSettingJS = '<script type="text/javascript">var newNamePrompt = "' . getBad
 $filters['unselected'] = '';
 $filters['title'] =
 	getBadgerTranslation2('statistics2', 'titleFilter') 
-	. $widgets->createSelectField("titleOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
+	. $widgets->createSelectField("titleOperator$FILTER_ID_MARKER", $dataGridStringFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("title$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;
 $filters['description'] = 
 	getBadgerTranslation2('statistics2', 'descriptionFilter')
-	. $widgets->createSelectField("descriptionOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
+	. $widgets->createSelectField("descriptionOperator$FILTER_ID_MARKER", $dataGridStringFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("description$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;
 $filters['valutaDate'] =
 	getBadgerTranslation2('statistics2', 'valutaDateFilter')
-	. $widgets->createSelectField("valutaDateOperator$FILTER_ID_MARKER", $datagGridDateFilterArray, "", "", false, "style='width: 95px;'")
+	. $widgets->createSelectField("valutaDateOperator$FILTER_ID_MARKER", $dataGridDateFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	.$widgets->addDateField("valutaDate$FILTER_ID_MARKER", "")
 	;
@@ -117,7 +118,7 @@ $filters['valutaDateAgo'] =
 	;
 $filters['amount'] =
 	getBadgerTranslation2('statistics2', 'amountFilter')
-	. $widgets->createSelectField("amountOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
+	. $widgets->createSelectField("amountOperator$FILTER_ID_MARKER", $dataGridFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("amount$FILTER_ID_MARKER", 3, "", "", false, "integer", "")
 	;
@@ -131,7 +132,7 @@ $filters['outsideCapital'] =
 	;
 $filters['transactionPartner'] =
 	getBadgerTranslation2('statistics2', 'transactionPartnerFilter')
-	. $widgets->createSelectField("transactionPartnerOperator$FILTER_ID_MARKER", $datagGridFilterArray, "", "", false, "style='width: 95px;'")
+	. $widgets->createSelectField("transactionPartnerOperator$FILTER_ID_MARKER", $dataGridStringFilterArray, "", "", false, "style='width: 95px;'")
 	. '&nbsp;'
 	. $widgets->createField("transactionPartner$FILTER_ID_MARKER", 30, "", "", false, "text", "")
 	;

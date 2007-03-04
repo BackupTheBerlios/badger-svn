@@ -28,6 +28,7 @@ $dataGrid->height = "350px";
 $dataGrid->deleteAction = "CategoryManager.php?action=delete&ID=";
 $dataGrid->editAction = "CategoryManager.php?action=edit&ID=";
 $dataGrid->newAction = "CategoryManager.php?action=new";
+$dataGrid->deleteRefreshType = 'refreshDataGrid'; 
 $dataGrid->initDataGridJS();
 
 $widgets->addNavigationHead();

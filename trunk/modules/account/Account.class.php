@@ -449,7 +449,7 @@ class Account extends DataGridHandler {
 				'valutaDate' => 'ft2.valuta_date',
 				'amount' => 'ft2.amount',
 				'outsideCapital' => 'ft2.outside_capital',
-				'transactionPartner' => 'ft2.transaction_parter',
+				'transactionPartner' => 'ft2.transaction_partner',
 				'categoryId' => 'ft2.category_id',
 				'categoryTitle' => 'ft2.category_title',
 				'parentCategoryId' => 'ft2.parent_category_id',
@@ -485,7 +485,7 @@ class Account extends DataGridHandler {
 				'valutaDate' => 'ft2.valuta_date',
 				'amount' => 'ft2.amount',
 				'outsideCapital' => 'ft2.outside_capital',
-				'transactionPartner' => 'ft2.transaction_parter',
+				'transactionPartner' => 'ft2.transaction_partner',
 				'categoryId' => 'ft2.category_id',
 				'categoryTitle' => 'ft2.category_title',
 				'parentCategoryId' => 'ft2.parent_category_id',
@@ -1897,6 +1897,7 @@ class Account extends DataGridHandler {
 //				AND pt.end_date > NOW()\n"; 	
 
 		$where = $this->getFilterSQL();
+		$where = str_replace('ft2.', 'pt.', $where);
 		$where = preg_replace('/pt\.parent_category_id = ([0-9]+)/', '(pt.category_id = \1 OR pt.parent_category_id = \1)', $where);
 		$where = preg_replace('/pt\.parent_category_id != ([0-9]+)/', '((pt.category_id IS NULL OR pt.category_id != \1) AND (pt.parent_category_id IS NULL OR pt.parent_category_id != \1))', $where);
 		//$where = preg_replace('/pc\\.title = (\'.*?[^\\\\]\')/', '(pc\\.title = \1 OR c\\.title = \1)', $where);
@@ -1908,6 +1909,7 @@ class Account extends DataGridHandler {
 		} 
 		
 		$order = $this->getOrderSQL();				
+		$order = str_replace('ft2.', 'pt.', $order);
 		$order = preg_replace('/pt\.__TYPE__ (asc|desc),*/', '', $order);
 		$order = preg_replace('/pt\.__SUM__ (asc|desc),*/', '', $order);
 		$order = trim(preg_replace('/pt\.valuta_date (asc|desc),*/', '', $order));
@@ -1921,6 +1923,7 @@ class Account extends DataGridHandler {
 			$sql .= " ORDER BY $order\n ";
 		}
 		
+		$sql = str_replace('ft2.', 'pt.', $sql);
 		$this->dbResultPlanned =& $this->badgerDb->query($sql);
 		
 		if (PEAR::isError($this->dbResultPlanned)) {
