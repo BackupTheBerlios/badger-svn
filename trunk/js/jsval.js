@@ -201,6 +201,14 @@ validationField.prototype.Merge = function(element){
    this.elements[this.elements.length] = element;
 };
 validationField.prototype.IsValid = function(arrFields){
+   //if the field isn't visible return true
+   if (this.element.style.display && this.element.style.display=="none") {
+	  return true;
+   }
+   if (this.element.style.display && this.element.style.visibility=="hidden") {
+	  return true;
+   }
+   
    switch (this.type){
       case "textarea":
       case "password":

@@ -19,6 +19,8 @@ function toggleTransferal() {
 	
 	$("transferalAccountRow").style.display = displayType;
 	$("transferalAmountRow").style.display = displayType;
+	//also hide input element, so that validation check will not be performed
+	$("transferalAmount").style.display = displayType;
 }
 
 function updateTransferalAmount() {
