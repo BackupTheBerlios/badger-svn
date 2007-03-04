@@ -1,6 +1,7 @@
 body, html {
 	margin: 0px;
 	padding: 0px;
+	width: 99.9%;
 }
 
 body, form, img {
@@ -27,12 +28,13 @@ h3 {
 #header {
 	background-color: #FFFFFF;
 	height: 43px;
+	width: 100%;
 }
 #header table {
 	font-size: 12pt;	
 }
 #staticMenuBar {
-	width: 99.6%;
+	width: 100%;
 }
 #content {
 	margin: 5px 5px 5px 5px;

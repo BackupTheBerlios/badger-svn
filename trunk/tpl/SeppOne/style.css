@@ -2,6 +2,7 @@ body, html {
 	margin: 0px;
 	padding: 0px;
 	background-color: #FAFBED;
+	width: 99.9%;
 }
 
 body, form, img {
@@ -31,12 +32,13 @@ h3 {
 	background-position: left;
 	background-repeat: no-repeat;
 	height: 43px;
+	width: 100%;
 }
 #header table {
 	font-size: 12pt;	
 }
 #staticMenuBar {
-	width: 99.6%;
+	width: 100%;
 }
 #content {
 	margin: 5px 5px 5px 5px;

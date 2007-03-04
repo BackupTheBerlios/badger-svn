@@ -87,7 +87,7 @@ Menu bar related selectors
 	background-image: url(office_xp_divider.png);
 	background-position: left;
 	background-repeat: no-repeat;
-	border: 1px outset;
+	border-bottom: 1px solid black;
 	cursor: default;
 	width: 100%;
 	padding-bottom: 3px;
@@ -114,14 +114,14 @@ Menu bar related selectors
 
 .jsdomenubaritem {
 	background-color: #EFEDDE;
-	border: none;
+	border: 1px solid #EFEDDE;
 	color: #000000;
 	display: inline;
 	font-family: Tahoma, Helvetica, sans, Arial, sans-serif;
 	font-size: 12px;
 	padding-bottom: 2px;
-	padding-left: 24px;
-	padding-right: 10px;
+	padding-left: 23px;
+	padding-right: 9px;
 	padding-top: 2px;
 	position: relative; /* Do not alter this line! */
 }
