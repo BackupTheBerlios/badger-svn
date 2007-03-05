@@ -87,6 +87,7 @@ Menu bar related selectors
 	background-image: url(office_xp_divider.png);
 	background-position: left;
 	background-repeat: no-repeat;
+	border: 0px solid black;
 	border-bottom: 1px solid black;
 	cursor: default;
 	width: 100%;
