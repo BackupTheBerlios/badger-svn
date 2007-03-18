@@ -144,6 +144,8 @@ function printFrontendFinished($AccountID, $ID) {
 	$categoryExpenseJS = getCategoryExpense();
 	$categoryExpenseWarning = getBadgerTranslation2('accountTransaction', 'categoryExpenseWarning');
 
+	$backTo = '';
+
 	if($ID!="new") {
 		$acc = $am->getAccountById($AccountID);
 		$transactionType = "finished";
@@ -299,12 +301,13 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	$categoryExpenseWarning = getBadgerTranslation2('accountTransaction', 'categoryExpenseWarning');
 	
 	$transactionType = "planned";
+
 	if($plannedTransactionId != "new") {
 		$acc = $am->getAccountById($AccountID);		
 		$transaction = $acc->getPlannedTransactionById($plannedTransactionId);
 		
 		$backToIdField = $widgets->createField('backToId', 0, $AccountID, '', false, 'hidden');
-
+		
 		if (is_null($transaction->getTransferalTransaction())) {
 				$transferalAmountValue = new Amount($transaction->getAmount());
 				$transferalAmountValue->mul(-1);
@@ -383,8 +386,9 @@ function printFrontendPlanned($AccountID, $plannedTransactionId, $finishedTransa
 	//set vars with values
 	$FormAction = $_SERVER['PHP_SELF'];
 	
-	$backTo = $widgets->createField('backTo', 0, (isset($_GET['backTo']) ? getGPC($_GET, 'backTo') : ''), null, false, 'hidden');
-
+	//$backTo = $widgets->createField('backTo', 0, (isset($_GET['backTo']) ? getGPC($_GET, 'backTo') : ''), null, false, 'hidden');
+	$backTo = isset($_GET['backTo']) ? getGPC($_GET, 'backTo') : '';
+	
 	if($AccountID=="choose") {
 		$AccountLabel = $widgets->createLabel("hiddenAccID", getBadgerTranslation2('accountTransaction', 'Account'), true);
 		$hiddenAccID = $widgets->createSelectField("hiddenAccID", getAccountsSelectArray(), $AccountID, "", false, "style='width: 31ex;'");
