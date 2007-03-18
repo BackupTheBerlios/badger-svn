@@ -82,7 +82,7 @@ function new_session(){
 	}else*/{
 		setcookie('badger_sess',$sess, 0, '/');
 	}
-	$sql = "insert into $_db_table_config(sid,start,last,ip) values('$sess',NOW(),NOW(),'".$_SERVER['REMOTE_ADDR']."')";
+	$sql = "insert into $_db_table_config(sid,id,start,last,ip) values('$sess',0,NOW(),NOW(),'".$_SERVER['REMOTE_ADDR']."')";
 	$res = query($sql);
 	return $sess;
 }

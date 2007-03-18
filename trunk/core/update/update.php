@@ -602,6 +602,10 @@ function update1_0beta2To1_0beta3() {
 	return $log;
 }
 
+function update1_0beta3TO1_0XXX() {
+	doQuery("ALTER TABLE `session_master` CHANGE `id` `id` INT( 11 ) NULL");
+}
+
 function doQuery($sql, $acceptableResults = array()) {
 	global $badgerDb, $tpl;
 
