@@ -185,7 +185,7 @@ if (isset($_POST['Upload'])){
 					$disableFields = '';
 			    	if (isset($importedTransactions[$outputTransactionNumber]['similarTransactions'])) {
 			    		foreach($importedTransactions[$outputTransactionNumber]['similarTransactions'] as $similarity => $currentTransaction) {
-			    			$matchingTransactions[$currentTransaction->getId()] = $currentTransaction->getTitle() . $similarity; //sprintf(' (%1.1f %%)', $similarity); 
+			    			$matchingTransactions[$currentTransaction->getId()] = $currentTransaction->getTitle() . ' ' . round($similarity * 100, 0) . ' %'; 
 			    		}
 			    		
 			    		$disableFields = ' disabled="disabled"';
@@ -395,6 +395,13 @@ function importMatching($importedTransaction, $accountId) {
 	$accountManager = new AccountManager($badgerDb);
 	$account = $accountManager->getAccountById($accountId);
 	
+	if ($minAmount->compare(0) < 0) {
+		$tmpAmount = $maxAmount;
+		$maxAmount = $minAmount;
+		$minAmount = $tmpAmount;
+		unset($tmpAmount);
+	}
+	
 	$account->setFilter(array (
 		array (
 			'key' => 'valutaDate',
@@ -442,12 +449,12 @@ function importMatching($importedTransaction, $accountId) {
 		
 		$currentTextSimilarity = ($titleSimilarity + $descriptionSimilarity + $transactionPartnerSimilarity) / 3;
 
-//		if ($currentTextSimilarity >= $textSimilarity) {
+		if ($currentTextSimilarity >= $textSimilarity) {
 			$overallSimilarity = ($titleSimilarity + $descriptionSimilarity + $transactionPartnerSimilarity + $dateSimilarity + $amountSimilarity) / 5;
 			
 			//$similarTransactions["$overallSimilarity t:$titleSimilarity d:$descriptionSimilarity tp:$transactionPartnerSimilarity vd:$dateSimilarity a:$amountSimilarity"] = $currentTransaction;
-			$similarTransactions[$overallSimilarity] = $currentTransaction;
-//		}
+			$similarTransactions["$overallSimilarity"] = $currentTransaction;
+		}
 	}
 	
 	krsort($similarTransactions);
