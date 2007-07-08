@@ -1,5 +1,3 @@
-/*Test*/
-
 body, html {
 	margin: 0px;
 	padding: 0px;
@@ -79,7 +77,7 @@ h3 {
 /* about badger */
 blockquote {
 	font-family: monospace;
-	border: 1px dashed gray;
+	border: 1px dashed grey;
 	margin: auto;
 	padding-left: 1em;
 	padding-right: 1em;
@@ -143,12 +141,15 @@ input.inputNumberMinus {
 button {
 	border: 1px solid #7D7D7D;
 	margin: 2px 2px 2px 2px;
+	padding: 1px 4px 1px 4px;
 	cursor: pointer;
+	overflow: visible;
 }
 button:hover {
 	border: 1px solid #4A4A4A;
 	margin: 2px 2px 2px 2px;
 	cursor: pointer;
+	overflow: visible;
 }
 /* END FORMS */
 
