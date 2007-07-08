@@ -1,3 +1,5 @@
+/*Test*/
+
 body, html {
 	margin: 0px;
 	padding: 0px;
@@ -77,7 +79,7 @@ h3 {
 /* about badger */
 blockquote {
 	font-family: monospace;
-	border: 1px dashed grey;
+	border: 1px dashed gray;
 	margin: auto;
 	padding-left: 1em;
 	padding-right: 1em;
