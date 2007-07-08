@@ -151,7 +151,9 @@ input.inputNumberMinus {
 button {
 	border: 1px solid #7D7D7D;
 	margin: 2px 2px 2px 2px;
+	padding: 1px 4px 1px 4px;
 	cursor: pointer;
+	overflow: visible;
 }
 button:hover {
 	border: 1px solid #4A4A4A;

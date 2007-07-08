@@ -69,7 +69,11 @@ table.dgTableFoot td {
 
 table.dgTableData {
 	table-layout: fixed;
-	width: 99.8%;
+	width: 99.95%;
+}
+*table.dgTableData { /* only for IE*/
+	table-layout: fixed;
+	width: auto;
 }
 table.dgTableData td {
 	overflow: hidden;
