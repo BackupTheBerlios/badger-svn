@@ -89,7 +89,7 @@ Menu bar related selectors
 	background-repeat: no-repeat;
 	border: 0px solid black;
 	border-bottom: 1px solid black;*/
-	background-image: url(../../button-dark.jpg);
+	background-image: url(../button-dark.jpg);
 	cursor: default;
 	width: 100%;
 	padding-bottom: 3px;
@@ -115,7 +115,7 @@ Menu bar related selectors
 }
 
 .jsdomenubaritem {
-	background-image: url(../../button-dark.jpg);
+	background-image: url(../button-dark.jpg);
 	/*background-color: #EFEDDE;
 	border: 1px solid #EFEDDE;*/
 	color: #ffffff;
@@ -130,7 +130,7 @@ Menu bar related selectors
 }
 
 .jsdomenubaritemover {
-	background-image: url(../../button-grey.jpg);
+	background-image: url(../button-grey.jpg);
 	/*background-color: #C1D2EE;
 	border: 1px solid #316AC5;*/
 	color: #000000;
@@ -145,7 +145,7 @@ Menu bar related selectors
 }
 
 .jsdomenubaritemclick {
-	background-image: url(../../button-lightgrey.jpg);
+	background-image: url(../button-lightgrey.jpg);
 	/*background-color: #EFEDDE;
 	border: 1px solid #8A867A;*/
 	color: #000000;
@@ -159,15 +159,3 @@ Menu bar related selectors
 	position: relative; /* Do not alter this line! */
 }
 
-/*
-Example of selectors for icons. Change the height and width to match the actual 
-height and width of the icon image.
-*/
-.icon1 {
-	background-image: url(icon1.png);
-	background-repeat: no-repeat; /* Do not alter this line! */
-	height: 16px;
-	left: 4px;
-	position: absolute; /* Do not alter this line! */
-	width: 16px;
-}
