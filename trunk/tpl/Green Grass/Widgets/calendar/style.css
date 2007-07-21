@@ -7,7 +7,7 @@
 }
 #calendar a {
 	text-decoration:none;
-	color: #0055FF;
+	color: #5AAC19;
 }
 #calendar table {
 	font-size: 12px;
@@ -15,7 +15,8 @@
 }
 
 tr.calendarHead {
-	background-color: #0055FF;
+	background-color: #5AAC19;
+	background-image: url(../../button-dark.jpg);
 }
 td.CALCaption {
 	padding: 2px;
@@ -55,17 +56,18 @@ tr.CALTodayString td {
 }
 
 span.spanFilterBox {
-	border:1px solid #B3CCFF;
-	cursor:pointer;
+	cursor: pointer;
 	font-weight: bold;
+	color: #ffffff;
 }
 span.spanActive {
-	border: 1px solid black;
+	cursor: pointer;
 	font-weight: bold;
+	color: #5AAC19;
 }
 
 td.selectMouseOver {
-	background-color: #0055FF;
+	background-color: #5AAC19;
 }
 
 table.selectMonthYear {
@@ -90,7 +92,7 @@ td.CALweekseparator {
 }
 
 span.CALDayNames {
-	color:#0055FF;
+	color:#5AAC19;
 }
 span.CALWeekNumbers {
 	
@@ -111,19 +113,19 @@ span.CALWeekdayPast {
 }
 
 span.CALSaturday {
-	color:#0055FF
+	color:#5AAC19
 }
 
 span.CALSaturdayPast {
-	color:#0055FF
+	color:#5AAC19
 }
 
 span.CALSunday {
-	color:#003CB3
+	color:#366F07
 }
 
 span.CALSundayPast {
-	color:#003CB3
+	color:#366F07
 }
 
 a.CALselectedDay {

@@ -27,10 +27,10 @@ h3 {
 }
 
 #header {
-	background-color: #7DDF1B;
+	background-color: #5AAC19;
 	background-image: url(background.jpg);
 	background-position: left;
-	background-repeat: repeat-x;
+	background-repeat: no-repeat;
 	height: 43px;
 	width: 100%;
 	position: relative;
